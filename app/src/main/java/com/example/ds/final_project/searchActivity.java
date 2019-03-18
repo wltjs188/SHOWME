@@ -1,9 +1,13 @@
 package com.example.ds.final_project;
 
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,10 +38,10 @@ import ai.api.model.Result;
 
 
 
-public class searchActivity extends AppCompatActivity {
+public class searchActivity extends AppCompatActivity implements AIListener{
     //상품검색
 
-
+    AIService aiService;
     String parameterString;
     String query;
     String action;
@@ -61,6 +65,12 @@ public class searchActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("쇼움이");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기버튼
 
+        int permission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            makeRequest();
+        }
         chatMessages = new ArrayList<>();
         listView = (ListView) findViewById(R.id.list_msg);
         btnSend = findViewById(R.id.btn_chat_send);
@@ -76,6 +86,9 @@ public class searchActivity extends AppCompatActivity {
         final AIConfiguration config = new AIConfiguration("c8675821bede492ea0f662d262675d29",
                 AIConfiguration.SupportedLanguages.Korean,
                 AIConfiguration.RecognitionEngine.System);
+
+        aiService = AIService.getService(this, config);
+        aiService.setListener(this);
 
         aiDataService = new AIDataService(this,config);
         aiRequest = new AIRequest();
@@ -98,7 +111,32 @@ public class searchActivity extends AppCompatActivity {
 
 
     }
+    protected void makeRequest() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.RECORD_AUDIO},
+                101);
+    }
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 101: {
 
+                if (grantResults.length == 0
+                        || grantResults[0] !=
+                        PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+
+                }
+                return;
+            }
+        }
+    }
+
+    public void ButtonClicked(View view){
+        aiService.startListening();
+
+    }
     private class AITask extends AsyncTask<AIRequest, Void, AIResponse>{
         protected AIResponse doInBackground(AIRequest... requests) {
             final AIRequest request = requests[0];
@@ -133,6 +171,29 @@ public class searchActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public void onError(AIError error) {
+
+    }
+
+    @Override
+    public void onAudioLevel(float level) {
+
+    }
+
+    @Override
+    public void onListeningStarted() {
+    }
+
+    @Override
+    public void onListeningCanceled() {
+
+    }
+
+    @Override
+    public void onListeningFinished() {
+    }
 
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
         switch (item.getItemId()){

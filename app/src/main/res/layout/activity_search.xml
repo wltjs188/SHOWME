@@ -35,6 +35,16 @@
             android:hint="내용을 입력해주세요." />
 
         <Button
+            android:id="@+id/btn_voice_chat_send"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:background="@color/background_floating_material_dark"
+            android:text="음성"
+            android:textColor="@color/background_material_light"
+            android:onClick="ButtonClicked"
+            />
+        <Button
             android:id="@+id/btn_chat_send"
             android:layout_width="0dp"
             android:layout_height="match_parent"
