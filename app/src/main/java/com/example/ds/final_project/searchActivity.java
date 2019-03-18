@@ -1,13 +1,10 @@
 package com.example.ds.final_project;
 
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,19 +23,29 @@ import java.util.List;
 import java.util.Map;
 
 import ai.api.AIListener;
+import ai.api.AIServiceException;
 import ai.api.android.AIConfiguration;
+import ai.api.android.AIDataService;
 import ai.api.android.AIService;
 import ai.api.model.AIError;
+import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
 
 
-public class searchActivity extends AppCompatActivity implements AIListener {
+
+public class searchActivity extends AppCompatActivity {
     //상품검색
 
-    AIService aiService;
-    TextView t;
 
+    String parameterString;
+    String query;
+    String action;
+    String answer;
+    String speech;
+
+    AIRequest aiRequest;
+    AIDataService aiDataService;
 
     private ListView listView;
     private View btnSend;
@@ -46,8 +53,6 @@ public class searchActivity extends AppCompatActivity implements AIListener {
     boolean isMine;
     private List<ChatMessage> chatMessages;
     private ArrayAdapter<ChatMessage> adapter;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,30 +62,26 @@ public class searchActivity extends AppCompatActivity implements AIListener {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기버튼
 
         chatMessages = new ArrayList<>();
-
         listView = (ListView) findViewById(R.id.list_msg);
         btnSend = findViewById(R.id.btn_chat_send);
         editText = (EditText) findViewById(R.id.msg_type);
+
         //set ListView adapter first
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
         listView.setAdapter(adapter);
         //ChatMessage chatMessage = new ChatMessage("어떤 상품을 찾아 드릴까요?", true);
         //chatMessages.add(chatMessage);
-        setContentView(R.layout.activity_main);
-        t=(TextView)findViewById(R.id.textView);
-        int permission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.RECORD_AUDIO);
 
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            makeRequest();
-        }
-        final AIConfiguration config = new AIConfiguration("7e5e4005e6cf487385649f1c6f88d37f",
+        //dialogflow
+        final AIConfiguration config = new AIConfiguration("c8675821bede492ea0f662d262675d29",
                 AIConfiguration.SupportedLanguages.Korean,
                 AIConfiguration.RecognitionEngine.System);
-        aiService = AIService.getService(this, config);
-        aiService.setListener(this);
+
+        aiDataService = new AIDataService(this,config);
+        aiRequest = new AIRequest();
 
 
+        //전송버튼
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,76 +90,50 @@ public class searchActivity extends AppCompatActivity implements AIListener {
                 } else {
                     //add message to list
                     isMine=false;
-                    ChatMessage chatMessage = new ChatMessage(editText.getText().toString(), isMine);
-                    chatMessages.add(chatMessage);
-                    adapter.notifyDataSetChanged();
-                    editText.setText("");
+                    aiRequest.setQuery(editText.getText().toString());
+                    new AITask().execute(aiRequest);
                 }
             }
         });
 
+
     }
-    protected void makeRequest() {
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.RECORD_AUDIO},
-                101);
-    }
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 101: {
 
-                if (grantResults.length == 0
-                        || grantResults[0] !=
-                        PackageManager.PERMISSION_GRANTED) {
-
-                } else {
-
-                }
-                return;
+    private class AITask extends AsyncTask<AIRequest, Void, AIResponse>{
+        protected AIResponse doInBackground(AIRequest... requests) {
+            final AIRequest request = requests[0];
+            try {
+                final AIResponse response = aiDataService.request(aiRequest);
+                return response;
+            } catch (AIServiceException e) {
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(AIResponse aiResponse) {
+            if (aiResponse != null) {
+                onResult(aiResponse);
             }
         }
     }
-    public void ButtonClicked(View view){
-        aiService.startListening();
-    }
 
-    @Override
-    public void onResult(AIResponse result) { //챗봇에서 가져온 내용
-        Log.d("anu",result.toString());
-        Result result1=result.getResult();
-        String parameterString = "";
-        if (result1.getParameters() != null && !result1.getParameters().isEmpty()) {
-            for (final Map.Entry<String, JsonElement> entry : result1.getParameters().entrySet()) {
-                parameterString += "(" + entry.getKey() + ", " + entry.getValue();
-            }
-        }
-
-        t.setText("query:"+result1.getResolvedQuery()+"\naction:"+result1.getAction()+"\nanswer:"+ parameterString+"\n"+result1.getFulfillment().getSpeech());
-    }
-
-    @Override
-    public void onError(AIError error) {
+    public void onResult(AIResponse response) {
+        final Result result = response.getResult();
+        speech = result.getFulfillment().getSpeech();
+        query=result.getResolvedQuery();
+        action=result.getAction();
+        ChatMessage chatMessage = new ChatMessage(query, isMine);
+        chatMessages.add(chatMessage);
+        adapter.notifyDataSetChanged();
+        editText.setText("");
+        isMine=true;
+        chatMessage = new ChatMessage(speech, isMine);
+        chatMessages.add(chatMessage);
+        adapter.notifyDataSetChanged();
 
     }
 
-    @Override
-    public void onAudioLevel(float level) {
 
-    }
-
-    @Override
-    public void onListeningStarted() {
-    }
-
-    @Override
-    public void onListeningCanceled() {
-
-    }
-
-    @Override
-    public void onListeningFinished() {
-    }
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
         switch (item.getItemId()){
             case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
@@ -168,8 +143,9 @@ public class searchActivity extends AppCompatActivity implements AIListener {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }
+
+
 class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
 
     private Activity activity;
@@ -181,6 +157,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         this.messages = objects;
     }
 
+    
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
