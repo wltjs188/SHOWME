@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     //메인화면
-    Intent searchIntent,wishIntent,infoIntent; //쇼핑시작,나의관심상품,정보수정
+    Intent searchIntent,wishIntent,infoIntent,webIntent; //쇼핑시작,나의관심상품,정보수정
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         searchIntent=new Intent(getApplicationContext(),searchActivity.class);//쇼핑시작
         wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
         infoIntent=new Intent(getApplicationContext(),MyInfoActivity.class);//나의정보수정
-
+        webIntent=new Intent(getApplicationContext(),WebActivity.class);//나의정보수정
     }
 
     public void onSearchClicked(View view) { //쇼핑시작
@@ -35,5 +35,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "정보 수정이 완료되었습니다.", Toast.LENGTH_LONG).show();
         }
     }
+    public void onWebClicked(View view) { startActivity(webIntent); }
 
 }
