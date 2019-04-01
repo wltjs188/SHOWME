@@ -3,6 +3,7 @@ package com.example.ds.final_project;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,6 +23,12 @@ import android.widget.Toast;
 
 import com.google.gson.JsonElement;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +39,7 @@ import ai.api.android.AIConfiguration;
 import ai.api.android.AIDataService;
 import ai.api.android.AIService;
 import ai.api.model.AIError;
+import ai.api.model.AIEvent;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
@@ -39,6 +47,11 @@ import ai.api.model.Result;
 
 
 public class searchActivity extends AppCompatActivity implements AIListener{
+
+    //서버
+    String IP_ADDRESS = "35.243.72.245";
+    String TAG = "phptest";
+
     //상품검색
 
     AIService aiService;
@@ -65,6 +78,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         getSupportActionBar().setTitle("쇼움이");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기버튼
 
+
+
         int permission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.RECORD_AUDIO);
 
@@ -79,8 +94,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         //set ListView adapter first
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
         listView.setAdapter(adapter);
-        //ChatMessage chatMessage = new ChatMessage("어떤 상품을 찾아 드릴까요?", true);
-        //chatMessages.add(chatMessage);
+        ChatMessage chatMessage = new ChatMessage("어떤 상품을 찾아 드릴까요?", true);
+        chatMessages.add(chatMessage);
+        adapter.notifyDataSetChanged();
 
         //dialogflow
         final AIConfiguration config = new AIConfiguration("b8dda671eb584e3586aba41efdd554cf",
@@ -93,6 +109,11 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         aiDataService = new AIDataService(this,config);
         aiRequest = new AIRequest();
 
+        //aiRequest.setEvent(new AIEvent("welcome"));
+        //new AITask().execute(aiRequest);
+
+
+
 
         //전송버튼
         btnSend.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +125,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     //add message to list
                     isMine=false;
                     aiRequest.setQuery(editText.getText().toString());
+                    Log.e("입력",editText.getText().toString());
                     new AITask().execute(aiRequest);
+                    //서버 입력
+                    InsertData task = new InsertData();
+                    task.execute("http://" + IP_ADDRESS + "/insert.php","천명희","대한민국");
+
+
                 }
             }
         });
@@ -160,14 +187,17 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         speech = result.getFulfillment().getSpeech();
         query=result.getResolvedQuery();
         action=result.getAction();
-        ChatMessage chatMessage = new ChatMessage(query, isMine);
-        chatMessages.add(chatMessage);
-        adapter.notifyDataSetChanged();
-        editText.setText("");
-        isMine=true;
-        chatMessage = new ChatMessage(speech, isMine);
-        chatMessages.add(chatMessage);
-        adapter.notifyDataSetChanged();
+        Log.e("액션",action);
+        ChatMessage chatMessage;
+
+            chatMessage = new ChatMessage(query, isMine);
+            chatMessages.add(chatMessage);
+            adapter.notifyDataSetChanged();
+            editText.setText("");
+            isMine=true;
+            chatMessage = new ChatMessage(speech, isMine);
+            chatMessages.add(chatMessage);
+            adapter.notifyDataSetChanged();
 
     }
 
@@ -203,6 +233,99 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+    //서버 입력 클래스
+    class InsertData extends AsyncTask<String, Void, String>{
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(searchActivity.this,
+                    "Please Wait", null, true, true);
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            progressDialog.dismiss();
+            //mTextViewResult.setText(result);
+            Log.d(TAG, "POST response  - " + result);
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String name = (String)params[1];
+            String country = (String)params[2];
+
+            String serverURL = (String)params[0];
+            String postParameters = "name=" + name + "&country=" + country;
+
+
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                Log.d(TAG, "POST response code - " + responseStatusCode);
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+
+                bufferedReader.close();
+
+
+                return sb.toString();
+
+
+            } catch (Exception e) {
+
+                Log.d(TAG, "InsertData: Error ", e);
+
+                return new String("Error: " + e.getMessage());
+            }
+
+        }
     }
 }
 
@@ -268,7 +391,11 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             msg = (TextView) v.findViewById(R.id.txt_msg);
         }
     }
+
+
 }
+
+
 
 
 
