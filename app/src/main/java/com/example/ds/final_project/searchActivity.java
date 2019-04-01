@@ -129,7 +129,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     new AITask().execute(aiRequest);
                     //서버 입력
                     InsertData task = new InsertData();
-                    task.execute("http://" + IP_ADDRESS + "/insert.php","천명희","대한민국");
+                    task.execute("http://" + IP_ADDRESS + "/insert.php","김채윤","여성","158","44","44","230");
 
 
                 }
@@ -265,10 +265,15 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         protected String doInBackground(String... params) {
 
             String name = (String)params[1];
-            String country = (String)params[2];
+            String gender = (String)params[2];
+            String height = (String)params[3];
+            String top = (String)params[4];
+            String bottom = (String)params[5];
+            String foot = (String)params[6];
+
 
             String serverURL = (String)params[0];
-            String postParameters = "name=" + name + "&country=" + country;
+            String postParameters = "name=" + name + "&gender=" + gender+ "&height=" + height+ "&top=" + top+ "&bottom=" + bottom+ "&foot=" + foot;
 
 
             try {
