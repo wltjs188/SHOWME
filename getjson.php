@@ -6,7 +6,7 @@
     include('dbcon.php');
         
 
-    $stmt = $con->prepare('select * from person');
+    $stmt = $con->prepare('select * from person WHERE uuid=\'hi\'');
     $stmt->execute();
 
     if ($stmt->rowCount() > 0)
@@ -18,14 +18,18 @@
             extract($row);
     
             array_push($data, 
-                array('id'=>$id,
+                array('id'=>$uuid,
                 'name'=>$name,
-                'country'=>$country
+                'gender'=>$gender
+                'height'=>$height
+                'top'=>$top
+                'bottom'=>$bottom
+                'foot'=>$foot
             ));
         }
 
         header('Content-Type: application/json; charset=utf8');
-        $json = json_encode(array("webnautes"=>$data), JSON_PRETTY_PRINT+JSON_UNESCAPED_UNICODE);
+        $json = json_encode(array("person"=>$data), JSON_PRETTY_PRINT+JSON_UNESCAPED_UNICODE);
         echo $json;
     }
 

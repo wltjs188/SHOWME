@@ -96,12 +96,15 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         btnSend = findViewById(R.id.btn_chat_send);
         editText = (EditText) findViewById(R.id.msg_type);
         uuid = getPreferences();
-        Log.d("uuid2",uuid);
+     //  Log.d("uuid2",uuid);
 
         //set ListView adapter first
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
         listView.setAdapter(adapter);
-        ChatMessage chatMessage = new ChatMessage("어떤 상품을 찾아 드릴까요?", true);
+        ChatMessage chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
+                "1. 상품검색\n" +
+                "2. 사용자 정보 수정\n" +
+                "3. 관심상품보기", true);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
 
@@ -143,7 +146,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 }
             }
         });
-
 
     }
     protected void makeRequest() {
@@ -199,6 +201,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                MyInfo.put(entry.getKey(),""+entry.getValue());
 
             }
+            //사용자 정보 DB에 넣기
             InsertData task = new InsertData();
             task.execute("http://" + IP_ADDRESS + "/insert.php",MyInfo.get("Name_Info"),MyInfo.get("Gender_Info"),MyInfo.get("Height_Info"),
                     MyInfo.get("Top_Info"),MyInfo.get("Bottom_Info"),MyInfo.get("Shoes_Info"));
@@ -209,7 +212,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         speech = result.getFulfillment().getSpeech();
         query=result.getResolvedQuery();
         action=result.getAction();
-        Log.e("액션",action);
+       // Log.e("액션",action);
         ChatMessage chatMessage;
         chatMessage = new ChatMessage(query, isMine);
         chatMessages.add(chatMessage);
@@ -221,20 +224,14 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         adapter.notifyDataSetChanged();
 
     }
-
-
     @Override
     public void onError(AIError error) { }
-
     @Override
     public void onAudioLevel(float level) { }
-
     @Override
     public void onListeningStarted() { }
-
     @Override
     public void onListeningCanceled() { }
-
     @Override
     public void onListeningFinished() { }
 
@@ -243,7 +240,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
         return pref.getString("uuid", "");
     }
-
 
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
         switch (item.getItemId()){
@@ -254,9 +250,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
 
     //서버 입력 클래스
     class InsertData extends AsyncTask<String, Void, String>{
@@ -276,7 +269,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             super.onPostExecute(result);
 
             progressDialog.dismiss();
-            //mTextViewResult.setText(result);
             Log.d(TAG, "POST response  - " + result);
         }
 
