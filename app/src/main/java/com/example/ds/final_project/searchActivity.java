@@ -4,6 +4,7 @@ package com.example.ds.final_project;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -76,6 +77,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     boolean isMine;
     private List<ChatMessage> chatMessages;
     private ArrayAdapter<ChatMessage> adapter;
+    private String uuid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,16 +88,15 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
 
 
-        int permission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.RECORD_AUDIO);
+        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+        if (permission != PackageManager.PERMISSION_GRANTED) { makeRequest(); }
 
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            makeRequest();
-        }
         chatMessages = new ArrayList<>();
         listView = (ListView) findViewById(R.id.list_msg);
         btnSend = findViewById(R.id.btn_chat_send);
         editText = (EditText) findViewById(R.id.msg_type);
+        uuid = getPreferences();
+        Log.d("uuid2",uuid);
 
         //set ListView adapter first
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
@@ -223,27 +224,26 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
 
     @Override
-    public void onError(AIError error) {
-
-    }
+    public void onError(AIError error) { }
 
     @Override
-    public void onAudioLevel(float level) {
-
-    }
+    public void onAudioLevel(float level) { }
 
     @Override
-    public void onListeningStarted() {
-    }
+    public void onListeningStarted() { }
 
     @Override
-    public void onListeningCanceled() {
-
-    }
+    public void onListeningCanceled() { }
 
     @Override
-    public void onListeningFinished() {
+    public void onListeningFinished() { }
+
+    // 값 불러오기
+    private String  getPreferences(){
+        SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
+        return pref.getString("uuid", "");
     }
+
 
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
         switch (item.getItemId()){
