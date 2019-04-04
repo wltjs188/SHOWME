@@ -30,6 +30,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +61,11 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String action;
     String answer;
     String speech;
+
+    //내정보
+    String key;
+    //String[] MyInfo=new String[6];
+    Map<String,String> MyInfo = new HashMap<String,String>();
 
     AIRequest aiRequest;
     AIDataService aiDataService;
@@ -109,6 +115,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         aiDataService = new AIDataService(this,config);
         aiRequest = new AIRequest();
 
+
         //aiRequest.setEvent(new AIEvent("welcome"));
         //new AITask().execute(aiRequest);
 
@@ -127,10 +134,10 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     aiRequest.setQuery(editText.getText().toString());
                     Log.e("입력",editText.getText().toString());
                     new AITask().execute(aiRequest);
-                    //서버 입력
-                    InsertData task = new InsertData();
-                    task.execute("http://" + IP_ADDRESS + "/insert.php","김채윤","여성","158","44","44","230");
 
+                    //서버 입력
+//                    InsertData task = new InsertData();
+//                    task.execute("http://" + IP_ADDRESS + "/insert.php","김채윤","여성","158","44","44","230");
 
                 }
             }
@@ -184,20 +191,33 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
     public void onResult(AIResponse response) {
         final Result result = response.getResult();
+        String parameterString = "";
+        int i=0;
+        if (result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6) {
+            for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+               MyInfo.put(entry.getKey(),""+entry.getValue());
+
+            }
+            InsertData task = new InsertData();
+            task.execute("http://" + IP_ADDRESS + "/insert.php",MyInfo.get("Name_Info"),MyInfo.get("Gender_Info"),MyInfo.get("Height_Info"),
+                    MyInfo.get("Top_Info"),MyInfo.get("Bottom_Info"),MyInfo.get("Shoes_Info"));
+            Log.e("abc",MyInfo.get("Name_Info"));
+
+        }
+
         speech = result.getFulfillment().getSpeech();
         query=result.getResolvedQuery();
         action=result.getAction();
         Log.e("액션",action);
         ChatMessage chatMessage;
-
-            chatMessage = new ChatMessage(query, isMine);
-            chatMessages.add(chatMessage);
-            adapter.notifyDataSetChanged();
-            editText.setText("");
-            isMine=true;
-            chatMessage = new ChatMessage(speech, isMine);
-            chatMessages.add(chatMessage);
-            adapter.notifyDataSetChanged();
+        chatMessage = new ChatMessage(query, isMine);
+        chatMessages.add(chatMessage);
+        adapter.notifyDataSetChanged();
+        editText.setText("");
+        isMine=true;
+        chatMessage = new ChatMessage(speech, isMine);
+        chatMessages.add(chatMessage);
+        adapter.notifyDataSetChanged();
 
     }
 
