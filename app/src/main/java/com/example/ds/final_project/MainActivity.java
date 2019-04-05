@@ -29,6 +29,8 @@ import java.net.URL;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static Context CONTEXT;
     //메인화면
     Intent searchIntent,wishIntent,infoIntent,webIntent; //쇼핑시작,나의관심상품,정보수정
     //서버
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle("쇼움이");
+        CONTEXT=this;
         searchIntent=new Intent(getApplicationContext(),searchActivity.class);//쇼핑시작
         wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
         infoIntent=new Intent(getApplicationContext(),MyInfoActivity.class);//나의정보수정
@@ -61,6 +64,15 @@ public class MainActivity extends AppCompatActivity {
         task.execute( "http://" + IP_ADDRESS + "/getjson.php", "");
 
     }
+    public void onResume(){
+        super.onResume();
+        Log.e("다시시작","다시시작");
+        savePreferences("uuid",uuid);
+        //서버연결
+        GetData task = new GetData();
+        task.execute( "http://" + IP_ADDRESS + "/getjson.php", "");
+    }
+
     private class GetData extends AsyncTask<String, Void, String> {
 
         ProgressDialog progressDialog;
@@ -157,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
         String TAG_TOP ="top";
         String TAG_BOTTOM ="bottom";
         String TAG_FOOT ="foot";
-
 
 
         try {

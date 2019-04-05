@@ -113,74 +113,16 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         if(name==""){
            // Log.d("야",chatMessages.size()+"");
             if(chatMessages.size()==0){
-                chatMessage = new ChatMessage("이름을 입력해주세요", true);
+                chatMessage = new ChatMessage("이름을 입력해주세요.", true);
                 chatMessages.add(chatMessage);
                 adapter.notifyDataSetChanged();
             }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-                chatMessage = new ChatMessage("이름을 입력해주세요", true);
+                chatMessage = new ChatMessage("이름을 입력해주세요.", true);
                 chatMessages.add(chatMessage);
                 adapter.notifyDataSetChanged();
             }
         }
-        else if(gender==""){
-           // Log.d("야","성별");
-            if(chatMessages.size()==0){
-                chatMessage = new ChatMessage("성별을 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-                chatMessage = new ChatMessage("성별을 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }
 
-        }
-        else if(height==""){
-          //  Log.d("야","키");
-            if(chatMessages.size()==0){
-                chatMessage = new ChatMessage("키를 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-                chatMessage = new ChatMessage("키를 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }
-
-        }
-        else if(top==""){
-            if(chatMessages.size()==0){
-                chatMessage = new ChatMessage("상의 사이즈를 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-                chatMessage = new ChatMessage("상의 사이즈를 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }
-        }
-        else if(bottom==""){
-            if(chatMessages.size()==0){
-                chatMessage = new ChatMessage("하의 사이즈를 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-                chatMessage = new ChatMessage("하의 사이즈를 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }
-        }
-        else if(foot==""){
-            if(chatMessages.size()==0){
-                chatMessage = new ChatMessage("신발 사이즈를 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-                chatMessage = new ChatMessage("신발 사이즈를 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }
-        }
         if(chatMessages.size()==0){
             chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
                     "1. 상품검색\n" +
@@ -292,7 +234,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             InsertData task = new InsertData();
             task.execute("http://" + IP_ADDRESS + "/insert.php",uuid,name,gender,height,top,bottom,shoes);
 
-
         }
 
         speech = result.getFulfillment().getSpeech();
@@ -330,6 +271,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
         switch (item.getItemId()){
             case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
+                ((MainActivity)MainActivity.CONTEXT).onResume();
                 finish();
                 return true;
             }
