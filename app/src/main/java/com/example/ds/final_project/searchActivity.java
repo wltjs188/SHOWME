@@ -83,8 +83,14 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     boolean isMine;
     private List<ChatMessage> chatMessages;
     private ArrayAdapter<ChatMessage> adapter;
+    //사용자 정보
     private String uuid;
-
+    private String name;
+    private String gender;
+    private String height;
+    private String top;
+    private String bottom;
+    private String foot;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,8 +107,15 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         listView = (ListView) findViewById(R.id.list_msg);
         btnSend = findViewById(R.id.btn_chat_send);
         editText = (EditText) findViewById(R.id.msg_type);
-        uuid = getPreferences();
-        Log.d("uuid2",uuid);
+        uuid = getPreferences("uuid");
+        name = getPreferences("name");
+        gender = getPreferences("gender");
+        height = getPreferences("height");
+        top = getPreferences("top");
+        bottom = getPreferences("bottom");
+        foot = getPreferences("foot");
+
+       // Log.d("받아온 사용자 정보",uuid+","+name+","+gender+","+height+","+top+","+bottom+","+foot);
 
         //set ListView adapter first
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
@@ -125,12 +138,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         aiDataService = new AIDataService(this,config);
         aiRequest = new AIRequest();
 
-
         //aiRequest.setEvent(new AIEvent("welcome"));
         //new AITask().execute(aiRequest);
-
-
-
 
         //전송버튼
         btnSend.setOnClickListener(new View.OnClickListener() {
@@ -144,15 +153,12 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     aiRequest.setQuery(editText.getText().toString());
                     Log.e("입력",editText.getText().toString());
                     new AITask().execute(aiRequest);
-
                     //서버 입력
 //                    InsertData task = new InsertData();
 //                    task.execute("http://" + IP_ADDRESS + "/insert.php","김채윤","여성","158","44","44","230");
-
                 }
             }
         });
-
     }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
@@ -175,7 +181,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             }
         }
     }
-
     public void ButtonClicked(View view){
         aiService.startListening();
 
@@ -247,9 +252,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     public void onListeningFinished() { }
 
     // 값 불러오기
-    private String  getPreferences(){
+    private String  getPreferences(String key){
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
-        return pref.getString("uuid", "");
+        return pref.getString(key, "");
     }
 
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
@@ -273,8 +278,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             progressDialog = ProgressDialog.show(searchActivity.this,
                     "Please Wait", null, true, true);
         }
-
-
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
@@ -282,8 +285,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             progressDialog.dismiss();
             Log.d(TAG, "POST response  - " + result);
         }
-
-
         @Override
         protected String doInBackground(String... params) {
 
@@ -295,28 +296,23 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             String bottom = (String)params[6];
             String foot = (String)params[7];
 
-
             String serverURL = (String)params[0];
             String postParameters = "uuid=" + uuid + "&name=" + name + "&gender=" + gender+ "&height=" + height+ "&top=" + top+ "&bottom=" + bottom+ "&foot=" + foot;
-
 
             try {
 
                 URL url = new URL(serverURL);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
-
                 httpURLConnection.setReadTimeout(5000);
                 httpURLConnection.setConnectTimeout(5000);
                 httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.connect();
 
-
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 outputStream.write(postParameters.getBytes("UTF-8"));
                 outputStream.flush();
                 outputStream.close();
-
 
                 int responseStatusCode = httpURLConnection.getResponseCode();
                 Log.d(TAG, "POST response code - " + responseStatusCode);
@@ -329,35 +325,22 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     inputStream = httpURLConnection.getErrorStream();
                 }
 
-
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
                 StringBuilder sb = new StringBuilder();
                 String line = null;
-
                 while((line = bufferedReader.readLine()) != null){
                     sb.append(line);
                 }
-
-
                 bufferedReader.close();
-
-
                 return sb.toString();
-
-
             } catch (Exception e) {
-
                 Log.d(TAG, "InsertData: Error ", e);
-
                 return new String("Error: " + e.getMessage());
             }
-
         }
     }
 }
-
 
 class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
 
@@ -369,8 +352,6 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         this.activity = context;
         this.messages = objects;
     }
-
-    
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
@@ -378,8 +359,6 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
 
         int layoutResource = 0; // determined by view type
         ChatMessage chatMessage = getItem(position);
-        int viewType = getItemViewType(position);
-
         if (chatMessage.isMine()) {
             layoutResource = R.layout.item_chat_left;
         } else {
@@ -393,8 +372,6 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         }
-
-        //set message content
         holder.msg.setText(chatMessage.getContent());
 
         return convertView;
@@ -412,16 +389,12 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         // return a value between 0 and (getViewTypeCount - 1)
         return position % 2;
     }
-
     private class ViewHolder {
         private TextView msg;
-
         public ViewHolder(View v) {
             msg = (TextView) v.findViewById(R.id.txt_msg);
         }
     }
-
-
 }
 
 

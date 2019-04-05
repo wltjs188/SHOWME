@@ -35,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
     String IP_ADDRESS = "35.243.72.245";
     private String mJsonString;
     //사용자 정보
-    private String uuid=""; //스마트폰 고유번호
-    private String name="";
-    private String gender="";
+    private String uuid; //스마트폰 고유번호
+    private String name;
+    private String gender;
     private String height;
     private String top;
     private String bottom;
@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         //서버연결
         GetData task = new GetData();
         task.execute( "http://" + IP_ADDRESS + "/getjson.php", "");
+
     }
     private class GetData extends AsyncTask<String, Void, String> {
 
@@ -146,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     private void showResult(){
 
         String TAG_JSON="person";
@@ -186,15 +186,20 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             Log.d("showResult : ", e.getMessage());
         }
-        Log.d("채윤",name+","+gender+","+height+","+top+","+bottom+","+foot);
+        //Log.d("채윤",name+","+gender+","+height+","+top+","+bottom+","+foot);
+        savePreferences("name",name);
+        savePreferences("gender",gender);
+        savePreferences("height",height);
+        savePreferences("top",top);
+        savePreferences("bottom",bottom);
+        savePreferences("foot",foot);
     }
 
-
     // 값 저장하기
-    private void savePreferences(String title, String s){
+    private void savePreferences(String key, String s){
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-        editor.putString("uuid", s);
+        editor.putString(key, s);
         editor.commit();
     }
     //스마트폰 고유번호 가져오기
