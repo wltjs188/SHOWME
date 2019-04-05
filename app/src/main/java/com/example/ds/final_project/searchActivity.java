@@ -56,22 +56,10 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String TAG = "phptest";
 
     //상품검색
-
     AIService aiService;
-    String parameterString;
     String query;
     String action;
-    String answer;
     String speech;
-
-    //메인 인텐트에서 uuid가져오기
-
-    Intent mainIntent=getIntent();
-
-
-    //내정보
-    String key;
-    //String[] MyInfo=new String[6];
     Map<String,String> MyInfo = new HashMap<String,String>();
 
     AIRequest aiRequest;
@@ -91,6 +79,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     private String top;
     private String bottom;
     private String foot;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,12 +104,50 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         bottom = getPreferences("bottom");
         foot = getPreferences("foot");
 
-       // Log.d("받아온 사용자 정보",uuid+","+name+","+gender+","+height+","+top+","+bottom+","+foot);
-
         //set ListView adapter first
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
         listView.setAdapter(adapter);
-        ChatMessage chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
+        ChatMessage chatMessage;
+
+        Log.d("받아온 사용자 정보",uuid+","+name+","+gender+","+height+","+top+","+bottom+","+foot);
+        if(name==""){
+           // Log.d("야","이름입력");
+            chatMessage = new ChatMessage("이름입력", true);
+            chatMessages.add(chatMessage);
+            adapter.notifyDataSetChanged();
+        }
+        if(gender==""){
+           // Log.d("야","성별");
+            chatMessage = new ChatMessage("성별", true);
+            chatMessages.add(chatMessage);
+            adapter.notifyDataSetChanged();
+        }
+        if(height==""){
+          //  Log.d("야","키");
+            chatMessage = new ChatMessage("키", true);
+            chatMessages.add(chatMessage);
+            adapter.notifyDataSetChanged();
+        }
+        if(top==""){
+           // Log.d("야","상의");
+            chatMessage = new ChatMessage("상의", true);
+            chatMessages.add(chatMessage);
+            adapter.notifyDataSetChanged();
+        }
+        if(bottom==""){
+           // Log.d("야","하의");
+            chatMessage = new ChatMessage("하의", true);
+            chatMessages.add(chatMessage);
+            adapter.notifyDataSetChanged();
+        }
+        if(foot==""){
+          //  Log.d("야","발사이즈입력");
+            chatMessage = new ChatMessage("발사이즈", true);
+            chatMessages.add(chatMessage);
+            adapter.notifyDataSetChanged();
+        }
+
+        chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
                 "1. 상품검색\n" +
                 "2. 사용자 정보 수정\n" +
                 "3. 관심상품보기", true);
