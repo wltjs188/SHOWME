@@ -87,8 +87,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         getSupportActionBar().setTitle("쇼움이");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기버튼
 
-
-
         int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
         if (permission != PackageManager.PERMISSION_GRANTED) { makeRequest(); }
 
@@ -113,11 +111,11 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         if(name==""){
            // Log.d("야",chatMessages.size()+"");
             if(chatMessages.size()==0){
-                chatMessage = new ChatMessage("이름을 입력해주세요.", true);
+                chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
                 chatMessages.add(chatMessage);
                 adapter.notifyDataSetChanged();
             }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-                chatMessage = new ChatMessage("이름을 입력해주세요.", true);
+                chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
                 chatMessages.add(chatMessage);
                 adapter.notifyDataSetChanged();
             }
@@ -223,12 +221,12 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
                MyInfo.put(entry.getKey(),""+entry.getValue());
             }
-            String name=(MyInfo.get("Name_Info")).replaceAll("\"","");
+            String name=(MyInfo.get("name")).replaceAll("\"","");
             String gender=(MyInfo.get("Gender_Info")).replaceAll("\"","");
-            String height=(MyInfo.get("Height_Info")).replaceAll("\"","");
-            String top=(MyInfo.get("Top_Info")).replaceAll("\"","");
-            String bottom=(MyInfo.get("Bottom_Info")).replaceAll("\"","");
-            String shoes=(MyInfo.get("Shoes_Info")).replaceAll("\"","");
+            String height=(MyInfo.get("height")).replaceAll("\"","");
+            String top=(MyInfo.get("top")).replaceAll("\"","");
+            String bottom=(MyInfo.get("bottom")).replaceAll("\"","");
+            String shoes=(MyInfo.get("shoes")).replaceAll("\"","");
 
             //사용자 정보 DB에 넣기
             InsertData task = new InsertData();

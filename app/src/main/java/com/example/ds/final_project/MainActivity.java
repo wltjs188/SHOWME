@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
     }
     public void onResume(){
         super.onResume();
-        Log.e("다시시작","다시시작");
         savePreferences("uuid",uuid);
         //서버연결
         GetData task = new GetData();
