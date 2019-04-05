@@ -111,48 +111,91 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
         Log.d("받아온 사용자 정보",uuid+","+name+","+gender+","+height+","+top+","+bottom+","+foot);
         if(name==""){
-           // Log.d("야","이름입력");
-            chatMessage = new ChatMessage("이름입력", true);
-            chatMessages.add(chatMessage);
-            adapter.notifyDataSetChanged();
+           // Log.d("야",chatMessages.size()+"");
+            if(chatMessages.size()==0){
+                chatMessage = new ChatMessage("이름을 입력해주세요", true);
+                chatMessages.add(chatMessage);
+                adapter.notifyDataSetChanged();
+            }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
+                chatMessage = new ChatMessage("이름을 입력해주세요", true);
+                chatMessages.add(chatMessage);
+                adapter.notifyDataSetChanged();
+            }
         }
-        if(gender==""){
+        else if(gender==""){
            // Log.d("야","성별");
-            chatMessage = new ChatMessage("성별", true);
-            chatMessages.add(chatMessage);
-            adapter.notifyDataSetChanged();
-        }
-        if(height==""){
-          //  Log.d("야","키");
-            chatMessage = new ChatMessage("키", true);
-            chatMessages.add(chatMessage);
-            adapter.notifyDataSetChanged();
-        }
-        if(top==""){
-           // Log.d("야","상의");
-            chatMessage = new ChatMessage("상의", true);
-            chatMessages.add(chatMessage);
-            adapter.notifyDataSetChanged();
-        }
-        if(bottom==""){
-           // Log.d("야","하의");
-            chatMessage = new ChatMessage("하의", true);
-            chatMessages.add(chatMessage);
-            adapter.notifyDataSetChanged();
-        }
-        if(foot==""){
-          //  Log.d("야","발사이즈입력");
-            chatMessage = new ChatMessage("발사이즈", true);
-            chatMessages.add(chatMessage);
-            adapter.notifyDataSetChanged();
-        }
+            if(chatMessages.size()==0){
+                chatMessage = new ChatMessage("성별을 입력해주세요", true);
+                chatMessages.add(chatMessage);
+                adapter.notifyDataSetChanged();
+            }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
+                chatMessage = new ChatMessage("성별을 입력해주세요", true);
+                chatMessages.add(chatMessage);
+                adapter.notifyDataSetChanged();
+            }
 
-        chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
-                "1. 상품검색\n" +
-                "2. 사용자 정보 수정\n" +
-                "3. 관심상품보기", true);
-        chatMessages.add(chatMessage);
-        adapter.notifyDataSetChanged();
+        }
+        else if(height==""){
+          //  Log.d("야","키");
+            if(chatMessages.size()==0){
+                chatMessage = new ChatMessage("키를 입력해주세요", true);
+                chatMessages.add(chatMessage);
+                adapter.notifyDataSetChanged();
+            }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
+                chatMessage = new ChatMessage("키를 입력해주세요", true);
+                chatMessages.add(chatMessage);
+                adapter.notifyDataSetChanged();
+            }
+
+        }
+        else if(top==""){
+            if(chatMessages.size()==0){
+                chatMessage = new ChatMessage("상의 사이즈를 입력해주세요", true);
+                chatMessages.add(chatMessage);
+                adapter.notifyDataSetChanged();
+            }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
+                chatMessage = new ChatMessage("상의 사이즈를 입력해주세요", true);
+                chatMessages.add(chatMessage);
+                adapter.notifyDataSetChanged();
+            }
+        }
+        else if(bottom==""){
+            if(chatMessages.size()==0){
+                chatMessage = new ChatMessage("하의 사이즈를 입력해주세요", true);
+                chatMessages.add(chatMessage);
+                adapter.notifyDataSetChanged();
+            }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
+                chatMessage = new ChatMessage("하의 사이즈를 입력해주세요", true);
+                chatMessages.add(chatMessage);
+                adapter.notifyDataSetChanged();
+            }
+        }
+        else if(foot==""){
+            if(chatMessages.size()==0){
+                chatMessage = new ChatMessage("신발 사이즈를 입력해주세요", true);
+                chatMessages.add(chatMessage);
+                adapter.notifyDataSetChanged();
+            }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
+                chatMessage = new ChatMessage("신발 사이즈를 입력해주세요", true);
+                chatMessages.add(chatMessage);
+                adapter.notifyDataSetChanged();
+            }
+        }
+        if(chatMessages.size()==0){
+            chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
+                    "1. 상품검색\n" +
+                    "2. 사용자 정보 수정\n" +
+                    "3. 관심상품보기", true);
+            chatMessages.add(chatMessage);
+            adapter.notifyDataSetChanged();
+        }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
+            chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
+                    "1. 상품검색\n" +
+                    "2. 사용자 정보 수정\n" +
+                    "3. 관심상품보기", true);
+            chatMessages.add(chatMessage);
+            adapter.notifyDataSetChanged();
+        }
 
         //dialogflow
         final AIConfiguration config = new AIConfiguration("b8dda671eb584e3586aba41efdd554cf",
