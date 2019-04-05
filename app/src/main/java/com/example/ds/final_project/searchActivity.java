@@ -4,6 +4,7 @@ package com.example.ds.final_project;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -63,6 +64,11 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String answer;
     String speech;
 
+    //메인 인텐트에서 uuid가져오기
+
+    Intent mainIntent=getIntent();
+
+
     //내정보
     String key;
     //String[] MyInfo=new String[6];
@@ -96,7 +102,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         btnSend = findViewById(R.id.btn_chat_send);
         editText = (EditText) findViewById(R.id.msg_type);
         uuid = getPreferences();
-     //  Log.d("uuid2",uuid);
+        Log.d("uuid2",uuid);
 
         //set ListView adapter first
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
@@ -199,13 +205,18 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         if (result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6) {
             for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
                MyInfo.put(entry.getKey(),""+entry.getValue());
-
             }
+            String name=(MyInfo.get("Name_Info")).replaceAll("\"","");
+            String gender=(MyInfo.get("Gender_Info")).replaceAll("\"","");
+            String height=(MyInfo.get("Height_Info")).replaceAll("\"","");
+            String top=(MyInfo.get("Top_Info")).replaceAll("\"","");
+            String bottom=(MyInfo.get("Bottom_Info")).replaceAll("\"","");
+            String shoes=(MyInfo.get("Shoes_Info")).replaceAll("\"","");
+
             //사용자 정보 DB에 넣기
             InsertData task = new InsertData();
-            task.execute("http://" + IP_ADDRESS + "/insert.php",MyInfo.get("Name_Info"),MyInfo.get("Gender_Info"),MyInfo.get("Height_Info"),
-                    MyInfo.get("Top_Info"),MyInfo.get("Bottom_Info"),MyInfo.get("Shoes_Info"));
-            Log.e("abc",MyInfo.get("Name_Info"));
+            task.execute("http://" + IP_ADDRESS + "/insert.php",uuid,name,gender,height,top,bottom,shoes);
+
 
         }
 
@@ -276,16 +287,17 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         @Override
         protected String doInBackground(String... params) {
 
-            String name = (String)params[1];
-            String gender = (String)params[2];
-            String height = (String)params[3];
-            String top = (String)params[4];
-            String bottom = (String)params[5];
-            String foot = (String)params[6];
+            String uuid = (String)params[1];
+            String name = (String)params[2];
+            String gender = (String)params[3];
+            String height = (String)params[4];
+            String top = (String)params[5];
+            String bottom = (String)params[6];
+            String foot = (String)params[7];
 
 
             String serverURL = (String)params[0];
-            String postParameters = "name=" + name + "&gender=" + gender+ "&height=" + height+ "&top=" + top+ "&bottom=" + bottom+ "&foot=" + foot;
+            String postParameters = "uuid=" + uuid + "&name=" + name + "&gender=" + gender+ "&height=" + height+ "&top=" + top+ "&bottom=" + bottom+ "&foot=" + foot;
 
 
             try {
