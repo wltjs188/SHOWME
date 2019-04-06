@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
             progressDialog.dismiss();
            // mTextViewResult.setText(result);
-            Log.d("response - " , result);
+//            Log.d("response - " , result);
 
             if (result == null){
                 //mTextViewResult.setText(errorString);
@@ -161,11 +161,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         try {
-            Log.d("어디","");
             JSONObject jsonObject = new JSONObject(mJsonString);
-            Log.d("어디1","");
             JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
-            Log.d("어디2","");
             for(int i=0;i<jsonArray.length();i++){
 
                 JSONObject item = jsonArray.getJSONObject(i);

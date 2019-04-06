@@ -79,7 +79,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     private String top;
     private String bottom;
     private String foot;
-
+    Intent wishIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +92,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
         if (permission != PackageManager.PERMISSION_GRANTED) { makeRequest(); }
 
+        wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
         chatMessages = new ArrayList<>();
         listView = (ListView) findViewById(R.id.list_msg);
         btnSend = findViewById(R.id.btn_chat_send);
@@ -308,7 +309,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         chatMessage = new ChatMessage(speech, isMine);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
-
+        if(speech.toString().equals("관심상품 보기 로 이동합니다.")){
+            startActivity(wishIntent);
+        }
     }
     @Override
     public void onError(AIError error) { }
