@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         savePreferences("uuid",uuid);
         //서버연결
         GetData task = new GetData();
-        task.execute( "http://" + IP_ADDRESS + "/getjson.php", "");
+        task.execute( "http://" + IP_ADDRESS + "/get_uuid.php",uuid);
 
     }
     public void onResume(){
@@ -69,29 +69,27 @@ public class MainActivity extends AppCompatActivity {
         savePreferences("uuid",uuid);
         //서버연결
         GetData task = new GetData();
-        task.execute( "http://" + IP_ADDRESS + "/getjson.php", "");
+        task.execute( "http://" + IP_ADDRESS + "/get_uuid.php",uuid);
     }
 
-    private class GetData extends AsyncTask<String, Void, String> {
+    private class GetData extends AsyncTask<String, Void, String>{
 
         ProgressDialog progressDialog;
+        String errorString = null;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
             progressDialog = ProgressDialog.show(MainActivity.this,
                     "Please Wait", null, true, true);
         }
+
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-
             progressDialog.dismiss();
-           // mTextViewResult.setText(result);
-            Log.d("response - " , result);
 
             if (result == null){
-                //mTextViewResult.setText(errorString);
             }
             else {
                 mJsonString = result;
@@ -99,13 +97,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
         @Override
         protected String doInBackground(String... params) {
-
             String serverURL = params[0];
-            String postParameters = params[1];
-
+            String postParameters = "uuid=" + params[1];
 
             try {
 
@@ -127,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
 
 
                 int responseStatusCode = httpURLConnection.getResponseCode();
-                Log.d("response code - " ,responseStatusCode+"");
 
                 InputStream inputStream;
                 if(responseStatusCode == HttpURLConnection.HTTP_OK) {
@@ -147,11 +141,14 @@ public class MainActivity extends AppCompatActivity {
                 while((line = bufferedReader.readLine()) != null){
                     sb.append(line);
                 }
+
                 bufferedReader.close();
+
                 return sb.toString().trim();
 
+
             } catch (Exception e) {
-               // Log.d( "GetData : Error ", e.getMessage());
+                errorString = e.toString();
                 return null;
             }
 
@@ -171,15 +168,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         try {
-            Log.d("어디","");
             JSONObject jsonObject = new JSONObject(mJsonString);
-            Log.d("어디1","");
             JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
-            Log.d("어디2","");
+
             for(int i=0;i<jsonArray.length();i++){
-
                 JSONObject item = jsonArray.getJSONObject(i);
-
                 String uuid = item.getString(TAG_ID);
                 Log.d("가져온 uuid",uuid);
                 Log.d("리얼 uuid",this.uuid);

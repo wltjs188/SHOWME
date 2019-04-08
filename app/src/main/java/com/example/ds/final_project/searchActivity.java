@@ -60,7 +60,10 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String query;
     String action;
     String speech;
+    //사용자정보 해쉬맵
     Map<String,String> MyInfo = new HashMap<String,String>();
+    //사용자정보수정 해쉬맵
+    Map<String,String> MyInfoModi = new HashMap<String,String>();
 
     AIRequest aiRequest;
     AIDataService aiDataService;
@@ -71,6 +74,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     boolean isMine;
     private List<ChatMessage> chatMessages;
     private ArrayAdapter<ChatMessage> adapter;
+
     //사용자 정보
     private String uuid;
     private String name;
@@ -79,6 +83,10 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     private String top;
     private String bottom;
     private String foot;
+    //챗봇 액션
+    String ACTION="";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +114,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
         listView.setAdapter(adapter);
         ChatMessage chatMessage;
+
+
 
         Log.d("받아온 사용자 정보",uuid+","+name+","+gender+","+height+","+top+","+bottom+","+foot);
         if(name==""){
@@ -202,6 +212,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 final AIResponse response = aiDataService.request(aiRequest);
                 return response;
             } catch (AIServiceException e) {
+                Log.e("에러",e.getMessage());
             }
             return null;
         }
@@ -216,10 +227,11 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     public void onResult(AIResponse response) {
         final Result result = response.getResult();
         String parameterString = "";
+        ACTION=result.getAction();
         int i=0;
         if (result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6) {
             for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-               MyInfo.put(entry.getKey(),""+entry.getValue());
+                MyInfo.put(entry.getKey(),""+entry.getValue());
             }
             String name=(MyInfo.get("name")).replaceAll("\"","");
             String gender=(MyInfo.get("Gender_Info")).replaceAll("\"","");
@@ -231,8 +243,53 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             //사용자 정보 DB에 넣기
             InsertData task = new InsertData();
             task.execute("http://" + IP_ADDRESS + "/insert.php",uuid,name,gender,height,top,bottom,shoes);
+        }
+        UpdateData task = new UpdateData();
+
+        //사용자 정보 수정
+        switch (ACTION) {
+            case "name_modi":
+                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"name",(""+entry.getValue()).replaceAll("\"",""));
+                }
+                break;
+            case "gender_modi":
+                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"gender",(""+entry.getValue()).replaceAll("\"",""));
+                }
+                break;
+            case "height_modi":
+                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+                    MyInfoModi.put(entry.getKey(),""+entry.getValue());
+                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"height",(""+entry.getValue()).replaceAll("\"",""));
+                }
+                break;
+            case "top_modi":
+                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"top",(""+entry.getValue()).replaceAll("\"",""));
+                }
+                break;
+            case "bottom_modi":
+                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"bottom",(""+entry.getValue()).replaceAll("\"",""));
+                }
+                break;
+            case "shoes_modi":
+                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"foot",(""+entry.getValue()).replaceAll("\"",""));
+                }
+                break;
+            default:
+                break;
 
         }
+
 
         speech = result.getFulfillment().getSpeech();
         query=result.getResolvedQuery();
@@ -276,7 +333,78 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         }
         return super.onOptionsItemSelected(item);
     }
+    //사용자 정보 수정 서버
+    class UpdateData extends AsyncTask<String, Void, String>{
+        ProgressDialog progressDialog;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(searchActivity.this,
+                    "Please Wait", null, true, true);
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            progressDialog.dismiss();
+            Log.d(TAG, "aaaaaaaaaaaa" + result);
+        }
+        @Override
+        protected String doInBackground(String... params) {
+
+            String uuid = (String)params[1];
+            String infoName = (String)params[2];
+            String value = (String)params[3];
+
+
+
+            String serverURL = (String)params[0];
+            String postParameters = "uuid=" + uuid + "&infoName=" + infoName + "&value=" + value;
+
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                Log.d(TAG, "POST response code - " + responseStatusCode);
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+                bufferedReader.close();
+                return sb.toString();
+            } catch (Exception e) {
+                Log.d(TAG, "UpdateData: Error ", e);
+                Log.d("에러",e.getMessage());
+                return new String("Error: " + e.getMessage());
+            }
+        }
+    }
     //서버 입력 클래스
     class InsertData extends AsyncTask<String, Void, String>{
         ProgressDialog progressDialog;
