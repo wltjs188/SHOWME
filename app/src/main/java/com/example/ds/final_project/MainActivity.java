@@ -29,6 +29,8 @@ import java.net.URL;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static Context CONTEXT;
     //메인화면
     Intent searchIntent,wishIntent,infoIntent,webIntent; //쇼핑시작,나의관심상품,정보수정
     //서버
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle("쇼움이");
+        CONTEXT=this;
         searchIntent=new Intent(getApplicationContext(),searchActivity.class);//쇼핑시작
         wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
         infoIntent=new Intent(getApplicationContext(),MyInfoActivity.class);//나의정보수정
@@ -58,29 +61,35 @@ public class MainActivity extends AppCompatActivity {
         savePreferences("uuid",uuid);
         //서버연결
         GetData task = new GetData();
-        task.execute( "http://" + IP_ADDRESS + "/getjson.php", "");
+        task.execute( "http://" + IP_ADDRESS + "/get_uuid.php",uuid);
 
     }
-    private class GetData extends AsyncTask<String, Void, String> {
+    public void onResume(){
+        super.onResume();
+        savePreferences("uuid",uuid);
+        //서버연결
+        GetData task = new GetData();
+        task.execute( "http://" + IP_ADDRESS + "/get_uuid.php",uuid);
+    }
+
+    private class GetData extends AsyncTask<String, Void, String>{
 
         ProgressDialog progressDialog;
+        String errorString = null;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
             progressDialog = ProgressDialog.show(MainActivity.this,
                     "Please Wait", null, true, true);
         }
+
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-
             progressDialog.dismiss();
-           // mTextViewResult.setText(result);
-//            Log.d("response - " , result);
 
             if (result == null){
-                //mTextViewResult.setText(errorString);
             }
             else {
                 mJsonString = result;
@@ -88,13 +97,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
         @Override
         protected String doInBackground(String... params) {
-
             String serverURL = params[0];
-            String postParameters = params[1];
-
+            String postParameters = "uuid=" + params[1];
 
             try {
 
@@ -116,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
 
 
                 int responseStatusCode = httpURLConnection.getResponseCode();
-                Log.d("response code - " ,responseStatusCode+"");
 
                 InputStream inputStream;
                 if(responseStatusCode == HttpURLConnection.HTTP_OK) {
@@ -136,11 +141,14 @@ public class MainActivity extends AppCompatActivity {
                 while((line = bufferedReader.readLine()) != null){
                     sb.append(line);
                 }
+
                 bufferedReader.close();
+
                 return sb.toString().trim();
 
+
             } catch (Exception e) {
-               // Log.d( "GetData : Error ", e.getMessage());
+                errorString = e.toString();
                 return null;
             }
 
@@ -159,14 +167,12 @@ public class MainActivity extends AppCompatActivity {
         String TAG_FOOT ="foot";
 
 
-
         try {
             JSONObject jsonObject = new JSONObject(mJsonString);
             JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
+
             for(int i=0;i<jsonArray.length();i++){
-
                 JSONObject item = jsonArray.getJSONObject(i);
-
                 String uuid = item.getString(TAG_ID);
                 Log.d("가져온 uuid",uuid);
                 Log.d("리얼 uuid",this.uuid);

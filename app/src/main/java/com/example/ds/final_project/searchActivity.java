@@ -60,7 +60,10 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String query;
     String action;
     String speech;
+    //사용자정보 해쉬맵
     Map<String,String> MyInfo = new HashMap<String,String>();
+    //사용자정보수정 해쉬맵
+    Map<String,String> MyInfoModi = new HashMap<String,String>();
 
     AIRequest aiRequest;
     AIDataService aiDataService;
@@ -71,6 +74,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     boolean isMine;
     private List<ChatMessage> chatMessages;
     private ArrayAdapter<ChatMessage> adapter;
+
     //사용자 정보
     private String uuid;
     private String name;
@@ -79,7 +83,11 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     private String top;
     private String bottom;
     private String foot;
-    Intent wishIntent;
+    //챗봇 액션
+    String ACTION="";
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,12 +95,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         getSupportActionBar().setTitle("쇼움이");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기버튼
 
-
-
         int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
         if (permission != PackageManager.PERMISSION_GRANTED) { makeRequest(); }
 
-        wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
         chatMessages = new ArrayList<>();
         listView = (ListView) findViewById(R.id.list_msg);
         btnSend = findViewById(R.id.btn_chat_send);
@@ -110,78 +115,22 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         listView.setAdapter(adapter);
         ChatMessage chatMessage;
 
+
+
         Log.d("받아온 사용자 정보",uuid+","+name+","+gender+","+height+","+top+","+bottom+","+foot);
         if(name==""){
            // Log.d("야",chatMessages.size()+"");
             if(chatMessages.size()==0){
-                chatMessage = new ChatMessage("이름을 입력해주세요", true);
+                chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
                 chatMessages.add(chatMessage);
                 adapter.notifyDataSetChanged();
             }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-                chatMessage = new ChatMessage("이름을 입력해주세요", true);
+                chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
                 chatMessages.add(chatMessage);
                 adapter.notifyDataSetChanged();
             }
         }
-        else if(gender==""){
-           // Log.d("야","성별");
-            if(chatMessages.size()==0){
-                chatMessage = new ChatMessage("성별을 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-                chatMessage = new ChatMessage("성별을 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }
 
-        }
-        else if(height==""){
-          //  Log.d("야","키");
-            if(chatMessages.size()==0){
-                chatMessage = new ChatMessage("키를 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-                chatMessage = new ChatMessage("키를 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }
-
-        }
-        else if(top==""){
-            if(chatMessages.size()==0){
-                chatMessage = new ChatMessage("상의 사이즈를 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-                chatMessage = new ChatMessage("상의 사이즈를 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }
-        }
-        else if(bottom==""){
-            if(chatMessages.size()==0){
-                chatMessage = new ChatMessage("하의 사이즈를 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-                chatMessage = new ChatMessage("하의 사이즈를 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }
-        }
-        else if(foot==""){
-            if(chatMessages.size()==0){
-                chatMessage = new ChatMessage("신발 사이즈를 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-                chatMessage = new ChatMessage("신발 사이즈를 입력해주세요", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }
-        }
         if(chatMessages.size()==0){
             chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
                     "1. 상품검색\n" +
@@ -263,6 +212,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 final AIResponse response = aiDataService.request(aiRequest);
                 return response;
             } catch (AIServiceException e) {
+                Log.e("에러",e.getMessage());
             }
             return null;
         }
@@ -277,24 +227,69 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     public void onResult(AIResponse response) {
         final Result result = response.getResult();
         String parameterString = "";
+        ACTION=result.getAction();
         int i=0;
         if (result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6) {
             for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-               MyInfo.put(entry.getKey(),""+entry.getValue());
+                MyInfo.put(entry.getKey(),""+entry.getValue());
             }
-            String name=(MyInfo.get("Name_Info")).replaceAll("\"","");
+            String name=(MyInfo.get("name")).replaceAll("\"","");
             String gender=(MyInfo.get("Gender_Info")).replaceAll("\"","");
-            String height=(MyInfo.get("Height_Info")).replaceAll("\"","");
-            String top=(MyInfo.get("Top_Info")).replaceAll("\"","");
-            String bottom=(MyInfo.get("Bottom_Info")).replaceAll("\"","");
-            String shoes=(MyInfo.get("Shoes_Info")).replaceAll("\"","");
+            String height=(MyInfo.get("height")).replaceAll("\"","");
+            String top=(MyInfo.get("top")).replaceAll("\"","");
+            String bottom=(MyInfo.get("bottom")).replaceAll("\"","");
+            String shoes=(MyInfo.get("shoes")).replaceAll("\"","");
 
             //사용자 정보 DB에 넣기
             InsertData task = new InsertData();
             task.execute("http://" + IP_ADDRESS + "/insert.php",uuid,name,gender,height,top,bottom,shoes);
+        }
+        UpdateData task = new UpdateData();
 
+        //사용자 정보 수정
+        switch (ACTION) {
+            case "name_modi":
+                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"name",(""+entry.getValue()).replaceAll("\"",""));
+                }
+                break;
+            case "gender_modi":
+                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"gender",(""+entry.getValue()).replaceAll("\"",""));
+                }
+                break;
+            case "height_modi":
+                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+                    MyInfoModi.put(entry.getKey(),""+entry.getValue());
+                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"height",(""+entry.getValue()).replaceAll("\"",""));
+                }
+                break;
+            case "top_modi":
+                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"top",(""+entry.getValue()).replaceAll("\"",""));
+                }
+                break;
+            case "bottom_modi":
+                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"bottom",(""+entry.getValue()).replaceAll("\"",""));
+                }
+                break;
+            case "shoes_modi":
+                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"foot",(""+entry.getValue()).replaceAll("\"",""));
+                }
+                break;
+            default:
+                break;
 
         }
+
 
         speech = result.getFulfillment().getSpeech();
         query=result.getResolvedQuery();
@@ -309,9 +304,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         chatMessage = new ChatMessage(speech, isMine);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
-        if(speech.toString().equals("관심상품 보기 로 이동합니다.")){
-            startActivity(wishIntent);
-        }
+
     }
     @Override
     public void onError(AIError error) { }
@@ -333,13 +326,85 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
         switch (item.getItemId()){
             case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
+                ((MainActivity)MainActivity.CONTEXT).onResume();
                 finish();
                 return true;
             }
         }
         return super.onOptionsItemSelected(item);
     }
+    //사용자 정보 수정 서버
+    class UpdateData extends AsyncTask<String, Void, String>{
+        ProgressDialog progressDialog;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(searchActivity.this,
+                    "Please Wait", null, true, true);
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            progressDialog.dismiss();
+            Log.d(TAG, "aaaaaaaaaaaa" + result);
+        }
+        @Override
+        protected String doInBackground(String... params) {
+
+            String uuid = (String)params[1];
+            String infoName = (String)params[2];
+            String value = (String)params[3];
+
+
+
+            String serverURL = (String)params[0];
+            String postParameters = "uuid=" + uuid + "&infoName=" + infoName + "&value=" + value;
+
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                Log.d(TAG, "POST response code - " + responseStatusCode);
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+                bufferedReader.close();
+                return sb.toString();
+            } catch (Exception e) {
+                Log.d(TAG, "UpdateData: Error ", e);
+                Log.d("에러",e.getMessage());
+                return new String("Error: " + e.getMessage());
+            }
+        }
+    }
     //서버 입력 클래스
     class InsertData extends AsyncTask<String, Void, String>{
         ProgressDialog progressDialog;
