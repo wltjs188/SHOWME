@@ -75,7 +75,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     private View btnSend;
     private EditText editText;
     boolean isMine;
-    private List<ChatMessage> chatMessages;
+    static private List<ChatMessage> chatMessages = new ArrayList<>();
     private ArrayAdapter<ChatMessage> adapter;
 
     //사용자 정보
@@ -110,7 +110,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         shopIntent=new Intent(getApplicationContext(),ShopActivity.class);
 
 
-        chatMessages = new ArrayList<>();
+
         listView = (ListView) findViewById(R.id.list_msg);
         btnSend = findViewById(R.id.btn_chat_send);
         editText = (EditText) findViewById(R.id.msg_type);
