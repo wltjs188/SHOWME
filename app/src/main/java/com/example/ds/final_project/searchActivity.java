@@ -83,7 +83,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         //chatMessages.add(chatMessage);
 
         //dialogflow
-        final AIConfiguration config = new AIConfiguration("c8675821bede492ea0f662d262675d29",
+        final AIConfiguration config = new AIConfiguration("b8dda671eb584e3586aba41efdd554cf",
                 AIConfiguration.SupportedLanguages.Korean,
                 AIConfiguration.RecognitionEngine.System);
 
