@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static Context CONTEXT;
     //메인화면
-    Intent searchIntent,wishIntent,infoIntent,webIntent; //쇼핑시작,나의관심상품,정보수정
+    Intent searchIntent,wishIntent,infoIntent,webIntent,shopIntent; //쇼핑시작,나의관심상품,정보수정
     //서버
     String IP_ADDRESS = "35.243.72.245";
     private String mJsonString;
@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
         wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
         infoIntent=new Intent(getApplicationContext(),MyInfoActivity.class);//나의정보수정
         webIntent=new Intent(getApplicationContext(),WebActivity.class);//나의정보수정
+        shopIntent=new Intent(getApplicationContext(),ShopActivity.class);//나의정보수정
+
         int permission2 = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
         if (permission2 != PackageManager.PERMISSION_GRANTED) { makeRequest(); }
 
@@ -238,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void onWebClicked(View view) { startActivity(webIntent); }
+    public void onShopClicked(View view) { startActivity(shopIntent); }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_PHONE_STATE},

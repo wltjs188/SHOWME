@@ -54,6 +54,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     //서버
     String IP_ADDRESS = "35.243.72.245";
     String TAG = "phptest";
+    //키워드
+    String keyword="";
+    String sub;
 
     //상품검색
     AIService aiService;
@@ -84,7 +87,10 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     private String bottom;
     private String foot;
 
-    Intent wishIntent;
+    //
+    String clothes[]={"Outer","Dress","Pants","Shoes","Skirt","Swimsuit","Top","Uderwear"};
+
+    Intent wishIntent,shopIntent;
     //챗봇 액션
     String ACTION="";
 
@@ -101,6 +107,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         if (permission != PackageManager.PERMISSION_GRANTED) { makeRequest(); }
 
         wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
+        shopIntent=new Intent(getApplicationContext(),ShopActivity.class);
+
 
         chatMessages = new ArrayList<>();
         listView = (ListView) findViewById(R.id.list_msg);
@@ -233,7 +241,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         String parameterString = "";
         ACTION=result.getAction();
         int i=0;
-        if (result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6) {
+        if (result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6&&ACTION=="user") {
             for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
                 MyInfo.put(entry.getKey(),""+entry.getValue());
             }
@@ -250,7 +258,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         }
         UpdateData task = new UpdateData();
 
-        //사용자 정보 수정
+        //액션
         switch (ACTION) {
             case "name_modi":
                 for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
@@ -289,6 +297,27 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"foot",(""+entry.getValue()).replaceAll("\"",""));
                 }
                 break;
+            case "search" :
+                if(result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6) {
+                    for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+//                    Log.d("겟값","key"+entry.getKey()+"value:"+entry.getValue());
+                        String key=entry.getKey();
+                        boolean inKey=false;
+                        for(int j=0;i<clothes.length;i++){
+                            inKey=inKey||(key.equals(clothes[j]));
+                        }
+                        if ((sub = "" + entry.getValue()) != null && inKey || key == "Color") {
+                            keyword += sub;
+                            Log.i("키워드", keyword);
+                        }
+                    }
+
+                    keyword.replaceAll("\"", "");
+                    shopIntent.putExtra("keyword", keyword);
+                    startActivity(shopIntent);
+                }
+                break;
+
             default:
                 break;
 

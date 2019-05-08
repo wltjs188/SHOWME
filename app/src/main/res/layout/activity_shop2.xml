@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ShopActivity"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:hint="검색어"
+            android:id="@+id/main_keyword_edt"
+            android:layout_toLeftOf="@+id/main_search_btn"
+            />
+
+        <Button
+            android:id="@+id/main_search_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="검색" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/main_listView"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"></ListView>
+
+    <Button
+        android:id="@+id/main_more_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="4개더보기"
+        android:layout_gravity="center"
+        />
+
+</LinearLayout>

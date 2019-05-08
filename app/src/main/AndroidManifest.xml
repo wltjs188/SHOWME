@@ -20,14 +20,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".SearchActivity"
-            android:label="@string/title_activity_search"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <!--<activity-->
+            <!--android:name=".searchActivity"-->
+            <!--android:label="@string/title_activity_search"-->
+            <!--android:theme="@style/AppTheme.NoActionBar" />-->
+        <activity android:name=".searchActivity" />
         <activity android:name=".MyInfoActivity" />
         <activity android:name=".WishListActivity" />
         <activity android:name=".ItemInfoActivity" />
-        <activity android:name=".searchActivity" />
+        <activity android:name=".ShopActivity" />
         <activity android:name=".WebActivity"></activity>
     </application>
 
