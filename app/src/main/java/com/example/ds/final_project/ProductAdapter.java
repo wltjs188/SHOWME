@@ -105,6 +105,10 @@ public class ProductAdapter extends ArrayAdapter<Product> {
 
     }
 
+//    public View getImg(int position, ImageView view){
+//
+//    }
+
     class ImageDownLoader extends AsyncTask<String, Void, Bitmap>
     {
         ImageView imageView;
