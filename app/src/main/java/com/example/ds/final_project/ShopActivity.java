@@ -7,8 +7,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -20,29 +22,33 @@ public class ShopActivity extends AppCompatActivity {
     private Button searchBtn;
     private Button moreBtn;
     private List<Product> productList;
-    private ListView listView;
+    private GridView GridView;
     private ProductAdapter adapter;
     ProductSearchService service;
     String keyword;
+    Intent productInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop2);
+        productInfo = new Intent(getApplicationContext(),ProductInfo.class);
         keywordEdt = (EditText)findViewById(R.id.main_keyword_edt);
         searchBtn = (Button) findViewById(R.id.main_search_btn);
         moreBtn = (Button) findViewById(R.id.main_more_btn);
         productList = new ArrayList<Product>();
         adapter = new ProductAdapter(this, R.layout.list_product_item, productList);
-        listView = (ListView) findViewById(R.id.main_listView);
-        listView.setAdapter(adapter);
+        GridView = (GridView) findViewById(R.id.main_GridView);
+        GridView.setAdapter(adapter);
         Intent intent=getIntent();
-        keyword=intent.getStringExtra("keyword");
+        //keyword=intent.getStringExtra("원피스");
+        keyword="원피스";
         keywordEdt.setText(keyword);
         service = new ProductSearchService(keyword);
         ProductSearchThread thread = new ProductSearchThread(service, handler);
         Toast.makeText(getApplicationContext(), "검색을 시작합니다.", Toast.LENGTH_LONG).show();
         thread.start();
+
 // 상품검색
         searchBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -57,6 +63,17 @@ public class ShopActivity extends AppCompatActivity {
                 thread.start();
             }
         });
+
+        //클릭시, 상세정보 페이지로 이동
+        GridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+                //int img=adapter.getImg(position);
+                //productInfo.putExtra("img",img);
+                startActivity(productInfo);
+            }
+        });
+
         //더보기
         moreBtn.setOnClickListener(new View.OnClickListener() {
 

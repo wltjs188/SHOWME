@@ -11,6 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         >
         <EditText
             android:layout_width="match_parent"
@@ -30,10 +31,11 @@
 
     </RelativeLayout>
 
-    <ListView
-        android:id="@+id/main_listView"
+    <GridView
+        android:id="@+id/main_GridView"
         android:layout_width="match_parent"
-        android:layout_height="400dp"></ListView>
+        android:layout_height="650dp"
+        android:numColumns="2"></GridView>
 
     <Button
         android:id="@+id/main_more_btn"
