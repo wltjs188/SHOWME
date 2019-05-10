@@ -85,6 +85,7 @@ public class ShopActivity extends AppCompatActivity {
                 Log.d("정보",adapter.getInfo(position));
                 productInfoIntent.putExtra("info", adapter.getInfo(position));
                 productInfoIntent.putExtra("url", adapter.getUrl(position));
+                productInfoIntent.putExtra("image", adapter.getImage(position));
                 startActivity(productInfoIntent);
             }
         });

@@ -16,6 +16,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +28,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
     private int resource;
     private List<Product> productList;
     private ImageLoader imageLoader;
+    ArrayList<String> images;
     public ProductAdapter(Context context, int resource, List<Product> productList) {
         super(context, resource,productList);
         // TODO Auto-generated constructor stub
@@ -94,20 +96,8 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         }
         else { //검색결과 있을때
             holder.product_Info.setText(p.toString());
-           // holder.productName.setText(p.getProductName());
-            //holder.productPrice.setText("대표가격: " + p.getProductPrice());
-           // holder.optionTitle.setText("옵션이름: " + p.getOptionTitle());
-           // holder.optionValue.setText("상품명: " + p.getOptionValueList().get(0));
-          //  holder.optionPrice.setText("가격: " + p.getOptionPriceList().get(0));
             new ImageDownLoader(holder.imageView).execute(p.getProductImage());
-//            String str1 = p.getOptionTitle();
-//            String[] words = str1.split(",");
-//            String str2 =  p.getOptionValueList().get(0)+"";
-//            String[] words2 = str2.split(",");
-//            String result ="\n가격 : "+ p.getOptionPriceList().get(0)+"\n";
-//            for(int i=0;i<words.length;i++){
-//                result+=words[i]+" : "+words2[i]+"\n";
-//            }
+
             Log.d("채윤",p.toString());
         }
         //book.getImage() < url에 접속해서 사진을 다운받아 디코딩해서 ImageView에 set
@@ -121,6 +111,9 @@ public class ProductAdapter extends ArrayAdapter<Product> {
     }
     public String getUrl(int i){
         return productList.get(i).getProductDetailUrl();
+    }
+    public String getImage(int i){
+        return images.get(i);
     }
 //    public View getImg(int position, ImageView view){
 //
@@ -139,6 +132,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
             Bitmap bitmap = null;
             try {
                 URL url = new URL(params[0]);
+                images.add(url.toString());
                 BufferedInputStream bi = new BufferedInputStream(url.openStream());
                 bitmap = BitmapFactory.decodeStream(bi);
                 bi.close();
@@ -165,10 +159,6 @@ public class ProductAdapter extends ArrayAdapter<Product> {
     static class ProductViewHolder{
         public ImageView imageView;
         public TextView product_Info;
-       // public TextView productName;
-      //  public TextView productPrice;
-      //  public TextView optionTitle;
-      //  public TextView optionValue;
-       // public TextView optionPrice;
+
     }
 }
