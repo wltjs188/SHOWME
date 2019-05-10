@@ -21,6 +21,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
+            android:id="@+id/product_Info"
+            android:text="상품명" />
+        <!--
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
             android:id="@+id/product_productName"
             android:text="상품명" />
         <TextView
@@ -43,7 +50,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/option_price"
             android:text="옵션가격" />
-
+-->
     </LinearLayout>
 
 </LinearLayout>

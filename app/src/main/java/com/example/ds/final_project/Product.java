@@ -21,8 +21,18 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product [productCode=" + productCode + ", productName=" + productName + ", productImage=" + productImage
-                + ", productDetailUrl=" + productDetailUrl + ", productPrice=" + productPrice + "]";
+    //    return "Product [productCode=" + productCode + ", productName=" + productName + ", productImage=" + productImage
+    //            + ", productDetailUrl=" + productDetailUrl + ", productPrice=" + productPrice + "]";
+        String str1 = optionTitle;
+        String[] words = str1.split(",");
+        String str2 =  optionValueList.get(0)+"";
+        String[] words2 = str2.split(",");
+
+        String str ="\n가격 : "+ optionPriceList.get(0)+"\n";
+        for(int i=0;i<words.length;i++){
+            str+=words[i]+" : "+words2[i]+"\n";
+        }
+        return str;
     }
 
     public String getProductCode() {

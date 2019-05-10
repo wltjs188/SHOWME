@@ -13,28 +13,43 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
         android:src="@drawable/ic_launcher_background" />
-
     <TextView
-        android:layout_width="350dp"
-        android:layout_height="300dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
+        android:textSize="25dp"
         android:text="상품상세정보" />
-    <Button
-        android:id="@+id/product_info_back_btn"
+    <TextView
+        android:id="@+id/product_info"
+        android:layout_width="350dp"
+        android:layout_height="10dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp" />
+
+    <CheckBox
+        android:id="@+id/wishCheck"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="관심상품등록"
         android:layout_gravity="center"
+         />
+    <Button
+        android:id="@+id/product_info_back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="등록"
+        android:layout_gravity="center"
         android:onClick="onBackBtnClicked"
         />
-    <Button
+   <!-- <Button
         android:id="@+id/product_info_back_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="이전으로"
         android:layout_gravity="center"
         android:onClick="onBackBtnClicked"
-        />
+        />-->
 
 </LinearLayout>

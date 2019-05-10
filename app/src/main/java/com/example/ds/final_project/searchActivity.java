@@ -242,7 +242,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         String parameterString = "";
         ACTION=result.getAction();
         int i=0;
-        if (result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6&&ACTION=="user") {
+        if (result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6&&ACTION.equals("user")) {
             for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
                 MyInfo.put(entry.getKey(),""+entry.getValue());
             }

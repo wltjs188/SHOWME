@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -28,14 +29,14 @@ public class ShopActivity extends AppCompatActivity {
 
     String keyword; //키워드
     String Color; //색상
-    Intent productInfo;
+    Intent productInfoIntent;
     int ProductNum=4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop2);
-        productInfo = new Intent(getApplicationContext(),ProductInfo.class);
+        productInfoIntent = new Intent(getApplicationContext(),ProductInfo.class);
         keywordEdt = (EditText)findViewById(R.id.main_keyword_edt);
         searchBtn = (Button) findViewById(R.id.main_search_btn);
         moreBtn = (Button) findViewById(R.id.main_more_btn);
@@ -80,8 +81,11 @@ public class ShopActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
                 //int img=adapter.getImg(position);
-                //productInfo.putExtra("img",img);
-                startActivity(productInfo);
+                //productInfoIntent.putExtra("img",img);
+                Log.d("정보",adapter.getInfo(position));
+                productInfoIntent.putExtra("info", adapter.getInfo(position));
+                productInfoIntent.putExtra("url", adapter.getUrl(position));
+                startActivity(productInfoIntent);
             }
         });
 

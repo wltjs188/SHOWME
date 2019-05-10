@@ -53,16 +53,18 @@ public class ProductAdapter extends ArrayAdapter<Product> {
             holder = new ProductViewHolder();
             holder.imageView
                     = (ImageView) convertView.findViewById(R.id.product_img);
-            holder.productName
-                    = (TextView) convertView.findViewById(R.id.product_productName);
-            holder.productPrice
-                    = (TextView) convertView.findViewById(R.id.product_price);
-            holder.optionTitle
-                    = (TextView) convertView.findViewById(R.id.option_title);
-            holder.optionValue
-                    = (TextView) convertView.findViewById(R.id.option_value);
-            holder.optionPrice
-                    = (TextView) convertView.findViewById(R.id.option_price);
+            holder.product_Info
+                    =(TextView)convertView.findViewById(R.id.product_Info);
+//            holder.productName
+//                    = (TextView) convertView.findViewById(R.id.product_productName);
+//            holder.productPrice
+//                    = (TextView) convertView.findViewById(R.id.product_price);
+//            holder.optionTitle
+//                    = (TextView) convertView.findViewById(R.id.option_title);
+//            holder.optionValue
+//                    = (TextView) convertView.findViewById(R.id.option_value);
+//            holder.optionPrice
+//                    = (TextView) convertView.findViewById(R.id.option_price);
             //처음 인플레이션 될 때 홀더 객체를 만들어서
             //홀더 셋트의 위젯 참조변수들이 findViewById
 
@@ -88,15 +90,25 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         int a=p.errorMessage(p.getProductName(),p.getOptionValueList());
         Log.i("에러",""+a);
         if(a==0){ //검색결과 없을때
-            holder.productName.setText("검색결과가 없습니다.");
+            holder.product_Info.setText("검색결과가 없습니다.");
         }
         else { //검색결과 있을때
-            holder.productName.setText(p.getProductName());
-            holder.productPrice.setText("대표가격: " + p.getProductPrice());
-            holder.optionTitle.setText("옵션이름: " + p.getOptionTitle());
-            holder.optionValue.setText("옵션값: " + p.getOptionValueList().get(0));
-            holder.optionPrice.setText("옵션가격: " + p.getOptionPriceList().get(0));
+            holder.product_Info.setText(p.toString());
+           // holder.productName.setText(p.getProductName());
+            //holder.productPrice.setText("대표가격: " + p.getProductPrice());
+           // holder.optionTitle.setText("옵션이름: " + p.getOptionTitle());
+           // holder.optionValue.setText("상품명: " + p.getOptionValueList().get(0));
+          //  holder.optionPrice.setText("가격: " + p.getOptionPriceList().get(0));
             new ImageDownLoader(holder.imageView).execute(p.getProductImage());
+//            String str1 = p.getOptionTitle();
+//            String[] words = str1.split(",");
+//            String str2 =  p.getOptionValueList().get(0)+"";
+//            String[] words2 = str2.split(",");
+//            String result ="\n가격 : "+ p.getOptionPriceList().get(0)+"\n";
+//            for(int i=0;i<words.length;i++){
+//                result+=words[i]+" : "+words2[i]+"\n";
+//            }
+            Log.d("채윤",p.toString());
         }
         //book.getImage() < url에 접속해서 사진을 다운받아 디코딩해서 ImageView에 set
 //      imageLoader.DisplayImage(p.getProductImage(), holder.imageView);
@@ -104,7 +116,12 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         return convertView;
 
     }
-
+    public String getInfo(int i){
+        return productList.get(i).toString();
+    }
+    public String getUrl(int i){
+        return productList.get(i).getProductDetailUrl();
+    }
 //    public View getImg(int position, ImageView view){
 //
 //    }
@@ -147,10 +164,11 @@ public class ProductAdapter extends ArrayAdapter<Product> {
 
     static class ProductViewHolder{
         public ImageView imageView;
-        public TextView productName;
-        public TextView productPrice;
-        public TextView optionTitle;
-        public TextView optionValue;
-        public TextView optionPrice;
+        public TextView product_Info;
+       // public TextView productName;
+      //  public TextView productPrice;
+      //  public TextView optionTitle;
+      //  public TextView optionValue;
+       // public TextView optionPrice;
     }
 }

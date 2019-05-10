@@ -17,8 +17,5 @@ public class ItemInfoActivity extends AppCompatActivity {
         wishList=getIntent();
         int img=wishList.getIntExtra("img",1);
         ImageView iv= (ImageView)findViewById(R.id.infoImg);
-
     }
-
-
 }
