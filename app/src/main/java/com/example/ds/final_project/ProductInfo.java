@@ -27,8 +27,9 @@ public class ProductInfo extends AppCompatActivity {
     private CheckBox wishCheck;
     private boolean infoBool;
     private String uuid=" ";
-    private String url=" ";
+    private String productURL=" ";
     private String info=" ";
+    private String image=" ";
     String IP_ADDRESS = "35.243.72.245";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class ProductInfo extends AppCompatActivity {
         product_info=(TextView)findViewById(R.id.product_info);
         Intent intent = getIntent();
         info=intent.getStringExtra("info");
-        url=intent.getStringExtra("url");
+        productURL=intent.getStringExtra("url");
         product_info.setText(info);
         wishCheck=(CheckBox)findViewById(R.id.wishCheck);
         wishCheck.setOnCheckedChangeListener(new CheckBoxListener());
@@ -59,8 +60,8 @@ public class ProductInfo extends AppCompatActivity {
     }
     public void onBackBtnClicked(View view){
         InsertData task = new InsertData();
-        Log.d("info",uuid+url+info);
-        task.execute("http://" + IP_ADDRESS + "/insertWishList.php",uuid,url,info);
+        Log.d("info",uuid+productURL+info);
+        task.execute("http://" + IP_ADDRESS + "/insertWishList.php",uuid,productURL,info,image);
     }
     public class CheckBoxListener implements CompoundButton.OnCheckedChangeListener{
         @Override
@@ -77,8 +78,8 @@ public class ProductInfo extends AppCompatActivity {
                 //DB에 추가
                 //사용자 정보 DB에 넣기
                 InsertData task = new InsertData();
-                Log.d("info",uuid+url+info);
-                task.execute("http://" + IP_ADDRESS + "/insertWishList.php",uuid,url,info);
+                Log.d("info",uuid+productURL+info);
+                task.execute("http://" + IP_ADDRESS + "/insertWishList.php",uuid,productURL,info,image);
             }
         }
 
@@ -96,7 +97,6 @@ public class ProductInfo extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-
             progressDialog.dismiss();
             Log.d(TAG, "POST response  - " + result);
         }
@@ -104,14 +104,14 @@ public class ProductInfo extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             String uuid = (String)params[1];
-            String url = (String)params[2];
+            String productURL = (String)params[2];
             String info = (String)params[3];
+            String image=(String)params[4];
 
             String serverURL = (String)params[0];
-            String postParameters = "uuid=" + uuid + "&url=" + url + "&info="+info ;
+            String postParameters = "uuid=" + uuid + "&productURL=" + productURL + "&info="+info + "&image="+image;
 
             try {
-
                 URL Url = new URL(serverURL);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) Url.openConnection();
 
