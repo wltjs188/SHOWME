@@ -28,7 +28,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
     private int resource;
     private List<Product> productList;
     private ImageLoader imageLoader;
-    ArrayList<String> images;
+    ArrayList<String> images=new ArrayList<String>();
     public ProductAdapter(Context context, int resource, List<Product> productList) {
         super(context, resource,productList);
         // TODO Auto-generated constructor stub
@@ -132,7 +132,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
             Bitmap bitmap = null;
             try {
                 URL url = new URL(params[0]);
-                images.add(url.toString());
+                images.add(params[0]);
                 BufferedInputStream bi = new BufferedInputStream(url.openStream());
                 bitmap = BitmapFactory.decodeStream(bi);
                 bi.close();
