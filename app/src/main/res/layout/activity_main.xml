@@ -65,6 +65,14 @@
         android:layout_marginTop="20dp"
         android:onClick="onShopClicked"
         />
-
+    <Button
+        android:id="@+id/productInfoBtn"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:text="관심상품"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:onClick="onProductInfoClicked"
+        />
 
 </LinearLayout>

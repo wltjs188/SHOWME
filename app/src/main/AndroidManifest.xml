@@ -29,7 +29,8 @@
         <activity android:name=".WishListActivity" />
         <activity android:name=".ItemInfoActivity" />
         <activity android:name=".ShopActivity" />
-        <activity android:name=".WebActivity"></activity>
+        <activity android:name=".WebActivity"/>
+        <activity android:name=".ProductInfo" />
     </application>
 
 </manifest>

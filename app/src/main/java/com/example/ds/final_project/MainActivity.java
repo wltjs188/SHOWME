@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static Context CONTEXT;
     //메인화면
-    Intent searchIntent,wishIntent,infoIntent,webIntent,shopIntent; //쇼핑시작,나의관심상품,정보수정
+    Intent searchIntent,wishIntent,infoIntent,webIntent,shopIntent,productInfoIntent; //쇼핑시작,나의관심상품,정보수정
     //서버
     String IP_ADDRESS = "35.243.72.245";
     private String mJsonString;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         infoIntent=new Intent(getApplicationContext(),MyInfoActivity.class);//나의정보수정
         webIntent=new Intent(getApplicationContext(),WebActivity.class);//나의정보수정
         shopIntent=new Intent(getApplicationContext(),ShopActivity.class);//나의정보수정
-
+        productInfoIntent = new Intent(getApplicationContext(),ProductInfo.class);
         int permission2 = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
         if (permission2 != PackageManager.PERMISSION_GRANTED) { makeRequest(); }
 
@@ -64,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         //서버연결
         GetData task = new GetData();
         task.execute( "http://" + IP_ADDRESS + "/get_uuid.php",uuid);
-
     }
     public void onResume(){
         super.onResume();
@@ -241,6 +241,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void onWebClicked(View view) { startActivity(webIntent); }
     public void onShopClicked(View view) { startActivity(shopIntent); }
+    public void onProductInfoClicked(View view){ startActivity(productInfoIntent); }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_PHONE_STATE},
