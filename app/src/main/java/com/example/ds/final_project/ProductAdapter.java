@@ -90,7 +90,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         if(a==0){ //검색결과 없을때
             holder.productName.setText("검색결과가 없습니다.");
         }
-        else { //검색결과 없을때
+        else { //검색결과 있을때
             holder.productName.setText(p.getProductName());
             holder.productPrice.setText("대표가격: " + p.getProductPrice());
             holder.optionTitle.setText("옵션이름: " + p.getOptionTitle());
@@ -153,5 +153,4 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         public TextView optionValue;
         public TextView optionPrice;
     }
-
 }

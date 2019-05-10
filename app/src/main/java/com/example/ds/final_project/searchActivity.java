@@ -57,6 +57,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     //키워드
     String keyword="";
     String sub;
+    //
+    String Color="";
 
     //상품검색
     AIService aiService;
@@ -87,8 +89,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     private String bottom;
     private String foot;
 
-    //
-    String clothes[]={"Outer","Dress","Pants","Shoes","Skirt","Swimsuit","Top","Uderwear"};
+
 
     Intent wishIntent,shopIntent;
     //챗봇 액션
@@ -131,7 +132,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
         Log.d("받아온 사용자 정보",uuid+","+name+","+gender+","+height+","+top+","+bottom+","+foot);
         if(name==""){
-           // Log.d("야",chatMessages.size()+"");
+            // Log.d("야",chatMessages.size()+"");
             if(chatMessages.size()==0){
                 chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
                 chatMessages.add(chatMessage);
@@ -299,21 +300,26 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 break;
             case "search" :
                 if(result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6) {
+                    keyword="";
                     for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
 //                    Log.d("겟값","key"+entry.getKey()+"value:"+entry.getValue());
-                        String key=entry.getKey();
-                        boolean inKey=false;
-                        for(int j=0;i<clothes.length;i++){
-                            inKey=inKey||(key.equals(clothes[j]));
-                        }
-                        if ((sub = "" + entry.getValue()) != null && inKey || key == "Color") {
+                        if ((sub = "" + entry.getValue()) != null) {
+                            Log.i("키",entry.getKey());
+                            Log.i("밸류",""+entry.getValue());
                             keyword += sub;
                             Log.i("키워드", keyword);
+                            if(entry.getKey().equals("Color")){
+                                Color=""+entry.getValue();
+                            }
                         }
                     }
-
-                    keyword.replaceAll("\"", "");
+                    Color=Color.replace("\"","");
+                    Log.i("Color",Color);
+                    keyword=keyword.replace("\"","");
+                    keyword=keyword.replace("없음","");
+                    Log.i("keyword",keyword);
                     shopIntent.putExtra("keyword", keyword);
+                    shopIntent.putExtra("Color",Color);
                     startActivity(shopIntent);
                 }
                 break;
@@ -327,7 +333,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         speech = result.getFulfillment().getSpeech();
         query=result.getResolvedQuery();
         action=result.getAction();
-       // Log.e("액션",action);
+        // Log.e("액션",action);
         ChatMessage chatMessage;
         chatMessage = new ChatMessage(query, isMine);
         chatMessages.add(chatMessage);
@@ -569,6 +575,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             msg = (TextView) v.findViewById(R.id.txt_msg);
         }
     }
+
 }
 
 

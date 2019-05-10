@@ -22,11 +22,11 @@ public class ProductSearchService {
     //요청을 하기 위한 ID와 SECRET
     private static final String CLIENT_ID = "";
     private static final String CLIENT_SECRET = "";
-    private static final int PAGE_SIZE=4; //출력되는 상품수
+    private static final int PAGE_SIZE=20; //출력되는 상품수
     private int PAGE_NUM=1; //페이지번호
     private String sortCd="CP"; //정렬순 //CP:인기순 A:누적판매순 G:평가높은순 I:후기/리뷰많은순 L:낮은가격순 H:높은가격순 N:최근등록순
 
-     // 상품검색 요청 URL
+    // 상품검색 요청 URL
     String URL="https://openapi.11st.co.kr/openapi/OpenApiService.tmall?key=ad722ec66e955e9c584c2b828158dee9&apiCode=ProductSearch&pageNum="+PAGE_NUM+"&pageSize="+PAGE_SIZE+"&sortCd="+sortCd+"&keyword=";
     //상품정보조회 요청 URL
     String URL_DETAIL="http://openapi.11st.co.kr/openapi/OpenApiService.tmall?key=ad722ec66e955e9c584c2b828158dee9&apiCode=ProductInfo&productCode=";
@@ -72,7 +72,7 @@ public class ProductSearchService {
     public List<Product> search() {
         List<Product> list = null;
         try {
-            java.net.URL url;
+            URL url;
             url = new URL(URL+ URLEncoder.encode(keyword, "EUC-KR"));
             URLConnection urlConn = url.openConnection();
 

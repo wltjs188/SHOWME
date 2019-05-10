@@ -240,7 +240,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void onWebClicked(View view) { startActivity(webIntent); }
-    public void onShopClicked(View view) { startActivity(shopIntent); }
+    public void onShopClicked(View view) {
+        shopIntent.putExtra("keyword","원피스");
+        shopIntent.putExtra("Color","소라");
+        startActivity(shopIntent); }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_PHONE_STATE},

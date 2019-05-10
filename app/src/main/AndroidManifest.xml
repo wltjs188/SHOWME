@@ -30,6 +30,7 @@
         <activity android:name=".ItemInfoActivity" />
         <activity android:name=".ShopActivity" />
         <activity android:name=".WebActivity"></activity>
+        <activity android:name=".ProductInfo"/>
     </application>
 
 </manifest>
