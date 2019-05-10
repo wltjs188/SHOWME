@@ -25,8 +25,11 @@ public class ShopActivity extends AppCompatActivity {
     private GridView GridView;
     private ProductAdapter adapter;
     ProductSearchService service;
-    String keyword;
+
+    String keyword; //키워드
+    String Color; //색상
     Intent productInfo;
+    int ProductNum=4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +44,18 @@ public class ShopActivity extends AppCompatActivity {
         GridView = (GridView) findViewById(R.id.main_GridView);
         GridView.setAdapter(adapter);
         Intent intent=getIntent();
+
+        keyword=intent.getStringExtra("keyword");
+        Color=intent.getStringExtra("Color");
+        keywordEdt.setText(Color+keyword);
+
         //keyword=intent.getStringExtra("원피스");
-        keyword="원피스";
         keywordEdt.setText(keyword);
+
         service = new ProductSearchService(keyword);
         ProductSearchThread thread = new ProductSearchThread(service, handler);
         Toast.makeText(getApplicationContext(), "검색을 시작합니다.", Toast.LENGTH_LONG).show();
+        thread.setColor(Color);
         thread.start();
 
 // 상품검색
@@ -58,8 +67,10 @@ public class ShopActivity extends AppCompatActivity {
                 // TODO Auto-generated method stub
                 keyword = keywordEdt.getText().toString();
                 service = new ProductSearchService(keyword);
+                Color="아이보리"; //테스트
                 ProductSearchThread thread = new ProductSearchThread(service, handler);
                 Toast.makeText(getApplicationContext(), "검색을 시작합니다.", 0).show();
+                thread.setColor(Color);
                 thread.start();
             }
         });
@@ -84,6 +95,7 @@ public class ShopActivity extends AppCompatActivity {
                 service.nextPage(keyword);
                 ProductSearchThread thread = new ProductSearchThread(service, handler);
                 Toast.makeText(getApplicationContext(), "더보기", 0).show();
+                thread.setColor(Color);
                 thread.start();
             }
         });
@@ -92,13 +104,17 @@ public class ShopActivity extends AppCompatActivity {
     private Handler handler = new Handler(){
         public void handleMessage(Message msg){
             super.handleMessage(msg);
+            List<Product> products;
             if(msg.what ==1 )
             {
+                Product product;
+                int error;
                 //arg1이 10이면 처음 검색에 대한 결과를 갖다 준걸로
                 if(msg.arg1==10)
                 {
+                    products=checkError(msg);
                     productList.clear();
-                    productList.addAll((List<Product>) msg.obj);
+                    productList.addAll(products.subList(0,ProductNum));
                     adapter.notifyDataSetChanged();
                 }
 //                arg2이 20이면 상품추가하기
@@ -107,11 +123,24 @@ public class ShopActivity extends AppCompatActivity {
                     List<Product> data = (List<Product>)msg.obj;
                     for(Product p : data)
                         result += p.getProductName() +"\n";
-                    productList.addAll((List<Product>) msg.obj);
+                    products=checkError(msg);
+                    productList.addAll(products.subList(0,ProductNum));
                     adapter.notifyDataSetChanged();
                 }
             }
         }
     };
+    public List<Product> checkError(Message msg){
+        Product errProduct;
+        int error;
+        for(int i=0;i<((List<Product>) msg.obj).size();i++){
+            errProduct=((List<Product>) msg.obj).get(i);
+            error=errProduct.errorMessage(errProduct.getProductName(),errProduct.getOptionValueList());
+            if (error==0){ //검색결과 없을때 삭제
+                ((List<Product>) msg.obj).remove(i);
+            }
+        }
+        return (List<Product>) msg.obj;
+    }
 }
 
