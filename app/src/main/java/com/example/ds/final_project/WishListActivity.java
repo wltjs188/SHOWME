@@ -44,7 +44,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class WishListActivity extends AppCompatActivity {
-
+    Intent productInfoIntent;
     GridView gv;
     int index=0;
     //나의관심상품
@@ -74,25 +74,20 @@ public class WishListActivity extends AppCompatActivity {
         //상품들 가져오기
         GetData task = new GetData();
         task.execute( "http://" + IP_ADDRESS + "/getWishList.php",uuid);
-       // adapter = new WishAdapter(this, R.layout.activity_wish_list, images,index);
-        gv = (GridView)findViewById(R.id.gridView1);
-        //gv.setAdapter(adapter);
-//        // 그리드뷰 어댑터 생성
-//        final MyAdapter adapter = new MyAdapter (
-//                getApplicationContext(),
-//                R.layout.wish_item,       // GridView 항목의 레이아웃 wish_item.xml
-//                img);
-//        GridView gv = (GridView)findViewById(R.id.gridView1);
-//        gv.setAdapter(adapter);
-//        gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-//                int img=adapter.getImg(position);
-//                itemInfoIntent.putExtra("img",img);
-//                startActivity(itemInfoIntent);
-//            }
-//        });
 
+        productInfoIntent = new Intent(getApplicationContext(),ProductInfo.class);
+        gv = (GridView)findViewById(R.id.gridView1);
+        gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+                //int img=adapter.getImg(position);
+                //productInfoIntent.putExtra("img",img);
+                productInfoIntent.putExtra("info", infos.get(position));
+                productInfoIntent.putExtra("url", productURLs.get(position));
+                productInfoIntent.putExtra("image", images.get(position));
+                startActivity(productInfoIntent);
+            }
+        });
     }
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
         switch (item.getItemId()){
