@@ -22,6 +22,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,9 +40,13 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class WishListActivity extends AppCompatActivity {
+
+    GridView gv;
+    int index=0;
     //나의관심상품
     Intent itemInfoIntent; //상품정보
     String mJsonString;
@@ -68,9 +74,9 @@ public class WishListActivity extends AppCompatActivity {
         //상품들 가져오기
         GetData task = new GetData();
         task.execute( "http://" + IP_ADDRESS + "/getWishList.php",uuid);
-        adapter = new WishAdapter(this, R.layout.activity_wish_list, images);
-        GridView gv = (GridView)findViewById(R.id.gridView1);
-        gv.setAdapter(adapter);
+       // adapter = new WishAdapter(this, R.layout.activity_wish_list, images,index);
+        gv = (GridView)findViewById(R.id.gridView1);
+        //gv.setAdapter(adapter);
 //        // 그리드뷰 어댑터 생성
 //        final MyAdapter adapter = new MyAdapter (
 //                getApplicationContext(),
@@ -196,10 +202,11 @@ public class WishListActivity extends AppCompatActivity {
                     productURLs.add(item.getString("productURL"));
                     infos.add(item.getString("info")) ;
                     images.add(item.getString("image"));
+                  //adapter.notifyDataSetChanged();
                 }
             }
-
-
+            adapter = new WishAdapter(this, R.layout.activity_wish_list, images,index);
+            gv.setAdapter(adapter);
         } catch (JSONException e) {
             Log.d("showResult : ", e.getMessage());
         }
@@ -265,17 +272,19 @@ public class WishListActivity extends AppCompatActivity {
 class WishAdapter extends ArrayAdapter<String> {
     private Context context;
     private int resource;
-    int i=0;
+   // int i=0;
   //  private List<Product> productList;
     private ImageLoader imageLoader;
     ArrayList<String> images;
-    public WishAdapter(Context context, int resource, ArrayList<String> images) {
+    int index;
+    public WishAdapter(Context context, int resource, ArrayList<String> images,int index) {
         super(context, resource,images);
         // TODO Auto-generated constructor stub
         this.context = context;
         this.resource = resource;
         this.images = images;
         imageLoader= new ImageLoader(context);
+        this.index=index;
     }
 
     @Override
@@ -310,68 +319,19 @@ class WishAdapter extends ArrayAdapter<String> {
 
         }
         Log.d("codbs","여기실행안되냐?");
-        new ImageDownLoader(holder.imageView).execute();
-        /*
-        try {
-            Log.d("images",images.get(position));
-            URL aURL = new URL(images.get(position));
-            URLConnection conn = aURL.openConnection();
-            conn.connect();
-            InputStream is = conn.getInputStream();
-            BufferedInputStream bis = new BufferedInputStream(is);
-            Bitmap bm = BitmapFactory.decodeStream(bis);
-            bis.close();
-            is.close();
-            holder.imageView.setImageBitmap(bm);
-        } catch (IOException e) {
-            Log.e("DEBUGTAG", "Remtoe Image Exception", e);
-        }*/
-        //getView 할 일
-        //1. 껍데기 인플레이션하기(convertView가 null아니면 재사용 가능)
-        //2. 껍데기 내부의 위젯들 객체 얻어도기 (findViewById)
-        //3. 각 위젯에 데이터 바인딩하기
-
-
-       // Product p = productList.get(position);
-
-        //여기부터 이제 홀더객체 안의 각  위젯에 book객체의 각 멤버면수값들이랑 바인딩하면 됨ㅇㅇ
-//        holder.imageView.setImageResource(R.drawable.ic_launcher);
-     //   int a=p.errorMessage(p.getProductName(),p.getOptionValueList());
-      //  Log.i("에러",""+a);
-//        if(a==0){ //검색결과 없을때
-//            holder.product_Info.setText("검색결과가 없습니다.");
-//        }
-//        else { //검색결과 있을때
-//            holder.product_Info.setText(p.toString());
-//            new ImageDownLoader(holder.imageView).execute(p.getProductImage());
-//
-//            Log.d("채윤",p.toString());
-//        }
-        //book.getImage() < url에 접속해서 사진을 다운받아 디코딩해서 ImageView에 set
-//      imageLoader.DisplayImage(p.getProductImage(), holder.imageView);
-
+        Glide.with(WishAdapter.super.getContext()).load(images.get(position)).into(holder.imageView);
+     //   new ImageDownLoader(holder.imageView,position).execute();
         return convertView;
 
     }
-//    public String getInfo(int i){
-//        return productList.get(i).toString();
-//    }
-//    public String getUrl(int i){
-//        return productList.get(i).getProductDetailUrl();
-//    }
-//    public String getImage(int i){
-//        return images.get(i);
-//    }
-//    public View getImg(int position, ImageView view){
-//
-//    }
-
     class ImageDownLoader extends AsyncTask<String, Void, Bitmap>
     {
         ImageView imageView;
-       // int i=0;
-        public ImageDownLoader(ImageView imageView){
+        int position;
+     //   int i=0;
+        public ImageDownLoader(ImageView imageView,int position){
             this.imageView = imageView;
+            this.position=position;
         }
 
         @Override
@@ -380,12 +340,14 @@ class WishAdapter extends ArrayAdapter<String> {
             Bitmap bitmap = null;
             try {
                // URL url = new URL(params[0]);
-                Log.d("codbs",images.get(i));
-                URL url = new URL(images.get(i++));
-                //images.add(url.toString());
+                Log.d("codbs",images.get(position));
+
+                URL url = new URL(images.get(position));
+
                 BufferedInputStream bi = new BufferedInputStream(url.openStream());
                 bitmap = BitmapFactory.decodeStream(bi);
                 bi.close();
+              //  }
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

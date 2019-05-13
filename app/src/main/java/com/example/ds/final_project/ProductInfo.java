@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +37,7 @@ public class ProductInfo extends AppCompatActivity {
     private String productURL=" ";
     private String info=" ";
     private String image=" ";
+    ImageView productImg;
     String IP_ADDRESS = "35.243.72.245";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +49,10 @@ public class ProductInfo extends AppCompatActivity {
         Intent intent = getIntent();
         info=intent.getStringExtra("info");
         productURL=intent.getStringExtra("url");
-
+        productImg=(ImageView)findViewById(R.id.productImg);
         image=intent.getStringExtra("image");
+        Glide.with(this).load(image).into(productImg);
+
         product_info.setText(info);
         wishCheck=(CheckBox)findViewById(R.id.wishCheck);
         wishCheck.setOnCheckedChangeListener(new CheckBoxListener());
@@ -68,12 +73,7 @@ public class ProductInfo extends AppCompatActivity {
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
         return pref.getString(key, "");
     }
-    public void onBackBtnClicked(View view){
-        InsertData task = new InsertData();
-        Log.d("info",uuid+productURL+info);
-        Log.d("info",uuid+productURL+info+image);
-        task.execute("http://" + IP_ADDRESS + "/insertWishList.php",uuid,productURL,info,image);
-    }
+
     public class CheckBoxListener implements CompoundButton.OnCheckedChangeListener{
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -83,6 +83,9 @@ public class ProductInfo extends AppCompatActivity {
                 Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_LONG);
                 Log.d("체크박스","된다");
                 //DB에서 삭제
+                DeleteData task = new DeleteData();
+            //    Log.d("info",uuid+productURL+info);
+                task.execute("http://" + IP_ADDRESS + "/delete.php",uuid,productURL);
             }
             else {
                 Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_LONG);
@@ -244,7 +247,73 @@ public class ProductInfo extends AppCompatActivity {
 
         }
     }
+    class DeleteData extends AsyncTask<String, Void, String>{
+        ProgressDialog progressDialog;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(ProductInfo.this,
+                    "Please Wait", null, true, true);
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+            Log.d(TAG, "POST response  - " + result);
+        }
+        @Override
+        protected String doInBackground(String... params) {
+
+            String uuid = (String)params[1];
+            String productURL = (String)params[2];
+         //   String info = (String)params[3];
+          //  String image=(String)params[4];
+            String serverURL = (String)params[0];
+            String postParameters = "uuid=" + uuid + "&productURL=" + productURL;
+
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                Log.d(TAG, "POST response code - " + responseStatusCode);
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+                bufferedReader.close();
+                return sb.toString();
+            } catch (Exception e) {
+                Log.d(TAG, "InsertData: Error ", e);
+                return new String("Error: " + e.getMessage());
+            }
+        }
+    }
     private void showResult(){
         int count=0;
         String TAG_JSON="wishList";
@@ -256,6 +325,10 @@ public class ProductInfo extends AppCompatActivity {
                 JSONObject item = jsonArray.getJSONObject(i);
                 String uuid = item.getString("uuid");
                 String productURL = item.getString("productURL");
+                Log.d("서버에서","받은"+uuid);
+                Log.d("서버에서","받은"+productURL);
+                Log.d("서버에서","진짜"+this.uuid);
+                Log.d("서버에서","진짜"+this.productURL);
                 if(uuid.equals(this.uuid)&&productURL.equals(this.productURL)){
                     count++;
                 }
