@@ -126,7 +126,7 @@ public class ProductInfo extends AppCompatActivity {
             String image=(String)params[4];
             String serverURL = (String)params[0];
             String postParameters = "uuid=" + uuid + "&productURL=" + URLEncoder.encode(productURL) + "&info=" + info+"&image="+image;
-Log.d("encode",URLEncoder.encode(productURL));
+
             try {
 
                 URL url = new URL(serverURL);
@@ -338,7 +338,7 @@ Log.d("encode",URLEncoder.encode(productURL));
                 infoBool=true;
             else //관심상품 아냐
                 infoBool=false;
-
+            wishCheck.setChecked(infoBool);
         } catch (JSONException e) {
             Log.d("showResult : ", e.getMessage());
         }
