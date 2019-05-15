@@ -44,32 +44,24 @@ import java.util.Iterator;
 import java.util.List;
 
 public class WishListActivity extends AppCompatActivity {
-    Intent productInfoIntent;
+    Intent productInfoIntent; //상세정보 intent
     GridView gv;
     int index=0;
-    //나의관심상품
-    Intent itemInfoIntent; //상품정보
     String mJsonString;
     String IP_ADDRESS = "35.243.72.245";
     private WishAdapter adapter;
     String uuid;
-    //String productURL;
+    //상품정보 List
     ArrayList<String> productURLs=new ArrayList<String>();
-    //String info;
     ArrayList<String> infos=new ArrayList<String>();
- //   String image;
     ArrayList<String> images=new ArrayList<String>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wish_list);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기버튼
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
         getSupportActionBar().setTitle("관심상품");
-        itemInfoIntent = new Intent(getApplicationContext(),ItemInfoActivity.class);
-//        int img[] = { //이미지배열
-//            R.drawable.test_img1,R.drawable.test_img2,R.drawable.test_img3,R.drawable.test_img4,R.drawable.test_img5,R.drawable.test_img6
-//        };
-
         uuid = getPreferences("uuid");
         //상품들 가져오기
         GetData task = new GetData();
@@ -80,15 +72,15 @@ public class WishListActivity extends AppCompatActivity {
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-                //int img=adapter.getImg(position);
-                //productInfoIntent.putExtra("img",img);
                 productInfoIntent.putExtra("info", infos.get(position));
                 productInfoIntent.putExtra("url", productURLs.get(position));
+                Log.d("detailurl","wishlist: "+productURLs.get(position));
                 productInfoIntent.putExtra("image", images.get(position));
                 startActivity(productInfoIntent);
             }
         });
     }
+
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
         switch (item.getItemId()){
             case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
@@ -109,7 +101,6 @@ public class WishListActivity extends AppCompatActivity {
             progressDialog = ProgressDialog.show(WishListActivity.this,
                     "Please Wait", null, true, true);
         }
-
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
@@ -120,15 +111,12 @@ public class WishListActivity extends AppCompatActivity {
             else {
                 mJsonString = result;
                 showResult();
-
             }
         }
-
         @Override
         protected String doInBackground(String... params) {
             String serverURL = params[0];
             String postParameters = "uuid=" + params[1];
-
             try {
 
                 URL url = new URL(serverURL);
@@ -141,15 +129,12 @@ public class WishListActivity extends AppCompatActivity {
                 httpURLConnection.setDoInput(true);
                 httpURLConnection.connect();
 
-
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 outputStream.write(postParameters.getBytes("UTF-8"));
                 outputStream.flush();
                 outputStream.close();
 
-
                 int responseStatusCode = httpURLConnection.getResponseCode();
-
                 InputStream inputStream;
                 if(responseStatusCode == HttpURLConnection.HTTP_OK) {
                     inputStream = httpURLConnection.getInputStream();
@@ -157,8 +142,6 @@ public class WishListActivity extends AppCompatActivity {
                 else{
                     inputStream = httpURLConnection.getErrorStream();
                 }
-
-
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
@@ -168,20 +151,14 @@ public class WishListActivity extends AppCompatActivity {
                 while((line = bufferedReader.readLine()) != null){
                     sb.append(line);
                 }
-
                 bufferedReader.close();
-
                 return sb.toString().trim();
-
-
             } catch (Exception e) {
                 errorString = e.toString();
                 return null;
             }
-
         }
     }
-
     private void showResult(){
         String TAG_JSON="wishList";
         try {
@@ -205,7 +182,6 @@ public class WishListActivity extends AppCompatActivity {
         } catch (JSONException e) {
             Log.d("showResult : ", e.getMessage());
         }
-
         if(images.size()>0)
         {  for(int i=0;i<images.size();i++){
             Log.d("관심",productURLs.get(i)+", "+infos.get(i)+", "+images.get(i));
@@ -217,52 +193,6 @@ public class WishListActivity extends AppCompatActivity {
         return pref.getString(key, "");
     }
 }
-
-//그리드뷰 어댑터
-//class MyAdapter extends BaseAdapter {
-//    Context context;
-//    int layout;
-//    int img[];
-//    LayoutInflater inf;
-//
-//    public MyAdapter(Context context, int layout, int[] img) {
-//        this.context = context;
-//        this.layout = layout;
-//        this.img = img;
-//        inf = (LayoutInflater) context.getSystemService
-//                (Context.LAYOUT_INFLATER_SERVICE);
-//    }
-//
-//    @Override
-//    public int getCount() {
-//        return img.length;
-//    }
-//
-//    public int getImg(int position){
-//        return img[position];
-//    }
-//
-//    @Override
-//    public Object getItem(int position) {
-//        return img[position];
-//    }
-//
-//    @Override
-//    public long getItemId(int position) {
-//        return position;
-//    }
-//
-//    @Override
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//        if (convertView==null)
-//            convertView = inf.inflate(layout, null);
-//        ImageView iv = (ImageView)convertView.findViewById(R.id.imageView1);
-//        iv.setImageResource(img[position]);
-//
-//        return convertView;
-//    }
-//
-//}
 
 class WishAdapter extends ArrayAdapter<String> {
     private Context context;
@@ -285,88 +215,25 @@ class WishAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
-//        return super.getView(position, convertView, parent);
-
-        //getView메소드는 리스트뷰의 한줄의 아이템을 그리기 위한 뷰를 만들어내는 함수이고
-        //한줄의 아이템에 대해서 UI를 인플레이션하고 그 객체를 리턴하면됨
 
         ProductViewHolder holder;
         if(convertView == null){
-            //이미 인플레이션 한 뷰가 있다면 매개변수 convertView에 들어와 재사용 가능하므로
-            //convertView가 null일때만 인플레이션 해줌
             LayoutInflater inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflate.inflate(R.layout.wish_item, parent, false);
             holder = new ProductViewHolder();
             holder.imageView
                     = (ImageView) convertView.findViewById(R.id.imageView1);
-//            holder.product_Info
-//                    =(TextView)convertView.findViewById(R.id.product_Info);
-            //처음 인플레이션 될 때 홀더 객체를 만들어서
-            //홀더 셋트의 위젯 참조변수들이 findViewById
-
-            //holder객체는 각 위젯들이 findViewById한 결과들 집합
             convertView.setTag(holder);
-
-
         }
         else{
             holder = (ProductViewHolder) convertView.getTag();
-
         }
         Log.d("codbs","여기실행안되냐?");
         Glide.with(WishAdapter.super.getContext()).load(images.get(position)).into(holder.imageView);
-     //   new ImageDownLoader(holder.imageView,position).execute();
         return convertView;
-
     }
-    class ImageDownLoader extends AsyncTask<String, Void, Bitmap>
-    {
-        ImageView imageView;
-        int position;
-     //   int i=0;
-        public ImageDownLoader(ImageView imageView,int position){
-            this.imageView = imageView;
-            this.position=position;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            // TODO Auto-generated method stub
-            Bitmap bitmap = null;
-            try {
-               // URL url = new URL(params[0]);
-                Log.d("codbs",images.get(position));
-
-                URL url = new URL(images.get(position));
-
-                BufferedInputStream bi = new BufferedInputStream(url.openStream());
-                bitmap = BitmapFactory.decodeStream(bi);
-                bi.close();
-              //  }
-            } catch (MalformedURLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            // TODO Auto-generated method stub
-            super.onPostExecute(result);
-            if(result != null)
-                imageView.setImageBitmap(result);
-        }
-
-    }
-
     static class ProductViewHolder{
         public ImageView imageView;
-     //   public TextView product_Info;
-
     }
 }
 

@@ -26,29 +26,36 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 public class ProductInfo extends AppCompatActivity {
+    String IP_ADDRESS = "35.243.72.245";
     String TAG = "phptest";
     private String mJsonString;
-    private TextView product_info;
-    private CheckBox wishCheck;
-    private boolean infoBool;
+
+    private TextView product_info; //상세정보 표시
+    ImageView productImg; //상품 이미지 표시
+    private CheckBox wishCheck; //관심상품 등록
+    private boolean infoBool; //관심상품 등록 여부
+
+    //상품 정보
     private String uuid=" ";
     private String productURL=" ";
     private String info=" ";
     private String image=" ";
-    ImageView productImg;
-    String IP_ADDRESS = "35.243.72.245";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_info);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
+        getSupportActionBar().setTitle("상품 상세 정보");
         uuid = getPreferences("uuid");
         product_info=(TextView)findViewById(R.id.product_info);
         Intent intent = getIntent();
         info=intent.getStringExtra("info");
         productURL=intent.getStringExtra("url");
+        Log.d("detailurl","상세정보 : "+productURL);
         productImg=(ImageView)findViewById(R.id.productImg);
         image=intent.getStringExtra("image");
         Glide.with(this).load(image).into(productImg);
@@ -81,7 +88,6 @@ public class ProductInfo extends AppCompatActivity {
             if(!wishCheck.isChecked()) {
                 //토스트 메세지가 왜 안뜰깡..
                 Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_LONG);
-                Log.d("체크박스","된다");
                 //DB에서 삭제
                 DeleteData task = new DeleteData();
             //    Log.d("info",uuid+productURL+info);
@@ -90,17 +96,14 @@ public class ProductInfo extends AppCompatActivity {
             else {
                 Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_LONG);
                 //DB에 추가
-                //사용자 정보 DB에 넣기
                 InsertData task = new InsertData();
-                Log.d("info",uuid+productURL+info);
+                Log.d("productURL"," 삽입"+productURL);
                 task.execute("http://" + IP_ADDRESS + "/insertWishList.php",uuid,productURL,info,image);
             }
         }
-
     }
     class InsertData extends AsyncTask<String, Void, String>{
         ProgressDialog progressDialog;
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -118,12 +121,12 @@ public class ProductInfo extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             String uuid = (String)params[1];
-            String productURL = (String)params[2];
+            //String productURL = (String)params[2];
             String info = (String)params[3];
             String image=(String)params[4];
             String serverURL = (String)params[0];
-            String postParameters = "uuid=" + uuid + "&productURL=" + productURL + "&info=" + info+"&image="+image;
-
+            String postParameters = "uuid=" + uuid + "&productURL=" + URLEncoder.encode(productURL) + "&info=" + info+"&image="+image;
+Log.d("encode",URLEncoder.encode(productURL));
             try {
 
                 URL url = new URL(serverURL);
@@ -265,11 +268,8 @@ public class ProductInfo extends AppCompatActivity {
         }
         @Override
         protected String doInBackground(String... params) {
-
             String uuid = (String)params[1];
             String productURL = (String)params[2];
-         //   String info = (String)params[3];
-          //  String image=(String)params[4];
             String serverURL = (String)params[0];
             String postParameters = "uuid=" + uuid + "&productURL=" + productURL;
 
@@ -329,13 +329,15 @@ public class ProductInfo extends AppCompatActivity {
                 Log.d("서버에서","받은"+productURL);
                 Log.d("서버에서","진짜"+this.uuid);
                 Log.d("서버에서","진짜"+this.productURL);
-                if(uuid.equals(this.uuid)&&productURL.equals(this.productURL)){
+                if(uuid.equals(this.uuid)&&productURL.equals(this.productURL)){ //DB에 있으면 count
                     count++;
                 }
             }
             Log.d("길이길이",count+"");
-            if(count>0) infoBool=true;
-            else infoBool=false;
+            if(count>0) //관심상품 맞아
+                infoBool=true;
+            else //관심상품 아냐
+                infoBool=false;
 
         } catch (JSONException e) {
             Log.d("showResult : ", e.getMessage());

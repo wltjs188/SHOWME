@@ -19,10 +19,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by SAMSUNG on 2019-03-19.
- */
-
 public class ProductAdapter extends ArrayAdapter<Product> {
     private Context context;
     private int resource;
@@ -57,20 +53,6 @@ public class ProductAdapter extends ArrayAdapter<Product> {
                     = (ImageView) convertView.findViewById(R.id.product_img);
             holder.product_Info
                     =(TextView)convertView.findViewById(R.id.product_Info);
-//            holder.productName
-//                    = (TextView) convertView.findViewById(R.id.product_productName);
-//            holder.productPrice
-//                    = (TextView) convertView.findViewById(R.id.product_price);
-//            holder.optionTitle
-//                    = (TextView) convertView.findViewById(R.id.option_title);
-//            holder.optionValue
-//                    = (TextView) convertView.findViewById(R.id.option_value);
-//            holder.optionPrice
-//                    = (TextView) convertView.findViewById(R.id.option_price);
-            //처음 인플레이션 될 때 홀더 객체를 만들어서
-            //홀더 셋트의 위젯 참조변수들이 findViewById
-
-            //holder객체는 각 위젯들이 findViewById한 결과들 집합
             convertView.setTag(holder);
 
 
@@ -84,7 +66,6 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         //2. 껍데기 내부의 위젯들 객체 얻어도기 (findViewById)
         //3. 각 위젯에 데이터 바인딩하기
 
-
         Product p = productList.get(position);
 
         //여기부터 이제 홀더객체 안의 각  위젯에 book객체의 각 멤버면수값들이랑 바인딩하면 됨ㅇㅇ
@@ -97,11 +78,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         else { //검색결과 있을때
             holder.product_Info.setText(p.toString());
             new ImageDownLoader(holder.imageView).execute(p.getProductImage());
-
-            Log.d("채윤",p.toString());
         }
-        //book.getImage() < url에 접속해서 사진을 다운받아 디코딩해서 ImageView에 set
-//      imageLoader.DisplayImage(p.getProductImage(), holder.imageView);
 
         return convertView;
 
@@ -110,14 +87,12 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         return productList.get(i).toString();
     }
     public String getUrl(int i){
+        Log.d("detailurl",productList.get(i).getProductDetailUrl());
         return productList.get(i).getProductDetailUrl();
     }
     public String getImage(int i){
         return images.get(i);
     }
-//    public View getImg(int position, ImageView view){
-//
-//    }
 
     class ImageDownLoader extends AsyncTask<String, Void, Bitmap>
     {
@@ -145,7 +120,6 @@ public class ProductAdapter extends ArrayAdapter<Product> {
             }
             return bitmap;
         }
-
         @Override
         protected void onPostExecute(Bitmap result) {
             // TODO Auto-generated method stub
@@ -155,7 +129,6 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         }
 
     }
-
     static class ProductViewHolder{
         public ImageView imageView;
         public TextView product_Info;

@@ -80,11 +80,10 @@ public class ShopActivity extends AppCompatActivity {
         GridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-                //int img=adapter.getImg(position);
-                //productInfoIntent.putExtra("img",img);
                 Log.d("정보",adapter.getInfo(position));
                 productInfoIntent.putExtra("info", adapter.getInfo(position));
                 productInfoIntent.putExtra("url", adapter.getUrl(position));
+                Log.d("detailurl","상품검색:"+adapter.getUrl(position));
                 productInfoIntent.putExtra("image", adapter.getImage(position));
                 startActivity(productInfoIntent);
             }
