@@ -252,7 +252,6 @@ public class ProductInfo extends AppCompatActivity {
     }
     class DeleteData extends AsyncTask<String, Void, String>{
         ProgressDialog progressDialog;
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -271,7 +270,8 @@ public class ProductInfo extends AppCompatActivity {
             String uuid = (String)params[1];
             String productURL = (String)params[2];
             String serverURL = (String)params[0];
-            String postParameters = "uuid=" + uuid + "&productURL=" + productURL;
+            Log.d("삭제할 데이터",uuid+productURL);
+            String postParameters = "uuid=" + uuid + "&productURL=" + URLEncoder.encode(productURL);
 
             try {
 

@@ -91,7 +91,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         return productList.get(i).getProductDetailUrl();
     }
     public String getImage(int i){
-        return images.get(i);
+        return images.get(i+1);
     }
 
     class ImageDownLoader extends AsyncTask<String, Void, Bitmap>
