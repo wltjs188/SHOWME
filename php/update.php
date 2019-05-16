@@ -15,6 +15,6 @@
 
 	$con = mysqli_connect("localhost","abc","125400","사용자이름");
 	$sql="UPDATE person SET $infoName='$value' WHERE uuid='$uuid'";
-	mysql_query($con,$sql);
+	mysqli_query($con,$sql);
 
 ?>
