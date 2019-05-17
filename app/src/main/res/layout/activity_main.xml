@@ -21,7 +21,7 @@
         android:layout_gravity="center"
         android:layout_margin="180dp"
         android:onClick="onSearchClicked"
-        android:text="쇼우미\n시작"
+        android:text="쇼움이\n시작"
         android:textSize="30dp" />
 
     <Button
