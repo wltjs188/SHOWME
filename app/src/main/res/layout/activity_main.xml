@@ -12,22 +12,24 @@
         android:text="쇼핑 도우미"
         android:textSize="40dp"
         android:layout_gravity="center"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="100dp"
         />
 
     <Button
-        android:layout_width="170dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="50dp"
+        android:layout_margin="180dp"
         android:onClick="onSearchClicked"
-        android:text="쇼핑시작"
-        android:textSize="22dp" />
+        android:text="쇼우미\n시작"
+        android:textSize="30dp" />
 
     <Button
+        android:visibility="gone"
         android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+
         android:layout_marginTop="20dp"
         android:onClick="onWishClicked"
         android:text="나의 관심 상품"
@@ -36,6 +38,7 @@
     />
 
     <Button
+        android:visibility="gone"
         android:id="@+id/info"
         android:layout_width="170dp"
         android:layout_height="wrap_content"
@@ -47,6 +50,7 @@
     />
 
     <Button
+        android:visibility="gone"
         android:id="@+id/web"
         android:layout_width="170dp"
         android:layout_height="wrap_content"
@@ -57,6 +61,7 @@
         android:textSize="22dp" />
     />
     <Button
+        android:visibility="gone"
         android:id="@+id/shop"
         android:layout_width="170dp"
         android:layout_height="wrap_content"
@@ -64,15 +69,6 @@
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:onClick="onShopClicked"
-        />
-    <Button
-        android:id="@+id/productInfoBtn"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        android:text="관심상품"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:onClick="onProductInfoClicked"
         />
 
 </LinearLayout>

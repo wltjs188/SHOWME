@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         infoIntent=new Intent(getApplicationContext(),MyInfoActivity.class);//나의정보수정
         webIntent=new Intent(getApplicationContext(),WebActivity.class);//나의정보수정
         shopIntent=new Intent(getApplicationContext(),ShopActivity.class);//나의정보수정
-        productInfoIntent = new Intent(getApplicationContext(),ProductInfo.class);
+
         int permission2 = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
         if (permission2 != PackageManager.PERMISSION_GRANTED) { makeRequest(); }
 
@@ -241,7 +241,6 @@ public class MainActivity extends AppCompatActivity {
     }
     public void onWebClicked(View view) { startActivity(webIntent); }
     public void onShopClicked(View view) { startActivity(shopIntent); }
-    public void onProductInfoClicked(View view){ startActivity(productInfoIntent); }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_PHONE_STATE},
