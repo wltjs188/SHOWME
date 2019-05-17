@@ -48,7 +48,10 @@ public class ShopActivity extends AppCompatActivity {
 
         keyword=intent.getStringExtra("keyword");
         Color=intent.getStringExtra("Color");
-        keywordEdt.setText(Color+keyword);
+       // keywordEdt.setText(Color+keyword);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
+        getSupportActionBar().setTitle(keyword+"검색 결과");
 
         //keyword=intent.getStringExtra("원피스");
         keywordEdt.setText(keyword);

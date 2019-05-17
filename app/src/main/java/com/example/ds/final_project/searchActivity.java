@@ -240,6 +240,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     public void onResult(AIResponse response) {
         final Result result = response.getResult();
         String parameterString = "";
+
         ACTION=result.getAction();
         int i=0;
         if (result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6&&ACTION.equals("user")) {
@@ -323,7 +324,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     startActivity(shopIntent);
                 }
                 break;
-
             default:
                 break;
 
@@ -343,8 +343,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         chatMessage = new ChatMessage(speech, isMine);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
-
-        if(speech.toString().equals("관심상품 보기 로 이동합니다.")){
+        Log.d("chatMessage",speech+"");
+        if(((speech.toString()).trim()).equals("관심상품보기 로 이동합니다.")||((speech.toString()).trim()).equals("관심상품 보기 로 이동합니다.")){
+            Log.d("chatMessage 같음",speech+"");
             startActivity(wishIntent);
         }
     }
