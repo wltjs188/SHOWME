@@ -1,4 +1,4 @@
-<?php 
+﻿<?php 
 
 	error_reporting(E_ALL); 
     ini_set('display_errors',1); 
@@ -17,7 +17,7 @@
 	require_once('db_config.php');
 	
 	//특정 종업원의 정보를 삭제하는 쿼리문을 작성합니다.
-	$sql = "DELETE FROM wishList WHERE uuid=$uuid AND  productURL=$productURL";
+	$sql = "DELETE FROM wishList WHERE uuid='$uuid' AND  productURL='$productURL'";
 	
 	//쿼리문을 실행합니다.
 	if(mysqli_query($con,$sql)){

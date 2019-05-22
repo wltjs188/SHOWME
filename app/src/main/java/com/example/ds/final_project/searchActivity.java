@@ -45,6 +45,7 @@ import ai.api.model.AIError;
 import ai.api.model.AIEvent;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
+import ai.api.model.ResponseMessage;
 import ai.api.model.Result;
 
 
@@ -65,6 +66,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String query;
     String action;
     String speech;
+    String remenu="";
     //사용자정보 해쉬맵
     Map<String,String> MyInfo = new HashMap<String,String>();
     //사용자정보수정 해쉬맵
@@ -200,6 +202,12 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             }
         });
     }
+    //리메뉴
+    protected String getRemenu(Result result){
+        ResponseMessage.ResponseSpeech responseMessage = (ResponseMessage.ResponseSpeech)result.getFulfillment().getMessages().get(1);
+        remenu=responseMessage.getSpeech().get(0);
+        return remenu;
+    }
     //메뉴 메세지
     protected void makeMenuMsg(){
         ChatMessage chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
@@ -293,6 +301,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             //사용자 정보 DB에 넣기
             InsertData task = new InsertData();
             task.execute("http://" + IP_ADDRESS + "/insert.php",uuid,name,gender,height,top,bottom,shoes);
+            remenu=getRemenu(result);
         }
         UpdateData task = new UpdateData();
 
@@ -302,12 +311,14 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
                     Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
                     task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"name",(""+entry.getValue()).replaceAll("\"",""));
+                    remenu=getRemenu(result);
                 }
                 break;
             case "gender_modi":
                 for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
                     Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
                     task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"gender",(""+entry.getValue()).replaceAll("\"",""));
+                    remenu=getRemenu(result);
                 }
                 break;
             case "height_modi":
@@ -315,24 +326,28 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     MyInfoModi.put(entry.getKey(),""+entry.getValue());
                     Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
                     task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"height",(""+entry.getValue()).replaceAll("\"",""));
+                    remenu=getRemenu(result);
                 }
                 break;
             case "top_modi":
                 for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
                     Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
                     task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"top",(""+entry.getValue()).replaceAll("\"",""));
+                    remenu=getRemenu(result);
                 }
                 break;
             case "bottom_modi":
                 for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
                     Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
                     task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"bottom",(""+entry.getValue()).replaceAll("\"",""));
+                    remenu=getRemenu(result);
                 }
                 break;
             case "shoes_modi":
                 for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
                     Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
                     task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"foot",(""+entry.getValue()).replaceAll("\"",""));
+                    remenu=getRemenu(result);
                 }
                 break;
             case "search" :
@@ -380,6 +395,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         chatMessage = new ChatMessage(speech, true);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
+        if(remenu!=""){
+            chatMessage = new ChatMessage(remenu, true);
+            chatMessages.add(chatMessage);
+            adapter.notifyDataSetChanged();
+            remenu="";
+        }
+
         Log.d("chatMessage",speech+"");
         if(((speech.toString()).trim()).equals("관심상품보기 로 이동합니다.")||((speech.toString()).trim()).equals("관심상품 보기 로 이동합니다.")){
             Log.d("chatMessage 같음",speech+"");
