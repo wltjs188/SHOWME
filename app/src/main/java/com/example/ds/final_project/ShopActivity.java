@@ -89,6 +89,7 @@ public class ShopActivity extends AppCompatActivity {
                 productInfoIntent.putExtra("url", adapter.getUrl(position));
                 Log.d("detailurl","상품검색:"+adapter.getUrl(position));
                 productInfoIntent.putExtra("image", adapter.getImage(position));
+                Log.i("put이미지"+position,adapter.getImage(position));
                 startActivity(productInfoIntent);
             }
         });
@@ -168,14 +169,26 @@ public class ShopActivity extends AppCompatActivity {
     public List<Product> checkError(Message msg){
         Product errProduct;
         int error;
-        for(int i=0;i<((List<Product>) msg.obj).size();i++){
+        for(int i=((List<Product>) msg.obj).size()-1;i>=0;i--){
             errProduct=((List<Product>) msg.obj).get(i);
+
             error=errProduct.errorMessage(errProduct.getProductName(),errProduct.getOptionValueList());
+            Log.i("프로덕트에러번호",error+",");
+            if(errProduct.getProductName()==null){
+                Log.i("프로덕트이름",i+"이름없음");
+            }
+            else if (errProduct.getOptionValueList().size()==0){
+                Log.i("프로덕트옵션",i+"옵션없음");
+            }
+            else{
+                errProduct.getProductName();
+                Log.i("살아남은프로덕트",errProduct.getOptionPriceList()+"&"+errProduct.getOptionValueList());
+            }
+
             if (error==0){ //검색결과 없을때 삭제
                 ((List<Product>) msg.obj).remove(i);
                // productList.remove(i);
-                Log.i("삭제",i+"삭제");
-
+                Log.i("삭제프로덕트",i+"삭제");
             }
         }
         return (List<Product>) msg.obj;

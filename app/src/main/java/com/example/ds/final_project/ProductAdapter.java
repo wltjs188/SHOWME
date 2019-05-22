@@ -71,7 +71,6 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         //여기부터 이제 홀더객체 안의 각  위젯에 book객체의 각 멤버면수값들이랑 바인딩하면 됨ㅇㅇ
 //        holder.imageView.setImageResource(R.drawable.ic_launcher);
         int a=p.errorMessage(p.getProductName(),p.getOptionValueList());
-        Log.i("에러",""+a);
         if(a==0){ //검색결과 없을때
             holder.product_Info.setText("검색결과가 없습니다.");
         }
@@ -91,7 +90,8 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         return productList.get(i).getProductDetailUrl();
     }
     public String getImage(int i){
-        return images.get(i+1);
+//        return images.get(i+1);
+        return productList.get(i).getProductImage();
     }
 
     class ImageDownLoader extends AsyncTask<String, Void, Bitmap>

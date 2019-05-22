@@ -59,6 +59,7 @@ public class ProductInfo extends AppCompatActivity {
         Log.d("detailurl","상세정보 : "+productURL);
         productImg=(ImageView)findViewById(R.id.productImg);
         image=intent.getStringExtra("image");
+        Log.i("이미지",""+image);
         Glide.with(this).load(image).into(productImg);
 
         product_info.setText(info);

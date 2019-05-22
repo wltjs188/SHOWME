@@ -6,14 +6,6 @@
     android:orientation="vertical"
     >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="쇼핑 도우미"
-        android:textSize="40dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="100dp"
-        />
 
     <Button
         android:layout_width="150dp"
@@ -23,6 +15,17 @@
         android:onClick="onSearchClicked"
         android:text="쇼움이\n시작"
         android:textSize="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="쇼핑 도우미"
+        android:textSize="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        />
+
+
 
     <Button
         android:visibility="gone"

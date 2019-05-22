@@ -22,7 +22,7 @@ public class ProductSearchService {
     //요청을 하기 위한 ID와 SECRET
     private static final String CLIENT_ID = "";
     private static final String CLIENT_SECRET = "";
-    private static final int PAGE_SIZE=20; //출력되는 상품수
+    private static final int PAGE_SIZE=30; //출력되는 상품수
     private int PAGE_NUM=1; //페이지번호
     private String sortCd="CP"; //정렬순 //CP:인기순 A:누적판매순 G:평가높은순 I:후기/리뷰많은순 L:낮은가격순 H:높은가격순 N:최근등록순
 
