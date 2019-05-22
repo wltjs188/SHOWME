@@ -16,6 +16,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.kakao.kakaolink.v2.KakaoLinkResponse;
+import com.kakao.kakaolink.v2.KakaoLinkService;
+import com.kakao.message.template.ButtonObject;
+import com.kakao.message.template.CommerceDetailObject;
+import com.kakao.message.template.CommerceTemplate;
+import com.kakao.message.template.ContentObject;
+import com.kakao.message.template.LinkObject;
+import com.kakao.network.ErrorResult;
+import com.kakao.network.callback.ResponseCallback;
+import com.kakao.util.helper.log.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +38,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProductInfo extends AppCompatActivity {
     String IP_ADDRESS = "35.243.72.245";
@@ -76,6 +88,58 @@ public class ProductInfo extends AppCompatActivity {
         //infoBool=true;
         wishCheck.setChecked(infoBool);
 
+    }
+    public void onKakaoClicked(View view){
+        Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_LONG).show();
+        ContentObject contentObject = ContentObject.newBuilder(
+                info,
+                image,
+                LinkObject.newBuilder()
+                        .setWebUrl("https://style.kakao.com/main/women/contentId=100")
+                        .setMobileWebUrl("https://m.style.kakao.com/main/women/contentId=100")
+                        .build())
+                .build();
+
+        CommerceDetailObject commerceDetailObject = CommerceDetailObject.newBuilder(208800)
+                .setDiscountPrice(146160)
+                .setDiscountRate(30)
+                .build();
+
+        ButtonObject firstButtonObject = new ButtonObject("구매하기",
+                LinkObject.newBuilder()
+                        .setWebUrl("https://style.kakao.com/main/women/contentId=100/buy")
+                        .setMobileWebUrl("https://style.kakao.com/main/women/contentId=100/buy")
+                        .build());
+
+        ButtonObject secondButtobObject = new ButtonObject("공유하기",
+                LinkObject.newBuilder()
+                        .setWebUrl("https://style.kakao.com/main/women/contentId=100/share")
+                        .setMobileWebUrl("https://m.style.kakao.com/main/women/contentId=100/share")
+                        .setAndroidExecutionParams("contentId=100&share=true")
+                        .setIosExecutionParams("contentId=100&share=true")
+                        .build());
+
+        CommerceTemplate params =  CommerceTemplate.newBuilder(contentObject, commerceDetailObject)
+                .addButton(firstButtonObject)
+                .addButton(secondButtobObject)
+                .build();
+
+        Map<String, String> serverCallbackArgs = new HashMap<String, String>();
+        serverCallbackArgs.put("user_id", "${current_user_id}");
+        serverCallbackArgs.put("product_id", "${shared_product_id}");
+
+        KakaoLinkService.getInstance().sendDefault(this, params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
+            @Override
+            public void onFailure(ErrorResult errorResult) {
+                Logger.e(errorResult.toString());
+                Log.d("kakao",errorResult.toString());
+            }
+
+            @Override
+            public void onSuccess(KakaoLinkResponse result) {
+                // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
+            }
+        });
     }
     // 값 불러오기
     private String  getPreferences(String key){
