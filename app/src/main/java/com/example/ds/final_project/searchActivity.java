@@ -200,8 +200,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             }
         });
     }
-    //챗봇 시작 메세지
-    protected void makeStartMsg(){
+    //메뉴 메세지
+    protected void makeMenuMsg(){
         ChatMessage chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
                 "1. 상품검색\n" +
                 "2. 사용자 정보 수정\n" +
@@ -268,7 +268,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 //                chatMessages.add(chatMessage);
 //                adapter.notifyDataSetChanged();
 //            }
-        }else{makeStartMsg();
+        }else{makeMenuMsg();
         }
       //  makeStartMsg();
     }
