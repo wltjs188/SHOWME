@@ -1,5 +1,7 @@
 package com.example.ds.final_project;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,6 +116,7 @@ public class Product {
 
     public int errorMessage(String productName, List optionValueList){
         if(productName==null||optionValueList.size()==0) {
+            Log.i("사이즈",""+optionValueList.size());
             return 0; //검색결과 없을때 0
         }
         else return 1; //검색결과 있을때 1

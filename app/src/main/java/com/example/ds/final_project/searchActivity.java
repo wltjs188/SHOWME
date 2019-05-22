@@ -307,7 +307,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                         if ((sub = "" + entry.getValue()) != null) {
                             Log.i("키",entry.getKey());
                             Log.i("밸류",""+entry.getValue());
-                            keyword += sub;
+                            keyword += sub+" ";
                             Log.i("키워드", keyword);
                             if(entry.getKey().equals("Color")){
                                 Color=""+entry.getValue();

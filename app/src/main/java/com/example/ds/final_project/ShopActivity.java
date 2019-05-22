@@ -83,7 +83,7 @@ public class ShopActivity extends AppCompatActivity {
         GridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-                Log.d("정보",adapter.getInfo(position));
+                Log.d(position+"정보",adapter.getInfo(position));
                 productInfoIntent.putExtra("info", adapter.getInfo(position));
                 productInfoIntent.putExtra("url", adapter.getUrl(position));
                 Log.d("detailurl","상품검색:"+adapter.getUrl(position));
@@ -99,6 +99,7 @@ public class ShopActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
+
                 service.nextPage(keyword);
                 ProductSearchThread thread = new ProductSearchThread(service, handler);
                 Toast.makeText(getApplicationContext(), "더보기", 0).show();
@@ -121,8 +122,15 @@ public class ShopActivity extends AppCompatActivity {
                 {
                     products=checkError(msg);
                     productList.clear();
-                    productList.addAll(products.subList(0,ProductNum));
-                    adapter.notifyDataSetChanged();
+                    if (products.size() <= 0) {
+                        Toast.makeText(ShopActivity.this,"검색된 상품이 없습니다.",Toast.LENGTH_LONG).show();
+                    } else if (products.size() < 4) {
+                        productList.addAll(products.subList(0, products.size() - 1));
+                    } else {
+                        productList.addAll(products.subList(0, ProductNum));
+                    }
+                    if(productList.size()>0)
+                        adapter.notifyDataSetChanged();
                 }
 //                arg2이 20이면 상품추가하기
                 else if(msg.arg2==20){
@@ -131,8 +139,17 @@ public class ShopActivity extends AppCompatActivity {
                     for(Product p : data)
                         result += p.getProductName() +"\n";
                     products=checkError(msg);
-                    productList.addAll(products.subList(0,ProductNum));
-                    adapter.notifyDataSetChanged();
+                    if (products.size() <= 0) {
+                        Toast.makeText(ShopActivity.this,"더 보여드릴 상품이 없습니다.",Toast.LENGTH_LONG).show();
+                    }
+                    else if(products.size()<4){
+                        productList.addAll(products.subList(0,products.size()-1));
+                    }
+                    else {
+                        productList.addAll(products.subList(0, ProductNum));
+                    }
+                    if(productList.size()>0)
+                        adapter.notifyDataSetChanged();
                 }
             }
         }
@@ -145,6 +162,9 @@ public class ShopActivity extends AppCompatActivity {
             error=errProduct.errorMessage(errProduct.getProductName(),errProduct.getOptionValueList());
             if (error==0){ //검색결과 없을때 삭제
                 ((List<Product>) msg.obj).remove(i);
+               // productList.remove(i);
+                Log.i("삭제",i+"삭제");
+
             }
         }
         return (List<Product>) msg.obj;
