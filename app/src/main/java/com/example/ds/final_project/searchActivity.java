@@ -76,9 +76,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     private ListView listView;
     private View btnSend;
     private EditText editText;
-    boolean isMine;
+    //boolean isMine;
     static private List<ChatMessage> chatMessages = new ArrayList<>();
-    private ArrayAdapter<ChatMessage> adapter;
+    private ArrayAdapter<ChatMessage> adapter;//= new MessageAdapter(this, 0, chatMessages);
 
     //사용자 정보
     private String uuid;
@@ -137,28 +137,29 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
                 chatMessages.add(chatMessage);
                 adapter.notifyDataSetChanged();
-            }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-                chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
             }
-        }
+//            else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
+//                chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
+//                chatMessages.add(chatMessage);
+//                adapter.notifyDataSetChanged();
+//            }
+        }else{makeStartMsg();}
 
-        if(chatMessages.size()==0){
-            chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
-                    "1. 상품검색\n" +
-                    "2. 사용자 정보 수정\n" +
-                    "3. 관심상품보기", true);
-            chatMessages.add(chatMessage);
-            adapter.notifyDataSetChanged();
-        }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-            chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
-                    "1. 상품검색\n" +
-                    "2. 사용자 정보 수정\n" +
-                    "3. 관심상품보기", true);
-            chatMessages.add(chatMessage);
-            adapter.notifyDataSetChanged();
-        }
+//        if(chatMessages.size()==0){
+//            chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
+//                    "1. 상품검색\n" +
+//                    "2. 사용자 정보 수정\n" +
+//                    "3. 관심상품보기", true);
+//            chatMessages.add(chatMessage);
+//            adapter.notifyDataSetChanged();
+//        }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
+//            chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
+//                    "1. 상품검색\n" +
+//                    "2. 사용자 정보 수정\n" +
+//                    "3. 관심상품보기", true);
+//            chatMessages.add(chatMessage);
+//            adapter.notifyDataSetChanged();
+//        }
 
         //dialogflow
         final AIConfiguration config = new AIConfiguration("b8dda671eb584e3586aba41efdd554cf",
@@ -182,9 +183,14 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     Toast.makeText(searchActivity.this, "Please input some text...", Toast.LENGTH_SHORT).show();
                 } else {
                     //add message to list
-                    isMine=false;
+                   // isMine=false;
                     aiRequest.setQuery(editText.getText().toString());
                     Log.e("입력",editText.getText().toString());
+                    ////////
+                    ChatMessage chatMessage = new ChatMessage(editText.getText().toString(), false);
+                    chatMessages.add(chatMessage);
+                    adapter.notifyDataSetChanged();
+                    ///////
                     new AITask().execute(aiRequest);
                     //서버 입력
 //                    InsertData task = new InsertData();
@@ -192,6 +198,15 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 }
             }
         });
+    }
+    //챗봇 시작 메세지
+    protected void makeStartMsg(){
+        ChatMessage chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
+                "1. 상품검색\n" +
+                "2. 사용자 정보 수정\n" +
+                "3. 관심상품보기", true);
+        chatMessages.add(chatMessage);
+        adapter.notifyDataSetChanged();
     }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
@@ -335,12 +350,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         action=result.getAction();
         // Log.e("액션",action);
         ChatMessage chatMessage;
-        chatMessage = new ChatMessage(query, isMine);
-        chatMessages.add(chatMessage);
-        adapter.notifyDataSetChanged();
+    //    isMine=false;
+//        chatMessage = new ChatMessage(query, false);
+//        chatMessages.add(chatMessage);
+//        adapter.notifyDataSetChanged();
         editText.setText("");
-        isMine=true;
-        chatMessage = new ChatMessage(speech, isMine);
+      //  isMine=true;
+        chatMessage = new ChatMessage(speech, true);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
         Log.d("chatMessage",speech+"");
@@ -539,11 +555,14 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
         int layoutResource = 0; // determined by view type
-        ChatMessage chatMessage = getItem(position);
+       // ChatMessage chatMessage = getItem(position);
+        ChatMessage chatMessage = messages.get(position);
         if (chatMessage.isMine()) {
             layoutResource = R.layout.item_chat_left;
+            Log.d("챗",position+chatMessage.getContent().toString()+"왼");
         } else {
             layoutResource = R.layout.item_chat_right;
+            Log.d("챗",position+chatMessage.getContent().toString()+"오");
         }
 
         if (convertView != null) {
@@ -564,11 +583,13 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         // at runtime
         return 2;
     }
-
     @Override
     public int getItemViewType(int position) {
         // return a value between 0 and (getViewTypeCount - 1)
-        return position % 2;
+        ChatMessage chatMessage = messages.get(position);
+        chatMessage.isMine();
+        if(chatMessage.isMine()) return 0;
+        else return 1;
     }
     private class ViewHolder {
         private TextView msg;
