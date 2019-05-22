@@ -131,19 +131,20 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
 
         Log.d("받아온 사용자 정보",uuid+","+name+","+gender+","+height+","+top+","+bottom+","+foot);
-        if(name==""){
-            // Log.d("야",chatMessages.size()+"");
-            if(chatMessages.size()==0){
-                chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }
-//            else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
+//        if(name==""){
+//            // Log.d("야",chatMessages.size()+"");
+//            if(chatMessages.size()==0){
 //                chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
 //                chatMessages.add(chatMessage);
 //                adapter.notifyDataSetChanged();
 //            }
-        }else{makeStartMsg();}
+////            else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
+////                chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
+////                chatMessages.add(chatMessage);
+////                adapter.notifyDataSetChanged();
+////            }
+//        }else{//makeStartMsg();
+//             }
 
 //        if(chatMessages.size()==0){
 //            chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
@@ -187,9 +188,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     aiRequest.setQuery(editText.getText().toString());
                     Log.e("입력",editText.getText().toString());
                     ////////
-                    ChatMessage chatMessage = new ChatMessage(editText.getText().toString(), false);
-                    chatMessages.add(chatMessage);
-                    adapter.notifyDataSetChanged();
+//                    ChatMessage chatMessage = new ChatMessage(editText.getText().toString(), false);
+//                    chatMessages.add(chatMessage);
+//                    adapter.notifyDataSetChanged();
                     ///////
                     new AITask().execute(aiRequest);
                     //서버 입력
@@ -250,6 +251,26 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 onResult(aiResponse);
             }
         }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(name==""){
+            // Log.d("야",chatMessages.size()+"");
+            if(chatMessages.size()==0){
+                ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
+                chatMessages.add(chatMessage);
+                adapter.notifyDataSetChanged();
+            }
+//            else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
+//                chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
+//                chatMessages.add(chatMessage);
+//                adapter.notifyDataSetChanged();
+//            }
+        }else{makeStartMsg();
+        }
+      //  makeStartMsg();
     }
 
     public void onResult(AIResponse response) {
@@ -350,10 +371,10 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         action=result.getAction();
         // Log.e("액션",action);
         ChatMessage chatMessage;
-    //    isMine=false;
-//        chatMessage = new ChatMessage(query, false);
-//        chatMessages.add(chatMessage);
-//        adapter.notifyDataSetChanged();
+      //  isMine=false;
+        chatMessage = new ChatMessage(query, false);
+        chatMessages.add(chatMessage);
+        adapter.notifyDataSetChanged();
         editText.setText("");
       //  isMine=true;
         chatMessage = new ChatMessage(speech, true);

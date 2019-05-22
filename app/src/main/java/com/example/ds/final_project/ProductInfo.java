@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -101,6 +102,16 @@ public class ProductInfo extends AppCompatActivity {
                 task.execute("http://" + IP_ADDRESS + "/insertWishList.php",uuid,productURL,info,image);
             }
         }
+    }
+    public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
+        switch (item.getItemId()){
+            case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
+                ((MainActivity)MainActivity.CONTEXT).onResume();
+                finish();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
     class InsertData extends AsyncTask<String, Void, String>{
         ProgressDialog progressDialog;

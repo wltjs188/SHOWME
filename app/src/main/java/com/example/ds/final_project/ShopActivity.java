@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -108,6 +109,16 @@ public class ShopActivity extends AppCompatActivity {
             }
         });
 
+    }
+    public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
+        switch (item.getItemId()){
+            case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
+                ((MainActivity)MainActivity.CONTEXT).onResume();
+                finish();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
     private Handler handler = new Handler(){
         public void handleMessage(Message msg){

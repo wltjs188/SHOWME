@@ -113,7 +113,7 @@ public class ProductSearchService {
                                 if (p != null){
                                     p.setProductName(parser.nextText());}
                                 break;
-                            case "ProductImage":
+                            case "ProductImage300":
                                 if (p != null){
                                     p.setProductImage(parser.nextText());
                                 }
