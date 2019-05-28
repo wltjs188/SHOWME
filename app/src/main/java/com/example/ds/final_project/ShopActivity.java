@@ -32,6 +32,8 @@ public class ShopActivity extends AppCompatActivity {
     String Color; //색상
     Intent productInfoIntent;
     int ProductNum=4;
+    List<Product> products; //상품리스트
+    int more_num; //더보기 체크
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,12 +103,17 @@ public class ShopActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-
-                service.nextPage(keyword);
-                ProductSearchThread thread = new ProductSearchThread(service, handler);
                 Toast.makeText(getApplicationContext(), "더보기", 0).show();
-                thread.setColor(Color);
-                thread.start();
+                if(products.size()>more_num && (products.size()-more_num)%4==0){
+                    more_num=more_product(more_num);
+                }
+                else {
+                    more_num=0;
+                    service.nextPage(keyword);
+                    ProductSearchThread thread = new ProductSearchThread(service, handler);
+                    thread.setColor(Color);
+                    thread.start();
+                }
             }
         });
 
@@ -124,7 +131,6 @@ public class ShopActivity extends AppCompatActivity {
     private Handler handler = new Handler(){
         public void handleMessage(Message msg){
             super.handleMessage(msg);
-            List<Product> products;
             if(msg.what ==1 )
             {
                 Product product;
@@ -138,11 +144,15 @@ public class ShopActivity extends AppCompatActivity {
                         Toast.makeText(ShopActivity.this,"검색된 상품이 없습니다.",Toast.LENGTH_LONG).show();
                     } else if (products.size() < 4) {
                         productList.addAll(products.subList(0, products.size() - 1));
+                        more_num=products.size() - 1;
                     } else {
                         productList.addAll(products.subList(0, ProductNum));
+                        more_num=ProductNum;
                     }
                     if(productList.size()>0)
                         adapter.notifyDataSetChanged();
+                    Log.i("리스트사이즈",""+products.size());
+
                 }
 //                arg2이 20이면 상품추가하기
                 else if(msg.arg2==20){
@@ -156,9 +166,11 @@ public class ShopActivity extends AppCompatActivity {
                     }
                     else if(products.size()<4){
                         productList.addAll(products.subList(0,products.size()-1));
+                        more_num=products.size() - 1;
                     }
                     else {
                         productList.addAll(products.subList(0, ProductNum));
+                        more_num=ProductNum;
                     }
                     if(productList.size()>0)
                         adapter.notifyDataSetChanged();
@@ -166,25 +178,32 @@ public class ShopActivity extends AppCompatActivity {
             }
         }
     };
+    public int more_product(int more_num){
+        if (products.size() <= 0) {
+            Toast.makeText(ShopActivity.this,"더 보여드릴 상품이 없습니다.",Toast.LENGTH_LONG).show();
+        }
+        else if(products.size()-more_num<4){
+            productList.addAll(products.subList(more_num,products.size()));
+            more_num+=ProductNum;
+        }
+        else {
+            productList.addAll(products.subList(more_num,ProductNum + more_num));
+            more_num+=ProductNum;
+        }
+
+        if(productList.size()>0)
+            adapter.notifyDataSetChanged();
+
+        return more_num;
+
+    }
+
     public List<Product> checkError(Message msg){
         Product errProduct;
         int error;
         for(int i=((List<Product>) msg.obj).size()-1;i>=0;i--){
             errProduct=((List<Product>) msg.obj).get(i);
-
             error=errProduct.errorMessage(errProduct.getProductName(),errProduct.getOptionValueList());
-            Log.i("프로덕트에러번호",error+",");
-            if(errProduct.getProductName()==null){
-                Log.i("프로덕트이름",i+"이름없음");
-            }
-            else if (errProduct.getOptionValueList().size()==0){
-                Log.i("프로덕트옵션",i+"옵션없음");
-            }
-            else{
-                errProduct.getProductName();
-                Log.i("살아남은프로덕트",errProduct.getOptionPriceList()+"&"+errProduct.getOptionValueList());
-            }
-
             if (error==0){ //검색결과 없을때 삭제
                 ((List<Product>) msg.obj).remove(i);
                // productList.remove(i);

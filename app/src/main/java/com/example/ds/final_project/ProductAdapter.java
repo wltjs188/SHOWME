@@ -127,7 +127,6 @@ public class ProductAdapter extends ArrayAdapter<Product> {
             if(result != null)
                 imageView.setImageBitmap(result);
         }
-
     }
     static class ProductViewHolder{
         public ImageView imageView;
