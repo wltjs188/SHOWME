@@ -74,6 +74,7 @@ public class ProductInfo extends AppCompatActivity {
         Log.i("이미지",""+image);
         Glide.with(this).load(image).into(productImg);
 
+        info = getPreferences("visionResult")+info;
         product_info.setText(info);
         wishCheck=(CheckBox)findViewById(R.id.wishCheck);
         wishCheck.setOnCheckedChangeListener(new CheckBoxListener());

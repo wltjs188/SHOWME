@@ -15,6 +15,13 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        buildTypes.each {
+            it.buildConfigField 'String', 'API_KEY', '"AIzaSyAaYatWr1knKGmO_sAhy2j2xXLeNwjEuUM"'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -42,4 +49,8 @@ dependencies {
     implementation group: 'com.kakao.sdk', name: 'kakaostory', version: '1.17.0'
     // push sdk를 사용하기 위해 필요.
     implementation group: 'com.kakao.sdk', name: 'push', version: '1.17.0'
+    //google vision api
+    implementation 'com.google.api-client:google-api-client-android:1.23.0' exclude module: 'httpclient'
+    implementation 'com.google.http-client:google-http-client-gson:1.23.0' exclude module: 'httpclient'
+    implementation 'com.google.apis:google-api-services-vision:v1-rev369-1.23.0'
 }
