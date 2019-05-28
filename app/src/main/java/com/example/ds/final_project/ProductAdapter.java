@@ -83,7 +83,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
 
     }
     public String getInfo(int i){
-        return productList.get(i).toString()+"이미지 분석정보";
+        return productList.get(i).toString();
     }
     public String getUrl(int i){
         Log.d("detailurl",productList.get(i).getProductDetailUrl());
@@ -93,9 +93,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
 //        return images.get(i+1);
         return productList.get(i).getProductImage();
     }
-    public String getOptionOrder(int i){
-        return productList.get(i).getOptionOrder();
-    }
+
     class ImageDownLoader extends AsyncTask<String, Void, Bitmap>
     {
         ImageView imageView;
