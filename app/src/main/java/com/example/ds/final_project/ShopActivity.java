@@ -125,20 +125,12 @@ public class ShopActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
                 Log.d(position+"정보",adapter.getInfo(position));
                 //startActivity(new Intent());
-                final int index=position;
+               // int index=position-1;
                 visionThread = new Thread(){
                     public void run(){
-                        Bitmap imgBitmap=toBitmap(adapter.getImage(index));
+                        Bitmap imgBitmap=toBitmap(adapter.getImage(position));
                         callCloudVision(imgBitmap);
-//                        try {
-//
-//                                Thread.sleep(5000);
-//
-//                            Log.d("thread", "스레드");
-//                            Thread.sleep(2000);
-//                        }catch (Exception e){
-//
-//                        }
+
                     }
                 };
                 visionThread.start();
@@ -153,7 +145,7 @@ public class ShopActivity extends AppCompatActivity {
 //                }catch (InterruptedException e){
 //                }
  //               Log.d("thread", "스레드 끝");
-                productInfoIntent.putExtra("info", visionResult + "\n" + adapter.getInfo(position));
+                productInfoIntent.putExtra("info", adapter.getInfo(position));
                 productInfoIntent.putExtra("url", adapter.getUrl(position));
                 Log.d("detailurl", "상품검색:" + adapter.getUrl(position));
                 productInfoIntent.putExtra("image", adapter.getImage(position));
@@ -204,7 +196,7 @@ public class ShopActivity extends AppCompatActivity {
         }
         return imgBitmap;
     }
-    private Vision.Images.Annotate prepareAnnotationRequest(final Bitmap bitmap) throws IOException {
+    private Vision.Images.Annotate prepareAnnotationRequest(Bitmap bitmap) throws IOException {
         HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
@@ -309,24 +301,21 @@ public class ShopActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             ShopActivity activity = mActivityWeakReference.get();
             if (activity != null && !activity.isFinishing()) {
-              //  TextView imageDetail = activity.findViewById(R.id.image_details);
-               // imageDetail.setText(result);
                // visionResult=result;
-                Bundle bd = new Bundle();
-                bd.putString("visionResult",result);
-
-                Message msg = handler.obtainMessage();
-                msg.what=2;
-                handler.sendMessage(msg);
+//                Bundle bd = new Bundle();
+//                bd.putString("visionResult",result);
+//
+//                Message msg = handler.obtainMessage();
+//                msg.what=2;
+//                handler.sendMessage(msg);
                 Log.d("visionResult",result);
                 savePreferences("visionResult",result);
-              //  notifyAll();
             }
         }
 
     }
 
-    private void callCloudVision(final Bitmap bitmap) {
+    private void callCloudVision(Bitmap bitmap) {
         // Switch text to loading
 
 
@@ -362,37 +351,43 @@ public class ShopActivity extends AppCompatActivity {
 
 
     private static String convertResponseToString(BatchAnnotateImagesResponse response) {
-        StringBuilder message = new StringBuilder("I found these things:\n\n");  //이미지 상세정보
+        StringBuilder message = new StringBuilder("");  //이미지 상세정보
         List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
         List<EntityAnnotation> texts = response.getResponses().get(0).getTextAnnotations();
-        List<EntityAnnotation> objects = response.getResponses().get(0).getLogoAnnotations();
-        Log.i("객체",""+objects);
+       // List<EntityAnnotation> objects = response.getResponses().get(0).getLogoAnnotations();
+       // Log.i("객체",""+objects);
 
-        if (objects != null) {
-            for (EntityAnnotation object : objects) {
-                message.append(String.format(Locale.KOREA, "%.3f: %s", object.getScore(), object.getDescription()));
-                message.append("\n");
-            }
-        }
-        else {
-            message.append("nothing\n");
-        }
+//        if (objects != null) {
+//            for (EntityAnnotation object : objects) {
+//                message.append(String.format(Locale.KOREA, "%.3f: %s", object.getScore(), object.getDescription()));
+//                message.append("\n");
+//            }
+//        }
+//        else {
+//            message.append("nothing\n");
+//        }
 
         if (labels != null) {
             for (EntityAnnotation label : labels) {
-                message.append(String.format(Locale.KOREA, "%.3f: %s", label.getScore(), label.getDescription()));
-                message.append("\n");
+               // if(label.getScore()>=0.9) {
+                    //message.append(String.format(Locale.KOREA, "%.3f: %s", label.getScore(), label.getDescription()));
+                    if(label.getDescription().equals("Clothing")){}
+                    else {
+                        message.append(String.format(Locale.KOREA, "%s", label.getDescription()));
+                        message.append("\n");
+                    }
+                //}
             }
         }
         else {
-            message.append("nothing\n");
+           // message.append("nothing\n");
         }
 
         if(texts !=null){
             message.append(texts.get(0).getDescription());
         }
         else {
-            message.append("nothing\n");
+          //  message.append("nothing\n");
         }
 
 
@@ -463,11 +458,11 @@ public class ShopActivity extends AppCompatActivity {
                         adapter.notifyDataSetChanged();
                 }
             }
-            else if(msg.what==2){
-                Bundle bd=msg.getData();
-                visionResult = bd.getString("visionResult");
-        //        Log.d("visionResult",visionResult);
-            }
+//            else if(msg.what==2){
+//                Bundle bd=msg.getData();
+//                visionResult = bd.getString("visionResult");
+//        //        Log.d("visionResult",visionResult);
+//            }
         }
     };
     public int more_product(int more_num){
