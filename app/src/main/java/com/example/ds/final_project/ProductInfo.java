@@ -476,10 +476,10 @@ public class ProductInfo extends AppCompatActivity {
                 JSONObject item = jsonArray.getJSONObject(i);
                 String uuid = item.getString("uuid");
                 String productURL = item.getString("productURL");
-                Log.d("서버에서","받은"+uuid);
-                Log.d("서버에서","받은"+productURL);
-                Log.d("서버에서","진짜"+this.uuid);
-                Log.d("서버에서","진짜"+this.productURL);
+//                Log.d("서버에서","받은"+uuid);
+//                Log.d("서버에서","받은"+productURL);
+//                Log.d("서버에서","진짜"+this.uuid);
+//                Log.d("서버에서","진짜"+this.productURL);
                 if(uuid.equals(this.uuid)&&productURL.equals(this.productURL)){ //DB에 있으면 count
                     count++;
                 }

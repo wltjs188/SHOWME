@@ -52,24 +52,25 @@ public class ShopActivity extends AppCompatActivity {
     private final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
     private final int MAX_LABEL_RESULTS = 10;
-    private  final int MAX_DIMENSION = 1200;
     private final String TAG = ShopActivity.class.getSimpleName();
-    private String visionResult;
     Thread visionThread;
     ///////////////////////////////////////////////////////////////
     private EditText keywordEdt;
     private Button searchBtn;
     private Button moreBtn;
     private List<Product> productList;
+    private List<Option> optionList;
     private GridView GridView;
     private ProductAdapter adapter;
     ProductSearchService service;
 
     String keyword; //키워드
     String Color; //색상
+
     Intent productInfoIntent;
     int ProductNum=4;
-    List<Product> products; //상품리스트
+   // List<Product> products; //상품리스트
+    List<Option> options; //상품리스트
     int more_num; //더보기 체크
 
     @Override
@@ -81,7 +82,8 @@ public class ShopActivity extends AppCompatActivity {
         searchBtn = (Button) findViewById(R.id.main_search_btn);
         moreBtn = (Button) findViewById(R.id.main_more_btn);
         productList = new ArrayList<Product>();
-        adapter = new ProductAdapter(this, R.layout.list_product_item, productList);
+        optionList = new ArrayList<Option>();
+        adapter = new ProductAdapter(this, R.layout.list_product_item,optionList);
         GridView = (GridView) findViewById(R.id.main_GridView);
         GridView.setAdapter(adapter);
         Intent intent=getIntent();
@@ -162,7 +164,7 @@ public class ShopActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 Toast.makeText(getApplicationContext(), "더보기", 0).show();
-                if(products.size()>more_num && (products.size()-more_num)%4==0){
+                if(options.size()>more_num && (options.size()-more_num)%4==0){
                     more_num=more_product(more_num);
                 }
                 else {
@@ -415,47 +417,57 @@ public class ShopActivity extends AppCompatActivity {
             super.handleMessage(msg);
             if(msg.what ==1 )
             {
-                Product product;
+                //Product product;
                 int error;
                 //arg1이 10이면 처음 검색에 대한 결과를 갖다 준걸로
                 if(msg.arg1==10)
                 {
-                    products=checkError(msg);
-                    productList.clear();
-                    if (products.size() <= 0) {
+                    options=checkError(msg);
+//                    optionList.clear();
+                    if (options.size() <= 0) {
                         Toast.makeText(ShopActivity.this,"검색된 상품이 없습니다.",Toast.LENGTH_LONG).show();
-                    } else if (products.size() < 4) {
-                        productList.addAll(products.subList(0, products.size() - 1));
-                        more_num=products.size() - 1;
-                    } else {
-                        productList.addAll(products.subList(0, ProductNum));
+                    } else if (options.size() < 4) {
+                        optionList.addAll(options.subList(0, options.size() - 1));
+                        more_num=options.size() - 1;
+                    }
+                    else {
+                        optionList.addAll(options.subList(0, ProductNum));
                         more_num=ProductNum;
                     }
-                    if(productList.size()>0)
+                    if(optionList.size()>0){
                         adapter.notifyDataSetChanged();
-                    Log.i("리스트사이즈",""+products.size());
+                        for (int i = 0; i < optionList.size(); i++) {
+                            Log.i("사이트", optionList.get(i).getOptionValue() + "&&" + optionList.get(i).getOptionOrder()+"&&"+optionList.get(i).getProductDetailUrl());;
+                        }
+                    }
+
+
 
                 }
 //                arg2이 20이면 상품추가하기
                 else if(msg.arg2==20){
-                    String result = "";
-                    List<Product> data = (List<Product>)msg.obj;
-                    for(Product p : data)
-                        result += p.getProductName() +"\n";
-                    products=checkError(msg);
-                    if (products.size() <= 0) {
+                    //String result = "";
+                    List<Option> data = (List<Option>)msg.obj;
+//                    for(Option o : data)
+//                        result += p.getProductName() +"\n";
+                    options=checkError(msg);
+                    if (options.size() <= 0) {
                         Toast.makeText(ShopActivity.this,"더 보여드릴 상품이 없습니다.",Toast.LENGTH_LONG).show();
                     }
-                    else if(products.size()<4){
-                        productList.addAll(products.subList(0,products.size()-1));
-                        more_num=products.size() - 1;
+                    else if(options.size()<4){
+                        optionList.addAll(options.subList(0,options.size()-1));
+                        more_num=options.size() - 1;
                     }
                     else {
-                        productList.addAll(products.subList(0, ProductNum));
+                        optionList.addAll(options.subList(0, ProductNum));
                         more_num=ProductNum;
                     }
-                    if(productList.size()>0)
+                    if(optionList.size()>0) {
                         adapter.notifyDataSetChanged();
+                        for (int i = 0; i < optionList.size(); i++) {
+                            Log.i("사이트", optionList.get(i).getOptionValue() + "&&" + optionList.get(i).getOptionOrder()+"&&"+optionList.get(i).getProductDetailUrl());;
+                        }
+                    }
                 }
             }
 //            else if(msg.what==2){
@@ -466,38 +478,38 @@ public class ShopActivity extends AppCompatActivity {
         }
     };
     public int more_product(int more_num){
-        if (products.size() <= 0) {
+        if (options.size() <= 0) {
             Toast.makeText(ShopActivity.this,"더 보여드릴 상품이 없습니다.",Toast.LENGTH_LONG).show();
         }
-        else if(products.size()-more_num<4){
-            productList.addAll(products.subList(more_num,products.size()));
+        else if(options.size()-more_num<4){
+            optionList.addAll(options.subList(more_num,options.size()));
             more_num+=ProductNum;
         }
         else {
-            productList.addAll(products.subList(more_num,ProductNum + more_num));
+            optionList.addAll(options.subList(more_num,ProductNum + more_num));
             more_num+=ProductNum;
         }
 
-        if(productList.size()>0)
+        if(optionList.size()>0)
             adapter.notifyDataSetChanged();
 
         return more_num;
 
     }
 
-    public List<Product> checkError(Message msg){
-        Product errProduct;
+    public List<Option> checkError(Message msg){
+        Option errOption;
         int error;
-        for(int i=((List<Product>) msg.obj).size()-1;i>=0;i--){
-            errProduct=((List<Product>) msg.obj).get(i);
-            error=errProduct.errorMessage(errProduct.getProductName(),errProduct.getOptionValueList());
-            if (error==0){ //검색결과 없을때 삭제
-                ((List<Product>) msg.obj).remove(i);
+        for(int i=((List<Option>) msg.obj).size()-1;i>=0;i--){
+            errOption=((List<Option>) msg.obj).get(i);
+
+//            error=errOption.errorMessage(errOption.getProductName(),errOption.getOptionValueMap());
+            if (errOption.getOptionPrice()==null){ //검색결과 없을때 삭제
+                ((List<Option>) msg.obj).remove(i);
                // productList.remove(i);
-                Log.i("삭제프로덕트",i+"삭제");
             }
         }
-        return (List<Product>) msg.obj;
+        return (List<Option>) msg.obj;
     }
 }
 

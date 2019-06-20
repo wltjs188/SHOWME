@@ -1,5 +1,7 @@
 package com.example.ds.final_project;
 
+import android.util.Log;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -84,17 +86,19 @@ public class ProductSearchService {
             int eventType = parser.getEventType();
 
             Product p = null;
+            String next="";
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
                     case XmlPullParser.END_DOCUMENT: // 문서의 끝
                         break;
-                    case XmlPullParser.START_DOCUMENT:
-                        list = new ArrayList<Product>();
+                    case XmlPullParser.START_DOCUMENT: //문서의 시작
+                        list = new ArrayList<Product>(); //ProductList 생성
                         break;
-                    case XmlPullParser.END_TAG: {
+
+                    case XmlPullParser.END_TAG: { //태그의 끝
                         String tag = parser.getName();
                         if (tag.equals("Product")) {
-                            list.add(p);
+                            list.add(p); //상품리스트에 상품 추가
                             p = null;
                         }
                     }
@@ -106,7 +110,7 @@ public class ProductSearchService {
                                 break;
                             case "ProductCode":
                                 if (p != null){
-                                    p.setProductCode(parser.nextText());
+                                    p.setProductCode(next=parser.nextText());
                                 }
                                 break;
                             case "ProductName":
@@ -129,6 +133,7 @@ public class ProductSearchService {
                                 break;
                         }
                     }
+
                 }
                 eventType = parser.next();
             }
@@ -150,12 +155,17 @@ public class ProductSearchService {
     }
 
     //상세정보 조회
-    public List<Product> search_detail(List<Product> productList, String color) {
+    public List<Option> search_detail(List<Product> productList, String color) {
+        List<Option> list = null;
+        List<Option> realList=null;
+
         for (int i = 0; i < productList.size(); i++) {
             URL_DETAIL="http://openapi.11st.co.kr/openapi/OpenApiService.tmall?key=ad722ec66e955e9c584c2b828158dee9&apiCode=ProductInfo&productCode=";
             Product p=productList.get(i);
             productcode=p.getProductCode();
             URL_DETAIL=URL_DETAIL+productcode+"&option=PdOption";
+            String titleName="";
+
 
             try {
                 java.net.URL url;
@@ -167,47 +177,82 @@ public class ProductSearchService {
                 XmlPullParser parser = factory.newPullParser();
                 // 요청에 대한 응답 결과를 파서에 세팅
                 parser.setInput(new InputStreamReader(urlConn.getInputStream(), "EUC-KR"));
+
                 int eventType = parser.getEventType();
+                Option o=null;
 
                 while (eventType != XmlPullParser.END_DOCUMENT) {
                     switch (eventType) {
                         case XmlPullParser.END_DOCUMENT: // 문서의 끝
                             break;
                         case XmlPullParser.START_DOCUMENT:
+                            if(realList==null){
+                                list=new ArrayList<Option>();
+                                realList=new ArrayList<Option>();
+                            }
+                            else {
+                                realList.addAll(list);
+                                list = new ArrayList<Option>();
+                            }
                             break;
                         case XmlPullParser.END_TAG: {
+                            String tag=parser.getName();
+                            if(tag.equals("Value")){
+
+                                list.add(o);
+                                o=null;
+                            }
                             break;
                         }
                         case XmlPullParser.START_TAG: {
                             String tag = parser.getName();
                             switch (tag) {
+                                case "Value":
+                                        o=new Option();
+                                        o.setProductCode(p.getProductCode());
+                                        o.setProductImage(p.getProductImage());
+                                        o.setProductDetailUrl(p.getProductDetailUrl());
+                                        o.setOptionTitle(titleName);
+//                                        Log.i("옵션생성",o.getProductCode());
+                                    break;
                                 case "Order":
-                                    if (p != null) {
+                                    if (o != null) {
                                         String a=parser.nextText();
-                                        p.setOptionOrder(a);
+                                        o.setOptionOrder(a);
+//                                        Log.i("옵션오더번호",o.getOptionOrder());
                                     }
                                     break;
                                 case "TitleName":
-                                    if (p != null) {
                                         String title=parser.nextText();
-                                        p.setOptionTitle(title);
-                                    }
+                                        titleName=title;
                                     break;
                                 case "ValueName":
-                                    if (p != null) {
+                                    if (o != null) {
                                         String name=parser.nextText();
                                         if(name.contains(color)){ //색 필터링
-                                            p.setOptionValueList(name);
-                                            p.setChagneValue(1);//추가됐을때
+                                            // p.setOptionValueList(name);
+                                            // p.setOptionValueList(Integer.parseInt(p.getOptionOrder()),name);
+                                            //o.setOptionValueMap(o, name);
+                                            o.setOptionValue(name);
+                                            o.setChagneValue(1);//추가됐을때
+//                                            Log.i("옵션밸류이름",o.getOptionValue());
+                                            //  Log.d("채윤이",o);
+                                            //  Log.d("채윤이 order: ",p.getOptionOrder());
                                         }
                                         else
-                                            p.setChagneValue(0); //추가안됐을때
+                                            o.setChagneValue(0); //추가안됐을때
                                     }
                                     break;
                                 case "Price":
-                                    if (p != null&&p.getOptionValueList().size()>0&&p.getChangeValue()==1) {
+                                    if (o != null&&o.getChangeValue()==1) {
                                         String price=parser.nextText();
-                                        p.setOptionPriceList(price);
+                                        // p.setOptionPriceList(price);
+                                        // p.setOptionPriceList(Integer.parseInt(p.getOptionOrder()),price);
+
+                                        //p.setOptionPriceMap(o, price);
+                                        o.setOptionPrice(price);
+                                        //  Log.d("채윤이",o);
+//                                        Log.i("옵션가격",o.getOptionPrice());
                                     }
                                     break;
                             }
@@ -231,7 +276,7 @@ public class ProductSearchService {
             }
 
         }
-        return productList;
+        return realList;
     }
 
 

@@ -19,18 +19,20 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductAdapter extends ArrayAdapter<Product> {
+public class ProductAdapter extends ArrayAdapter<Option> {
     private Context context;
     private int resource;
-    private List<Product> productList;
+    //private List<Product> productList;
+    private List<Option> optionList;
     private ImageLoader imageLoader;
     ArrayList<String> images=new ArrayList<String>();
-    public ProductAdapter(Context context, int resource, List<Product> productList) {
-        super(context, resource,productList);
+    public ProductAdapter(Context context, int resource, List<Option> optionList) {
+        super(context, resource ,optionList);
         // TODO Auto-generated constructor stub
         this.context = context;
         this.resource = resource;
-        this.productList = productList;
+       // this.productList = productList;
+        this.optionList=optionList;
         imageLoader= new ImageLoader(context);
     }
 
@@ -66,32 +68,35 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         //2. 껍데기 내부의 위젯들 객체 얻어도기 (findViewById)
         //3. 각 위젯에 데이터 바인딩하기
 
-        Product p = productList.get(position);
+        Option o = optionList.get(position);
 
         //여기부터 이제 홀더객체 안의 각  위젯에 book객체의 각 멤버면수값들이랑 바인딩하면 됨ㅇㅇ
 //        holder.imageView.setImageResource(R.drawable.ic_launcher);
-        int a=p.errorMessage(p.getProductName(),p.getOptionValueList());
-        if(a==0){ //검색결과 없을때
+        //int a=o.errorMessage(p.getProductName(),p.getOptionValueMap());
+        if(o==null){ //검색결과 없을때
             holder.product_Info.setText("검색결과가 없습니다.");
         }
         else { //검색결과 있을때
-            holder.product_Info.setText(p.toString());
-            new ImageDownLoader(holder.imageView).execute(p.getProductImage());
+            holder.product_Info.setText(o.toString());
+            new ImageDownLoader(holder.imageView).execute(o.getProductImage());
         }
 
         return convertView;
 
     }
     public String getInfo(int i){
-        return productList.get(i).toString();
+        return optionList.get(i).toString();
     }
     public String getUrl(int i){
-        Log.d("detailurl",productList.get(i).getProductDetailUrl());
-        return productList.get(i).getProductDetailUrl();
+        Log.d("detailurl",optionList.get(i).getProductDetailUrl());
+        return optionList.get(i).getProductDetailUrl();
     }
     public String getImage(int i){
-//        return images.get(i+1);
-        return productList.get(i).getProductImage();
+
+        return optionList.get(i).getProductImage();
+    }
+    public String getOption(int i){
+        return optionList.get(i).getOptionOrder();
     }
 
     class ImageDownLoader extends AsyncTask<String, Void, Bitmap>
