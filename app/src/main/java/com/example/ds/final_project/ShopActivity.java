@@ -136,17 +136,7 @@ public class ShopActivity extends AppCompatActivity {
                     }
                 };
                 visionThread.start();
-//                try{
-//                    synchronized(thread){
-//                        Thread.currentThread().wait();
-//                    }
-                    //Thread.currentThread().wait();
-                  //  Thread.wait();
-                   // visionThread.join();
 
-//                }catch (InterruptedException e){
-//                }
- //               Log.d("thread", "스레드 끝");
                 productInfoIntent.putExtra("info", adapter.getInfo(position));
                 productInfoIntent.putExtra("url", adapter.getUrl(position));
                 Log.d("detailurl", "상품검색:" + adapter.getUrl(position));
@@ -303,13 +293,7 @@ public class ShopActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             ShopActivity activity = mActivityWeakReference.get();
             if (activity != null && !activity.isFinishing()) {
-               // visionResult=result;
-//                Bundle bd = new Bundle();
-//                bd.putString("visionResult",result);
-//
-//                Message msg = handler.obtainMessage();
-//                msg.what=2;
-//                handler.sendMessage(msg);
+
                 Log.d("visionResult",result);
                 savePreferences("visionResult",result);
             }
@@ -356,18 +340,6 @@ public class ShopActivity extends AppCompatActivity {
         StringBuilder message = new StringBuilder("");  //이미지 상세정보
         List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
         List<EntityAnnotation> texts = response.getResponses().get(0).getTextAnnotations();
-       // List<EntityAnnotation> objects = response.getResponses().get(0).getLogoAnnotations();
-       // Log.i("객체",""+objects);
-
-//        if (objects != null) {
-//            for (EntityAnnotation object : objects) {
-//                message.append(String.format(Locale.KOREA, "%.3f: %s", object.getScore(), object.getDescription()));
-//                message.append("\n");
-//            }
-//        }
-//        else {
-//            message.append("nothing\n");
-//        }
 
         if (labels != null) {
             for (EntityAnnotation label : labels) {
