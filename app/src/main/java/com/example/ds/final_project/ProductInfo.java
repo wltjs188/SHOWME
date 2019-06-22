@@ -587,6 +587,7 @@ public class ProductInfo extends AppCompatActivity {
             //tvResult.setText(items.getTranslatedText());
             info+=items.getTranslatedText();
             product_info.setText(info);
+            Log.i("이미지분석",info);
         }
 
 
@@ -595,7 +596,10 @@ public class ProductInfo extends AppCompatActivity {
         private class TranslatedItem {
             String translatedText;
 
+
             public String getTranslatedText() {
+
+                translatedText=translatedText.replaceAll(System.getProperty("line.separator"),"&");
                 return translatedText;
             }
         }
