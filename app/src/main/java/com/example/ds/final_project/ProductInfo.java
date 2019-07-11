@@ -103,7 +103,6 @@ public class ProductInfo extends AppCompatActivity {
 
     }
     public void onKakaoClicked(View view){
-        Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_LONG).show();
         ContentObject contentObject = ContentObject.newBuilder(
                 info,
                 image,
