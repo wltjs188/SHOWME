@@ -1,7 +1,7 @@
 package com.example.ds.final_project;
 
 public class ChatMessage {
-    //메세지
+    //메세지 하하
     private String content;
     private boolean isMine;
 
