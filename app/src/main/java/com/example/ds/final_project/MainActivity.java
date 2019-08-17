@@ -114,8 +114,11 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.dismiss();
 
             if (result == null){
+                Log.i(TAG,"RESULT="+result);
+
             }
             else {
+                Log.i(TAG,"RESULT="+result);
                 mJsonString = result;
                 showResult();
             }
@@ -292,7 +295,15 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(result);
 
             progressDialog.dismiss();
-            Log.d(TAG, "POST response  - " + result);
+            if (result == null){
+                Log.i(TAG,"nullRESULT="+result);
+
+            }
+            else {
+                Log.i(TAG,"RESULT="+result);
+                mJsonString = result;
+                showResult();
+            }
         }
         @Override
         protected String doInBackground(String... params) {
@@ -319,6 +330,7 @@ public class MainActivity extends AppCompatActivity {
             //String postParameters = "uuid=" + uuid + "&name=" + name + "&gender=" + gder+ "&height=" + height+ "&top=" + top+ "&bottom=" + bottom+ "&foot=" + foot;
             String postParameters = "id=" + id + "&name=" + name +"&image=" + image + "&price=" + price
                     +"&size=" + size +"&color=" + color +"&fabric=" + fabric +"&pattern=" + pattern +"&detail=" + detail;
+            Log.i(TAG,"파라미터:"+postParameters);
             try {
 
                 URL url = new URL(serverURL);
@@ -335,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
                 outputStream.close();
 
                 int responseStatusCode = httpURLConnection.getResponseCode();
-                Log.d(TAG, "POST response code - " + responseStatusCode);
+                Log.d(TAG, "POSTabc response code - " + responseStatusCode);
 
                 InputStream inputStream;
                 if(responseStatusCode == HttpURLConnection.HTTP_OK) {

@@ -1,4 +1,4 @@
-<?php 
+﻿<?php 
     error_reporting(E_ALL); 
     ini_set('display_errors',1); 
     include('dbcon.php');
@@ -32,8 +32,15 @@
                 $stmt->bindParam(':p_fabric', $p_fabric);
                 $stmt->bindParam(':p_pattern', $p_pattern);
                 $stmt->bindParam(':p_detail', $p_detail);
+	  if($stmt->execute())
+                {
+                    $successMSG = "상품  등록되었습니다.";
+                }
+                else
+                {
+                    $errMSG = "상품  추가 에러";
+                }
                 
-                $successMSG = "새로운 상품을 추가했습니다.";
             } catch(PDOException $e) {
                 die("Database error: " . $e->getMessage()); 
             }
