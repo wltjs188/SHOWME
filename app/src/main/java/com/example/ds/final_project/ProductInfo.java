@@ -164,7 +164,6 @@ public class ProductInfo extends AppCompatActivity {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             // 체크박스를 클릭해서 상태가 바꾸었을 경우 호출되는 콜백 메서드
             if(!wishCheck.isChecked()) {
-                //토스트 메세지가 왜 안뜰깡..
                 Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_LONG).show();
                 //DB에서 삭제
                 DeleteData task = new DeleteData();

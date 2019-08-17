@@ -17,8 +17,7 @@ public class Option {
 
     @Override
     public String toString() {
-        //    return "Product [productCode=" + productCode + ", productName=" + productName + ", productImage=" + productImage
-        //            + ", productDetailUrl=" + productDetailUrl + ", productPrice=" + productPrice + "]";
+
         String str1 = optionTitle;
         String[] words = str1.split(",");
         String str2 =  optionValue;

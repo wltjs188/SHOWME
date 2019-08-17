@@ -20,6 +20,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.ds.final_project.db.InsertProduct;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,17 +32,18 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
-
+    String TAG = "phptest";
     public static Context CONTEXT;
     //메인화면
-    Intent searchIntent,wishIntent,infoIntent,webIntent,shopIntent,productInfoIntent; //쇼핑시작,나의관심상품,정보수정
+    Intent searchIntent,wishIntent,infoIntent,webIntent,shopIntent,dbTestIntent; //쇼핑시작,나의관심상품,정보수정
     //서버
-    String IP_ADDRESS = "35.243.72.245";
+    String IP_ADDRESS = "18.191.10.193";
     private String mJsonString;
     //사용자 정보
     private String uuid; //스마트폰 고유번호
@@ -260,9 +263,101 @@ public class MainActivity extends AppCompatActivity {
     }
     public void onWebClicked(View view) { startActivity(webIntent); }
     public void onShopClicked(View view) { startActivity(shopIntent); }
+    public void onDBTestClicked(View view){
+//        InsertProduct task = new InsertProduct();
+//        task.execute("http://" + IP_ADDRESS + "/insertProduct.php","p_id","p_name","p_image","p_price",
+//                "p_size","p_color","p_fabric","p_pattern","p_detail");
+        InsertData task = new InsertData();
+        task.execute("http://" + IP_ADDRESS + "/insertProduct.php","id","name","image","price", "size","color","fabric","pattern","detail");
+    }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_PHONE_STATE},
                 101);
+    }
+
+
+    class InsertData extends AsyncTask<String, Void, String>{
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(MainActivity.this,
+                    "Please Wait", null, true, true);
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            progressDialog.dismiss();
+            Log.d(TAG, "POST response  - " + result);
+        }
+        @Override
+        protected String doInBackground(String... params) {
+
+//            String uuid = (String)params[1];
+//            String name = (String)params[2];
+//            String gender = (String)params[3];
+//            String height = (String)params[4];
+//            String top = (String)params[5];
+//            String bottom = (String)params[6];
+//            String foot = (String)params[7];
+
+            String id = (String)params[1];
+            String name = (String)params[2];
+            String image = (String)params[3];
+            String price=(String)params[4];
+            String size=(String)params[5];
+            String color=(String)params[6];
+            String fabric=(String)params[7];
+            String pattern=(String)params[8];
+            String detail=(String)params[9];
+
+            String serverURL = (String)params[0];
+            //String postParameters = "uuid=" + uuid + "&name=" + name + "&gender=" + gder+ "&height=" + height+ "&top=" + top+ "&bottom=" + bottom+ "&foot=" + foot;
+            String postParameters = "id=" + id + "&name=" + name +"&image=" + image + "&price=" + price
+                    +"&size=" + size +"&color=" + color +"&fabric=" + fabric +"&pattern=" + pattern +"&detail=" + detail;
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                Log.d(TAG, "POST response code - " + responseStatusCode);
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+                bufferedReader.close();
+                return sb.toString();
+            } catch (Exception e) {
+                Log.d(TAG, "InsertData: Error ", e);
+                return new String("Error: " + e.getMessage());
+            }
+        }
     }
 }

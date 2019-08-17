@@ -19,26 +19,28 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <!--<activity-->
-            <!--android:name=".searchActivity"-->
-            <!--android:label="@string/title_activity_search"-->
-            <!--android:theme="@style/AppTheme.NoActionBar" />-->
+        </activity> <!-- <activity -->
+        <!-- android:name=".searchActivity" -->
+        <!-- android:label="@string/title_activity_search" -->
+        <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
         <activity android:name=".searchActivity" />
         <activity android:name=".MyInfoActivity" />
         <activity android:name=".WishListActivity" />
         <activity android:name=".ShopActivity" />
-        <activity android:name=".WebActivity"/>
+        <activity android:name=".WebActivity" />
         <activity android:name=".ProductInfo">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="@string/kakao_scheme"
-                    android:host="@string/kakaolink_host" />
+                <data
+                    android:host="@string/kakaolink_host"
+                    android:scheme="@string/kakao_scheme" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />

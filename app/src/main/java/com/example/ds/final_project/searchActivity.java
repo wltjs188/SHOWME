@@ -53,7 +53,7 @@ import ai.api.model.Result;
 public class searchActivity extends AppCompatActivity implements AIListener{
 
     //서버
-    String IP_ADDRESS = "35.243.72.245";
+    String IP_ADDRESS = "18.191.10.193";
     String TAG = "phptest";
     //키워드
     String keyword="";
@@ -283,7 +283,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
     public void onResult(AIResponse response) {
         final Result result = response.getResult();
-        String parameterString = "";
 
         ACTION=result.getAction();
         int i=0;

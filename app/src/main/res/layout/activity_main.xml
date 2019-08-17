@@ -18,12 +18,18 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="180dp"
+
         android:onClick="onSearchClicked"
         android:text="쇼움이\n시작"
         android:textSize="30dp" />
 
-
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:onClick="onDBTestClicked"
+        android:text="DB Test"
+        android:textSize="30dp" />
 
 
 
