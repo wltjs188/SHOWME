@@ -36,17 +36,19 @@ public class InsertProduct extends AsyncTask<String, Void, String> {
 
         String p_id = (String)params[1];
         String p_name = (String)params[2];
-        String p_image = (String)params[3];
-        String p_price=(String)params[4];
-        String p_size=(String)params[5];
-        String p_color=(String)params[6];
-        String p_fabric=(String)params[7];
-        String p_pattern=(String)params[8];
-        String p_detail=(String)params[9];
+        String p_category = (String)params[3];
+        String p_length = (String)params[4];
+        String p_image = (String)params[5];
+        String p_price=(String)params[6];
+        String p_size=(String)params[7];
+        String p_color=(String)params[8];
+        String p_fabric=(String)params[9];
+        String p_pattern=(String)params[10];
+        String p_detail=(String)params[11];
 
         String serverURL = (String)params[0];
-        String postParameters = "p_id=" + p_id + "&p_name=" + p_name +"&p_image=" + URLEncoder.encode(p_image) + "&p_price=" + p_price
-                +"&p_size=" + p_size +"&p_color=" + p_color +"&p_fabric=" + p_fabric +"&p_pattern=" + p_pattern +"&p_detail=" + p_detail;
+        String postParameters = "id=" + p_id + "&name=" + p_name + "&category=" + p_category+ "&length=" + p_length+"&image=" + URLEncoder.encode(p_image) + "&price=" + p_price
+                +"&size=" + p_size +"&color=" + p_color +"&fabric=" + p_fabric +"&pattern=" + p_pattern +"&detail=" + p_detail;
 
         try {
 
