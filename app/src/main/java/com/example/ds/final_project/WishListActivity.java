@@ -48,7 +48,7 @@ public class WishListActivity extends AppCompatActivity {
     GridView gv;
     int index=0;
     String mJsonString;
-    String IP_ADDRESS = "35.243.72.245";
+    String IP_ADDRESS = "18.191.10.193";
     private WishAdapter adapter;
     String uuid;
     //상품정보 List
