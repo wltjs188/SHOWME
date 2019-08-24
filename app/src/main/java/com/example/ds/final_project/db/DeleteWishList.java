@@ -34,9 +34,11 @@ public class DeleteWishList extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
             String uid = (String)params[1];
             String productId = (String)params[2];
+            String optionNum = (String)params[3];
+
             String serverURL = (String)params[0];
             Log.d("삭제할 데이터",uid+productId);
-            String postParameters = "uid=" + uid + "&productId=" + productId;
+            String postParameters = "uid=" + uid + "&productId=" + productId+ "&optionNum=" + optionNum;
 
             try {
 

@@ -8,13 +8,14 @@ include('dbcon.php');
 
 //POST 값을 읽어온다.
 $uuid=isset($_POST['uid']) ? $_POST['uid'] : '';
-
+$productId=isset($_POST['productId']) ? $_POST['productId'] : '';
+$optionNum=isset($_POST['optionNum']) ? $_POST['optionNum'] : '';
 $android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
 
 
 if ($uuid != "" ){ 
 
-    $sql="select * from WishList where uid='$uid'";
+    $sql="select * from WishList where uid='$uid' and productId='$productId' and optionNum='$optionNum' ";
     $stmt = $con->prepare($sql);
     $stmt->execute();
  

@@ -13,7 +13,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class UpdateWishList extends AsyncTask<String, Void, String> {
+public class InsertWishList extends AsyncTask<String, Void, String> {
 //    ProgressDialog progressDialog;
 String TAG = "phptest";
     @Override
@@ -33,9 +33,9 @@ String TAG = "phptest";
 
         String uid = (String)params[1];
         String productId = (String)params[2];
-
+        String optionNum = (String)params[3];
         String serverURL = (String)params[0];
-        String postParameters = "uid=" + uid + "&productId=" + productId ;
+        String postParameters = "uid=" + uid + "&productId=" + productId+"&optionNum=" + optionNum ;
 
         try {
 

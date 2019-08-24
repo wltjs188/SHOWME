@@ -52,9 +52,10 @@ public class WishListActivity extends AppCompatActivity {
     private WishAdapter adapter;
     String uuid;
     //상품정보 List
-    ArrayList<String> productURLs=new ArrayList<String>();
-    ArrayList<String> infos=new ArrayList<String>();
-    ArrayList<String> images=new ArrayList<String>();
+    ArrayList<String> productIds=new ArrayList<String>();
+    ArrayList<String> optionNums=new ArrayList<String>();
+   // ArrayList<String> infos=new ArrayList<String>();
+   // ArrayList<String> images=new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class WishListActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("관심상품");
         uuid = getPreferences("uuid");
         //상품들 가져오기
-        GetData task = new GetData();
+        GetWishList task = new GetWishList();
         task.execute( "http://" + IP_ADDRESS + "/getWishList.php",uuid);
 
         productInfoIntent = new Intent(getApplicationContext(),ProductInfo.class);
@@ -73,9 +74,10 @@ public class WishListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
                // productInfoIntent.putExtra("info", infos.get(position));
-                productInfoIntent.putExtra("productId", productURLs.get(position));
-                Log.d("detailurl","wishlist: "+productURLs.get(position));
-                productInfoIntent.putExtra("image", images.get(position));
+                productInfoIntent.putExtra("productId", productIds.get(position));
+                productInfoIntent.putExtra("optionNum", optionNums.get(position));
+               // Log.d("detailurl","wishlist: "+productURLs.get(position));
+               // productInfoIntent.putExtra("image", images.get(position));
                 startActivity(productInfoIntent);
             }
         });
@@ -90,7 +92,7 @@ public class WishListActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    private class GetData extends AsyncTask<String, Void, String> {
+    private class GetWishList extends AsyncTask<String, Void, String> {
 
         ProgressDialog progressDialog;
         String errorString = null;
@@ -111,6 +113,14 @@ public class WishListActivity extends AppCompatActivity {
             else {
                 mJsonString = result;
                 showResult();
+                //어댑터
+                //관심상품 Products에서 가져오기
+                for(String pid:productIds) {
+
+                }
+//                adapter = new WishAdapter(this, R.layout.activity_wish_list, images,index);
+//                gv.setAdapter(adapter);
+
             }
         }
         @Override
@@ -170,22 +180,23 @@ public class WishListActivity extends AppCompatActivity {
                 String uuid = item.getString("uuid");
 
                 if(uuid.equals(this.uuid)){
-                    Log.d("uuid같음",item.getString("productURL"));
-                    productURLs.add(item.getString("productURL"));
-                    infos.add(item.getString("info")) ;
-                    images.add(item.getString("image"));
+                    Log.d("uuid같음",item.getString("productId"));
+                    productIds.add(item.getString("productId"));
+                    optionNums.add(item.getString("optionNum"));
+                //    infos.add(item.getString("info")) ;
+                 //   images.add(item.getString("image"));
                   //adapter.notifyDataSetChanged();
                 }
             }
-            adapter = new WishAdapter(this, R.layout.activity_wish_list, images,index);
-            gv.setAdapter(adapter);
+
+
         } catch (JSONException e) {
             Log.d("showResult : ", e.getMessage());
         }
-        if(images.size()>0)
-        {  for(int i=0;i<images.size();i++){
-            Log.d("관심",productURLs.get(i)+", "+infos.get(i)+", "+images.get(i));
-        }}
+//        if(images.size()>0)
+//        {  for(int i=0;i<images.size();i++){
+//            //Log.d("관심",productURLs.get(i)+", "+infos.get(i)+", "+images.get(i));
+//        }}
     }
     // 값 불러오기
     private String  getPreferences(String key){
