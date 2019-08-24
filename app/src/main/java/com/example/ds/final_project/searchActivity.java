@@ -390,7 +390,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 user_name=""+parameter.get("user_name");
                 user_phone=""+parameter.get("user_phone");
                 user_address=""+parameter.get("user_address");
-                remenu=getRemenu(result);
+               remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;
             case "ACTION_M_NAME"://사용자정보수정 : 이름
@@ -406,8 +406,15 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 result.getContexts().clear();
                 break;
             case "ACTION_SEARCH": //상품검색 :
-                remenu=getRemenu(result);
-                result.getContexts().clear();
+                if(parameter.size()==5){
+                    parameter=getParameter(result);
+                    for(String key : parameter.keySet()){
+                        String value = ""+parameter.get(key);
+                        System.out.println(key+" : "+value);
+                    }
+                    startActivity(shopIntent);
+                }
+
                 break;
             case "ACTION_MENU" :
                 parameter=getParameter(result);
