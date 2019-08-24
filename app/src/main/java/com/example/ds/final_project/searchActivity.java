@@ -375,7 +375,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
         Log.i("액션",ACTION);
 
-        AsyncTask task=null;
+       // AsyncTask task=null;
         //챗봇 액션 처리
         switch (ACTION){
 
@@ -383,7 +383,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 parameter=getParameter(result);
                 user_name=""+parameter.get("user_name");
                 //사용자 정보 DB에 넣기
-                task = new InsertUser();
+                InsertUser task = new InsertUser();
                 task.execute("http://" + IP_ADDRESS + "/insertUser.php",user_uuid,user_name,null,null);
 
                 remenu=getRemenu(result);
@@ -405,24 +405,24 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             case "ACTION_M_NAME"://사용자정보수정 : 이름
                 parameter=getParameter(result);
                 user_name = ""+parameter.get("user_name");
-                task = new UpdateUser(); //사용자정보 수정
-                task.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"name",user_name);
+                UpdateUser task1 = new UpdateUser(); //사용자정보 수정
+                task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"name",user_name);
                 remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;
             case "ACTION_M_PHONE"://사용자정보수정 : 핸드폰번호
                 parameter=getParameter(result);
                 user_phone = ""+parameter.get("user_phone");
-                task = new UpdateUser(); //사용자정보 수정
-                task.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"phoneNum",user_phone);
+                task1 = new UpdateUser(); //사용자정보 수정
+                task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"phoneNum",user_phone);
                 remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;
             case "ACTION_M_ADDRESS"://사용자정보수정 : 주소
                 parameter=getParameter(result);
                 user_address = ""+parameter.get("user_address");
-                task = new UpdateUser(); //사용자정보 수정
-                task.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"address",user_address);
+                task1 = new UpdateUser(); //사용자정보 수정
+                task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"address",user_address);
                 remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;
