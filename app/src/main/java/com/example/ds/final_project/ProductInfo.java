@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.ds.final_project.db.DeleteWishList;
-import com.example.ds.final_project.db.UpdateWishList;
+import com.example.ds.final_project.db.InsertWishList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -61,6 +61,7 @@ public class ProductInfo extends AppCompatActivity {
     //상품 정보
     private String uuid=" ";
     private String productId=" ";
+    private String optionNum="";
     //private String productURL=" ";
     private String info=" ";
     private String image=" ";
@@ -74,7 +75,9 @@ public class ProductInfo extends AppCompatActivity {
         uuid = getPreferences("uuid");
         product_info=(TextView)findViewById(R.id.product_info);
         Intent intent = getIntent();
-        info=intent.getStringExtra("info");
+        productId=intent.getStringExtra("productId");
+        optionNum=intent.getStringExtra("optionNum");
+        //info=intent.getStringExtra("info");
       //  productURL=intent.getStringExtra("url");
        // Log.d("detailurl","상세정보 : "+productURL);
         productImg=(ImageView)findViewById(R.id.productImg);
@@ -95,8 +98,8 @@ public class ProductInfo extends AppCompatActivity {
         wishCheck.setOnCheckedChangeListener(new CheckBoxListener());
 
         //등록된 상품인지 확인
-        GetData task = new GetData();
-        task.execute( "http://" + IP_ADDRESS + "/getWishList.php",uuid);
+        GetWishListItem task = new GetWishListItem();
+        task.execute( "http://" + IP_ADDRESS + "/getWishListItem.php",uuid);
 
         //uuid+상품url 으로 비교해서 서버에 없으면
        // infoBool=false;
@@ -170,7 +173,9 @@ public class ProductInfo extends AppCompatActivity {
                 Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_LONG).show();
                 //DB에서 삭제
                 DeleteWishList task = new DeleteWishList();
-                task.execute("http://" + IP_ADDRESS + "/deleteWishList.php",uuid,productId);
+                task.execute("http://" + IP_ADDRESS + "/deleteWishList.php",uuid,productId,optionNum);
+//                ProgressDialog progressDialog = ProgressDialog.show(ProductInfo.this,
+//                        "Please Wait", null, true, true);
              //   DeleteData task = new DeleteData();
             //    Log.d("info",uuid+productURL+info);
              //   task.execute("http://" + IP_ADDRESS + "/deleteWishList.php",uuid,productURL);
@@ -178,9 +183,9 @@ public class ProductInfo extends AppCompatActivity {
             else {
                 Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_LONG).show();
                 //DB에 추가
-                UpdateWishList task = new UpdateWishList();
+                InsertWishList task = new InsertWishList();
                // Log.d("productURL"," 삽입"+productURL);
-                task.execute("http://" + IP_ADDRESS + "/insertWishList.php",uuid,productId);
+                task.execute("http://" + IP_ADDRESS + "/insertWishList.php",uuid,productId,optionNum);
             }
         }
     }
@@ -259,7 +264,7 @@ public class ProductInfo extends AppCompatActivity {
 //            }
 //        }
 //    }
-    private class GetData extends AsyncTask<String, Void, String>{
+    private class GetWishListItem extends AsyncTask<String, Void, String>{
 
         ProgressDialog progressDialog;
         String errorString = null;
@@ -351,13 +356,14 @@ public class ProductInfo extends AppCompatActivity {
 
             for(int i=0;i<jsonArray.length();i++){
                 JSONObject item = jsonArray.getJSONObject(i);
-                String uuid = item.getString("uuid");
+                String uuid = item.getString("uid");
                 String productId = item.getString("productId");
+                String optionNum = item.getString("optionNum");
 //                Log.d("서버에서","받은"+uuid);
 //                Log.d("서버에서","받은"+productURL);
 //                Log.d("서버에서","진짜"+this.uuid);
 //                Log.d("서버에서","진짜"+this.productURL);
-                if(uuid.equals(this.uuid)&&productId.equals(this.productId)){ //DB에 있으면 count
+                if(uuid.equals(this.uuid)&&productId.equals(this.productId)&&optionNum.equals(this.optionNum)){ //DB에 있으면 count
                     count++;
                 }
             }

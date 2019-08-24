@@ -125,7 +125,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         if (permission != PackageManager.PERMISSION_GRANTED) { makeRequest(); }
 
         wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
-        shopIntent=new Intent(getApplicationContext(),ShopActivity.class);
+        shopIntent=new Intent(getApplicationContext(),ShopActivity.class); //상품검색
 
 
         listView = (ListView) findViewById(R.id.list_msg);

@@ -16,7 +16,7 @@
 
         $uid=$_POST['uid'];
         $productId=$_POST['productId'];
-    
+        $optionNum=$_POST['optionNum'];
       
 
 
@@ -25,10 +25,10 @@
         {
             try{
                 // SQL문을 실행하여 데이터를 MySQL 서버의 person 테이블에 저장합니다. 
-                $stmt = $con->prepare('INSERT INTO WishList(uid,productId) VALUES(:uid, :productId)');
+                $stmt = $con->prepare('INSERT INTO WishList(uid,productId,optionNum) VALUES(:uid, :productId,:optionNum)');
                 $stmt->bindParam(':uid', $uid);
                 $stmt->bindParam(':productId', $productId);
-             
+                $stmt->bindParam(':optionNum', $optionNum);
                if($stmt->execute())
                 {
                     $successMSG = "관심상품 등록되었습니다.";
