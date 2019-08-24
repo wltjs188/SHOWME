@@ -376,14 +376,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
         Log.i("액션",ACTION);
 
-        parameter=getParameter(result);
-
-
         switch (ACTION){
             case "ACTION_USERNAME": //이름만 입력했을때
+                parameter=getParameter(result);
                 user_name=""+parameter.get("user_name");
                 break;
             case "ACTION_USERALL": //이름,번호,주소 입력했을때
+                parameter=getParameter(result);
                 user_name=""+parameter.get("user_name");
                 user_phone=""+parameter.get("user_phone");
                 user_address=""+parameter.get("user_address");
