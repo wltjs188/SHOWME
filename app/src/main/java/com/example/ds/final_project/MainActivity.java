@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.ds.final_project.db.DeleteWishList;
 import com.example.ds.final_project.db.InsertProduct;
 
 import org.json.JSONArray;
@@ -267,9 +268,11 @@ public class MainActivity extends AppCompatActivity {
     public void onWebClicked(View view) { startActivity(webIntent); }
     public void onShopClicked(View view) { startActivity(shopIntent); }
     public void onDBTestClicked(View view){
-        InsertProduct task = new InsertProduct();
-        task.execute("http://" + IP_ADDRESS + "/insertProduct.php","p_id1","p_name","p_category","p_length","p_image","p_price",
-                "p_size","p_color","p_fabric","p_pattern","p_detail");
+//        InsertProduct task = new InsertProduct();
+//        task.execute("http://" + IP_ADDRESS + "/insertProduct.php","p_id1","p_name","p_category","p_length","p_image","p_price",
+//                "p_size","p_color","p_fabric","p_pattern","p_detail");
+        DeleteWishList task = new DeleteWishList();
+        task.execute("http://" + IP_ADDRESS + "/deleteWishList.php","id","pid");
 
     }
     protected void makeRequest() {
@@ -278,8 +281,6 @@ public class MainActivity extends AppCompatActivity {
                 101);
     }
 
-<<<<<<< HEAD
-=======
 
     class InsertData extends AsyncTask<String, Void, String>{
         ProgressDialog progressDialog;
@@ -373,5 +374,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
->>>>>>> 6c0dd5a478aba6c8eb8a4b0bb918993e1508266e
+
 }

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.ds.final_project.db.DeleteWishList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -47,7 +48,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ProductInfo extends AppCompatActivity {
-    String IP_ADDRESS = "35.243.72.245";
+    String IP_ADDRESS = "18.191.10.193";
     String TAG = "phptest";
     private String mJsonString;
 
@@ -58,7 +59,8 @@ public class ProductInfo extends AppCompatActivity {
 
     //상품 정보
     private String uuid=" ";
-    private String productURL=" ";
+    private String productId=" ";
+    //private String productURL=" ";
     private String info=" ";
     private String image=" ";
 
@@ -72,8 +74,8 @@ public class ProductInfo extends AppCompatActivity {
         product_info=(TextView)findViewById(R.id.product_info);
         Intent intent = getIntent();
         info=intent.getStringExtra("info");
-        productURL=intent.getStringExtra("url");
-        Log.d("detailurl","상세정보 : "+productURL);
+      //  productURL=intent.getStringExtra("url");
+       // Log.d("detailurl","상세정보 : "+productURL);
         productImg=(ImageView)findViewById(R.id.productImg);
         image=intent.getStringExtra("image");
         Log.i("이미지",""+image);
@@ -166,16 +168,18 @@ public class ProductInfo extends AppCompatActivity {
             if(!wishCheck.isChecked()) {
                 Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_LONG).show();
                 //DB에서 삭제
-                DeleteData task = new DeleteData();
+                DeleteWishList task = new DeleteWishList();
+                task.execute("http://" + IP_ADDRESS + "/deleteWishList.php",uuid,productId);
+             //   DeleteData task = new DeleteData();
             //    Log.d("info",uuid+productURL+info);
-                task.execute("http://" + IP_ADDRESS + "/delete.php",uuid,productURL);
+             //   task.execute("http://" + IP_ADDRESS + "/deleteWishList.php",uuid,productURL);
             }
             else {
                 Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_LONG).show();
                 //DB에 추가
                 InsertData task = new InsertData();
-                Log.d("productURL"," 삽입"+productURL);
-                task.execute("http://" + IP_ADDRESS + "/insertWishList.php",uuid,productURL,info,image);
+               // Log.d("productURL"," 삽입"+productURL);
+                task.execute("http://" + IP_ADDRESS + "/insertWishList.php",uuid,productId);
             }
         }
     }
@@ -208,11 +212,10 @@ public class ProductInfo extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             String uuid = (String)params[1];
-            //String productURL = (String)params[2];
-            String info = (String)params[3];
-            String image=(String)params[4];
+            String productId = (String)params[2];
+
             String serverURL = (String)params[0];
-            String postParameters = "uuid=" + uuid + "&productURL=" + URLEncoder.encode(productURL) + "&info=" + info+"&image="+image;
+            String postParameters = "uid=" + uuid + "&productId=" + productId ;
 
             try {
 
@@ -337,70 +340,7 @@ public class ProductInfo extends AppCompatActivity {
 
         }
     }
-    class DeleteData extends AsyncTask<String, Void, String>{
-        ProgressDialog progressDialog;
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
 
-            progressDialog = ProgressDialog.show(ProductInfo.this,
-                    "Please Wait", null, true, true);
-        }
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            progressDialog.dismiss();
-            Log.d(TAG, "POST response  - " + result);
-        }
-        @Override
-        protected String doInBackground(String... params) {
-            String uuid = (String)params[1];
-            String productURL = (String)params[2];
-            String serverURL = (String)params[0];
-            Log.d("삭제할 데이터",uuid+productURL);
-            String postParameters = "uuid=" + uuid + "&productURL=" + URLEncoder.encode(productURL);
-
-            try {
-
-                URL url = new URL(serverURL);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
-                httpURLConnection.setReadTimeout(5000);
-                httpURLConnection.setConnectTimeout(5000);
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.connect();
-
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                outputStream.write(postParameters.getBytes("UTF-8"));
-                outputStream.flush();
-                outputStream.close();
-
-                int responseStatusCode = httpURLConnection.getResponseCode();
-                Log.d(TAG, "POST response code - " + responseStatusCode);
-
-                InputStream inputStream;
-                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
-                    inputStream = httpURLConnection.getInputStream();
-                }
-                else{
-                    inputStream = httpURLConnection.getErrorStream();
-                }
-
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                StringBuilder sb = new StringBuilder();
-                String line = null;
-                while((line = bufferedReader.readLine()) != null){
-                    sb.append(line);
-                }
-                bufferedReader.close();
-                return sb.toString();
-            } catch (Exception e) {
-                Log.d(TAG, "InsertData: Error ", e);
-                return new String("Error: " + e.getMessage());
-            }
-        }
-    }
     class UpdateData extends AsyncTask<String, Void, String>{
         ProgressDialog progressDialog;
 
@@ -482,12 +422,12 @@ public class ProductInfo extends AppCompatActivity {
             for(int i=0;i<jsonArray.length();i++){
                 JSONObject item = jsonArray.getJSONObject(i);
                 String uuid = item.getString("uuid");
-                String productURL = item.getString("productURL");
+                String productId = item.getString("productId");
 //                Log.d("서버에서","받은"+uuid);
 //                Log.d("서버에서","받은"+productURL);
 //                Log.d("서버에서","진짜"+this.uuid);
 //                Log.d("서버에서","진짜"+this.productURL);
-                if(uuid.equals(this.uuid)&&productURL.equals(this.productURL)){ //DB에 있으면 count
+                if(uuid.equals(this.uuid)&&productId.equals(this.productId)){ //DB에 있으면 count
                     count++;
                 }
             }

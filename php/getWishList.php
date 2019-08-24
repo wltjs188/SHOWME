@@ -5,17 +5,17 @@
     $android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
     if( (($_SERVER['REQUEST_METHOD'] == 'POST') && isset($_POST['submit'])) || $android )
     {
-        // ¾Èµå·ÎÀÌµå ÄÚµåÀÇ postParameters º¯¼ö¿¡ Àû¾îÁØ ÀÌ¸§À» °¡Áö°í °ªÀ» Àü 
+        // Â¾ÃˆÂµÃ¥Â·ÃŽÃ€ÃŒÂµÃ¥ Ã„ÃšÂµÃ¥Ã€Ã‡ postParameters ÂºÂ¯Â¼Ã¶Â¿Â¡ Ã€Ã»Â¾Ã®ÃÃ˜ Ã€ÃŒÂ¸Â§Ã€Â» Â°Â¡ÃÃ¶Â°Ã­ Â°ÂªÃ€Â» Ã€Ã¼ 
         $uuid=$_POST['uuid'];
         $productURL=$_POST['productURL'];
         $info=$_POST['info'];
         $image=$_POST['image'];
         
-        if(!isset($errMSG)) // ÀÌ¸§°ú ³ª¶ó ¸ðµÎ ÀÔ·ÂÀÌ µÇ¾ú´Ù¸é 
+        if(!isset($errMSG)) // Ã€ÃŒÂ¸Â§Â°Ãº Â³ÂªÂ¶Ã³ Â¸Ã°ÂµÃŽ Ã€Ã”Â·Ã‚Ã€ÃŒ ÂµÃ‡Â¾ÃºÂ´Ã™Â¸Ã© 
         {
             
                  try{
-                // SQL¹®À» ½ÇÇàÇÏ¿© µ¥ÀÌÅÍ¸¦ MySQL ¼­¹öÀÇ person Å×ÀÌºí¿¡ ÀúÀåÇÕ´Ï´Ù. 
+                // SQLÂ¹Â®Ã€Â» Â½Ã‡Ã‡Ã Ã‡ÃÂ¿Â© ÂµÂ¥Ã€ÃŒÃ…ÃÂ¸Â¦ MySQL Â¼Â­Â¹Ã¶Ã€Ã‡ person Ã…Ã—Ã€ÃŒÂºÃ­Â¿Â¡ Ã€ÃºÃ€Ã¥Ã‡Ã•Â´ÃÂ´Ã™. 
                 $stmt = $con->prepare('INSERT INTO wishList(uuid,productURL,info, image) VALUES(:uuid, :productURL, :info, :image)');
                 $stmt->bindParam(':uuid', $uuid);
                 $stmt->bindParam(':productURL', $productURL);
@@ -24,18 +24,16 @@
                 
                 if($stmt->execute())
                 {
-                    $successMSG = "°ü½É»óÇ° µî·ÏµÇ¾ú½À´Ï´Ù.";
+                    $successMSG = "ì„±ê³µ";
                 }
                 else
                 {
-                    $errMSG = "»ç¿ëÀÚ Ãß°¡ ¿¡·¯";
+                    $errMSG = "ì‹¤íŒ¨";
                 }
             } catch(PDOException $e) {
                 die("Database error: " . $e->getMessage()); 
             }
-            } catch(PDOException $e) {
-                die("Database error: " . $e->getMessage()); 
-            }
+            
         }
     }
 ?>
