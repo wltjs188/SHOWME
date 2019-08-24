@@ -378,29 +378,30 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         AsyncTask task=null;
         //챗봇 액션 처리
         switch (ACTION){
-
-            case "ACTION_USERNAME": //사용자등록 : 이름만 입력했을때
+            case "ACTION_USER":
                 parameter=getParameter(result);
                 user_name=""+parameter.get("user_name");
+                result.getContexts().clear();
+                break;
+            case "ACTION_USERNAME": //사용자등록 : 이름만 입력했을때
                 //사용자 정보 DB에 넣기
                 task = new InsertUser();
                 task.execute("http://" + IP_ADDRESS + "/insertUser.php",user_uuid,user_name,null,null);
-
                 remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;
             case "ACTION_USERALL": //사용자등록 : 이름,번호,주소 입력했을때
                 parameter=getParameter(result);
-                user_name=""+parameter.get("user_name");
-                user_address=""+parameter.get("user_address");
-                user_phone=""+parameter.get("user_phone");
+                if(parameter.size()==2) {
+                    user_address = "" + parameter.get("user_address");
+                    user_phone = "" + parameter.get("user_phone");
+                    //사용자 정보 DB에 넣기
+                    task = new InsertUser();
+                    task.execute("http://" + IP_ADDRESS + "/insertUser.php",user_uuid,user_name,user_address,user_phone);
+                    remenu=getRemenu(result);
+                    result.getContexts().clear();
+                }
 
-                //사용자 정보 DB에 넣기
-                task = new InsertUser();
-                task.execute("http://" + IP_ADDRESS + "/insertUser.php",user_uuid,user_name,user_address,user_phone);
-
-                remenu=getRemenu(result);
-                result.getContexts().clear();
                 break;
             case "ACTION_M_NAME"://사용자정보수정 : 이름
                 parameter=getParameter(result);
@@ -425,10 +426,11 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 task.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"address",user_address);
                 remenu=getRemenu(result);
                 result.getContexts().clear();
+
                 break;
             case "ACTION_SEARCH": //상품검색 :
+                parameter=getParameter(result);
                 if(parameter.size()==5){
-                    parameter=getParameter(result);
                     for(String key : parameter.keySet()){
                         String value = ""+parameter.get(key);
                         System.out.println(key+" : "+value);
@@ -593,7 +595,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     //챗봇 파라미터 가져오기
     private HashMap<String,JsonElement> getParameter(Result result){
         HashMap<String,JsonElement> parameter=new HashMap<String, JsonElement>();
-        for (final Map.Entry<String, JsonElement> entry : result.getContexts().get(0).getParameters().entrySet()) {
+        for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
             parameter.put(entry.getKey(),entry.getValue());
         }
         return parameter;
