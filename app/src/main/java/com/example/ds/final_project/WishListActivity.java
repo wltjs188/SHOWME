@@ -72,8 +72,8 @@ public class WishListActivity extends AppCompatActivity {
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-                productInfoIntent.putExtra("info", infos.get(position));
-                productInfoIntent.putExtra("url", productURLs.get(position));
+               // productInfoIntent.putExtra("info", infos.get(position));
+                productInfoIntent.putExtra("productId", productURLs.get(position));
                 Log.d("detailurl","wishlist: "+productURLs.get(position));
                 productInfoIntent.putExtra("image", images.get(position));
                 startActivity(productInfoIntent);
