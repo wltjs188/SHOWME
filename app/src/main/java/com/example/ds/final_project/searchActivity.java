@@ -276,6 +276,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     protected String getRemenu(Result result){
         ResponseMessage.ResponseSpeech responseMessage = (ResponseMessage.ResponseSpeech)result.getFulfillment().getMessages().get(1);
         remenu=responseMessage.getSpeech().get(0);
+        result.getContexts().clear();
         return remenu;
     }
     //메뉴 메세지
@@ -376,17 +377,46 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
         Log.i("액션",ACTION);
 
+        //챗봇 액션 처리
         switch (ACTION){
-            case "ACTION_USERNAME": //이름만 입력했을때
+            case "ACTION_USERNAME": //사용자등록 : 이름만 입력했을때
                 parameter=getParameter(result);
                 user_name=""+parameter.get("user_name");
+                remenu=getRemenu(result);
+                result.getContexts().clear();
                 break;
-            case "ACTION_USERALL": //이름,번호,주소 입력했을때
+            case "ACTION_USERALL": //사용자등록 : 이름,번호,주소 입력했을때
                 parameter=getParameter(result);
                 user_name=""+parameter.get("user_name");
                 user_phone=""+parameter.get("user_phone");
                 user_address=""+parameter.get("user_address");
+                remenu=getRemenu(result);
+                result.getContexts().clear();
                 break;
+            case "ACTION_M_NAME"://사용자정보수정 : 이름
+                remenu=getRemenu(result);
+                result.getContexts().clear();
+                break;
+            case "ACTION_M_PHONE"://사용자정보수정 : 핸드폰번호
+                remenu=getRemenu(result);
+                result.getContexts().clear();
+                break;
+            case "ACTION_M_ADDRESS"://사용자정보수정 : 주소
+                remenu=getRemenu(result);
+                result.getContexts().clear();
+                break;
+            case "ACTION_SEARCH": //상품검색 :
+                remenu=getRemenu(result);
+                result.getContexts().clear();
+                break;
+            case "ACTION_MENU" :
+                parameter=getParameter(result);
+                if(parameter.get("Wish_Item").toString().equals("\"관심상품 보기\"")){
+                    startActivity(wishIntent);
+                    result.getContexts().clear();
+                }
+                break;
+
         }
 
 
@@ -507,11 +537,11 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             remenu="";
         }
 
-        Log.d("chatMessage",speech+"");
-        if(((speech.toString()).trim()).equals("관심상품보기 로 이동합니다.")||((speech.toString()).trim()).equals("관심상품 보기 로 이동합니다.")){
-            Log.d("chatMessage 같음",speech+"");
-            startActivity(wishIntent);
-        }
+//        Log.d("chatMessage",speech+"");
+//        if(((speech.toString()).trim()).equals("관심상품보기 로 이동합니다.")||((speech.toString()).trim()).equals("관심상품 보기 로 이동합니다.")){
+//            Log.d("chatMessage 같음",speech+"");
+//            startActivity(wishIntent);
+//        }
     }
     @Override
     public void onError(AIError error) { }
@@ -540,6 +570,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         }
         return parameter;
     }
+
+
 
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
         switch (item.getItemId()){
