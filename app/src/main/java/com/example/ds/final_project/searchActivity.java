@@ -398,6 +398,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 //사용자 정보 DB에 넣기
                 task = new InsertUser();
                 task.execute("http://" + IP_ADDRESS + "/insertUser.php",user_uuid,user_name,user_address,user_phone);
+
                 remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;
@@ -426,8 +427,15 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 result.getContexts().clear();
                 break;
             case "ACTION_SEARCH": //상품검색 :
-                remenu=getRemenu(result);
-                result.getContexts().clear();
+                if(parameter.size()==5){
+                    parameter=getParameter(result);
+                    for(String key : parameter.keySet()){
+                        String value = ""+parameter.get(key);
+                        System.out.println(key+" : "+value);
+                    }
+                    startActivity(shopIntent);
+                }
+
                 break;
             case "ACTION_MENU" :
                 parameter=getParameter(result);
