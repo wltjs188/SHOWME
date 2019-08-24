@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ds.final_project.db.InsertUser;
 import com.example.ds.final_project.db.UpdateUser;
 import com.google.gson.JsonElement;
 
@@ -354,11 +355,28 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
 
         ACTION=result.getAction();
+//<<<<<<< HEAD
+//=======
+//        int i=0;
+//        if (result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6&&ACTION.equals("user")) {
+//            for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+//                MyInfo.put(entry.getKey(),""+entry.getValue());
+//            }
+//            String name=(MyInfo.get("name")).replaceAll("\"","");
+//            String address=(MyInfo.get("address")).replaceAll("\"","");
+//            String phoneNum=(MyInfo.get("phoneNum")).replaceAll("\"","");
+//
+//            //사용자 정보 DB에 넣기
+//            InsertUser task = new InsertUser();
+//            task.execute("http://" + IP_ADDRESS + "/insertUser.php",uuid,name,address,phoneNum);
+//            remenu=getRemenu(result);
+//        }
+//        UpdateUser task = new UpdateUser(); //사용자정보 수정
+//>>>>>>> f6bb73d89e3801edf36e89adde93b202de39db0b
 
         Log.i("액션",ACTION);
 
         parameter=getParameter(result);
-
 
 
         switch (ACTION){
@@ -535,79 +553,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         return super.onOptionsItemSelected(item);
     }
 
-    //서버 입력 클래스
-    class InsertData extends AsyncTask<String, Void, String>{
-        ProgressDialog progressDialog;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            progressDialog = ProgressDialog.show(searchActivity.this,
-                    "Please Wait", null, true, true);
-        }
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            progressDialog.dismiss();
-            Log.d(TAG, "POST response  - " + result);
-        }
-        @Override
-        protected String doInBackground(String... params) {
-
-            String uuid = (String)params[1];
-            String name = (String)params[2];
-            String gender = (String)params[3];
-            String height = (String)params[4];
-            String top = (String)params[5];
-            String bottom = (String)params[6];
-            String foot = (String)params[7];
-
-            String serverURL = (String)params[0];
-            String postParameters = "uuid=" + uuid + "&name=" + name + "&gender=" + gender+ "&height=" + height+ "&top=" + top+ "&bottom=" + bottom+ "&foot=" + foot;
-
-            try {
-
-                URL url = new URL(serverURL);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
-                httpURLConnection.setReadTimeout(5000);
-                httpURLConnection.setConnectTimeout(5000);
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.connect();
-
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                outputStream.write(postParameters.getBytes("UTF-8"));
-                outputStream.flush();
-                outputStream.close();
-
-                int responseStatusCode = httpURLConnection.getResponseCode();
-                Log.d(TAG, "POST response code - " + responseStatusCode);
-
-                InputStream inputStream;
-                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
-                    inputStream = httpURLConnection.getInputStream();
-                }
-                else{
-                    inputStream = httpURLConnection.getErrorStream();
-                }
-
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                StringBuilder sb = new StringBuilder();
-                String line = null;
-                while((line = bufferedReader.readLine()) != null){
-                    sb.append(line);
-                }
-                bufferedReader.close();
-                return sb.toString();
-            } catch (Exception e) {
-                Log.d(TAG, "InsertData: Error ", e);
-                return new String("Error: " + e.getMessage());
-            }
-        }
-    }
 }
 
 class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터

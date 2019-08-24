@@ -20,6 +20,7 @@ import android.view.View;
 
 import android.widget.Toast;
 
+import com.example.ds.final_project.db.InsertUser;
 import com.example.ds.final_project.db.UpdateWishList;
 
 import org.json.JSONArray;
@@ -255,11 +256,13 @@ public class MainActivity extends AppCompatActivity {
     }
     public void onWebClicked(View view) { startActivity(webIntent); }
     public void onShopClicked(View view) { startActivity(shopIntent); }
-    public void onDBTestClicked(View view){
-
-        UpdateWishList task = new UpdateWishList();
-        // Log.d("productURL"," 삽입"+productURL);
-        task.execute("http://" + IP_ADDRESS + "/insertWishList.php","id","pid");
+    public void onDBTestClicked(View view){ //DB테스트
+//
+//        UpdateWishList task = new UpdateWishList();
+//        // Log.d("productURL"," 삽입"+productURL);
+//        task.execute("http://" + IP_ADDRESS + "/insertWishList.php","id","pid");
+        InsertUser task = new InsertUser();
+        task.execute("http://" + IP_ADDRESS + "/insertUser.php","uid","윤","내집","010");
     }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,

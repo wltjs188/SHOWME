@@ -14,13 +14,11 @@
 
         // 안드로이드 코드의 postParameters 변수에 적어준 이름을 가지고 값을 전달 받습니다.
 
-        $uuid=$_POST['uuid'];
+        $uid=$_POST['uid'];
         $name=$_POST['name'];
-        $gender=$_POST['gender'];
-        $height=$_POST['height'];
-        $top=$_POST['top'];
-        $bottom=$_POST['bottom'];
-        $foot=$_POST['foot'];
+        $address=$_POST['address'];
+        $phoneNum=$_POST['phoneNum'];
+        
 
 
 
@@ -28,17 +26,21 @@
         {
             try{
                 // SQL문을 실행하여 데이터를 MySQL 서버의 person 테이블에 저장합니다. 
-                $stmt = $con->prepare('INSERT INTO person(uuid,name, gender, height, top, bottom, foot) VALUES(:uuid, :name, :gender, :height, :top, :bottom, :foot )');
-                $stmt->bindParam(':uuid', $uuid);
+                $stmt = $con->prepare('INSERT INTO User(uid,name, address, phoneNum) VALUES(:uid, :name, :address, :phoneNum)');
+                $stmt->bindParam(':uid', $uid);
                 $stmt->bindParam(':name', $name);
-                $stmt->bindParam(':gender', $gender);
-                $stmt->bindParam(':height', $height);
-                $stmt->bindParam(':top', $top);
-                $stmt->bindParam(':bottom', $bottom);
-                $stmt->bindParam(':foot', $foot);
-                
-                $successMSG = "새로운 사용자를 추가했습니다.";
-
+                $stmt->bindParam(':address', $address);
+                $stmt->bindParam(':phoneNum', $phoneNum);
+              
+                if($stmt->execute())
+                {
+                    $successMSG = "새로운 사용자를 추가했습니다.";
+                }
+                else
+                {
+                    $errMSG = "관심상품 등록 에러";
+                }
+        
 
             } catch(PDOException $e) {
                 die("Database error: " . $e->getMessage()); 
