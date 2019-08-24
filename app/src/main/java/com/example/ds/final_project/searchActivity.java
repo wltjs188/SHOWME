@@ -91,13 +91,16 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     private ArrayAdapter<ChatMessage> adapter;//= new MessageAdapter(this, 0, chatMessages);
 
     //사용자 정보
-    private String uuid;
-    private String name;
-    private String gender;
-    private String height;
-    private String top;
-    private String bottom;
-    private String foot;
+    HashMap<String,JsonElement> parameter=new HashMap<String,JsonElement>();
+    private String user_uuid;
+    private String user_name;
+    private String user_phone;
+    private String user_address;
+//    private String gender;
+//    private String height;
+//    private String top;
+//    private String bottom;
+//    private String foot;
 
 
 
@@ -125,13 +128,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         btnSend = findViewById(R.id.btn_chat_send);
         btnSST=findViewById(R.id.btn_stt);
         editText = (EditText) findViewById(R.id.msg_type);
-        uuid = getPreferences("uuid");
-        name = getPreferences("name");
-        gender = getPreferences("gender");
-        height = getPreferences("height");
-        top = getPreferences("top");
-        bottom = getPreferences("bottom");
-        foot = getPreferences("foot");
+        user_uuid = getPreferences("uuid");
+        user_name = getPreferences("name");
+//        gender = getPreferences("gender");
+//        height = getPreferences("height");
+//        top = getPreferences("top");
+//        bottom = getPreferences("bottom");
+//        foot = getPreferences("foot");
 
         //set ListView adapter first
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
@@ -140,7 +143,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
 
 
-        Log.d("받아온 사용자 정보",uuid+","+name+","+gender+","+height+","+top+","+bottom+","+foot);
+//        Log.d("받아온 사용자 정보",uuid+","+name+","+gender+","+height+","+top+","+bottom+","+foot);
 //        if(name==""){
 //            // Log.d("야",chatMessages.size()+"");
 //            if(chatMessages.size()==0){
@@ -319,7 +322,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(name==""){
+        if(user_name==""){
             // Log.d("야",chatMessages.size()+"");
             if(chatMessages.size()==0){
                 ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
@@ -339,100 +342,118 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     public void onResult(AIResponse response) {
         final Result result = response.getResult();
 
-        ACTION=result.getAction();
-        int i=0;
-        if (result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6&&ACTION.equals("user")) {
-            for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-                MyInfo.put(entry.getKey(),""+entry.getValue());
-            }
-            String name=(MyInfo.get("name")).replaceAll("\"","");
-            String gender=(MyInfo.get("Gender_Info")).replaceAll("\"","");
-            String height=(MyInfo.get("height")).replaceAll("\"","");
-            String top=(MyInfo.get("top")).replaceAll("\"","");
-            String bottom=(MyInfo.get("bottom")).replaceAll("\"","");
-            String shoes=(MyInfo.get("shoes")).replaceAll("\"","");
 
-            //사용자 정보 DB에 넣기
-            InsertData task = new InsertData();
-            task.execute("http://" + IP_ADDRESS + "/insert.php",uuid,name,gender,height,top,bottom,shoes);
-            remenu=getRemenu(result);
+        ACTION=result.getAction();
+        Log.i("액션",ACTION);
+
+        parameter=getParameter(result);
+
+
+
+        switch (ACTION){
+            case "ACTION_USERNAME": //이름만 입력했을때
+                user_name=""+parameter.get("user_name");
+                break;
+            case "ACTION_USERALL": //이름,번호,주소 입력했을때
+                user_name=""+parameter.get("user_name");
+                user_phone=""+parameter.get("user_phone");
+                user_address=""+parameter.get("user_address");
+                break;
         }
-        UpdateData task = new UpdateData();
+
+//        int i=0;
+//        if (result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6&&ACTION.equals("user")) {
+//            for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+//                MyInfo.put(entry.getKey(),""+entry.getValue());
+//            }
+//            String name=(MyInfo.get("name")).replaceAll("\"","");
+//            String gender=(MyInfo.get("Gender_Info")).replaceAll("\"","");
+//            String height=(MyInfo.get("height")).replaceAll("\"","");
+//            String top=(MyInfo.get("top")).replaceAll("\"","");
+//            String bottom=(MyInfo.get("bottom")).replaceAll("\"","");
+//            String shoes=(MyInfo.get("shoes")).replaceAll("\"","");
+//
+//            //사용자 정보 DB에 넣기
+//            InsertData task = new InsertData();
+//            task.execute("http://" + IP_ADDRESS + "/insert.php",uuid,name,gender,height,top,bottom,shoes);
+//            remenu=getRemenu(result);
+//        }
+//        UpdateData task = new UpdateData();
 
         //액션
-        switch (ACTION) {
-            case "name_modi":
-                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
-                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"name",(""+entry.getValue()).replaceAll("\"",""));
-                    remenu=getRemenu(result);
-                }
-                break;
-            case "gender_modi":
-                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
-                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"gender",(""+entry.getValue()).replaceAll("\"",""));
-                    remenu=getRemenu(result);
-                }
-                break;
-            case "height_modi":
-                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-                    MyInfoModi.put(entry.getKey(),""+entry.getValue());
-                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
-                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"height",(""+entry.getValue()).replaceAll("\"",""));
-                    remenu=getRemenu(result);
-                }
-                break;
-            case "top_modi":
-                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
-                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"top",(""+entry.getValue()).replaceAll("\"",""));
-                    remenu=getRemenu(result);
-                }
-                break;
-            case "bottom_modi":
-                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
-                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"bottom",(""+entry.getValue()).replaceAll("\"",""));
-                    remenu=getRemenu(result);
-                }
-                break;
-            case "shoes_modi":
-                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
-                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"foot",(""+entry.getValue()).replaceAll("\"",""));
-                    remenu=getRemenu(result);
-                }
-                break;
-            case "search" :
-                if(result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==5) {
-                    keyword="";
-                    for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-//                    Log.d("겟값","key"+entry.getKey()+"value:"+entry.getValue());
-                        if ((sub = "" + entry.getValue()) != null) {
-                            Log.i("키",entry.getKey());
-                            Log.i("밸류",""+entry.getValue());
-                            keyword += sub+" ";
-                            Log.i("키워드", keyword);
-                            if(entry.getKey().equals("Color")){
-                                Color=""+entry.getValue();
-                            }
-                        }
-                    }
-                    Color=Color.replace("\"","");
-                    Log.i("Color",Color);
-                    keyword=keyword.replace("\"","");
-                    keyword=keyword.replace("없음","");
-                    Log.i("keyword",keyword);
-                    shopIntent.putExtra("keyword", keyword);
-                    shopIntent.putExtra("Color",Color);
-                    startActivity(shopIntent);
-                }
-                break;
-            default:
-                break;
-
-        }
+//        switch (ACTION) {
+//            case "name_modi":
+//                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+//                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+//                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"name",(""+entry.getValue()).replaceAll("\"",""));
+//                    remenu=getRemenu(result);
+//                }
+//                break;
+//            case "gender_modi":
+//                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+//                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+//                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"gender",(""+entry.getValue()).replaceAll("\"",""));
+//                    remenu=getRemenu(result);
+//                }
+//                break;
+//            case "height_modi":
+//                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+//                    MyInfoModi.put(entry.getKey(),""+entry.getValue());
+//                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+//                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"height",(""+entry.getValue()).replaceAll("\"",""));
+//                    remenu=getRemenu(result);
+//                }
+//                break;
+//            case "top_modi":
+//                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+//                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+//                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"top",(""+entry.getValue()).replaceAll("\"",""));
+//                    remenu=getRemenu(result);
+//                }
+//                break;
+//            case "bottom_modi":
+//                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+//                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+//                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"bottom",(""+entry.getValue()).replaceAll("\"",""));
+//                    remenu=getRemenu(result);
+//                }
+//                break;
+//            case "shoes_modi":
+//                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+//                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
+//                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"foot",(""+entry.getValue()).replaceAll("\"",""));
+//                    remenu=getRemenu(result);
+//                }
+//                break;
+//            case "search" :
+//                if(result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==5) {
+//                    keyword="";
+//                    for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+////                    Log.d("겟값","key"+entry.getKey()+"value:"+entry.getValue());
+//                        if ((sub = "" + entry.getValue()) != null) {
+//                            Log.i("키",entry.getKey());
+//                            Log.i("밸류",""+entry.getValue());
+//                            keyword += sub+" ";
+//                            Log.i("키워드", keyword);
+//                            if(entry.getKey().equals("Color")){
+//                                Color=""+entry.getValue();
+//                            }
+//                        }
+//                    }
+//                    Color=Color.replace("\"","");
+//                    Log.i("Color",Color);
+//                    keyword=keyword.replace("\"","");
+//                    keyword=keyword.replace("없음","");
+//                    Log.i("keyword",keyword);
+//                    shopIntent.putExtra("keyword", keyword);
+//                    shopIntent.putExtra("Color",Color);
+//                    startActivity(shopIntent);
+//                }
+//                break;
+//            default:
+//                break;
+//
+//        }
 
 
         speech = result.getFulfillment().getSpeech();
@@ -473,10 +494,21 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     @Override
     public void onListeningFinished() { }
 
+
+
     // 값 불러오기
     private String  getPreferences(String key){
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
         return pref.getString(key, "");
+    }
+
+    //챗봇 파라미터 가져오기
+    private HashMap<String,JsonElement> getParameter(Result result){
+        HashMap<String,JsonElement> parameter=new HashMap<String, JsonElement>();
+        for (final Map.Entry<String, JsonElement> entry : result.getContexts().get(0).getParameters().entrySet()) {
+            parameter.put(entry.getKey(),entry.getValue());
+        }
+        return parameter;
     }
 
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
