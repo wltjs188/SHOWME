@@ -55,7 +55,7 @@ public class WishListActivity extends AppCompatActivity {
     ArrayList<String> productIds=new ArrayList<String>();
     ArrayList<String> optionNums=new ArrayList<String>();
    // ArrayList<String> infos=new ArrayList<String>();
-   // ArrayList<String> images=new ArrayList<String>();
+    ArrayList<String> images=new ArrayList<String>(); //상품 옵션 대표 이미지
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,6 +197,120 @@ public class WishListActivity extends AppCompatActivity {
 //        {  for(int i=0;i<images.size();i++){
 //            //Log.d("관심",productURLs.get(i)+", "+infos.get(i)+", "+images.get(i));
 //        }}
+    }
+    private class GetProduct extends AsyncTask<String, Void, String>{
+
+        ProgressDialog progressDialog;
+        String errorString = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(WishListActivity.this,
+                    "Please Wait", null, true, true);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+
+            if (result == null){
+            }
+            else {
+                mJsonString = result;
+                showProductResult();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String serverURL = params[0];
+            String postParameters = "uuid=" + params[1];
+
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+                bufferedReader.close();
+
+                return sb.toString().trim();
+
+
+            } catch (Exception e) {
+                errorString = e.toString();
+                return null;
+            }
+
+        }
+    }
+
+    private void showProductResult(){
+        int count=0;
+        String TAG_JSON="wishList";
+        try {
+            JSONObject jsonObject = new JSONObject(mJsonString);
+            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
+
+            for(int i=0;i<jsonArray.length();i++){
+                JSONObject item = jsonArray.getJSONObject(i);
+                String uuid = item.getString("uid");
+                String productId = item.getString("productId");
+                String optionNum = item.getString("optionNum");
+//                Log.d("서버에서","받은"+uuid);
+//                Log.d("서버에서","받은"+productURL);
+//                Log.d("서버에서","진짜"+this.uuid);
+//                Log.d("서버에서","진짜"+this.productURL);
+//                if(uuid.equals(this.uuid)&&productId.equals(this.productId)&&optionNum.equals(this.optionNum)){ //DB에 있으면 count
+//                    count++;
+//                }
+            }
+//            Log.d("길이길이",count+"");
+//            if(count>0) //관심상품 맞아
+//                infoBool=true;
+//            else //관심상품 아냐
+//                infoBool=false;
+//            wishCheck.setChecked(infoBool);
+        } catch (JSONException e) {
+            Log.d("showResult : ", e.getMessage());
+        }
+
     }
     // 값 불러오기
     private String  getPreferences(String key){
