@@ -43,7 +43,7 @@ if ($productId != "" ){
                 'size'=>$row["size"],
                 'color'=>$row["color"],
                 'fabric'=>$row["fabric"],
-                'patter'=>$row["patter"],
+                'pattern'=>$row["pattern"],
                 'detail'=>$row["detail"]
             ));
         }
