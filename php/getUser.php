@@ -7,20 +7,20 @@ include('dbcon.php');
 
 
 //POST 값을 읽어온다.
-$uuid=isset($_POST['uuid']) ? $_POST['uuid'] : '';
+$uid=isset($_POST['uid']) ? $_POST['uid'] : '';
 $android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
 
 
-if ($uuid != "" ){ 
+if ($uid != "" ){ 
 
-    $sql="select * from person where uuid='$uuid'";
+    $sql="select * from person where uid='$uid'";
     $stmt = $con->prepare($sql);
     $stmt->execute();
  
     if ($stmt->rowCount() == 0){
 
         echo "'";
-        echo $uuid;
+        echo $uid;
         echo "'은 찾을 수 없습니다. 사용자 입력을 해주세요.";
     }
     else{
@@ -32,13 +32,10 @@ if ($uuid != "" ){
             extract($row);
 
             array_push($data, 
-                array('uuid'=>$row["uuid"],
+                array('uid'=>$row["uid"],
                 'name'=>$row["name"],
-                'gender'=>$row["gender"],
-                'height'=>$row["height"],
-                'top'=>$row["top"],
-                'bottom'=>$row["bottom"],
-                'foot'=>$row["foot"]
+                'address'=>$row["address"],
+                'phoneNum'=>$row["phoneNum"]
             ));
         }
 

@@ -7,14 +7,14 @@
 
     $android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
 
-    $uuid=$_POST['uuid'];
+    $uid=$_POST['uid'];
 	$infoName=$_POST['infoName'];
 	$value=$_POST['value'];
 
 
 
-	$con = mysqli_connect("localhost","abc","125400","사용자이름");
-	$sql="UPDATE person SET $infoName='$value' WHERE uuid='$uuid'";
+	$con = mysqli_connect("localhost","kimcheon","kim2cheon1","SHOWOOMI");
+	$sql="UPDATE person SET $infoName='$value' WHERE uid='$uid'";
 	mysqli_query($con,$sql);
 
 ?>

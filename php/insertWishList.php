@@ -14,10 +14,9 @@
 
         // 안드로이드 코드의 postParameters 변수에 적어준 이름을 가지고 값을 전달 받습니다.
 
-        $uuid=$_POST['uuid'];
-        $productURL=$_POST['productURL'];
-        $info=$_POST['info'];
-        $image=$_POST['image'];
+        $uid=$_POST['uid'];
+        $productId=$_POST['productId'];
+    
       
 
 
@@ -26,14 +25,20 @@
         {
             try{
                 // SQL문을 실행하여 데이터를 MySQL 서버의 person 테이블에 저장합니다. 
-                $stmt = $con->prepare('INSERT INTO wishList(uuid,productURL, info,image) VALUES(:uuid, :productURL, :info ,:image)');
-                $stmt->bindParam(':uuid', $uuid);
-                $stmt->bindParam(':productURL', $productURL);
-                $stmt->bindParam(':info', $info);
-                $stmt->bindParam(':image', $image);
-               
+                $stmt = $con->prepare('INSERT INTO WishList(uid,productId) VALUES(:uid, :productId)');
+                $stmt->bindParam(':uid', $uid);
+                $stmt->bindParam(':productId', $productId);
+             
+               if($stmt->execute())
+                {
+                    $successMSG = "관심상품 등록되었습니다.";
+                }
+                else
+                {
+                    $errMSG = "관심상품 등록 에러";
+                }
                 
-                $successMSG = "관심상품 등록되었습니다.";
+              
 
 
             } catch(PDOException $e) {

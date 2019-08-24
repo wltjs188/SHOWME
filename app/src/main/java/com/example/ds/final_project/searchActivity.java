@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ds.final_project.db.UpdateUser;
 import com.google.gson.JsonElement;
 
 import java.io.BufferedReader;
@@ -91,11 +92,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     private ArrayAdapter<ChatMessage> adapter;//= new MessageAdapter(this, 0, chatMessages);
 
     //사용자 정보
+
     HashMap<String,JsonElement> parameter=new HashMap<String,JsonElement>();
     private String user_uuid;
     private String user_name;
     private String user_phone;
     private String user_address;
+
 //    private String gender;
 //    private String height;
 //    private String top;
@@ -128,13 +131,18 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         btnSend = findViewById(R.id.btn_chat_send);
         btnSST=findViewById(R.id.btn_stt);
         editText = (EditText) findViewById(R.id.msg_type);
+
         user_uuid = getPreferences("uuid");
         user_name = getPreferences("name");
+
 //        gender = getPreferences("gender");
 //        height = getPreferences("height");
 //        top = getPreferences("top");
 //        bottom = getPreferences("bottom");
 //        foot = getPreferences("foot");
+
+
+
 
         //set ListView adapter first
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
@@ -143,7 +151,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
 
 
-//        Log.d("받아온 사용자 정보",uuid+","+name+","+gender+","+height+","+top+","+bottom+","+foot);
+
+//        Log.d("받아온 사용자 정보",uuid+","+name+","+address+","+phoneNum);
+
 //        if(name==""){
 //            // Log.d("야",chatMessages.size()+"");
 //            if(chatMessages.size()==0){
@@ -344,6 +354,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
 
         ACTION=result.getAction();
+
         Log.i("액션",ACTION);
 
         parameter=getParameter(result);
@@ -360,6 +371,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 user_address=""+parameter.get("user_address");
                 break;
         }
+
+
 
 //        int i=0;
 //        if (result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6&&ACTION.equals("user")) {
@@ -521,78 +534,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         }
         return super.onOptionsItemSelected(item);
     }
-    //사용자 정보 수정 서버
-    class UpdateData extends AsyncTask<String, Void, String>{
-        ProgressDialog progressDialog;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            progressDialog = ProgressDialog.show(searchActivity.this,
-                    "Please Wait", null, true, true);
-        }
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            progressDialog.dismiss();
-            Log.d(TAG, "aaaaaaaaaaaa" + result);
-        }
-        @Override
-        protected String doInBackground(String... params) {
-
-            String uuid = (String)params[1];
-            String infoName = (String)params[2];
-            String value = (String)params[3];
-
-
-
-            String serverURL = (String)params[0];
-            String postParameters = "uuid=" + uuid + "&infoName=" + infoName + "&value=" + value;
-
-            try {
-
-                URL url = new URL(serverURL);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
-                httpURLConnection.setReadTimeout(5000);
-                httpURLConnection.setConnectTimeout(5000);
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.connect();
-
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                outputStream.write(postParameters.getBytes("UTF-8"));
-                outputStream.flush();
-                outputStream.close();
-
-                int responseStatusCode = httpURLConnection.getResponseCode();
-                Log.d(TAG, "POST response code - " + responseStatusCode);
-
-                InputStream inputStream;
-                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
-                    inputStream = httpURLConnection.getInputStream();
-                }
-                else{
-                    inputStream = httpURLConnection.getErrorStream();
-                }
-
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                StringBuilder sb = new StringBuilder();
-                String line = null;
-                while((line = bufferedReader.readLine()) != null){
-                    sb.append(line);
-                }
-                bufferedReader.close();
-                return sb.toString();
-            } catch (Exception e) {
-                Log.d(TAG, "UpdateData: Error ", e);
-                Log.d("에러",e.getMessage());
-                return new String("Error: " + e.getMessage());
-            }
-        }
-    }
     //서버 입력 클래스
     class InsertData extends AsyncTask<String, Void, String>{
         ProgressDialog progressDialog;
