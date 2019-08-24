@@ -367,41 +367,62 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 //            String address=(MyInfo.get("address")).replaceAll("\"","");
 //            String phoneNum=(MyInfo.get("phoneNum")).replaceAll("\"","");
 //
-//            //사용자 정보 DB에 넣기
-//            InsertUser task = new InsertUser();
-//            task.execute("http://" + IP_ADDRESS + "/insertUser.php",uuid,name,address,phoneNum);
+
 //            remenu=getRemenu(result);
 //        }
-//        UpdateUser task = new UpdateUser(); //사용자정보 수정
+
 //>>>>>>> f6bb73d89e3801edf36e89adde93b202de39db0b
 
         Log.i("액션",ACTION);
 
+        AsyncTask task=null;
         //챗봇 액션 처리
         switch (ACTION){
+
             case "ACTION_USERNAME": //사용자등록 : 이름만 입력했을때
                 parameter=getParameter(result);
                 user_name=""+parameter.get("user_name");
+                //사용자 정보 DB에 넣기
+                task = new InsertUser();
+                task.execute("http://" + IP_ADDRESS + "/insertUser.php",user_uuid,user_name,null,null);
+
                 remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;
             case "ACTION_USERALL": //사용자등록 : 이름,번호,주소 입력했을때
                 parameter=getParameter(result);
                 user_name=""+parameter.get("user_name");
-                user_phone=""+parameter.get("user_phone");
                 user_address=""+parameter.get("user_address");
-               remenu=getRemenu(result);
+                user_phone=""+parameter.get("user_phone");
+
+                //사용자 정보 DB에 넣기
+                task = new InsertUser();
+                task.execute("http://" + IP_ADDRESS + "/insertUser.php",user_uuid,user_name,user_address,user_phone);
+
+                remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;
             case "ACTION_M_NAME"://사용자정보수정 : 이름
+                parameter=getParameter(result);
+                user_name = ""+parameter.get("user_name");
+                task = new UpdateUser(); //사용자정보 수정
+                task.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"name",user_name);
                 remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;
             case "ACTION_M_PHONE"://사용자정보수정 : 핸드폰번호
+                parameter=getParameter(result);
+                user_phone = ""+parameter.get("user_phone");
+                task = new UpdateUser(); //사용자정보 수정
+                task.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"phoneNum",user_phone);
                 remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;
             case "ACTION_M_ADDRESS"://사용자정보수정 : 주소
+                parameter=getParameter(result);
+                user_address = ""+parameter.get("user_address");
+                task = new UpdateUser(); //사용자정보 수정
+                task.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"address",user_address);
                 remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;

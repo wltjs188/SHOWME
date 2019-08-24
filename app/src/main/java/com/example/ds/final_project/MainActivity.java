@@ -20,9 +20,7 @@ import android.view.View;
 
 import android.widget.Toast;
 
-import com.example.ds.final_project.db.InsertUser;
 import com.example.ds.final_project.db.UpdateUser;
-import com.example.ds.final_project.db.UpdateWishList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -183,8 +181,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void showResult(){
 
-        String TAG_JSON="person";
-        String TAG_ID = "uuid";
+        String TAG_JSON="User";
+        String TAG_ID = "uid";
         String TAG_NAME = "name";
         String TAG_ADDRESS = "address";
         String TAG_PHONENUM ="phoneNum";
