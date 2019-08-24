@@ -1,0 +1,12 @@
+import pymysql
+ 
+conn = pymysql.connect(host='localhost', user='kimcheon', password='kim2cheon1',
+                       db='SHOWOOMI', charset='utf8')
+ 
+curs = conn.cursor()
+sql = """Product(id,opNum, name, category, lengthimage, price, size, color, fabric, pattern, detail) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+curs.execute(sql, ('홍길동', '홍길동','홍길동','홍길동','홍길동','홍길동','홍길동','홍길동','홍길동','홍길동','홍길동','홍길동'))
+
+conn.commit()
+ 
+conn.close()
