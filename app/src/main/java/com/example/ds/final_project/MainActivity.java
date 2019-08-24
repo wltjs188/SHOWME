@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.ds.final_project.db.DeleteWishList;
 import com.example.ds.final_project.db.InsertProduct;
+import com.example.ds.final_project.db.UpdateWishList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -271,9 +272,11 @@ public class MainActivity extends AppCompatActivity {
 //        InsertProduct task = new InsertProduct();
 //        task.execute("http://" + IP_ADDRESS + "/insertProduct.php","p_id1","p_name","p_category","p_length","p_image","p_price",
 //                "p_size","p_color","p_fabric","p_pattern","p_detail");
-        DeleteWishList task = new DeleteWishList();
-        task.execute("http://" + IP_ADDRESS + "/deleteWishList.php","id","pid");
-
+//        DeleteWishList task = new DeleteWishList();
+//        task.execute("http://" + IP_ADDRESS + "/deleteWishList.php","id","pid");
+        UpdateWishList task = new UpdateWishList();
+        // Log.d("productURL"," 삽입"+productURL);
+        task.execute("http://" + IP_ADDRESS + "/insertWishList.php","id","pid");
     }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
