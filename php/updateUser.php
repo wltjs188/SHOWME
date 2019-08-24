@@ -1,4 +1,5 @@
 <?php
+ 	header('Content-Type: text/html; charset=utf-8'); 
 	error_reporting(E_ALL); 
     ini_set('display_errors',1); 
 
@@ -14,7 +15,7 @@
 
 
 	$con = mysqli_connect("localhost","kimcheon","kim2cheon1","SHOWOOMI");
-	$sql="UPDATE person SET $infoName='$value' WHERE uid='$uid'";
+	$sql="UPDATE User SET $infoName='$value' WHERE uid='$uid'";
 	mysqli_query($con,$sql);
-
+	mysqli_query('set names utf8');
 ?>

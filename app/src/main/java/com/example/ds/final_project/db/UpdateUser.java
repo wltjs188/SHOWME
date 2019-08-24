@@ -28,12 +28,12 @@ public class UpdateUser extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
 
-        String uuid = (String)params[1];
+        String uid = (String)params[1];
         String infoName = (String)params[2];
         String value = (String)params[3];
 
         String serverURL = (String)params[0];
-        String postParameters = "uuid=" + uuid + "&infoName=" + infoName + "&value=" + value;
+        String postParameters = "uid=" + uid + "&infoName=" + infoName + "&value=" + value;
 
         try {
 
