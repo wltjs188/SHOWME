@@ -9,6 +9,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -61,8 +64,12 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     //
     String Color="";
 
+    //구글 SST 음성인식
+    Intent sstIntent;
+    SpeechRecognizer mRecognizer;
+
     //상품검색
-    AIService aiService;
+//    AIService aiService; 챗봇음성
     String query;
     String action;
     String speech;
@@ -77,6 +84,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
     private ListView listView;
     private View btnSend;
+    private View btnSST;
     private EditText editText;
     //boolean isMine;
     static private List<ChatMessage> chatMessages = new ArrayList<>();
@@ -113,9 +121,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         shopIntent=new Intent(getApplicationContext(),ShopActivity.class);
 
 
-
         listView = (ListView) findViewById(R.id.list_msg);
         btnSend = findViewById(R.id.btn_chat_send);
+        btnSST=findViewById(R.id.btn_stt);
         editText = (EditText) findViewById(R.id.msg_type);
         uuid = getPreferences("uuid");
         name = getPreferences("name");
@@ -164,13 +172,22 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 //            adapter.notifyDataSetChanged();
 //        }
 
+        //구글 sst 음성인식
+        sstIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        sstIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getApplicationContext().getPackageName());
+        sstIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR");
+        mRecognizer = SpeechRecognizer.createSpeechRecognizer(getApplicationContext());
+        mRecognizer.setRecognitionListener(listener);
+
+
+
         //dialogflow
         final AIConfiguration config = new AIConfiguration("b8dda671eb584e3586aba41efdd554cf",
                 AIConfiguration.SupportedLanguages.Korean,
                 AIConfiguration.RecognitionEngine.System);
 
-        aiService = AIService.getService(this, config);
-        aiService.setListener(this);
+//        aiService = AIService.getService(this, config);
+//        aiService.setListener(this);
 
         aiDataService = new AIDataService(this,config);
         aiRequest = new AIRequest();
@@ -201,7 +218,46 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 }
             }
         });
+        //SST 버튼
+        btnSST.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"지금부터 말을 해주세요!",Toast.LENGTH_LONG).show();
+                mRecognizer.startListening(sstIntent);
+            }
+        });
+
     }
+
+    //SST 리스너
+    private RecognitionListener listener = new RecognitionListener() {
+        public void onRmsChanged(float rmsdB) { }
+        public void onResults(Bundle results) {
+            String key = "";
+            key = SpeechRecognizer.RESULTS_RECOGNITION;
+            ArrayList<String> mResult = results.getStringArrayList(key);
+            String[] rs = new String[mResult.size()];
+            mResult.toArray(rs);
+            editText.setText(""+rs[0]);
+
+        }
+        public void onReadyForSpeech(Bundle params) {
+
+        }
+        public void onPartialResults(Bundle partialResults) {}
+        public void onEvent(int eventType, Bundle params) {}
+        public void onError(int error) {
+            Toast.makeText(getApplicationContext(),"오류",Toast.LENGTH_LONG).show();
+        }
+        public void onEndOfSpeech() {}
+        public void onBufferReceived(byte[] buffer) {}
+        public void onBeginningOfSpeech() {
+        }
+    };
+
+
+
+
     //리메뉴
     protected String getRemenu(Result result){
         ResponseMessage.ResponseSpeech responseMessage = (ResponseMessage.ResponseSpeech)result.getFulfillment().getMessages().get(1);
@@ -238,10 +294,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             }
         }
     }
-    public void ButtonClicked(View view){
-        aiService.startListening();
-
-    }
+//    public void ButtonClicked(View view){
+//        aiService.startListening();
+//    }
     private class AITask extends AsyncTask<AIRequest, Void, AIResponse>{
         protected AIResponse doInBackground(AIRequest... requests) {
             final AIRequest request = requests[0];
@@ -350,7 +405,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 }
                 break;
             case "search" :
-                if(result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6) {
+                if(result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==5) {
                     keyword="";
                     for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
 //                    Log.d("겟값","key"+entry.getKey()+"value:"+entry.getValue());
