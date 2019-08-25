@@ -359,9 +359,9 @@ public class ProductInfo extends AppCompatActivity {
                 String uuid = item.getString("uid");
                 String productId = item.getString("productId");
                 String optionNum = item.getString("optionNum");
-//                Log.d("서버에서","받은"+uuid);
+                Log.d("서버에서","받은"+uuid);
 //                Log.d("서버에서","받은"+productURL);
-//                Log.d("서버에서","진짜"+this.uuid);
+                Log.d("서버에서","진짜"+this.uuid);
 //                Log.d("서버에서","진짜"+this.productURL);
                 if(uuid.equals(this.uuid)&&productId.equals(this.productId)&&optionNum.equals(this.optionNum)){ //DB에 있으면 count
                     count++;
