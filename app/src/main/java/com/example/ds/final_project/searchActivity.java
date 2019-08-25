@@ -135,7 +135,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
         user_uuid = getPreferences("uuid");
         user_name = getPreferences("name");
-
+        user_address = getPreferences("address");
+        user_phone = getPreferences("phoneNum");
+        Log.d("uuid 정보",user_name+user_address+user_phone);
 //        gender = getPreferences("gender");
 //        height = getPreferences("height");
 //        top = getPreferences("top");

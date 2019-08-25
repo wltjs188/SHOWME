@@ -50,11 +50,11 @@ public class WishListActivity extends AppCompatActivity {
     String mJsonString;
     String IP_ADDRESS = "18.191.10.193";
     private WishAdapter adapter;
-    String uuid;
+    String uuid="uid";
     //상품정보 List
     ArrayList<String> productIds=new ArrayList<String>();
     ArrayList<String> optionNums=new ArrayList<String>();
-   // ArrayList<String> infos=new ArrayList<String>();
+    ArrayList<String> infos=new ArrayList<String>(); //상품 상세 정보
     ArrayList<String> images=new ArrayList<String>(); //상품 옵션 대표 이미지
 
     @Override
@@ -63,7 +63,7 @@ public class WishListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wish_list);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
         getSupportActionBar().setTitle("관심상품");
-        uuid = getPreferences("uuid");
+       // uuid = getPreferences("uuid");
         //상품들 가져오기
         GetWishList task = new GetWishList();
         task.execute( "http://" + IP_ADDRESS + "/getWishList.php",uuid);
@@ -76,13 +76,12 @@ public class WishListActivity extends AppCompatActivity {
                // productInfoIntent.putExtra("info", infos.get(position));
                 productInfoIntent.putExtra("productId", productIds.get(position));
                 productInfoIntent.putExtra("optionNum", optionNums.get(position));
-               // Log.d("detailurl","wishlist: "+productURLs.get(position));
-               // productInfoIntent.putExtra("image", images.get(position));
+                productInfoIntent.putExtra("info", infos.get(position));
+                productInfoIntent.putExtra("image", images.get(position));
                 startActivity(productInfoIntent);
             }
         });
     }
-
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
         switch (item.getItemId()){
             case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작

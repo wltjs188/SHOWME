@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         uuid = GetDevicesUUID(getBaseContext());
         savePreferences("uuid",uuid);
+        Log.d("uuid",uuid);
         //서버연결
         GetData task = new GetData();
         task.execute( "http://" + IP_ADDRESS + "/getUser.php",uuid);
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             String serverURL = params[0];
-            String postParameters = "uuid=" + params[1];
+            String postParameters = "uid=" + params[1];
 
             try {
 
@@ -208,10 +209,11 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             Log.d("showResult : ", e.getMessage());
         }
-        //Log.d("채윤",name+","+gender+","+height+","+top+","+bottom+","+foot);
+        Log.d("채윤",uuid+", "+name+","+address+","+phoneNum);
         savePreferences("name",name);
         savePreferences("address",address);
         savePreferences("phoneNum",phoneNum);
+
 
     }
 
