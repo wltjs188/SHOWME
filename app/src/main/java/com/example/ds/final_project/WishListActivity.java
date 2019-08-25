@@ -67,7 +67,7 @@ public class WishListActivity extends AppCompatActivity {
         //상품들 가져오기
         GetWishList task = new GetWishList();
         task.execute( "http://" + IP_ADDRESS + "/getWishList.php",uuid);
-
+ //       Log.d("헐","관심");
         productInfoIntent = new Intent(getApplicationContext(),ProductInfo.class);
         gv = (GridView)findViewById(R.id.gridView1);
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -108,15 +108,17 @@ public class WishListActivity extends AppCompatActivity {
             progressDialog.dismiss();
 
             if (result == null){
+
             }
             else {
+                Log.d("널","헐");
                 mJsonString = result;
                 showResult();
                 //어댑터
                 //관심상품 Products에서 가져오기
-                for(String pid:productIds) {
-
-                }
+//                for(String pid:productIds) {
+//
+//                }
 //                adapter = new WishAdapter(this, R.layout.activity_wish_list, images,index);
 //                gv.setAdapter(adapter);
 
