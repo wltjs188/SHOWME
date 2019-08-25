@@ -381,15 +381,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
        // AsyncTask task=null;
         //챗봇 액션 처리
         switch (ACTION){
-            case "ACTION_USER":
-                Log.i("RESULT_user",""+result.getParameters());
+            case "ACTION_USER"://사용자등록 : 이름받아오기
                 parameter=getParameter(result);
                 user_name=""+parameter.get("user_name");
                 result.getContexts().clear();
                 break;
             case "ACTION_USERNAME": //사용자등록 : 이름만 입력했을때
                 //사용자 정보 DB에 넣기
-                Log.i("RESULT_username",""+result.getParameters());
                 InsertUser task = new InsertUser();
                 task.execute("http://" + IP_ADDRESS + "/insertUser.php",user_uuid,user_name,null,null);
                 Log.d("test","이름");
@@ -397,10 +395,15 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 result.getContexts().clear();
                 break;
             case "ACTION_USERALL": //사용자등록 : 이름,번호,주소 입력했을때
-                Log.i("RESULT_userall",""+result.getParameters());
                 parameter=getParameter(result);
-                if(parameter.size()==2) {
-                    user_address = "" + parameter.get("user_address");
+                if(parameter.containsKey("city")) {
+                    //주소 시,구,동 받아오기
+                    user_address = "" + parameter.get("city")+parameter.get("county");
+                    if(parameter.containsKey("county1")){
+                        user_address=user_address+parameter.get("county1");
+                    }
+                    user_address=user_address+parameter.get("village");
+                    user_address=user_address.replaceAll("\"","");
                     user_phone = "" + parameter.get("user_phone");
                     //사용자 정보 DB에 넣기
                     task = new InsertUser();
@@ -420,7 +423,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 break;
             case "ACTION_M_PHONE"://사용자정보수정 : 핸드폰번호
                 parameter=getParameter(result);
-                user_phone = ""+parameter.get("user_phone");
                 task1 = new UpdateUser(); //사용자정보 수정
                 task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"phoneNum",user_phone);
                 remenu=getRemenu(result);
@@ -428,7 +430,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 break;
             case "ACTION_M_ADDRESS"://사용자정보수정 : 주소
                 parameter=getParameter(result);
-                user_address = ""+parameter.get("user_address");
+                //주소 시,구,동 받아오기
+                user_address = "" + parameter.get("city")+parameter.get("county");
+                if(parameter.containsKey("county1")){
+                    user_address=user_address+parameter.get("county1");
+                }
+                user_address=user_address+parameter.get("village");
+                user_address=user_address.replaceAll("\"","");
                 task1 = new UpdateUser(); //사용자정보 수정
                 task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"address",user_address);
                 remenu=getRemenu(result);
@@ -447,9 +455,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
                 break;
             case "ACTION_MENU" :
-                Log.i("RESULT_usermenu",""+result.getParameters());
                 parameter=getParameter(result);
-                if(parameter.containsKey("Wish_Item")){
+                if(parameter.containsKey("Wish_Item")){ //관심상품이동
                     startActivity(wishIntent);
                     result.getContexts().clear();
                 }
