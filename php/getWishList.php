@@ -1,38 +1,84 @@
-<?php 
-    error_reporting(E_ALL); 
-    ini_set('display_errors',1); 
-    include('dbcon.php');
-    $android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
-    if( (($_SERVER['REQUEST_METHOD'] == 'POST') && isset($_POST['submit'])) || $android )
-    {
-        $uid=$_POST['uuid'];
-        $productURL=$_POST['productURL'];
-        $info=$_POST['info'];
-        $image=$_POST['image'];
-        
-        if(!isset($errMSG))  
+<?php  
+error_reporting(E_ALL); 
+ini_set('display_errors',1); 
+
+include('dbcon.php');
+
+
+
+//POST 값을 읽어온다.
+$uid=isset($_POST['uid']) ? $_POST['uid'] : '';
+
+$android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
+
+
+if ($uid != "" ){ 
+
+    $sql="select * from WishList where uid='$uid'";
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
+ 
+    if ($stmt->rowCount() == 0){
+
+        echo "'";
+        echo $uid;
+        echo "'은 찾을 수 없습니다. 사용자 입력을 해주세요.";
+    }
+    else{
+
+        $data = array(); 
+
+        while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
+
+            extract($row);
+
+            array_push($data, 
+                array('uid'=>$row["uid"],
+                'productId'=>$row["productId"],
+                'optionNum'=>$row["optionNum"]
+            ));
+        }
+
+
+        if (!$android) {
+            echo "<pre>"; 
+            print_r($data); 
+            echo '</pre>';
+        }else
         {
-            
-                 try{
-               
-                $stmt = $con->prepare('INSERT INTO wishList(uuid,productURL,info, image) VALUES(:uuid, :productURL, :info, :image)');
-                $stmt->bindParam(':uuid', $uuid);
-                $stmt->bindParam(':productURL', $productURL);
-                $stmt->bindParam(':info', $info);
-                $stmt->bindParam(':image', $image);
-                
-                if($stmt->execute())
-                {
-                    $successMSG = "successMSG";
-                }
-                else
-                {
-                    $errMSG = "errMSG";
-                }
-            } catch(PDOException $e) {
-                die("Database error: " . $e->getMessage()); 
-            }
-            
+            header('Content-Type: application/json; charset=utf8');
+            $json = json_encode(array("WishList"=>$data), JSON_PRETTY_PRINT+JSON_UNESCAPED_UNICODE);
+            echo $json;
         }
     }
+}
+else {
+    echo "사용자를 입력해주세요.";
+}
+
+?>
+
+
+
+<?php
+
+$android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
+
+if (!$android){
+?>
+
+<html>
+   <body>
+   
+      <form action="<?php $_PHP_SELF ?>" method="POST">
+         uid: <input type = "text" name = "uid" />
+         <input type = "submit" />
+      </form>
+   
+   </body>
+</html>
+<?php
+}
+
+   
 ?>

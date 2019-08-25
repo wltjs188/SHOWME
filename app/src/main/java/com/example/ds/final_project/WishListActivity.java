@@ -169,14 +169,14 @@ public class WishListActivity extends AppCompatActivity {
         }
     }
     private void showResult(){
-        String TAG_JSON="wishList";
+        String TAG_JSON="WishList";
         try {
             JSONObject jsonObject = new JSONObject(mJsonString);
             JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
             Log.d("jsonArray",jsonArray.length()+"");
             for(int i=0;i<jsonArray.length();i++){
                 JSONObject item = jsonArray.getJSONObject(i);
-                String uuid = item.getString("uuid");
+                String uuid = item.getString("uid");
 
                 if(uuid.equals(this.uuid)){
                     Log.d("uuid같음",item.getString("productId"));

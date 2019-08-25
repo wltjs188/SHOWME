@@ -71,7 +71,7 @@ if (!$android){
    <body>
    
       <form action="<?php $_PHP_SELF ?>" method="POST">
-         uuid: <input type = "text" name = "uuid" />
+         uid: <input type = "text" name = "uid" />
          <input type = "submit" />
       </form>
    

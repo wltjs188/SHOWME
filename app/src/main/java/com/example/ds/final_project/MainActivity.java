@@ -157,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
                     inputStream = httpURLConnection.getErrorStream();
                 }
 
-
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
@@ -171,16 +170,12 @@ public class MainActivity extends AppCompatActivity {
                 bufferedReader.close();
 
                 return sb.toString().trim();
-
-
             } catch (Exception e) {
                 errorString = e.toString();
                 return null;
             }
-
         }
     }
-
     private void showResult(){
 
         String TAG_JSON="User";
@@ -188,7 +183,6 @@ public class MainActivity extends AppCompatActivity {
         String TAG_NAME = "name";
         String TAG_ADDRESS = "address";
         String TAG_PHONENUM ="phoneNum";
-
 
         try {
             JSONObject jsonObject = new JSONObject(mJsonString);
@@ -224,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(key, s);
         editor.commit();
     }
+
     //스마트폰 고유번호 가져오기
     private String GetDevicesUUID(Context mContext){
         final TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
@@ -258,6 +253,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void onWebClicked(View view) { startActivity(webIntent); }
     public void onShopClicked(View view) { startActivity(shopIntent); }
+
     public void onDBTestClicked(View view){ //DB테스트
 //
 //        UpdateWishList task = new UpdateWishList();
