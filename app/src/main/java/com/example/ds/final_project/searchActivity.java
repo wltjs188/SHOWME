@@ -96,9 +96,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
     HashMap<String,JsonElement> parameter=new HashMap<String,JsonElement>();
     private String user_uuid;
-    private String user_name;
-    private String user_phone;
-    private String user_address;
+    private String user_name=null;
+    private String user_phone=null;
+    private String user_address=null;
 
 //    private String gender;
 //    private String height;
@@ -387,6 +387,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 //사용자 정보 DB에 넣기
                 InsertUser task = new InsertUser();
                 task.execute("http://" + IP_ADDRESS + "/insertUser.php",user_uuid,user_name,null,null);
+                Log.d("test","이름");
                 remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;

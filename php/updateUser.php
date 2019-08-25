@@ -17,10 +17,10 @@
 	$con = mysqli_connect("localhost","kimcheon","kim2cheon1","SHOWOOMI");
 	$sql="UPDATE User SET $infoName='$value' WHERE uid='$uid'";
 
-	mysqli_query("set session character_set_connection=utf8;");
-	mysqli_query("set session character_set_results=utf8;");
+	mysqli_query($con,"set session character_set_connection=utf8;");
+	mysqli_query($con,"set session character_set_results=utf8;");
 
-	mysqli_query("set session character_set_client=utf8;");
+	mysqli_query($con,"set session character_set_client=utf8;");
 
 	mysqli_query($con,$sql);
 	
