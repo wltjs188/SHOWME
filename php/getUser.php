@@ -13,7 +13,7 @@ $android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
 
 if ($uid != "" ){ 
 
-    $sql="select * from person where uid='$uid'";
+    $sql="select * from User where uid='$uid'";
     $stmt = $con->prepare($sql);
     $stmt->execute();
  
@@ -47,7 +47,7 @@ if ($uid != "" ){
         }else
         {
             header('Content-Type: application/json; charset=utf8');
-            $json = json_encode(array("person"=>$data), JSON_PRETTY_PRINT+JSON_UNESCAPED_UNICODE);
+            $json = json_encode(array("User"=>$data), JSON_PRETTY_PRINT+JSON_UNESCAPED_UNICODE);
             echo $json;
         }
     }
