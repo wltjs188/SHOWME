@@ -449,7 +449,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             case "ACTION_MENU" :
                 Log.i("RESULT_usermenu",""+result.getParameters());
                 parameter=getParameter(result);
-                if(parameter.get("Wish_Item").toString().equals("\"관심상품 보기\"")){
+                if(parameter.containsKey("Wish_Item")){
                     startActivity(wishIntent);
                     result.getContexts().clear();
                 }
