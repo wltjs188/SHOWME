@@ -374,17 +374,20 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 //>>>>>>> f6bb73d89e3801edf36e89adde93b202de39db0b
 
         Log.i("액션",ACTION);
+        Log.i("RESULT",""+result);
 
        // AsyncTask task=null;
         //챗봇 액션 처리
         switch (ACTION){
             case "ACTION_USER":
+                Log.i("RESULT_user",""+result.getParameters());
                 parameter=getParameter(result);
                 user_name=""+parameter.get("user_name");
                 result.getContexts().clear();
                 break;
             case "ACTION_USERNAME": //사용자등록 : 이름만 입력했을때
                 //사용자 정보 DB에 넣기
+                Log.i("RESULT_username",""+result.getParameters());
                 InsertUser task = new InsertUser();
                 task.execute("http://" + IP_ADDRESS + "/insertUser.php",user_uuid,user_name,null,null);
                 Log.d("test","이름");
@@ -392,6 +395,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 result.getContexts().clear();
                 break;
             case "ACTION_USERALL": //사용자등록 : 이름,번호,주소 입력했을때
+                Log.i("RESULT_userall",""+result.getParameters());
                 parameter=getParameter(result);
                 if(parameter.size()==2) {
                     user_address = "" + parameter.get("user_address");
@@ -441,6 +445,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
                 break;
             case "ACTION_MENU" :
+                Log.i("RESULT_usermenu",""+result.getParameters());
                 parameter=getParameter(result);
                 if(parameter.get("Wish_Item").toString().equals("\"관심상품 보기\"")){
                     startActivity(wishIntent);
