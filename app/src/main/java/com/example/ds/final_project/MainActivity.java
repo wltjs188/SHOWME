@@ -20,6 +20,7 @@ import android.view.View;
 
 import android.widget.Toast;
 
+import com.example.ds.final_project.db.InsertUser;
 import com.example.ds.final_project.db.UpdateUser;
 
 import org.json.JSONArray;
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         savePreferences("uuid",uuid);
         //서버연결
         GetData task = new GetData();
-        task.execute( "http://" + IP_ADDRESS + "/get_uuid.php",uuid);
+        task.execute( "http://" + IP_ADDRESS + "/getUser.php",uuid);
     }
 
     private class GetData extends AsyncTask<String, Void, String>{
@@ -260,8 +261,8 @@ public class MainActivity extends AppCompatActivity {
 //        UpdateWishList task = new UpdateWishList();
 //        // Log.d("productURL"," 삽입"+productURL);
 //        task.execute("http://" + IP_ADDRESS + "/insertWishList.php","id","pid");
-        UpdateUser task = new UpdateUser();
-        task.execute("http://" + IP_ADDRESS + "/updateUser.php","uid","name","채니");
+        UpdateUser task1 = new UpdateUser(); //사용자정보 수정
+        task1.execute("http://" + IP_ADDRESS + "/updateUser.php","myUid","name","채");
     }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
