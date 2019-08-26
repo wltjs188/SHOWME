@@ -66,7 +66,7 @@ public class WishListActivity extends AppCompatActivity {
        // uuid = getPreferences("uuid");
         //상품들 가져오기
         GetWishList task = new GetWishList();
-        task.execute( "http://" + IP_ADDRESS + "/getWishList.php",uuid);
+        task.execute( "http://" + IP_ADDRESS + "/getWishList.php","uid");
  //       Log.d("헐","관심");
         productInfoIntent = new Intent(getApplicationContext(),ProductInfo.class);
         gv = (GridView)findViewById(R.id.gridView1);
@@ -127,7 +127,7 @@ public class WishListActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             String serverURL = params[0];
-            String postParameters = "uuid=" + params[1];
+            String postParameters = "uid=" + params[1];
             try {
 
                 URL url = new URL(serverURL);
@@ -181,7 +181,8 @@ public class WishListActivity extends AppCompatActivity {
                 String uuid = item.getString("uid");
 
                 if(uuid.equals(this.uuid)){
-                    Log.d("uuid같음",item.getString("productId"));
+                    Log.d("가져온 data",item.getString("productId"));
+                    Log.d("가져온 data",item.getString("optionNum"));
                     productIds.add(item.getString("productId"));
                     optionNums.add(item.getString("optionNum"));
                 //    infos.add(item.getString("info")) ;
@@ -193,6 +194,7 @@ public class WishListActivity extends AppCompatActivity {
 
         } catch (JSONException e) {
             Log.d("showResult : ", e.getMessage());
+            Log.d("phptest: ",mJsonString);
         }
 //        if(images.size()>0)
 //        {  for(int i=0;i<images.size();i++){
@@ -220,6 +222,7 @@ public class WishListActivity extends AppCompatActivity {
             }
             else {
                 mJsonString = result;
+                Log.d("mJsonString wishlist",mJsonString);
                 showProductResult();
             }
         }
