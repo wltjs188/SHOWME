@@ -77,11 +77,12 @@ public class ProductInfo extends AppCompatActivity {
         Intent intent = getIntent();
         productId=intent.getStringExtra("productId");
         optionNum=intent.getStringExtra("optionNum");
+        info=intent.getStringExtra("info");
+        image=intent.getStringExtra("image");
         //info=intent.getStringExtra("info");
       //  productURL=intent.getStringExtra("url");
        // Log.d("detailurl","상세정보 : "+productURL);
         productImg=(ImageView)findViewById(R.id.productImg);
-        image=intent.getStringExtra("image");
         Log.i("이미지",""+image);
         Glide.with(this).load(image).into(productImg);
 
@@ -199,71 +200,7 @@ public class ProductInfo extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-//    class InsertData extends AsyncTask<String, Void, String>{
-//        ProgressDialog progressDialog;
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//
-//            progressDialog = ProgressDialog.show(ProductInfo.this,
-//                    "Please Wait", null, true, true);
-//        }
-//        @Override
-//        protected void onPostExecute(String result) {
-//            super.onPostExecute(result);
-//            progressDialog.dismiss();
-//            Log.d(TAG, "POST response  - " + result);
-//        }
-//        @Override
-//        protected String doInBackground(String... params) {
-//
-//            String uuid = (String)params[1];
-//            String productId = (String)params[2];
-//
-//            String serverURL = (String)params[0];
-//            String postParameters = "uid=" + uuid + "&productId=" + productId ;
-//
-//            try {
-//
-//                URL url = new URL(serverURL);
-//                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-//
-//                httpURLConnection.setReadTimeout(5000);
-//                httpURLConnection.setConnectTimeout(5000);
-//                httpURLConnection.setRequestMethod("POST");
-//                httpURLConnection.connect();
-//
-//                OutputStream outputStream = httpURLConnection.getOutputStream();
-//                outputStream.write(postParameters.getBytes("UTF-8"));
-//                outputStream.flush();
-//                outputStream.close();
-//
-//                int responseStatusCode = httpURLConnection.getResponseCode();
-//                Log.d(TAG, "POST response code - " + responseStatusCode);
-//
-//                InputStream inputStream;
-//                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
-//                    inputStream = httpURLConnection.getInputStream();
-//                }
-//                else{
-//                    inputStream = httpURLConnection.getErrorStream();
-//                }
-//
-//                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-//                StringBuilder sb = new StringBuilder();
-//                String line = null;
-//                while((line = bufferedReader.readLine()) != null){
-//                    sb.append(line);
-//                }
-//                bufferedReader.close();
-//                return sb.toString();
-//            } catch (Exception e) {
-//                Log.d(TAG, "InsertData: Error ", e);
-//                return new String("Error: " + e.getMessage());
-//            }
-//        }
-//    }
+
     private class GetWishListItem extends AsyncTask<String, Void, String>{
 
         ProgressDialog progressDialog;
@@ -463,8 +400,6 @@ public class ProductInfo extends AppCompatActivity {
             product_info.setText(info);
             Log.i("이미지분석",info);
         }
-
-
 
         //자바용 그릇
         private class TranslatedItem {

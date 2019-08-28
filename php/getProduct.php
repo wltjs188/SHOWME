@@ -33,8 +33,6 @@ if ($productId != "" ){
 
             array_push($data, 
                 array(
-                'productId'=>$row["productId"],
-                'optionNum'=>$row["optionNum"],
                 'name'=>$row["name"],
                 'category'=>$row["category"],
                 'length'=>$row["length"],
@@ -56,7 +54,7 @@ if ($productId != "" ){
         }else
         {
             header('Content-Type: application/json; charset=utf8');
-            $json = json_encode(array("person"=>$data), JSON_PRETTY_PRINT+JSON_UNESCAPED_UNICODE);
+            $json = json_encode(array("products"=>$data), JSON_PRETTY_PRINT+JSON_UNESCAPED_UNICODE);
             echo $json;
         }
     }

@@ -97,20 +97,20 @@ public class MainActivity extends AppCompatActivity {
 
     private class GetData extends AsyncTask<String, Void, String>{
 
-        ProgressDialog progressDialog;
+      //  ProgressDialog progressDialog;
         String errorString = null;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = ProgressDialog.show(MainActivity.this,
-                    "Please Wait", null, true, true);
+//            progressDialog = ProgressDialog.show(MainActivity.this,
+//                    "Please Wait", null, true, true);
         }
 
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            progressDialog.dismiss();
+          //  progressDialog.dismiss();
 
             if (result == null){
                 Log.i(TAG,"RESULT="+result);
@@ -259,8 +259,12 @@ public class MainActivity extends AppCompatActivity {
 //        UpdateWishList task = new UpdateWishList();
 //        // Log.d("productURL"," 삽입"+productURL);
 //        task.execute("http://" + IP_ADDRESS + "/insertWishList.php","id","pid");
-        UpdateUser task1 = new UpdateUser(); //사용자정보 수정
-        task1.execute("http://" + IP_ADDRESS + "/updateUser.php","myUid","name","채");
+//        UpdateUser task1 = new UpdateUser(); //사용자정보 수정
+//        task1.execute("http://" + IP_ADDRESS + "/updateUser.php","myUid","name","채");
+//        GetProduct task = new GetProduct();
+//        task.execute( "http://" + IP_ADDRESS + "/getProduct.php","1017008148","3");
+        Intent i=new Intent(getApplicationContext(),WishListActivity.class);
+        startActivity(i);
     }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
@@ -268,5 +272,122 @@ public class MainActivity extends AppCompatActivity {
                 101);
     }
 
+    private class GetProduct extends AsyncTask<String, Void, String>{
 
+        //ProgressDialog progressDialog;
+        String errorString = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            progressDialog = ProgressDialog.show(WishListActivity.this,
+//                    "Please Wait", null, true, true);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+//            progressDialog.dismiss();
+
+            if (result == null){
+            }
+            else {
+                mJsonString = result;
+                Log.d("mJsonString wishlist",mJsonString);
+                showProductResult();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String productId = params[1];
+            String optionNum = params[2];
+            String serverURL = params[0];
+            Log.d("param",productId+" "+optionNum);
+            String postParameters = "productId=" + productId+"optionNum=" + "3";
+
+
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+                bufferedReader.close();
+
+                return sb.toString().trim();
+
+
+            } catch (Exception e) {
+                errorString = e.toString();
+                return null;
+            }
+
+        }
+    }
+
+    private void showProductResult(){
+        int count=0;
+        String TAG_JSON="products";
+        try {
+            JSONObject jsonObject = new JSONObject(mJsonString);
+            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
+
+            for(int i=0;i<jsonArray.length();i++){
+                JSONObject item = jsonArray.getJSONObject(i);
+                String name = item.getString("name");
+                String category = item.getString("category");
+                String length = item.getString("length");
+                String image = item.getString("image");
+                String price = item.getString("price");
+                String size = item.getString("size");
+                String color = item.getString("color");
+                String fabric = item.getString("fabric");
+                String pattern = item.getString("pattern");
+                String detail = item.getString("detail");
+                String info=name+"\n"+name+"\n"+category+"\n"+length+"\n"+price+"\n"+size+"\n"+color+"\n"+fabric+"\n"+pattern+"\n"+detail;
+                Log.d("가져온 상품 data:",info);
+                //infos.add(info);
+                //images.add(image);
+            }
+
+        } catch (JSONException e) {
+            Log.d("showResult : ", e.getMessage());
+        }
+
+    }
 }
