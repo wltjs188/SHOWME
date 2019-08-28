@@ -223,8 +223,12 @@ public class WishListActivity extends AppCompatActivity {
             task.execute( "http://" + IP_ADDRESS + "/getProduct.php",productIds.get(i),optionNums.get(i));
             Log.d("가져온, product, option",productIds.get(i)+optionNums.get(i));
             Log.d("힝",images.size()+"");
-//            adapter = new WishAdapter(this, R.layout.activity_wish_list, images,index);
-//            gv.setAdapter(adapter);
+            adapter = new WishAdapter(this, R.layout.activity_wish_list, images,index);
+            gv.setAdapter(adapter);
+
+//            if(ta.Status.FINISHED){
+//                // My AsyncTask is done and onPostExecute was called
+//            }
         }
     }
     private class GetProduct extends AsyncTask<String, Void, String>{
@@ -338,8 +342,11 @@ public class WishListActivity extends AppCompatActivity {
                 Log.d("가져온 상품 data:",info);
                 infos.add(info);
                 images.add(image);
-                adapter.notifyDataSetChanged();
+               // adapter.notifyDataSetChanged();
                // adapter.notifyitemInserted
+                adapter = new WishAdapter(this, R.layout.activity_wish_list, images,index);
+                gv.setAdapter(adapter);
+                Log.d("힝힝",""+images.size());
             }
 
         } catch (JSONException e) {
