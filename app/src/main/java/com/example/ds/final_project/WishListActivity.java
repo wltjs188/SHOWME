@@ -78,7 +78,7 @@ public class WishListActivity extends AppCompatActivity {
 
 //        Log.d("힝",""+images.size());
 //        if(images.size()>0){
-            adapter = new WishAdapter(this, R.layout.activity_wish_list, images,index);
+            adapter = new WishAdapter(this, R.layout.activity_wish_list, images,infos,index);
             gv.setAdapter(adapter);
 //
 //        }
@@ -309,7 +309,7 @@ private class GetWishProduct extends AsyncTask<String, Void, String> {
                     images.add(item.getString("image"));
 
                     //adapter 설정
-                    adapter = new WishAdapter(this, R.layout.activity_wish_list, images,index);
+                    adapter = new WishAdapter(this, R.layout.activity_wish_list, images,infos,index);
                     gv.setAdapter(adapter);
                 }
             }
@@ -473,13 +473,15 @@ class WishAdapter extends ArrayAdapter<String> {
   //  private List<Product> productList;
     private ImageLoader imageLoader;
     ArrayList<String> images;
+    ArrayList<String> infos;
     int index;
-    public WishAdapter(Context context, int resource, ArrayList<String> images,int index) {
+    public WishAdapter(Context context, int resource, ArrayList<String> images,ArrayList<String> infos,int index) {
         super(context, resource,images);
         // TODO Auto-generated constructor stub
         this.context = context;
         this.resource = resource;
         this.images = images;
+        this.infos=infos;
         imageLoader= new ImageLoader(context);
         this.index=index;
     }
@@ -496,6 +498,7 @@ class WishAdapter extends ArrayAdapter<String> {
             holder.imageView
                     = (ImageView) convertView.findViewById(R.id.imageView1);
             convertView.setTag(holder);
+            holder.imageView.setContentDescription(getInfo(position));
         }
         else{
             holder = (ProductViewHolder) convertView.getTag();
@@ -503,6 +506,9 @@ class WishAdapter extends ArrayAdapter<String> {
         Log.d("codbs","여기실행안되냐?");
         Glide.with(WishAdapter.super.getContext()).load(images.get(position)).into(holder.imageView);
         return convertView;
+    }
+    public String getInfo(int i){
+        return infos.get(i).toString();
     }
     static class ProductViewHolder{
         public ImageView imageView;
