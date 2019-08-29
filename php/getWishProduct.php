@@ -8,14 +8,13 @@ include('dbcon.php');
 
 //POST 값을 읽어온다.
 $uid=isset($_POST['uid']) ? $_POST['uid'] : '';
-$productId=isset($_POST['productId']) ? $_POST['productId'] : '';
-$optionNum=isset($_POST['optionNum']) ? $_POST['optionNum'] : '';
+
 $android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
 
 
 if ($uid != "" ){ 
 
-    $sql="select * from WishProduct where uid='$uid' and productId='$productId' and optionNum='$optionNum' ";
+    $sql="select * from WishProduct where uid='$uid'";
     $stmt = $con->prepare($sql);
     $stmt->execute();
  
@@ -36,7 +35,9 @@ if ($uid != "" ){
             array_push($data, 
                 array('uid'=>$row["uid"],
                 'productId'=>$row["productId"],
-                'optionNum'=>$row["optionNum"]
+                'optionNum'=>$row["optionNum"],
+                'image'=>$row["image"],
+                'info'=>$row["info"]
             ));
         }
 
@@ -48,7 +49,7 @@ if ($uid != "" ){
         }else
         {
             header('Content-Type: application/json; charset=utf8');
-            $json = json_encode(array("getWishListItem"=>$data), JSON_PRETTY_PRINT+JSON_UNESCAPED_UNICODE);
+            $json = json_encode(array("WishProduct"=>$data), JSON_PRETTY_PRINT+JSON_UNESCAPED_UNICODE);
             echo $json;
         }
     }
@@ -72,7 +73,7 @@ if (!$android){
    <body>
    
       <form action="<?php $_PHP_SELF ?>" method="POST">
-         uuid: <input type = "text" name = "uuid" />
+         uid: <input type = "text" name = "uid" />
          <input type = "submit" />
       </form>
    
