@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +40,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import ai.api.AIListener;
@@ -53,7 +55,7 @@ import ai.api.model.AIResponse;
 import ai.api.model.ResponseMessage;
 import ai.api.model.Result;
 
-
+import static android.speech.tts.TextToSpeech.ERROR;
 
 public class searchActivity extends AppCompatActivity implements AIListener{
 
@@ -99,6 +101,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     private String user_name=null;
     private String user_phone=null;
     private String user_address=null;
+    private TextToSpeech tts;
 
 //    private String gender;
 //    private String height;
@@ -152,7 +155,15 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         listView.setAdapter(adapter);
         ChatMessage chatMessage;
 
-
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != ERROR) {
+                    // 언어를 선택한다.
+                    tts.setLanguage(Locale.KOREAN);
+                }
+            }
+        });
 
 
 //        Log.d("받아온 사용자 정보",uuid+","+name+","+address+","+phoneNum);
@@ -288,6 +299,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 "2. 사용자 정보 수정\n" +
                 "3. 관심상품보기", true);
         chatMessages.add(chatMessage);
+
+        tts.speak(chatMessage+"",TextToSpeech.QUEUE_FLUSH, null);
         adapter.notifyDataSetChanged();
     }
     protected void makeRequest() {
@@ -342,6 +355,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
                 chatMessages.add(chatMessage);
                 adapter.notifyDataSetChanged();
+
+                tts.speak(chatMessage+"",TextToSpeech.QUEUE_FLUSH, null);
             }
 //            else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
 //                chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
@@ -575,10 +590,12 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         chatMessage = new ChatMessage(speech, true);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
+        tts.speak(chatMessage+"",TextToSpeech.QUEUE_FLUSH, null);
         if(remenu!=""){
             chatMessage = new ChatMessage(remenu, true);
             chatMessages.add(chatMessage);
             adapter.notifyDataSetChanged();
+            tts.speak(chatMessage+"",TextToSpeech.QUEUE_FLUSH, null);
             remenu="";
         }
 
@@ -641,6 +658,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         super(context, resource, objects);
         this.activity = context;
         this.messages = objects;
+
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -649,10 +667,13 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
 
         int layoutResource = 0; // determined by view type
        // ChatMessage chatMessage = getItem(position);
+
         ChatMessage chatMessage = messages.get(position);
         if (chatMessage.isMine()) {
             layoutResource = R.layout.item_chat_left;
            // Log.d("챗",position+chatMessage.getContent().toString()+"왼");
+
+
         } else {
             layoutResource = R.layout.item_chat_right;
            // Log.d("챗",position+chatMessage.getContent().toString()+"오");
