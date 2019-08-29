@@ -652,10 +652,10 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         ChatMessage chatMessage = messages.get(position);
         if (chatMessage.isMine()) {
             layoutResource = R.layout.item_chat_left;
-            Log.d("챗",position+chatMessage.getContent().toString()+"왼");
+           // Log.d("챗",position+chatMessage.getContent().toString()+"왼");
         } else {
             layoutResource = R.layout.item_chat_right;
-            Log.d("챗",position+chatMessage.getContent().toString()+"오");
+           // Log.d("챗",position+chatMessage.getContent().toString()+"오");
         }
 
         if (convertView != null) {
@@ -666,7 +666,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             convertView.setTag(holder);
         }
         holder.msg.setText(chatMessage.getContent());
-
+        holder.msg.setContentDescription(messages.get(position)+"");
         return convertView;
     }
 
