@@ -95,13 +95,20 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     private ArrayAdapter<ChatMessage> adapter;//= new MessageAdapter(this, 0, chatMessages);
 
     //사용자 정보
-
     HashMap<String,JsonElement> parameter=new HashMap<String,JsonElement>();
     private String user_uuid;
     private String user_name=null;
     private String user_phone=null;
     private String user_address=null;
     private TextToSpeech tts;
+
+    //검색 정보
+    String category = null;
+    String color = null;
+    String length = null;
+    String size = null;
+    String pattern = null;
+    String fabric = null;
 
 //    private String gender;
 //    private String height;
@@ -227,7 +234,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             @Override
             public void onClick(View v) {
                 if (editText.getText().toString().trim().equals("")) {
-                    Toast.makeText(searchActivity.this, "Please input some text...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(searchActivity.this, "텍스트를 입력해주세요", Toast.LENGTH_SHORT).show();
                 } else {
                     //add message to list
                    // isMine=false;
@@ -460,15 +467,72 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 break;
             case "ACTION_SEARCH": //상품검색 :
                 parameter=getParameter(result);
-                if(parameter.size()==5){
-                    for(String key : parameter.keySet()){
-                        String value = ""+parameter.get(key);
-                        System.out.println(key+" : "+value);
-                    }
+                //검색조건(카테고리,색상,기장,사이즈,패턴,재질) 받아오기
+                //카테고리
+                if(parameter.containsKey("Top")){
+                    category = ""+parameter.get("Top");
+                }
+                else if(parameter.containsKey("Dress")){
+                    category = ""+parameter.get("Dress");
+                }
+                else if(parameter.containsKey("Outer")){
+                    category = ""+parameter.get("Outer");
+                }
+                else if(parameter.containsKey("Pants")){
+                    category = ""+parameter.get("Pants");
+                }
+                else if(parameter.containsKey("Shoes")){
+                    category = ""+parameter.get("Shoes");
+                }
+                else if(parameter.containsKey("Skirt")){
+                    category = ""+parameter.get("Skirt");
+                }
+                else if(parameter.containsKey("Swimsuit")){
+                    category = ""+parameter.get("Swimsuit");
+                }
+                //색상
+                if(parameter.containsKey("Color")){
+                    color = ""+parameter.get("Color");
+                }
+                //기장, 바지기장
+                if(parameter.containsKey("Length")){
+                    length = ""+parameter.get("Length");
+                }
+                if(parameter.containsKey("PantsLength")){
+                    length = ""+parameter.get("PantsLength");
+                }
+                //사이즈
+                if(parameter.containsKey("Size")){
+                    size = ""+parameter.get("Size");
+                }
+                if(parameter.containsKey("ShoesSize")){
+                    size = ""+parameter.get("ShoesSize");
+                }
+                //패턴
+                if(parameter.containsKey("Pattern")){
+                    pattern = ""+parameter.get("Pattern");
+                }
+                //재질
+                if(parameter.containsKey("Material")){
+                    fabric = ""+parameter.get("Material");
+                }
+                System.out.println("카테고리 : "+category+"색상 : "+color+"기장 : "+length+"사이즈 : "+size+"패턴 : "+pattern+"재질 : "+fabric);
+
+                if( category != null && color != null && length != null && size != null && pattern != null && fabric != null ) {
+                    shopIntent.putExtra("category", category);
+                    shopIntent.putExtra("color", color);
+                    shopIntent.putExtra("length", length);
+                    shopIntent.putExtra("size", size);
+                    shopIntent.putExtra("pattern", pattern);
+                    shopIntent.putExtra("fabric", fabric);
+
+                    category = null; color = null; length = null; size = null; pattern = null; fabric = null;
+                    result.getContexts().clear();
                     startActivity(shopIntent);
                 }
 
                 break;
+
             case "ACTION_MENU" :
                 parameter=getParameter(result);
                 if(parameter.containsKey("Wish_Item")){ //관심상품이동

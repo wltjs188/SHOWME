@@ -64,14 +64,19 @@ public class ShopActivity extends AppCompatActivity {
     private ProductAdapter adapter;
     ProductSearchService service;
 
-    String keyword; //키워드
-    String Color; //색상
-
     Intent productInfoIntent;
     int ProductNum=4;
    // List<Product> products; //상품리스트
     List<Option> options; //상품리스트
     int more_num; //더보기 체크
+
+    //검색 정보
+    String category = null;
+    String color = null;
+    String length = null;
+    String size = null;
+    String pattern = null;
+    String fabric = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,38 +93,41 @@ public class ShopActivity extends AppCompatActivity {
         GridView.setAdapter(adapter);
         Intent intent=getIntent();
 
-        keyword=intent.getStringExtra("keyword");
-        Color=intent.getStringExtra("Color");
-       // keywordEdt.setText(Color+keyword);
+        //검색정보 받아오기
+        category=intent.getStringExtra("category");
+        color=intent.getStringExtra("color");
+        length=intent.getStringExtra("length");
+        size=intent.getStringExtra("size");
+        pattern=intent.getStringExtra("pattern");
+        fabric=intent.getStringExtra("fabric");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
-        getSupportActionBar().setTitle(keyword+"검색 결과");
+        getSupportActionBar().setTitle(category+"검색 결과");
 
-        //keyword=intent.getStringExtra("원피스");
-        keywordEdt.setText(keyword);
+        keywordEdt.setText(category);
 
-        service = new ProductSearchService(keyword);
-        ProductSearchThread thread = new ProductSearchThread(service, handler);
-        Toast.makeText(getApplicationContext(), "검색을 시작합니다.", Toast.LENGTH_LONG).show();
-        thread.setColor(Color);
-        thread.start();
+//        service = new ProductSearchService(keyword);
+//        ProductSearchThread thread = new ProductSearchThread(service, handler);
+//        Toast.makeText(getApplicationContext(), "검색을 시작합니다.", Toast.LENGTH_LONG).show();
+//        thread.setColor(Color);
+//        thread.start();
 
 // 상품검색
-        searchBtn.setOnClickListener(new View.OnClickListener() {
-
-            @SuppressLint("WrongConstant")
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                keyword = keywordEdt.getText().toString();
-                service = new ProductSearchService(keyword);
-                Color="아이보리"; //테스트
-                ProductSearchThread thread = new ProductSearchThread(service, handler);
-                Toast.makeText(getApplicationContext(), "검색을 시작합니다.", 0).show();
-                thread.setColor(Color);
-                thread.start();
-            }
-        });
+//        searchBtn.setOnClickListener(new View.OnClickListener() {
+//
+//            @SuppressLint("WrongConstant")
+//            @Override
+//            public void onClick(View v) {
+//                // TODO Auto-generated method stub
+//                keyword = keywordEdt.getText().toString();
+//                service = new ProductSearchService(keyword);
+//                Color="아이보리"; //테스트
+//                ProductSearchThread thread = new ProductSearchThread(service, handler);
+//                Toast.makeText(getApplicationContext(), "검색을 시작합니다.", 0).show();
+//                thread.setColor(Color);
+//                thread.start();
+//            }
+//        });
 
         //클릭시, 상세정보 페이지로 이동
         GridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -153,18 +161,20 @@ public class ShopActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                Toast.makeText(getApplicationContext(), "더보기", 0).show();
-                if(options.size()>more_num && (options.size()-more_num)%4==0){
-                    more_num=more_product(more_num);
-                }
-                else {
-                    more_num=0;
-                    service.nextPage(keyword);
-                    ProductSearchThread thread = new ProductSearchThread(service, handler);
-                    thread.setColor(Color);
-                    thread.start();
-                }
+                System.out.println("카테고리 : "+category+"색상 : "+color+"기장 : "+length+"사이즈 : "+size+"패턴 : "+pattern+"재질 : "+fabric);
+//                Toast.makeText(getApplicationContext(), "더보기", 0).show();
+//                if(options.size()>more_num && (options.size()-more_num)%4==0){
+//                    more_num=more_product(more_num);
+//                }
+//                else {
+//                    more_num=0;
+//                    service.nextPage(category);
+//                    ProductSearchThread thread = new ProductSearchThread(service, handler);
+//                    thread.setColor(color);
+//                    thread.start();
+//                }
             }
+
         });
 
     }
