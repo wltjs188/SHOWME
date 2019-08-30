@@ -13,7 +13,9 @@ public class ChatMessage {
     public String getContent() {
         return content;
     }
-
+    public String toString(){
+        return content;
+    }
     public boolean isMine() {
         return isMine;
     }

@@ -300,7 +300,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 "3. 관심상품보기", true);
         chatMessages.add(chatMessage);
 
-        tts.speak(chatMessage+"",TextToSpeech.QUEUE_FLUSH, null);
+        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
         adapter.notifyDataSetChanged();
     }
     protected void makeRequest() {
@@ -356,7 +356,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 chatMessages.add(chatMessage);
                 adapter.notifyDataSetChanged();
 
-                tts.speak(chatMessage+"",TextToSpeech.QUEUE_FLUSH, null);
+                tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
             }
 //            else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
 //                chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
@@ -590,12 +590,12 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         chatMessage = new ChatMessage(speech, true);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
-        tts.speak(chatMessage+"",TextToSpeech.QUEUE_FLUSH, null);
+        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
         if(remenu!=""){
             chatMessage = new ChatMessage(remenu, true);
             chatMessages.add(chatMessage);
             adapter.notifyDataSetChanged();
-            tts.speak(chatMessage+"",TextToSpeech.QUEUE_FLUSH, null);
+            tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
             remenu="";
         }
 
