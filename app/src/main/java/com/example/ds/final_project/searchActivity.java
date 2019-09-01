@@ -155,14 +155,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 //        foot = getPreferences("foot");
 
 
-
-
-        //set ListView adapter first
-        adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
-        listView.setAdapter(adapter);
-        ChatMessage chatMessage;
-
-        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status != ERROR) {
@@ -171,6 +164,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 }
             }
         });
+
+        //set ListView adapter first
+        adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
+        listView.setAdapter(adapter);
+        ChatMessage chatMessage;
+
+
 
 
 //        Log.d("받아온 사용자 정보",uuid+","+name+","+address+","+phoneNum);

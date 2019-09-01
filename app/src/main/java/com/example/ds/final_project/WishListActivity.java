@@ -90,7 +90,6 @@ public class WishListActivity extends AppCompatActivity {
                 productInfoIntent.putExtra("productId", productIds.get(position));
                 productInfoIntent.putExtra("optionNum", optionNums.get(position));
                 productInfoIntent.putExtra("info", infos.get(position));
-                Log.d("info",infos.get(position));
                 productInfoIntent.putExtra("image", images.get(position));
                 startActivity(productInfoIntent);
             }
@@ -238,10 +237,8 @@ private class GetWishProduct extends AsyncTask<String, Void, String> {
 
         }
         else {
-            Log.d("널","헐");
             mJsonString = result;
             showResult();
-
         }
     }
     @Override

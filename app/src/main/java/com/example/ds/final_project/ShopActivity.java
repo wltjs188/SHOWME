@@ -1,6 +1,8 @@
 package com.example.ds.final_project;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -11,16 +13,21 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
@@ -36,10 +43,19 @@ import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -48,28 +64,34 @@ import java.util.List;
 import java.util.Locale;
 
 public class ShopActivity extends AppCompatActivity {
-    private final String CLOUD_VISION_API_KEY = "AIzaSyAaYatWr1knKGmO_sAhy2j2xXLeNwjEuUM";
-    private final String ANDROID_CERT_HEADER = "X-Android-Cert";
-    private final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
-    private final int MAX_LABEL_RESULTS = 10;
-    private final String TAG = ShopActivity.class.getSimpleName();
-    Thread visionThread;
+//    private final String CLOUD_VISION_API_KEY = "AIzaSyAaYatWr1knKGmO_sAhy2j2xXLeNwjEuUM";
+//    private final String ANDROID_CERT_HEADER = "X-Android-Cert";
+//    private final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
+//    private final int MAX_LABEL_RESULTS = 10;
+//    private final String TAG = ShopActivity.class.getSimpleName();
+//    Thread visionThread;
     ///////////////////////////////////////////////////////////////
     private EditText keywordEdt;
     private Button searchBtn;
     private Button moreBtn;
-    private List<Product> productList;
+   // private List<Product> productList;
     private List<Option> optionList;
-    private GridView GridView;
+    private GridView gv;
     private ProductAdapter adapter;
-    ProductSearchService service;
-
+   // ProductSearchService service;
     Intent productInfoIntent;
+    String mJsonString;
+    String IP_ADDRESS = "18.191.10.193";
     int ProductNum=4;
    // List<Product> products; //상품리스트
-    List<Option> options; //상품리스트
+ //   List<Option> options; //상품리스트
     int more_num; //더보기 체크
-
+    //상품정보 List
+    ArrayList<String> productIds=new ArrayList<String>();
+    ArrayList<String> optionNums=new ArrayList<String>();
+    ArrayList<String> infos=new ArrayList<String>(); //상품 상세 정보
+    ArrayList<String> images=new ArrayList<String>(); //상품 옵션 대표 이미지
+    int index=0;
     //검색 정보
     String category = null;
     String color = null;
@@ -77,7 +99,7 @@ public class ShopActivity extends AppCompatActivity {
     String size = null;
     String pattern = null;
     String fabric = null;
-
+    String detail = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,11 +108,13 @@ public class ShopActivity extends AppCompatActivity {
         keywordEdt = (EditText)findViewById(R.id.main_keyword_edt);
         searchBtn = (Button) findViewById(R.id.main_search_btn);
         moreBtn = (Button) findViewById(R.id.main_more_btn);
-        productList = new ArrayList<Product>();
-        optionList = new ArrayList<Option>();
-        adapter = new ProductAdapter(this, R.layout.list_product_item,optionList);
-        GridView = (GridView) findViewById(R.id.main_GridView);
-        GridView.setAdapter(adapter);
+       // productList = new ArrayList<Product>();
+       // optionList = new ArrayList<Option>();
+
+
+      //  adapter = new ProductAdapter(this, R.layout.list_product_item, images,infos,index);
+        gv = (GridView) findViewById(R.id.main_GridView);
+       // gv.setAdapter(adapter);
         Intent intent=getIntent();
 
         //검색정보 받아오기
@@ -105,7 +129,9 @@ public class ShopActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(category+"검색 결과");
 
         keywordEdt.setText(category);
+        GetProduct task = new GetProduct();
 
+        task.execute( "http://" + IP_ADDRESS + "/getSearchedProduct.php",category,color,length,size,pattern,fabric,detail);
 //        service = new ProductSearchService(keyword);
 //        ProductSearchThread thread = new ProductSearchThread(service, handler);
 //        Toast.makeText(getApplicationContext(), "검색을 시작합니다.", Toast.LENGTH_LONG).show();
@@ -130,26 +156,25 @@ public class ShopActivity extends AppCompatActivity {
 //        });
 
         //클릭시, 상세정보 페이지로 이동
-        GridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-                Log.d(position+"정보",adapter.getInfo(position));
+               // Log.d(position+"정보",adapter.getInfo(position));
                 //startActivity(new Intent());
                // int index=position-1;
-                visionThread = new Thread(){
-                    public void run(){
-                        Bitmap imgBitmap=toBitmap(adapter.getImage(position));
-                        callCloudVision(imgBitmap);
+//                visionThread = new Thread(){
+//                    public void run(){
+//                        Bitmap imgBitmap=toBitmap(adapter.getImage(position));
+//                        callCloudVision(imgBitmap);
+//
+//                    }
+//                };
+//                visionThread.start();
 
-                    }
-                };
-                visionThread.start();
-
-                productInfoIntent.putExtra("info", adapter.getInfo(position));
-                productInfoIntent.putExtra("url", adapter.getUrl(position));
-                Log.d("detailurl", "상품검색:" + adapter.getUrl(position));
-                productInfoIntent.putExtra("image", adapter.getImage(position));
-                Log.i("put이미지" + position, adapter.getImage(position));
+                productInfoIntent.putExtra("productId", productIds.get(position));
+                productInfoIntent.putExtra("optionNum", optionNums.get(position));
+                productInfoIntent.putExtra("info", infos.get(position));
+                productInfoIntent.putExtra("image", images.get(position));
                 startActivity(productInfoIntent);
             }
         });
@@ -178,6 +203,135 @@ public class ShopActivity extends AppCompatActivity {
         });
 
     }
+    private class GetProduct extends AsyncTask<String, Void, String> {
+
+        ProgressDialog progressDialog;
+        String errorString = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(ShopActivity.this,
+                    "Please Wait", null, true, true);
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+
+            if (result == null){
+
+            }
+            else {
+                mJsonString = result;
+                showResult();
+            }
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            String category = params[1];
+            String color = params[2];
+            String length = params[3];
+            String size = params[4];
+            String pattern = params[5];
+            String fabric = params[6];
+            String detail = params[7];
+
+            String serverURL = params[0];
+
+
+            String postParameters = "category=" + category;
+            if(color!=""&color!=null)
+                postParameters+="&color="+color;
+            if(length!=""&length!=null)
+                postParameters+="&length="+length;
+            if(size!=""&size!=null)
+                postParameters+="&size="+size;
+            if(pattern!=""&pattern!=null)
+                postParameters+="&pattern="+pattern;
+            if(fabric!=""&fabric!=null)
+                postParameters+="&fabric="+fabric;
+            if(detail!=""&detail!=null)
+                postParameters+="&detail="+detail;
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.connect();
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+                bufferedReader.close();
+                return sb.toString().trim();
+            } catch (Exception e) {
+                errorString = e.toString();
+                return null;
+            }
+        }
+    }
+    private void showResult(){
+        String TAG_JSON="WishProduct";
+        try {
+            JSONObject jsonObject = new JSONObject(mJsonString);
+            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
+            Log.d("jsonArray",jsonArray.length()+"");
+            for(int i=0;i<jsonArray.length();i++){
+                JSONObject item = jsonArray.getJSONObject(i);
+                String uuid = item.getString("uid");
+
+
+                productIds.add(item.getString("productId"));
+                optionNums.add(item.getString("optionNum"));
+                String info=item.getString("name")+"\n"
+                        +item.getString("category")+"\n"
+                        +item.getString("length")+"\n"
+                        +item.getString("price")+"\n"
+                        +item.getString("size")+"\n"
+                        +item.getString("color")+"\n"
+                        +item.getString("fabric")+"\n"
+                        +item.getString("patter")+"\n"
+                        +item.getString("detail");
+                infos.add(info) ;
+                images.add(item.getString("image"));
+
+                adapter = new ProductAdapter(this, R.layout.activity_product_info, images,infos,index);
+                gv.setAdapter(adapter);
+
+            }
+
+
+        } catch (JSONException e) {
+            Log.d("showResult : ", e.getMessage());
+            Log.d("phptest: ",mJsonString);
+        }
+
+    }
     public Bitmap toBitmap(String imgurl){
         URL url;
         Bitmap imgBitmap = null;
@@ -198,16 +352,14 @@ public class ShopActivity extends AppCompatActivity {
         }
         return imgBitmap;
     }
-    private Vision.Images.Annotate prepareAnnotationRequest(Bitmap bitmap) throws IOException {
+
+    /*private Vision.Images.Annotate prepareAnnotationRequest(Bitmap bitmap) throws IOException {
         HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
         VisionRequestInitializer requestInitializer =
                 new VisionRequestInitializer(CLOUD_VISION_API_KEY) {
-                    /**
-                     * We override this so we can inject important identifying fields into the HTTP
-                     * headers. This enables use of a restricted cloud platform API key.
-                     */
+
                     @Override
                     protected void initializeVisionRequest(VisionRequest<?> visionRequest)
                             throws IOException {
@@ -376,7 +528,7 @@ public class ShopActivity extends AppCompatActivity {
 
 
         return message.toString();
-    }
+    }*/
     // 값 저장하기
     private void savePreferences(String key, String s){
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
@@ -394,7 +546,7 @@ public class ShopActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    private Handler handler = new Handler(){
+    /*private Handler handler = new Handler(){
         public void handleMessage(Message msg){
             super.handleMessage(msg);
             if(msg.what ==1 )
@@ -492,6 +644,53 @@ public class ShopActivity extends AppCompatActivity {
             }
         }
         return (List<Option>) msg.obj;
+    }*/
+}
+class ProductAdapter extends ArrayAdapter<String> {
+    private Context context;
+    private int resource;
+    // int i=0;
+    //  private List<Product> productList;
+    private ImageLoader imageLoader;
+    ArrayList<String> images;
+    ArrayList<String> infos;
+    int index;
+    public ProductAdapter(Context context, int resource, ArrayList<String> images,ArrayList<String> infos,int index) {
+        super(context, resource,images);
+        // TODO Auto-generated constructor stub
+        this.context = context;
+        this.resource = resource;
+        this.images = images;
+        this.infos=infos;
+        imageLoader= new ImageLoader(context);
+        this.index=index;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        // TODO Auto-generated method stub
+
+        ProductViewHolder holder;
+        if(convertView == null){
+            LayoutInflater inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflate.inflate(R.layout.wish_item, parent, false);
+            holder = new ProductViewHolder();
+            holder.imageView
+                    = (ImageView) convertView.findViewById(R.id.imageView1);
+            convertView.setTag(holder);
+            holder.imageView.setContentDescription(getInfo(position));
+        }
+        else{
+            holder = (ProductViewHolder) convertView.getTag();
+        }
+        Glide.with(ProductAdapter.super.getContext()).load(images.get(position)).into(holder.imageView);
+        return convertView;
+    }
+    public String getInfo(int i){
+        return infos.get(i).toString();
+    }
+    class ProductViewHolder{
+        public ImageView imageView;
     }
 }
 
