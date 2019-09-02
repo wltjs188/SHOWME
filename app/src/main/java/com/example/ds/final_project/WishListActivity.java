@@ -505,7 +505,7 @@ class WishAdapter extends ArrayAdapter<String> {
         return convertView;
     }
     public String getInfo(int i){
-        return infos.get(i).toString();
+        return infos.get(i);
     }
     static class ProductViewHolder{
         public ImageView imageView;

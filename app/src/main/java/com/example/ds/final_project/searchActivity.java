@@ -116,8 +116,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 //    private String bottom;
 //    private String foot;
 
-
-
     Intent wishIntent,shopIntent;
     //챗봇 액션
     String ACTION="";
@@ -169,9 +167,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
         listView.setAdapter(adapter);
         ChatMessage chatMessage;
-
-
-
 
 //        Log.d("받아온 사용자 정보",uuid+","+name+","+address+","+phoneNum);
 
@@ -735,9 +730,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         ChatMessage chatMessage = messages.get(position);
         if (chatMessage.isMine()) {
             layoutResource = R.layout.item_chat_left;
-           // Log.d("챗",position+chatMessage.getContent().toString()+"왼");
-
-
+           // Log.d("챗",position+chatMessage.getContent().toString()+"왼");ㅇ
         } else {
             layoutResource = R.layout.item_chat_right;
            // Log.d("챗",position+chatMessage.getContent().toString()+"오");
@@ -749,6 +742,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             convertView = inflater.inflate(layoutResource, parent, false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
+
         }
         holder.msg.setText(chatMessage.getContent());
         holder.msg.setContentDescription(messages.get(position)+"");

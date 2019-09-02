@@ -7,26 +7,27 @@ include('dbcon.php');
 
 
 //POST 값을 읽어온다.
-$category=isset($_POST['category']) ? $_POST['category'] : "";
-$color=isset($_POST['color']) ? $_POST['color'] : "";
-$length=isset($_POST['length']) ? $_POST['length'] : "";
-$size=isset($_POST['size']) ? $_POST['size'] : "";
-$pattern=isset($_POST['pattern']) ? $_POST['pattern'] : "";
-$fabric=isset($_POST['fabric']) ? $_POST['fabric'] : "";
-$detail=isset($_POST['detail']) ? $_POST['detail'] : "";
+$category=isset($_POST['category']) ? $_POST['category'] : '';
+$color=isset($_POST['color']) ? $_POST['color'] : '';
+$length=isset($_POST['length']) ? $_POST['length'] : '';
+$size=isset($_POST['size']) ? $_POST['size'] : '';
+$pattern=isset($_POST['pattern']) ? $_POST['pattern'] : '';
+$fabric=isset($_POST['fabric']) ? $_POST['fabric'] : '';
+$detail=isset($_POST['detail']) ? $_POST['detail'] : '';
 
 $android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
 
-// $s1=($color==""?"":"and color='$color'");
-// $s2=($length==""?"":"and length='$length'");
-// $s3=($size==""?"":"and size='$size'");
-// $s4=($pattern==""?"":"and pattern='$pattern'");
-// $s5=($fabric==""?"":"and fabric='$fabric'");
-// $s6=($detail==""?"":"and detail='$detail'");
+$s1=($color==""?"":"and color='$color'");
+$s2=($length==""?"":"and length='$length'");
+$s3=($size==""?"":"and size='$size'");
+$s4=($pattern==""?"":"and pattern='$pattern'");
+$s5=($fabric==""?"":"and fabric='$fabric'");
+$s6=($detail==""?"":"and detail='$detail'");
 
 if ($category != "" ){ 
 
-    $sql="select * from Product where category='$category'".$color==""?"":"and color='$color'".$length==""?"":"and length='$length'".$size==""?"":"and size='$size'".$pattern==""?"":"and pattern='$pattern'".$fabric==""?"":"and fabric='$fabric'".$detail==""?"":"and detail='$detail'";
+    // $sql="select * from Product where category='$category'".$color==""?"":"and color='$color'".$length==""?"":"and length='$length'".$size==""?"":"and size='$size'".$pattern==""?"":"and pattern='$pattern'".$fabric==""?"":"and fabric='$fabric'".$detail==""?"":"and detail='$detail'";
+    $sql="select * from Product where category='$category'".$s1.$s2.$s3.$s4.$s5.$s6;
     $stmt = $con->prepare($sql);
     $stmt->execute();
  
