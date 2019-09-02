@@ -36,6 +36,7 @@ if ($category != "" ){
         echo "'";
         echo $category;
         echo "'은 찾을 수 없습니다. 상품을 입력을 해주세요.";
+        
     }
     else{
 

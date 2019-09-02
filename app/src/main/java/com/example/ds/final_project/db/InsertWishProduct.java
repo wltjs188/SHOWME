@@ -31,8 +31,10 @@ public class InsertWishProduct extends AsyncTask<String, Void, String> {
         String uid = (String)params[1];
         String productId = (String)params[2];
         String optionNum = (String)params[3];
+        String image = (String)params[4];
+        String info = (String)params[5];
         String serverURL = (String)params[0];
-        String postParameters = "uid=" + uid + "&productId=" + productId+"&optionNum=" + optionNum ;
+        String postParameters = "uid=" + uid + "&productId=" + productId+"&optionNum=" + optionNum+"&image=" + image+"&info=" + info ;
 
         try {
 
