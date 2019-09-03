@@ -64,26 +64,15 @@ import java.util.List;
 import java.util.Locale;
 
 public class ShopActivity extends AppCompatActivity {
-//    private final String CLOUD_VISION_API_KEY = "AIzaSyAaYatWr1knKGmO_sAhy2j2xXLeNwjEuUM";
-//    private final String ANDROID_CERT_HEADER = "X-Android-Cert";
-//    private final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
-//    private final int MAX_LABEL_RESULTS = 10;
-//    private final String TAG = ShopActivity.class.getSimpleName();
-//    Thread visionThread;
-    ///////////////////////////////////////////////////////////////
-    private EditText keywordEdt;
-    private Button searchBtn;
+
     private Button moreBtn;
-   // private List<Product> productList;
-    private List<Option> optionList;
     private GridView gv;
     private ProductAdapter adapter;
-   // ProductSearchService service;
+
     Intent productInfoIntent;
     String mJsonString;
     String IP_ADDRESS = "18.191.10.193";
-    int ProductNum=4;
-    int more_num; //더보기 체크
+
     //상품정보 List
     ArrayList<String> productIds=new ArrayList<String>();
     ArrayList<String> optionNums=new ArrayList<String>();
@@ -103,8 +92,6 @@ public class ShopActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop2);
         productInfoIntent = new Intent(getApplicationContext(),ProductInfo.class);
-        keywordEdt = (EditText)findViewById(R.id.main_keyword_edt);
-        searchBtn = (Button) findViewById(R.id.main_search_btn);
         moreBtn = (Button) findViewById(R.id.main_more_btn);
 
         adapter = new ProductAdapter(this, R.layout.list_product_item, images,infos);
@@ -123,7 +110,6 @@ public class ShopActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
         getSupportActionBar().setTitle(category+"검색 결과");
 
-        keywordEdt.setText(category);
         GetProduct task = new GetProduct();
 
         task.execute( "http://" + IP_ADDRESS + "/getSearchedProduct.php",category,color,length,size,pattern,fabric,detail);
