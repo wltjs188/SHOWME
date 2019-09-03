@@ -95,7 +95,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     private ArrayAdapter<ChatMessage> adapter;//= new MessageAdapter(this, 0, chatMessages);
 
     //사용자 정보
-
     HashMap<String,JsonElement> parameter=new HashMap<String,JsonElement>();
     private String user_uuid;
     private String user_name=null;
@@ -103,13 +102,19 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     private String user_address=null;
     private TextToSpeech tts;
 
+    //검색 정보
+    String category = null;
+    String color = null;
+    String length = null;
+    String size = null;
+    String pattern = null;
+    String fabric = null;
+
 //    private String gender;
 //    private String height;
 //    private String top;
 //    private String bottom;
 //    private String foot;
-
-
 
     Intent wishIntent,shopIntent;
     //챗봇 액션
@@ -148,14 +153,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 //        foot = getPreferences("foot");
 
 
-
-
-        //set ListView adapter first
-        adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
-        listView.setAdapter(adapter);
-        ChatMessage chatMessage;
-
-        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status != ERROR) {
@@ -165,6 +163,10 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             }
         });
 
+        //set ListView adapter first
+        adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
+        listView.setAdapter(adapter);
+        ChatMessage chatMessage;
 
 //        Log.d("받아온 사용자 정보",uuid+","+name+","+address+","+phoneNum);
 
@@ -227,7 +229,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             @Override
             public void onClick(View v) {
                 if (editText.getText().toString().trim().equals("")) {
-                    Toast.makeText(searchActivity.this, "Please input some text...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(searchActivity.this, "텍스트를 입력해주세요", Toast.LENGTH_SHORT).show();
                 } else {
                     //add message to list
                    // isMine=false;
@@ -300,7 +302,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 "3. 관심상품보기", true);
         chatMessages.add(chatMessage);
 
-        tts.speak(chatMessage+"",TextToSpeech.QUEUE_FLUSH, null);
+        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
         adapter.notifyDataSetChanged();
     }
     protected void makeRequest() {
@@ -356,7 +358,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 chatMessages.add(chatMessage);
                 adapter.notifyDataSetChanged();
 
-                tts.speak(chatMessage+"",TextToSpeech.QUEUE_FLUSH, null);
+                tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
             }
 //            else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
 //                chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
@@ -460,15 +462,72 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 break;
             case "ACTION_SEARCH": //상품검색 :
                 parameter=getParameter(result);
-                if(parameter.size()==5){
-                    for(String key : parameter.keySet()){
-                        String value = ""+parameter.get(key);
-                        System.out.println(key+" : "+value);
-                    }
+                //검색조건(카테고리,색상,기장,사이즈,패턴,재질) 받아오기
+                //카테고리
+                if(parameter.containsKey("Top")){
+                    category = ""+parameter.get("Top");
+                }
+                else if(parameter.containsKey("Dress")){
+                    category = ""+parameter.get("Dress");
+                }
+                else if(parameter.containsKey("Outer")){
+                    category = ""+parameter.get("Outer");
+                }
+                else if(parameter.containsKey("Pants")){
+                    category = ""+parameter.get("Pants");
+                }
+                else if(parameter.containsKey("Shoes")){
+                    category = ""+parameter.get("Shoes");
+                }
+                else if(parameter.containsKey("Skirt")){
+                    category = ""+parameter.get("Skirt");
+                }
+                else if(parameter.containsKey("Swimsuit")){
+                    category = ""+parameter.get("Swimsuit");
+                }
+                //색상
+                if(parameter.containsKey("Color")){
+                    color = ""+parameter.get("Color");
+                }
+                //기장, 바지기장
+                if(parameter.containsKey("Length")){
+                    length = ""+parameter.get("Length");
+                }
+                if(parameter.containsKey("PantsLength")){
+                    length = ""+parameter.get("PantsLength");
+                }
+                //사이즈
+                if(parameter.containsKey("Size")){
+                    size = ""+parameter.get("Size");
+                }
+                if(parameter.containsKey("ShoesSize")){
+                    size = ""+parameter.get("ShoesSize");
+                }
+                //패턴
+                if(parameter.containsKey("Pattern")){
+                    pattern = ""+parameter.get("Pattern");
+                }
+                //재질
+                if(parameter.containsKey("Material")){
+                    fabric = ""+parameter.get("Material");
+                }
+                System.out.println("카테고리 : "+category+"색상 : "+color+"기장 : "+length+"사이즈 : "+size+"패턴 : "+pattern+"재질 : "+fabric);
+
+                if( category != null && color != null && length != null && size != null && pattern != null && fabric != null ) {
+                    shopIntent.putExtra("category", category);
+                    shopIntent.putExtra("color", color);
+                    shopIntent.putExtra("length", length);
+                    shopIntent.putExtra("size", size);
+                    shopIntent.putExtra("pattern", pattern);
+                    shopIntent.putExtra("fabric", fabric);
+
+                    category = null; color = null; length = null; size = null; pattern = null; fabric = null;
+                    result.getContexts().clear();
                     startActivity(shopIntent);
                 }
 
                 break;
+
             case "ACTION_MENU" :
                 parameter=getParameter(result);
                 if(parameter.containsKey("Wish_Item")){ //관심상품이동
@@ -590,12 +649,12 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         chatMessage = new ChatMessage(speech, true);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
-        tts.speak(chatMessage+"",TextToSpeech.QUEUE_FLUSH, null);
+        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
         if(remenu!=""){
             chatMessage = new ChatMessage(remenu, true);
             chatMessages.add(chatMessage);
             adapter.notifyDataSetChanged();
-            tts.speak(chatMessage+"",TextToSpeech.QUEUE_FLUSH, null);
+            tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
             remenu="";
         }
 
@@ -671,9 +730,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         ChatMessage chatMessage = messages.get(position);
         if (chatMessage.isMine()) {
             layoutResource = R.layout.item_chat_left;
-           // Log.d("챗",position+chatMessage.getContent().toString()+"왼");
-
-
+           // Log.d("챗",position+chatMessage.getContent().toString()+"왼");ㅇ
         } else {
             layoutResource = R.layout.item_chat_right;
            // Log.d("챗",position+chatMessage.getContent().toString()+"오");
@@ -685,6 +742,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             convertView = inflater.inflate(layoutResource, parent, false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
+
         }
         holder.msg.setText(chatMessage.getContent());
         holder.msg.setContentDescription(messages.get(position)+"");

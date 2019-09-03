@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.ds.final_project.db.InsertUser;
+import com.example.ds.final_project.db.InsertWishProduct;
 import com.example.ds.final_project.db.UpdateUser;
 
 import org.json.JSONArray;
@@ -263,8 +264,9 @@ public class MainActivity extends AppCompatActivity {
 //        task1.execute("http://" + IP_ADDRESS + "/updateUser.php","myUid","name","채");
 //        GetProduct task = new GetProduct();
 //        task.execute( "http://" + IP_ADDRESS + "/getProduct.php","1017008148","3");
-        Intent i=new Intent(getApplicationContext(),WishListActivity.class);
-        startActivity(i);
+        InsertWishProduct task = new InsertWishProduct();
+        // Log.d("productURL"," 삽입"+productURL);
+        task.execute("http://" + IP_ADDRESS + "/insertWishProduct.php",uuid,"id","3","hhh","정보");
     }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
