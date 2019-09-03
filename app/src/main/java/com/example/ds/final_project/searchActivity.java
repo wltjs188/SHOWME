@@ -1,9 +1,6 @@
 package com.example.ds.final_project;
-
-
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -169,39 +166,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         listView.setSelection(adapter.getCount() - 1);
         ChatMessage chatMessage;
 
-//        Log.d("받아온 사용자 정보",uuid+","+name+","+address+","+phoneNum);
-
-//        if(name==""){
-//            // Log.d("야",chatMessages.size()+"");
-//            if(chatMessages.size()==0){
-//                chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
-//                chatMessages.add(chatMessage);
-//                adapter.notifyDataSetChanged();
-//            }
-////            else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-////                chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
-////                chatMessages.add(chatMessage);
-////                adapter.notifyDataSetChanged();
-////            }
-//        }else{//makeStartMsg();
-//             }
-
-//        if(chatMessages.size()==0){
-//            chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
-//                    "1. 상품검색\n" +
-//                    "2. 사용자 정보 수정\n" +
-//                    "3. 관심상품보기", true);
-//            chatMessages.add(chatMessage);
-//            adapter.notifyDataSetChanged();
-//        }else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-//            chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
-//                    "1. 상품검색\n" +
-//                    "2. 사용자 정보 수정\n" +
-//                    "3. 관심상품보기", true);
-//            chatMessages.add(chatMessage);
-//            adapter.notifyDataSetChanged();
-//        }
-
         //구글 sst 음성인식
         sstIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         sstIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getApplicationContext().getPackageName());
@@ -209,21 +173,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         mRecognizer = SpeechRecognizer.createSpeechRecognizer(getApplicationContext());
         mRecognizer.setRecognitionListener(listener);
 
-
-
         //dialogflow
         final AIConfiguration config = new AIConfiguration("b8dda671eb584e3586aba41efdd554cf",
                 AIConfiguration.SupportedLanguages.Korean,
                 AIConfiguration.RecognitionEngine.System);
 
-//        aiService = AIService.getService(this, config);
-//        aiService.setListener(this);
-
         aiDataService = new AIDataService(this,config);
         aiRequest = new AIRequest();
-
-        //aiRequest.setEvent(new AIEvent("welcome"));
-        //new AITask().execute(aiRequest);
 
         //전송버튼
         btnSend.setOnClickListener(new View.OnClickListener() {
@@ -232,19 +188,10 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 if (editText.getText().toString().trim().equals("")) {
                     Toast.makeText(searchActivity.this, "텍스트를 입력해주세요", Toast.LENGTH_SHORT).show();
                 } else {
-                    //add message to list
-                   // isMine=false;
                     aiRequest.setQuery(editText.getText().toString());
                     Log.e("입력",editText.getText().toString());
-                    ////////
-//                    ChatMessage chatMessage = new ChatMessage(editText.getText().toString(), false);
-//                    chatMessages.add(chatMessage);
-//                    adapter.notifyDataSetChanged();
-                    ///////
                     new AITask().execute(aiRequest);
-                    //서버 입력
-//                    InsertData task = new InsertData();
-//                    task.execute("http://" + IP_ADDRESS + "/insert.php","김채윤","여성","158","44","44","230");
+
                 }
             }
         });
@@ -258,7 +205,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         });
 
     }
-
     //SST 리스너
     private RecognitionListener listener = new RecognitionListener() {
         public void onRmsChanged(float rmsdB) { }
@@ -284,8 +230,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         public void onBeginningOfSpeech() {
         }
     };
-
-
 
 
     //리메뉴
@@ -353,7 +297,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     protected void onPostResume() {
         super.onPostResume();
         if(user_name==""){
-            // Log.d("야",chatMessages.size()+"");
             if(chatMessages.size()==0){
                 ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
                 chatMessages.add(chatMessage);
@@ -361,14 +304,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
                 tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
             }
-//            else if(chatMessages.get(chatMessages.size()-1).isMine()==false){
-//                chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
-//                chatMessages.add(chatMessage);
-//                adapter.notifyDataSetChanged();
-//            }
         }else{makeMenuMsg();
         }
-      //  makeStartMsg();
+
     }
 
     public void onResult(AIResponse response) {
@@ -376,22 +314,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
 
         ACTION=result.getAction();
-//<<<<<<< HEAD
-//=======
-//        int i=0;
-//        if (result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6&&ACTION.equals("user")) {
-//            for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-//                MyInfo.put(entry.getKey(),""+entry.getValue());
-//            }
-//            String name=(MyInfo.get("name")).replaceAll("\"","");
-//            String address=(MyInfo.get("address")).replaceAll("\"","");
-//            String phoneNum=(MyInfo.get("phoneNum")).replaceAll("\"","");
-//
 
-//            remenu=getRemenu(result);
-//        }
-
-//>>>>>>> f6bb73d89e3801edf36e89adde93b202de39db0b
 
         Log.i("액션",ACTION);
         Log.i("RESULT",""+result);
@@ -536,117 +459,19 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     result.getContexts().clear();
                 }
                 break;
-
         }
-
-
-
-//        int i=0;
-//        if (result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==6&&ACTION.equals("user")) {
-//            for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-//                MyInfo.put(entry.getKey(),""+entry.getValue());
-//            }
-//            String name=(MyInfo.get("name")).replaceAll("\"","");
-//            String gender=(MyInfo.get("Gender_Info")).replaceAll("\"","");
-//            String height=(MyInfo.get("height")).replaceAll("\"","");
-//            String top=(MyInfo.get("top")).replaceAll("\"","");
-//            String bottom=(MyInfo.get("bottom")).replaceAll("\"","");
-//            String shoes=(MyInfo.get("shoes")).replaceAll("\"","");
-//
-//            //사용자 정보 DB에 넣기
-//            InsertData task = new InsertData();
-//            task.execute("http://" + IP_ADDRESS + "/insert.php",uuid,name,gender,height,top,bottom,shoes);
-//            remenu=getRemenu(result);
-//        }
-//        UpdateData task = new UpdateData();
-
-        //액션
-//        switch (ACTION) {
-//            case "name_modi":
-//                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-//                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
-//                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"name",(""+entry.getValue()).replaceAll("\"",""));
-//                    remenu=getRemenu(result);
-//                }
-//                break;
-//            case "gender_modi":
-//                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-//                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
-//                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"gender",(""+entry.getValue()).replaceAll("\"",""));
-//                    remenu=getRemenu(result);
-//                }
-//                break;
-//            case "height_modi":
-//                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-//                    MyInfoModi.put(entry.getKey(),""+entry.getValue());
-//                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
-//                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"height",(""+entry.getValue()).replaceAll("\"",""));
-//                    remenu=getRemenu(result);
-//                }
-//                break;
-//            case "top_modi":
-//                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-//                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
-//                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"top",(""+entry.getValue()).replaceAll("\"",""));
-//                    remenu=getRemenu(result);
-//                }
-//                break;
-//            case "bottom_modi":
-//                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-//                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
-//                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"bottom",(""+entry.getValue()).replaceAll("\"",""));
-//                    remenu=getRemenu(result);
-//                }
-//                break;
-//            case "shoes_modi":
-//                for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-//                    Log.d("사용자정보수정","key"+entry.getKey()+"value:"+entry.getValue());
-//                    task.execute("http://" + IP_ADDRESS + "/update.php",uuid,"foot",(""+entry.getValue()).replaceAll("\"",""));
-//                    remenu=getRemenu(result);
-//                }
-//                break;
-//            case "search" :
-//                if(result.getParameters() != null && !result.getParameters().isEmpty() && result.getParameters().size()==5) {
-//                    keyword="";
-//                    for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-////                    Log.d("겟값","key"+entry.getKey()+"value:"+entry.getValue());
-//                        if ((sub = "" + entry.getValue()) != null) {
-//                            Log.i("키",entry.getKey());
-//                            Log.i("밸류",""+entry.getValue());
-//                            keyword += sub+" ";
-//                            Log.i("키워드", keyword);
-//                            if(entry.getKey().equals("Color")){
-//                                Color=""+entry.getValue();
-//                            }
-//                        }
-//                    }
-//                    Color=Color.replace("\"","");
-//                    Log.i("Color",Color);
-//                    keyword=keyword.replace("\"","");
-//                    keyword=keyword.replace("없음","");
-//                    Log.i("keyword",keyword);
-//                    shopIntent.putExtra("keyword", keyword);
-//                    shopIntent.putExtra("Color",Color);
-//                    startActivity(shopIntent);
-//                }
-//                break;
-//            default:
-//                break;
-//
-//        }
-
 
         speech = result.getFulfillment().getSpeech();
         query=result.getResolvedQuery();
         action=result.getAction();
-        // Log.e("액션",action);
+
         ChatMessage chatMessage;
-      //  isMine=false;
+
         chatMessage = new ChatMessage(query, false);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
         editText.setText("");
-      //  isMine=true;
+
         chatMessage = new ChatMessage(speech, true);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
@@ -659,11 +484,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             remenu="";
         }
 
-//        Log.d("chatMessage",speech+"");
-//        if(((speech.toString()).trim()).equals("관심상품보기 로 이동합니다.")||((speech.toString()).trim()).equals("관심상품 보기 로 이동합니다.")){
-//            Log.d("chatMessage 같음",speech+"");
-//            startActivity(wishIntent);
-//        }
     }
     @Override
     public void onError(AIError error) { }

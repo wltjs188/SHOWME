@@ -14,16 +14,9 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
-import com.example.ds.final_project.db.DeleteWishList;
 import com.example.ds.final_project.db.DeleteWishProduct;
-import com.example.ds.final_project.db.InsertWishList;
 import com.example.ds.final_project.db.InsertWishProduct;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
 import com.kakao.kakaolink.v2.KakaoLinkService;
 import com.kakao.message.template.ButtonObject;
@@ -34,25 +27,20 @@ import com.kakao.message.template.LinkObject;
 import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
 import com.kakao.util.helper.log.Logger;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ProductInfo extends AppCompatActivity {
     String IP_ADDRESS = "18.191.10.193";
-    String TAG = "phptest";
     private String mJsonString;
 
     private TextView product_info; //상세정보 표시
@@ -64,7 +52,7 @@ public class ProductInfo extends AppCompatActivity {
     private String uuid=" ";
     private String productId=" ";
     private String optionNum="";
-    //private String productURL=" ";
+    private String productURL=" ";
     private String info=" ";
     private String image=" ";
 
@@ -81,21 +69,11 @@ public class ProductInfo extends AppCompatActivity {
         optionNum=intent.getStringExtra("optionNum");
         info=intent.getStringExtra("info");
         image=intent.getStringExtra("image");
-        //info=intent.getStringExtra("info");
-      //  productURL=intent.getStringExtra("url");
-       // Log.d("detailurl","상세정보 : "+productURL);
+
         productImg=(ImageView)findViewById(R.id.productImg);
         Log.i("이미지",""+image);
         Glide.with(this).load(image).into(productImg);
 
-        //info = getPreferences("visionResult")+"음"+info;
-//        if(getPreferences("visionResult")!=null){
-//            //visionResult 번역
-//            NaverTranslateTask asyncTask = new NaverTranslateTask();
-//            String visionResult = getPreferences("visionResult");
-//            asyncTask.execute(visionResult);
-//            //info+=getPreferences("visionResult");
-//        }
         product_info.setText(info);
         wishCheck=(CheckBox)findViewById(R.id.wishCheck);
         wishCheck.setOnCheckedChangeListener(new CheckBoxListener());
@@ -103,11 +81,6 @@ public class ProductInfo extends AppCompatActivity {
         //등록된 상품인지 확인
         GetWishListItem task = new GetWishListItem();
         task.execute( "http://" + IP_ADDRESS + "/getWishListItem.php",uuid,productId,optionNum);
-
-        //uuid+상품url 으로 비교해서 서버에 없으면
-       // infoBool=false;
-        //서버에 있으면
-        //infoBool=true;
         wishCheck.setChecked(infoBool);
 
     }
@@ -155,7 +128,6 @@ public class ProductInfo extends AppCompatActivity {
                 Logger.e(errorResult.toString());
                 Log.d("kakao",errorResult.toString());
             }
-
             @Override
             public void onSuccess(KakaoLinkResponse result) {
                 // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
@@ -176,21 +148,14 @@ public class ProductInfo extends AppCompatActivity {
                 Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_LONG).show();
                 //DB에 추가
                 InsertWishProduct task = new InsertWishProduct();
-                // Log.d("productURL"," 삽입"+productURL);
                 task.execute("http://" + IP_ADDRESS + "/insertWishProduct.php",uuid,productId,optionNum,image,info);
 
             }
             else {
-
                 Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_LONG).show();
                 //DB에서 삭제
                 DeleteWishProduct task = new DeleteWishProduct();
                 task.execute("http://" + IP_ADDRESS + "/deleteWishProduct.php",uuid,productId,optionNum);
-                ProgressDialog progressDialog = ProgressDialog.show(ProductInfo.this,
-                        "Please Wait", null, true, true);
-                //   DeleteData task = new DeleteData();
-                //    Log.d("info",uuid+productURL+info);
-                //   task.execute("http://" + IP_ADDRESS + "/deleteWishList.php",uuid,productURL);
             }
         }
     }
@@ -255,8 +220,6 @@ public class ProductInfo extends AppCompatActivity {
                 outputStream.write(postParameters.getBytes("UTF-8"));
                 outputStream.flush();
                 outputStream.close();
-
-
                 int responseStatusCode = httpURLConnection.getResponseCode();
 
                 InputStream inputStream;
@@ -266,11 +229,8 @@ public class ProductInfo extends AppCompatActivity {
                 else{
                     inputStream = httpURLConnection.getErrorStream();
                 }
-
-
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
                 StringBuilder sb = new StringBuilder();
                 String line;
 
@@ -287,10 +247,8 @@ public class ProductInfo extends AppCompatActivity {
                 errorString = e.toString();
                 return null;
             }
-
         }
     }
-
     private void showResult(){
        // int count=0;
         String TAG_JSON="getWishListItem";
@@ -302,129 +260,10 @@ public class ProductInfo extends AppCompatActivity {
                 infoBool=true;
             }else { infoBool=false; }
             wishCheck.setChecked(infoBool);
-//            for(int i=0;i<jsonArray.length();i++){
-//                JSONObject item = jsonArray.getJSONObject(i);
-//                String uuid = item.getString("uid");
-//                String productId = item.getString("productId");
-//                String optionNum = item.getString("optionNum");
-//                Log.d("서버에서","받은"+uuid);
-////                Log.d("서버에서","받은"+productURL);
-//                Log.d("서버에서","진짜"+this.uuid);
-////                Log.d("서버에서","진짜"+this.productURL);
-//                if(uuid.equals(this.uuid)&&productId.equals(this.productId)&&optionNum.equals(this.optionNum)){ //DB에 있으면 count
-//                    count++;
-//                }
-//            }
-//            Log.d("길이길이",count+"");
-//            if(count>0) //관심상품 맞아
-//                infoBool=true;
-//            else //관심상품 아냐
-//                infoBool=false;
-//            wishCheck.setChecked(infoBool);
         } catch (JSONException e) {
             Log.d("showResult : ", e.getMessage());
             Log.d("showResult : ", mJsonString);
         }
-
     }
-    //ASYNCTASK
-//    public class NaverTranslateTask extends AsyncTask<String, Void, String> {
-//
-//        public String resultText;
-//        //Naver
-//        String clientId = "y35TS1jdnSaYzjZFyeqv";//애플리케이션 클라이언트 아이디값";
-//        String clientSecret = "J6pTI2_r1j";//애플리케이션 클라이언트 시크릿값";
-//        //언어선택도 나중에 사용자가 선택할 수 있게 옵션 처리해 주면 된다.
-//        String sourceLang = "en";
-//        String targetLang = "ko";
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//        }
-//
-//        //AsyncTask 메인처리
-//        @Override
-//        protected String doInBackground(String... strings) {
-////네이버제공 예제 복사해 넣자.
-////Log.d("AsyncTask:", "1.Background");
-//
-//            String sourceText = strings[0];
-//
-//            try {
-//                //String text = URLEncoder.encode("만나서 반갑습니다.", "UTF-8");
-//                String text = URLEncoder.encode(sourceText, "UTF-8");
-//                String apiURL = "https://openapi.naver.com/v1/papago/n2mt";
-//                URL url = new URL(apiURL);
-//                HttpURLConnection con = (HttpURLConnection)url.openConnection();
-//                con.setRequestMethod("POST");
-//                con.setRequestProperty("X-Naver-Client-Id", clientId);
-//                con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
-//                // post request
-//                String postParams = "source="+sourceLang+"&target="+targetLang+"&text=" + text;
-//                con.setDoOutput(true);
-//                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-//                wr.writeBytes(postParams);
-//                wr.flush();
-//                wr.close();
-//                int responseCode = con.getResponseCode();
-//                BufferedReader br;
-//                if(responseCode==200) { // 정상 호출
-//                    br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-//                } else { // 에러 발생
-//                    br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-//                }
-//                String inputLine;
-//                StringBuffer response = new StringBuffer();
-//                while ((inputLine = br.readLine()) != null) {
-//                    response.append(inputLine);
-//                }
-//                br.close();
-//                //System.out.println(response.toString());
-//                return response.toString();
-//
-//            } catch (Exception e) {
-//                //System.out.println(e);
-//                Log.d("error", e.getMessage());
-//                return null;
-//            }
-//        }
-//
-//        //번역된 결과를 받아서 처리
-//        @Override
-//        protected void onPostExecute(String s) {
-//            super.onPostExecute(s);
-//            //최종 결과 처리부
-//            //Log.d("background result", s.toString()); //네이버에 보내주는 응답결과가 JSON 데이터이다.
-//
-//            //JSON데이터를 자바객체로 변환해야 한다.
-//            //Gson을 사용할 것이다.
-//
-//            Gson gson = new GsonBuilder().create();
-//            JsonParser parser = new JsonParser();
-//            JsonElement rootObj = parser.parse(s.toString()).getAsJsonObject().get("message").getAsJsonObject().get("result");
-//            //안드로이드 객체에 담기
-//            TranslatedItem items = gson.fromJson(rootObj.toString(), TranslatedItem.class);
-//            //Log.d("result", items.getTranslatedText());
-//            //번역결과를 텍스트뷰에 넣는다.
-//            //tvResult.setText(items.getTranslatedText());
-//            info+=items.getTranslatedText();
-//            product_info.setText(info);
-//            Log.i("이미지분석",info);
-//        }
-//
-//        //자바용 그릇
-//        private class TranslatedItem {
-//            String translatedText;
-//
-//
-//            public String getTranslatedText() {
-//
-//                translatedText=translatedText.replaceAll(System.getProperty("line.separator"),"&");
-//                return translatedText;
-//            }
-//        }
-//    }
-
 }
 
