@@ -69,19 +69,13 @@ public class WishListActivity extends AppCompatActivity {
         gv = (GridView)findViewById(R.id.gridView1);
 
         uuid = getPreferences("uuid");
-        //상품들 가져오기
-//        GetWishList task = new GetWishList();
-//        task.execute( "http://" + IP_ADDRESS + "/getWishList.php","uid");
+
         GetWishProduct task = new GetWishProduct();
         task.execute( "http://" + IP_ADDRESS + "/getWishProduct.php",uuid);
 
+        adapter = new WishAdapter(this, R.layout.activity_wish_list, images,infos,index);
+        gv.setAdapter(adapter);
 
-//        Log.d("힝",""+images.size());
-//        if(images.size()>0){
-            adapter = new WishAdapter(this, R.layout.activity_wish_list, images,infos,index);
-            gv.setAdapter(adapter);
-//
-//        }
 
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -104,119 +98,7 @@ public class WishListActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-//    private class GetWishList extends AsyncTask<String, Void, String> {
-//
-//        ProgressDialog progressDialog;
-//        String errorString = null;
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            progressDialog = ProgressDialog.show(WishListActivity.this,
-//                    "Please Wait", null, true, true);
-//        }
-//        @Override
-//        protected void onPostExecute(String result) {
-//            super.onPostExecute(result);
-//            progressDialog.dismiss();
-//
-//            if (result == null){
-//
-//            }
-//            else {
-//                Log.d("널","헐");
-//                mJsonString = result;
-//                showResult();
-//                //어댑터
-////                //관심상품 Products에서 가져오기
-////                for(int i=0;i<productIds.size();i++) {
-////                    GetProduct task = new GetProduct();
-////                    task.execute( "http://" + IP_ADDRESS + "/getProduct.php",productIds.get(i),optionNums.get(i));
-////                    Log.d("가져온, product, option",productIds.get(i)+optionNums.get(i));
-////
-////                }
-////                adapter = new WishAdapter(this, R.layout.activity_wish_list, images,index);
-////                gv.setAdapter(adapter);
-//                getProduct();
-//            }
-//        }
-//        @Override
-//        protected String doInBackground(String... params) {
-//            String serverURL = params[0];
-//            String postParameters = "uid=" + params[1];
-//            try {
-//
-//                URL url = new URL(serverURL);
-//                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-//
-//
-//                httpURLConnection.setReadTimeout(5000);
-//                httpURLConnection.setConnectTimeout(5000);
-//                httpURLConnection.setRequestMethod("POST");
-//                httpURLConnection.setDoInput(true);
-//                httpURLConnection.connect();
-//
-//                OutputStream outputStream = httpURLConnection.getOutputStream();
-//                outputStream.write(postParameters.getBytes("UTF-8"));
-//                outputStream.flush();
-//                outputStream.close();
-//
-//                int responseStatusCode = httpURLConnection.getResponseCode();
-//                InputStream inputStream;
-//                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
-//                    inputStream = httpURLConnection.getInputStream();
-//                }
-//                else{
-//                    inputStream = httpURLConnection.getErrorStream();
-//                }
-//                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-//
-//                StringBuilder sb = new StringBuilder();
-//                String line;
-//
-//                while((line = bufferedReader.readLine()) != null){
-//                    sb.append(line);
-//                }
-//                bufferedReader.close();
-//                return sb.toString().trim();
-//            } catch (Exception e) {
-//                errorString = e.toString();
-//                return null;
-//            }
-//        }
-//    }
-//    private void showResult(){
-//        String TAG_JSON="WishList";
-//        try {
-//            JSONObject jsonObject = new JSONObject(mJsonString);
-//            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
-//            Log.d("jsonArray",jsonArray.length()+"");
-//            for(int i=0;i<jsonArray.length();i++){
-//                JSONObject item = jsonArray.getJSONObject(i);
-//                String uuid = item.getString("uid");
-//
-//                if(uuid.equals(this.uuid)){
-//                    Log.d("가져온 data",item.getString("productId"));
-//                    Log.d("가져온 data",item.getString("optionNum"));
-//                    productIds.add(item.getString("productId"));
-//                    optionNums.add(item.getString("optionNum"));
-//                //    infos.add(item.getString("info")) ;
-//                 //   images.add(item.getString("image"));
-//                  //adapter.notifyDataSetChanged();
-//                }
-//            }
-//
-//
-//        } catch (JSONException e) {
-//            Log.d("showResult : ", e.getMessage());
-//            Log.d("phptest: ",mJsonString);
-//        }
-////        if(images.size()>0)
-////        {  for(int i=0;i<images.size();i++){
-////            //Log.d("관심",productURLs.get(i)+", "+infos.get(i)+", "+images.get(i));
-////        }}
-//    }
+
 private class GetWishProduct extends AsyncTask<String, Void, String> {
 
     ProgressDialog progressDialog;
@@ -318,144 +200,7 @@ private class GetWishProduct extends AsyncTask<String, Void, String> {
         }
 
     }
-//    private void getProduct(){
-//        //관심상품 Products에서 가져오기
-//        for(int i=0;i<productIds.size();i++) {
-//           // GetProduct task = new GetProduct();
-//            //task.execute( "http://" + IP_ADDRESS + "/getProduct.php",productIds.get(i),optionNums.get(i));
-//            Log.d("가져온, product, option",productIds.get(i)+optionNums.get(i));
-//            Log.d("힝",images.size()+"");
-//            adapter = new WishAdapter(this, R.layout.activity_wish_list, images,index);
-//            gv.setAdapter(adapter);
-//
-////            if(ta.Status.FINISHED){
-////                // My AsyncTask is done and onPostExecute was called
-////            }
-//        }
-//    }
-//    private class GetProduct extends AsyncTask<String, Void, String>{
-//
-//        ProgressDialog progressDialog;
-//        String errorString = null;
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            progressDialog = ProgressDialog.show(WishListActivity.this,
-//                    "Please Wait", null, true, true);
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String result) {
-//            super.onPostExecute(result);
-//            progressDialog.dismiss();
-//
-//            if (result == null){
-//            }
-//            else {
-//                mJsonString = result;
-//                Log.d("mJsonString wishlist",mJsonString);
-//                showProductResult();
-//            }
-//        }
-//
-//        @Override
-//        protected String doInBackground(String... params) {
-//            String productId = params[1];
-//            String optionNum = params[2];
-//            String serverURL = params[0];
-//            Log.d("param",productId+" "+optionNum);
-//            String postParameters = "productId=" + productId+"&optionNum=" + optionNum;
-//
-//
-//            try {
-//
-//                URL url = new URL(serverURL);
-//                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-//
-//
-//                httpURLConnection.setReadTimeout(5000);
-//                httpURLConnection.setConnectTimeout(5000);
-//                httpURLConnection.setRequestMethod("POST");
-//                httpURLConnection.setDoInput(true);
-//                httpURLConnection.connect();
-//
-//
-//                OutputStream outputStream = httpURLConnection.getOutputStream();
-//                outputStream.write(postParameters.getBytes("UTF-8"));
-//                outputStream.flush();
-//                outputStream.close();
-//
-//
-//                int responseStatusCode = httpURLConnection.getResponseCode();
-//
-//                InputStream inputStream;
-//                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
-//                    inputStream = httpURLConnection.getInputStream();
-//                }
-//                else{
-//                    inputStream = httpURLConnection.getErrorStream();
-//                }
-//
-//
-//                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-//
-//                StringBuilder sb = new StringBuilder();
-//                String line;
-//
-//                while((line = bufferedReader.readLine()) != null){
-//                    sb.append(line);
-//                }
-//
-//                bufferedReader.close();
-//
-//                return sb.toString().trim();
-//
-//
-//            } catch (Exception e) {
-//                errorString = e.toString();
-//                return null;
-//            }
-//
-//        }
-//    }
-//
-//    private void showProductResult(){
-//        int count=0;
-//        String TAG_JSON="products";
-//        try {
-//            JSONObject jsonObject = new JSONObject(mJsonString);
-//            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
-//
-//            for(int i=0;i<jsonArray.length();i++){
-//                JSONObject item = jsonArray.getJSONObject(i);
-//                String name = item.getString("name");
-//                String category = item.getString("category");
-//                String length = item.getString("length");
-//                String image = item.getString("image");
-//                String price = item.getString("price");
-//                String size = item.getString("size");
-//                String color = item.getString("color");
-//                String fabric = item.getString("fabric");
-//                String pattern = item.getString("pattern");
-//                String detail = item.getString("detail");
-//                String info=name+"\n"+name+"\n"+category+"\n"+length+"\n"+price+"\n"+size+"\n"+color+"\n"+fabric+"\n"+pattern+"\n"+detail;
-//                Log.d("가져온 상품 data:",info);
-//                infos.add(info);
-//                images.add(image);
-//               // adapter.notifyDataSetChanged();
-//               // adapter.notifyitemInserted
-//                adapter = new WishAdapter(this, R.layout.activity_wish_list, images,index);
-//                gv.setAdapter(adapter);
-//                Log.d("힝힝",""+images.size());
-//            }
-//
-//        } catch (JSONException e) {
-//            Log.d("showResult : ", e.getMessage());
-//        }
-//
-//    }
+
     // 값 불러오기
     private String  getPreferences(String key){
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);

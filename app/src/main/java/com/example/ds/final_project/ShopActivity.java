@@ -83,8 +83,6 @@ public class ShopActivity extends AppCompatActivity {
     String mJsonString;
     String IP_ADDRESS = "18.191.10.193";
     int ProductNum=4;
-   // List<Product> products; //상품리스트
- //   List<Option> options; //상품리스트
     int more_num; //더보기 체크
     //상품정보 List
     ArrayList<String> productIds=new ArrayList<String>();
@@ -108,9 +106,6 @@ public class ShopActivity extends AppCompatActivity {
         keywordEdt = (EditText)findViewById(R.id.main_keyword_edt);
         searchBtn = (Button) findViewById(R.id.main_search_btn);
         moreBtn = (Button) findViewById(R.id.main_more_btn);
-       // productList = new ArrayList<Product>();
-       // optionList = new ArrayList<Option>();
-
 
         adapter = new ProductAdapter(this, R.layout.list_product_item, images,infos);
         gv = (GridView) findViewById(R.id.main_GridView);
@@ -132,44 +127,11 @@ public class ShopActivity extends AppCompatActivity {
         GetProduct task = new GetProduct();
 
         task.execute( "http://" + IP_ADDRESS + "/getSearchedProduct.php",category,color,length,size,pattern,fabric,detail);
-//        service = new ProductSearchService(keyword);
-//        ProductSearchThread thread = new ProductSearchThread(service, handler);
-//        Toast.makeText(getApplicationContext(), "검색을 시작합니다.", Toast.LENGTH_LONG).show();
-//        thread.setColor(Color);
-//        thread.start();
-
-// 상품검색
-//        searchBtn.setOnClickListener(new View.OnClickListener() {
-//
-//            @SuppressLint("WrongConstant")
-//            @Override
-//            public void onClick(View v) {
-//                // TODO Auto-generated method stub
-//                keyword = keywordEdt.getText().toString();
-//                service = new ProductSearchService(keyword);
-//                Color="아이보리"; //테스트
-//                ProductSearchThread thread = new ProductSearchThread(service, handler);
-//                Toast.makeText(getApplicationContext(), "검색을 시작합니다.", 0).show();
-//                thread.setColor(Color);
-//                thread.start();
-//            }
-//        });
 
         //클릭시, 상세정보 페이지로 이동
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-               // Log.d(position+"정보",adapter.getInfo(position));
-                //startActivity(new Intent());
-               // int index=position-1;
-//                visionThread = new Thread(){
-//                    public void run(){
-//                        Bitmap imgBitmap=toBitmap(adapter.getImage(position));
-//                        callCloudVision(imgBitmap);
-//
-//                    }
-//                };
-//                visionThread.start();
 
                 productInfoIntent.putExtra("productId", productIds.get(position));
                 productInfoIntent.putExtra("optionNum", optionNums.get(position));
@@ -187,17 +149,7 @@ public class ShopActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 System.out.println("카테고리 : "+category+"색상 : "+color+"기장 : "+length+"사이즈 : "+size+"패턴 : "+pattern+"재질 : "+fabric);
-//                Toast.makeText(getApplicationContext(), "더보기", 0).show();
-//                if(options.size()>more_num && (options.size()-more_num)%4==0){
-//                    more_num=more_product(more_num);
-//                }
-//                else {
-//                    more_num=0;
-//                    service.nextPage(category);
-//                    ProductSearchThread thread = new ProductSearchThread(service, handler);
-//                    thread.setColor(color);
-//                    thread.start();
-//                }
+
             }
 
         });
@@ -357,182 +309,6 @@ public class ShopActivity extends AppCompatActivity {
         return imgBitmap;
     }
 
-    /*private Vision.Images.Annotate prepareAnnotationRequest(Bitmap bitmap) throws IOException {
-        HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
-        JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
-
-        VisionRequestInitializer requestInitializer =
-                new VisionRequestInitializer(CLOUD_VISION_API_KEY) {
-
-                    @Override
-                    protected void initializeVisionRequest(VisionRequest<?> visionRequest)
-                            throws IOException {
-                        super.initializeVisionRequest(visionRequest);
-
-                        String packageName = getPackageName();
-                        visionRequest.getRequestHeaders().set(ANDROID_PACKAGE_HEADER, packageName);
-
-                        String sig = PackageManagerUtils.getSignature(getPackageManager(), packageName);
-
-                        visionRequest.getRequestHeaders().set(ANDROID_CERT_HEADER, sig);
-                    }
-                };
-
-        Vision.Builder builder = new Vision.Builder(httpTransport, jsonFactory, null);
-        builder.setVisionRequestInitializer(requestInitializer);
-
-        Vision vision = builder.build();
-
-        BatchAnnotateImagesRequest batchAnnotateImagesRequest =
-                new BatchAnnotateImagesRequest();
-        batchAnnotateImagesRequest.setRequests(new ArrayList<AnnotateImageRequest>() {{
-            AnnotateImageRequest annotateImageRequest = new AnnotateImageRequest();
-
-            // Add the image
-            Image base64EncodedImage = new Image();
-            // Convert the bitmap to a JPEG
-            // Just in case it's a format that Android understands but Cloud Vision
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream);
-            byte[] imageBytes = byteArrayOutputStream.toByteArray();
-
-            // Base64 encode the JPEG
-            base64EncodedImage.encodeContent(imageBytes);
-            annotateImageRequest.setImage(base64EncodedImage);
-
-            // add the features we want
-            annotateImageRequest.setFeatures(new ArrayList<Feature>() {{
-                Feature labelDetection = new Feature();
-                labelDetection.setType("LABEL_DETECTION");
-                labelDetection.setMaxResults(MAX_LABEL_RESULTS);
-                add(labelDetection);
-
-                Feature textEetection = new Feature();
-                textEetection.setType("TEXT_DETECTION");
-                textEetection.setMaxResults(MAX_LABEL_RESULTS);
-                add(textEetection);
-
-                Feature objectEetection = new Feature();
-                objectEetection.setType("OBJECT_LOCALIZATION");
-                objectEetection.setMaxResults(MAX_LABEL_RESULTS);
-                add(objectEetection);
-            }});
-
-            // Add the list of one thing to the request
-            add(annotateImageRequest);
-        }});
-
-        Vision.Images.Annotate annotateRequest =
-                vision.images().annotate(batchAnnotateImagesRequest);
-        // Due to a bug: requests to Vision API containing large images fail when GZipped.
-        annotateRequest.setDisableGZipContent(true);
-        Log.d(TAG, "created Cloud Vision request object, sending request");
-
-        return annotateRequest;
-    }
-
-    private class LableDetectionTask extends AsyncTask<Object, Void, String> {
-        private final WeakReference<ShopActivity> mActivityWeakReference;
-        private Vision.Images.Annotate mRequest;
-
-        LableDetectionTask(ShopActivity activity, Vision.Images.Annotate annotate) {
-            mActivityWeakReference = new WeakReference<>(activity);
-            mRequest = annotate;
-        }
-
-        @Override
-        protected String doInBackground(Object... params) {
-            try {
-                Log.d(TAG, "created Cloud Vision request object, sending request");
-                BatchAnnotateImagesResponse response = mRequest.execute();
-                return convertResponseToString(response);
-
-            } catch (GoogleJsonResponseException e) {
-                Log.d(TAG, "failed to make API request because " + e.getContent());
-            } catch (IOException e) {
-                Log.d(TAG, "failed to make API request because of other IOException " +
-                        e.getMessage());
-            }
-            return "Cloud Vision API request failed. Check logs for details.";
-        }
-
-        protected void onPostExecute(String result) {
-            ShopActivity activity = mActivityWeakReference.get();
-            if (activity != null && !activity.isFinishing()) {
-
-                Log.d("visionResult",result);
-                savePreferences("visionResult",result);
-            }
-        }
-
-    }
-
-    private void callCloudVision(Bitmap bitmap) {
-        // Switch text to loading
-
-
-        // Do the real work in an async task, because we need to use the network anyway
-        try {
-            AsyncTask<Object, Void, String> labelDetectionTask = new ShopActivity.LableDetectionTask(ShopActivity.this, prepareAnnotationRequest(bitmap));
-            labelDetectionTask.execute();
-        } catch (IOException e) {
-            Log.d(TAG, "failed to make API request because of other IOException " +
-                    e.getMessage());
-        }
-    }
-
-    private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
-
-        int originalWidth = bitmap.getWidth();
-        int originalHeight = bitmap.getHeight();
-        int resizedWidth = maxDimension;
-        int resizedHeight = maxDimension;
-
-        if (originalHeight > originalWidth) {
-            resizedHeight = maxDimension;
-            resizedWidth = (int) (resizedHeight * (float) originalWidth / (float) originalHeight);
-        } else if (originalWidth > originalHeight) {
-            resizedWidth = maxDimension;
-            resizedHeight = (int) (resizedWidth * (float) originalHeight / (float) originalWidth);
-        } else if (originalHeight == originalWidth) {
-            resizedHeight = maxDimension;
-            resizedWidth = maxDimension;
-        }
-        return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
-    }
-
-
-    private static String convertResponseToString(BatchAnnotateImagesResponse response) {
-        StringBuilder message = new StringBuilder("");  //이미지 상세정보
-        List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
-        List<EntityAnnotation> texts = response.getResponses().get(0).getTextAnnotations();
-
-        if (labels != null) {
-            for (EntityAnnotation label : labels) {
-               // if(label.getScore()>=0.9) {
-                    //message.append(String.format(Locale.KOREA, "%.3f: %s", label.getScore(), label.getDescription()));
-                    if(label.getDescription().equals("Clothing")){}
-                    else {
-                        message.append(String.format(Locale.KOREA, "%s", label.getDescription()));
-                        message.append("\n");
-                    }
-                //}
-            }
-        }
-        else {
-           // message.append("nothing\n");
-        }
-
-        if(texts !=null){
-            message.append(texts.get(0).getDescription());
-        }
-        else {
-          //  message.append("nothing\n");
-        }
-
-
-        return message.toString();
-    }*/
     // 값 저장하기
     private void savePreferences(String key, String s){
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
@@ -550,105 +326,7 @@ public class ShopActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    /*private Handler handler = new Handler(){
-        public void handleMessage(Message msg){
-            super.handleMessage(msg);
-            if(msg.what ==1 )
-            {
-                //Product product;
-                int error;
-                //arg1이 10이면 처음 검색에 대한 결과를 갖다 준걸로
-                if(msg.arg1==10)
-                {
-                    options=checkError(msg);
-//                    optionList.clear();
-                    if (options.size() <= 0) {
-                        Toast.makeText(ShopActivity.this,"검색된 상품이 없습니다.",Toast.LENGTH_LONG).show();
-                    } else if (options.size() < 4) {
-                        optionList.addAll(options.subList(0, options.size() - 1));
-                        more_num=options.size() - 1;
-                    }
-                    else {
-                        optionList.addAll(options.subList(0, ProductNum));
-                        more_num=ProductNum;
-                    }
-                    if(optionList.size()>0){
-                        adapter.notifyDataSetChanged();
-                        for (int i = 0; i < optionList.size(); i++) {
-                            Log.i("사이트", optionList.get(i).getOptionValue() + "&&" + optionList.get(i).getOptionOrder()+"&&"+optionList.get(i).getProductDetailUrl());;
-                        }
-                    }
 
-
-
-                }
-//                arg2이 20이면 상품추가하기
-                else if(msg.arg2==20){
-                    //String result = "";
-                    List<Option> data = (List<Option>)msg.obj;
-//                    for(Option o : data)
-//                        result += p.getProductName() +"\n";
-                    options=checkError(msg);
-                    if (options.size() <= 0) {
-                        Toast.makeText(ShopActivity.this,"더 보여드릴 상품이 없습니다.",Toast.LENGTH_LONG).show();
-                    }
-                    else if(options.size()<4){
-                        optionList.addAll(options.subList(0,options.size()-1));
-                        more_num=options.size() - 1;
-                    }
-                    else {
-                        optionList.addAll(options.subList(0, ProductNum));
-                        more_num=ProductNum;
-                    }
-                    if(optionList.size()>0) {
-                        adapter.notifyDataSetChanged();
-                        for (int i = 0; i < optionList.size(); i++) {
-                            Log.i("사이트", optionList.get(i).getOptionValue() + "&&" + optionList.get(i).getOptionOrder()+"&&"+optionList.get(i).getProductDetailUrl());;
-                        }
-                    }
-                }
-            }
-//            else if(msg.what==2){
-//                Bundle bd=msg.getData();
-//                visionResult = bd.getString("visionResult");
-//        //        Log.d("visionResult",visionResult);
-//            }
-        }
-    };
-    public int more_product(int more_num){
-        if (options.size() <= 0) {
-            Toast.makeText(ShopActivity.this,"더 보여드릴 상품이 없습니다.",Toast.LENGTH_LONG).show();
-        }
-        else if(options.size()-more_num<4){
-            optionList.addAll(options.subList(more_num,options.size()));
-            more_num+=ProductNum;
-        }
-        else {
-            optionList.addAll(options.subList(more_num,ProductNum + more_num));
-            more_num+=ProductNum;
-        }
-
-        if(optionList.size()>0)
-            adapter.notifyDataSetChanged();
-
-        return more_num;
-
-    }
-
-    public List<Option> checkError(Message msg){
-        Option errOption;
-        int error;
-        for(int i=((List<Option>) msg.obj).size()-1;i>=0;i--){
-            errOption=((List<Option>) msg.obj).get(i);
-
-//            error=errOption.errorMessage(errOption.getProductName(),errOption.getOptionValueMap());
-            if (errOption.getOptionPrice()==null){ //검색결과 없을때 삭제
-                ((List<Option>) msg.obj).remove(i);
-               // productList.remove(i);
-            }
-        }
-        return (List<Option>) msg.obj;
-    }*/
 }
 class ProductAdapter extends ArrayAdapter<String> {
     private Context context;

@@ -61,12 +61,10 @@ public class ImageLoader {
     {
         File f=fileCache.getFile(url);
 
-        //from SD cache
         Bitmap b = decodeFile(f);
         if(b!=null)
             return b;
 
-        //from web
         try {
             Bitmap bitmap=null;
             URL imageUrl = new URL(url);
