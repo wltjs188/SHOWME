@@ -166,6 +166,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         //set ListView adapter first
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
         listView.setAdapter(adapter);
+        listView.setSelection(adapter.getCount() - 1);
         ChatMessage chatMessage;
 
 //        Log.d("받아온 사용자 정보",uuid+","+name+","+address+","+phoneNum);
