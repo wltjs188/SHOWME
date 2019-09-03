@@ -163,6 +163,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         //set ListView adapter first
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
         listView.setAdapter(adapter);
+        listView.setSelection(adapter.getCount() - 1);
         ChatMessage chatMessage;
 
         //구글 sst 음성인식
