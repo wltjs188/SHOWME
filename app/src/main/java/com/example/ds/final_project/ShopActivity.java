@@ -41,11 +41,9 @@ import android.view.GestureDetector.OnGestureListener;
 import android.widget.Toast;
 
 
-public class ShopActivity extends AppCompatActivity implements OnGestureListener {
+public class ShopActivity extends AppCompatActivity {
 
 
-
-    private Button moreBtn;
     private GridView gv;
     private ProductAdapter adapter;
 
@@ -70,11 +68,11 @@ public class ShopActivity extends AppCompatActivity implements OnGestureListener
     String fabric = null;
     String detail = null;
 
-    private static final int SWIPE_MIN_DISTANCE = 120;
-    private static final int SWIPE_MAX_OFF_PATH = 250;
-    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-
-    private GestureDetector gDetector;
+//    private static final int SWIPE_MIN_DISTANCE = 120;
+//    private static final int SWIPE_MAX_OFF_PATH = 250;
+//    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+//
+//    private GestureDetector gDetector;
 
 
     @Override
@@ -82,9 +80,8 @@ public class ShopActivity extends AppCompatActivity implements OnGestureListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop2);
         productInfoIntent = new Intent(getApplicationContext(), ProductInfo.class);
-        moreBtn = (Button) findViewById(R.id.main_more_btn);
 
-        gDetector = new GestureDetector(this);
+       // gDetector = new GestureDetector(this);
 
         adapter = new ProductAdapter(this, R.layout.list_product_item, images, infos);
         gv = (GridView) findViewById(R.id.main_GridView);
@@ -118,7 +115,7 @@ public class ShopActivity extends AppCompatActivity implements OnGestureListener
                 startActivity(productInfoIntent);
             }
         });
-
+/*
         //더보기
         moreBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -131,96 +128,129 @@ public class ShopActivity extends AppCompatActivity implements OnGestureListener
             }
 
         });
+*/
 
     }
-    @Override
-    public boolean onTouchEvent(MotionEvent me) {
-        return gDetector.onTouchEvent(me);
-    }
-
-    public boolean onDown(MotionEvent e) {
-     //   viewA.setText("-" + "DOWN" + "-");
-        return true;
-    }
-
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        try {
-            Log.d("동작","되냐");
-            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-                return false;
-
-            // right to left swipe
-            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                //다음
-             //Toast.makeText(getApplicationContext(), "Left Swipe", Toast.LENGTH_SHORT).show();
-                if(images.size()<=page*4+3){
-                    Toast.makeText(getApplicationContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
-                }else{
-                    page++;
-                    if(images.size()<=page*4+3){
-                        adap_images= new ArrayList<String>(images.subList(page*4,images.size()));
-                        adap_infos=new ArrayList<String>(images.subList(page*4,infos.size()));
-                    }else{
-                        adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
-                        adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
-                    }
-                    adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
-                    gv.setAdapter(adapter);
-                }
-            }
-            // left to right swipe
-            else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                //이전
-                //Toast.makeText(getApplicationContext(), "Right Swipe", Toast.LENGTH_SHORT).show();
-                if(page==0){
-                    Toast.makeText(getApplicationContext(), "첫번째 페이지 입니다.", Toast.LENGTH_SHORT).show();
-                }else{
-                    page--;
-                    if(images.size()<=page*4+3){
-                        adap_images=new ArrayList<String>(images.subList(page*4,images.size()));
-                        adap_infos=new ArrayList<String>(infos.subList(page*4,images.size()));
-                    }else{
-                        adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
-                        adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
-                    }
-                    adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
-                    gv.setAdapter(adapter);
-                }
-            }
-//            // down to up swipe
-//            else if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-//                Toast.makeText(getApplicationContext(), "Swipe up", Toast.LENGTH_SHORT).show();
+//    @Override
+//    public boolean onTouchEvent(MotionEvent me) {
+//        return gDetector.onTouchEvent(me);
+//    }
+//
+//    public boolean onDown(MotionEvent e) {
+//     //   viewA.setText("-" + "DOWN" + "-");
+//        return true;
+//    }
+//
+//    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+//        try {
+//            Log.d("동작","되냐");
+//            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+//                return false;
+//
+//            // right to left swipe
+//            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+//                //다음
+//             //Toast.makeText(getApplicationContext(), "Left Swipe", Toast.LENGTH_SHORT).show();
+//                if(images.size()<=page*4+3){
+//                    Toast.makeText(getApplicationContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
+//                }else{
+//                    page++;
+//                    if(images.size()<=page*4+3){
+//                        adap_images= new ArrayList<String>(images.subList(page*4,images.size()));
+//                        adap_infos=new ArrayList<String>(images.subList(page*4,infos.size()));
+//                    }else{
+//                        adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
+//                        adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
+//                    }
+//                    adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
+//                    gv.setAdapter(adapter);
+//                }
 //            }
-//            // up to down swipe
-//            else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-//                Toast.makeText(getApplicationContext(), "Swipe down", Toast.LENGTH_SHORT).show();
+//            // left to right swipe
+//            else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+//                //이전
+//                //Toast.makeText(getApplicationContext(), "Right Swipe", Toast.LENGTH_SHORT).show();
+//                if(page==0){
+//                    Toast.makeText(getApplicationContext(), "첫번째 페이지 입니다.", Toast.LENGTH_SHORT).show();
+//                }else{
+//                    page--;
+//                    if(images.size()<=page*4+3){
+//                        adap_images=new ArrayList<String>(images.subList(page*4,images.size()));
+//                        adap_infos=new ArrayList<String>(infos.subList(page*4,images.size()));
+//                    }else{
+//                        adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
+//                        adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
+//                    }
+//                    adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
+//                    gv.setAdapter(adapter);
+//                }
 //            }
-        } catch (Exception e) {
-
+////            // down to up swipe
+////            else if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+////                Toast.makeText(getApplicationContext(), "Swipe up", Toast.LENGTH_SHORT).show();
+////            }
+////            // up to down swipe
+////            else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+////                Toast.makeText(getApplicationContext(), "Swipe down", Toast.LENGTH_SHORT).show();
+////            }
+//        } catch (Exception e) {
+//
+//        }
+//        return true;
+//    }
+//
+//    public void onLongPress(MotionEvent e) {
+//        Toast mToast = Toast.makeText(getApplicationContext(), "Long Press", Toast.LENGTH_SHORT);
+//        mToast.show();
+//    }
+//
+//    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+//       // viewA.setText("-" + "SCROLL" + "-");
+//        return true;
+//    }
+//
+//    public void onShowPress(MotionEvent e) {
+//        //viewA.setText("-" + "SHOW PRESS" + "-");
+//    }
+//
+//    public boolean onSingleTapUp(MotionEvent e) {
+//        Toast mToast = Toast.makeText(getApplicationContext(), "Single Tap", Toast.LENGTH_SHORT);
+//        mToast.show();
+//        return true;
+//    }
+    public void onNextBtnClicked(View view){
+        if(images.size()<=page*4+3){
+            Toast.makeText(getApplicationContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
+        }else{
+            page++;
+            if(images.size()<=page*4+3){
+                adap_images= new ArrayList<String>(images.subList(page*4,images.size()));
+                adap_infos=new ArrayList<String>(images.subList(page*4,infos.size()));
+            }else{
+                adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
+                adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
+            }
+            adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
+            gv.setAdapter(adapter);
         }
-        return true;
     }
+    public void onPrevBtnClicked(View view){
 
-    public void onLongPress(MotionEvent e) {
-        Toast mToast = Toast.makeText(getApplicationContext(), "Long Press", Toast.LENGTH_SHORT);
-        mToast.show();
+        if(page==0){
+            Toast.makeText(getApplicationContext(), "첫번째 페이지 입니다.", Toast.LENGTH_SHORT).show();
+        }else{
+            page--;
+            if(images.size()<=page*4+3){
+                adap_images=new ArrayList<String>(images.subList(page*4,images.size()));
+                adap_infos=new ArrayList<String>(infos.subList(page*4,images.size()));
+            }else{
+                adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
+                adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
+            }
+            adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
+            gv.setAdapter(adapter);
+        }
     }
-
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-       // viewA.setText("-" + "SCROLL" + "-");
-        return true;
-    }
-
-    public void onShowPress(MotionEvent e) {
-        //viewA.setText("-" + "SHOW PRESS" + "-");
-    }
-
-    public boolean onSingleTapUp(MotionEvent e) {
-        Toast mToast = Toast.makeText(getApplicationContext(), "Single Tap", Toast.LENGTH_SHORT);
-        mToast.show();
-        return true;
-    }
-
 
     private class GetProduct extends AsyncTask<String, Void, String> {
 
@@ -274,7 +304,6 @@ public class ShopActivity extends AppCompatActivity implements OnGestureListener
                 postParameters += "&fabric=" + fabric;
             }
             if (detail != "" && detail != null && !detail.equals("없음")) {
-                Log.d("detail:", "엥");
                 postParameters += "&detail=" + detail;
             }
             try {
@@ -403,6 +432,7 @@ public class ShopActivity extends AppCompatActivity implements OnGestureListener
     }
 
 }
+
 class ProductAdapter extends ArrayAdapter<String> {
     private Context context;
     private int resource;

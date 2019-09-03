@@ -16,6 +16,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,7 +33,6 @@ import java.util.ArrayList;
 public class WishListActivity extends AppCompatActivity {
     Intent productInfoIntent; //상세정보 intent
     GridView gv;
-    int index=0;
     String mJsonString;
     String IP_ADDRESS = "18.191.10.193";
     private WishAdapter adapter;
@@ -41,6 +42,9 @@ public class WishListActivity extends AppCompatActivity {
     ArrayList<String> optionNums=new ArrayList<String>();
     ArrayList<String> infos=new ArrayList<String>(); //상품 상세 정보
     ArrayList<String> images=new ArrayList<String>(); //상품 옵션 대표 이미지
+    ArrayList<String> adap_infos = new ArrayList<String>(); //상품 상세 정보
+    ArrayList<String> adap_images = new ArrayList<String>(); //상품 옵션 대표 이미지
+    int page = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +61,7 @@ public class WishListActivity extends AppCompatActivity {
         GetWishProduct task = new GetWishProduct();
         task.execute( "http://" + IP_ADDRESS + "/getWishProduct.php",uuid);
 
-        adapter = new WishAdapter(this, R.layout.activity_wish_list, images,infos,index);
+        adapter = new WishAdapter(this, R.layout.activity_wish_list, images,infos);
         gv.setAdapter(adapter);
 
 
@@ -72,6 +76,39 @@ public class WishListActivity extends AppCompatActivity {
                 startActivity(productInfoIntent);
             }
         });
+    }
+    public void onNextBtnClicked(View view){
+        if(images.size()<=page*4+3){
+            Toast.makeText(getApplicationContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
+        }else{
+            page++;
+            if(images.size()<=page*4+3){
+                adap_images= new ArrayList<String>(images.subList(page*4,images.size()));
+                adap_infos=new ArrayList<String>(images.subList(page*4,infos.size()));
+            }else{
+                adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
+                adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
+            }
+            adapter = new WishAdapter(this, R.layout.activity_wish_list, adap_images, adap_infos);
+            gv.setAdapter(adapter);
+        }
+    }
+    public void onPrevBtnClicked(View view){
+
+        if(page==0){
+            Toast.makeText(getApplicationContext(), "첫번째 페이지 입니다.", Toast.LENGTH_SHORT).show();
+        }else{
+            page--;
+            if(images.size()<=page*4+3){
+                adap_images=new ArrayList<String>(images.subList(page*4,images.size()));
+                adap_infos=new ArrayList<String>(infos.subList(page*4,images.size()));
+            }else{
+                adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
+                adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
+            }
+            adapter = new WishAdapter(this, R.layout.activity_wish_list, adap_images, adap_infos);
+            gv.setAdapter(adapter);
+        }
     }
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
         switch (item.getItemId()){
@@ -171,8 +208,18 @@ private class GetWishProduct extends AsyncTask<String, Void, String> {
                     infos.add(item.getString("info")) ;
                     images.add(item.getString("image"));
 
-                    //adapter 설정
-                    adapter = new WishAdapter(this, R.layout.activity_wish_list, images,infos,index);
+
+//                    adapter = new WishAdapter(this, R.layout.activity_wish_list, images,infos);
+//                    gv.setAdapter(adapter);
+                }
+                //adapter 설정
+                if(images.size()<=4) {
+                    adapter = new WishAdapter(this, R.layout.list_product_item, images, infos);
+                    gv.setAdapter(adapter);
+                }else{
+                    adap_images=new ArrayList<String>(images.subList(0,4));
+                    adap_infos=new ArrayList<String>(infos.subList(0,4));
+                    adapter = new WishAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
                     gv.setAdapter(adapter);
                 }
             }
@@ -198,14 +245,13 @@ class WishAdapter extends ArrayAdapter<String> {
 
     ArrayList<String> images;
     ArrayList<String> infos;
-    int index;
-    public WishAdapter(Context context, int resource, ArrayList<String> images,ArrayList<String> infos,int index) {
+
+    public WishAdapter(Context context, int resource, ArrayList<String> images,ArrayList<String> infos) {
         super(context, resource,images);
         this.context = context;
         this.resource = resource;
         this.images = images;
         this.infos=infos;
-        this.index=index;
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
