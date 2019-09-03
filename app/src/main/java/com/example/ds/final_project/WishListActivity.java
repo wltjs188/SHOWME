@@ -500,7 +500,6 @@ class WishAdapter extends ArrayAdapter<String> {
         else{
             holder = (ProductViewHolder) convertView.getTag();
         }
-        Log.d("codbs","여기실행안되냐?");
         Glide.with(WishAdapter.super.getContext()).load(images.get(position)).into(holder.imageView);
         return convertView;
     }

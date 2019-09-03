@@ -650,63 +650,17 @@ public class ShopActivity extends AppCompatActivity {
         return (List<Option>) msg.obj;
     }*/
 }
-//class ProductAdapter extends ArrayAdapter<String> {
-//    private Context context;
-//    private int resource;
-//    // int i=0;
-//    //  private List<Product> productList;
-//    private ImageLoader imageLoader;
-//    ArrayList<String> images;
-//    ArrayList<String> infos;
-//    int index;
-//    public ProductAdapter(Context context, int resource, ArrayList<String> images,ArrayList<String> infos,int index) {
-//        super(context, resource,images);
-//        // TODO Auto-generated constructor stub
-//        this.context = context;
-//        this.resource = resource;
-//        this.images = images;
-//        this.infos=infos;
-//        imageLoader= new ImageLoader(context);
-//        this.index=index;
-//    }
-//
-//    @Override
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//        // TODO Auto-generated method stub
-//
-//        ProductViewHolder holder;
-//        if(convertView == null){
-//            LayoutInflater inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//            convertView = inflate.inflate(R.layout.wish_item, parent, false);
-//            holder = new ProductViewHolder();
-//            holder.imageView
-//                    = (ImageView) convertView.findViewById(R.id.imageView1);
-//            convertView.setTag(holder);
-//            holder.imageView.setContentDescription(getInfo(position));
-//        }
-//        else{
-//            holder = (ProductViewHolder) convertView.getTag();
-//        }
-//        Glide.with(ProductAdapter.super.getContext()).load(images.get(position)).into(holder.imageView);
-//        return convertView;
-//    }
-//    public String getInfo(int i){
-//        return infos.get(i).toString();
-//    }
-//    class ProductViewHolder{
-//        public ImageView imageView;
-//    }
-//}
-
 class ProductAdapter extends ArrayAdapter<String> {
     private Context context;
     private int resource;
+    // int i=0;
+    //  private List<Product> productList;
+    private ImageLoader imageLoader;
     ArrayList<String> images;
     ArrayList<String> infos;
-    private ImageLoader imageLoader;
-   // ArrayList<String> images=new ArrayList<String>();
+
     public ProductAdapter(Context context, int resource, ArrayList<String> images,ArrayList<String> infos) {
-        super(context, resource ,images);
+        super(context, resource,images);
         // TODO Auto-generated constructor stub
         this.context = context;
         this.resource = resource;
@@ -718,90 +672,27 @@ class ProductAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
-//        return super.getView(position, convertView, parent);
-
-        //getView메소드는 리스트뷰의 한줄의 아이템을 그리기 위한 뷰를 만들어내는 함수이고
-        //한줄의 아이템에 대해서 UI를 인플레이션하고 그 객체를 리턴하면됨
 
         ProductViewHolder holder;
         if(convertView == null){
-            //이미 인플레이션 한 뷰가 있다면 매개변수 convertView에 들어와 재사용 가능하므로
-            //convertView가 null일때만 인플레이션 해줌
             LayoutInflater inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflate.inflate(R.layout.list_product_item, parent, false);
+            convertView = inflate.inflate(R.layout.wish_item, parent, false);
             holder = new ProductViewHolder();
             holder.imageView
-                    = (ImageView) convertView.findViewById(R.id.product_img);
-            holder.product_Info
-                    =(TextView)convertView.findViewById(R.id.product_Info);
+                    = (ImageView) convertView.findViewById(R.id.imageView1);
             convertView.setTag(holder);
-            //holder.imageView.setContentDescription(infos.get(position));
+            holder.imageView.setContentDescription(getInfo(position));
         }
         else{
             holder = (ProductViewHolder) convertView.getTag();
         }
-
-        //여기부터 이제 홀더객체 안의 각  위젯에 book객체의 각 멤버면수값들이랑 바인딩하면 됨ㅇㅇ
-//        holder.imageView.setImageResource(R.drawable.ic_launcher);
-        //int a=o.errorMessage(p.getProductName(),p.getOptionValueMap());
-        if(images.size()<0){ //검색결과 없을때
-            holder.product_Info.setText("검색결과가 없습니다.");
-        }
-        else { //검색결과 있을때
-            //holder.product_Info.setText(getInfo(position));
-            new ImageDownLoader(holder.imageView).execute(images.get(position));
-        }
-
+        Glide.with(ProductAdapter.super.getContext()).load(images.get(position)).into(holder.imageView);
         return convertView;
-
     }
     public String getInfo(int i){
-        return infos.get(i);
+        return infos.get(i).toString();
     }
-
-    public String getImage(int i){
-
-        return images.get(i);
-    }
-
-
-    class ImageDownLoader extends AsyncTask<String, Void, Bitmap>
-    {
-        ImageView imageView;
-        public ImageDownLoader(ImageView imageView){
-            this.imageView = imageView;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            // TODO Auto-generated method stub
-            Bitmap bitmap = null;
-            try {
-                URL url = new URL(params[0]);
-                images.add(params[0]);
-                BufferedInputStream bi = new BufferedInputStream(url.openStream());
-                bitmap = BitmapFactory.decodeStream(bi);
-                bi.close();
-            } catch (MalformedURLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            return bitmap;
-        }
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            // TODO Auto-generated method stub
-            super.onPostExecute(result);
-            if(result != null)
-                imageView.setImageBitmap(result);
-        }
-    }
-    static class ProductViewHolder{
+    class ProductViewHolder{
         public ImageView imageView;
-        public TextView product_Info;
-
     }
 }
