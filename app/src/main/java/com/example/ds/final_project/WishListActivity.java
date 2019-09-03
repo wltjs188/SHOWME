@@ -4,9 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,32 +14,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class WishListActivity extends AppCompatActivity {
     Intent productInfoIntent; //상세정보 intent
@@ -211,26 +195,20 @@ private class GetWishProduct extends AsyncTask<String, Void, String> {
 class WishAdapter extends ArrayAdapter<String> {
     private Context context;
     private int resource;
-   // int i=0;
-  //  private List<Product> productList;
-    private ImageLoader imageLoader;
+
     ArrayList<String> images;
     ArrayList<String> infos;
     int index;
     public WishAdapter(Context context, int resource, ArrayList<String> images,ArrayList<String> infos,int index) {
         super(context, resource,images);
-        // TODO Auto-generated constructor stub
         this.context = context;
         this.resource = resource;
         this.images = images;
         this.infos=infos;
-        imageLoader= new ImageLoader(context);
         this.index=index;
     }
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
 
         ProductViewHolder holder;
         if(convertView == null){
