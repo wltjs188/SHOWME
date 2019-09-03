@@ -56,6 +56,8 @@ public class ProductInfo extends AppCompatActivity {
     private String info=" ";
     private String image=" ";
 
+    private String Url="http://www.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +77,9 @@ public class ProductInfo extends AppCompatActivity {
         Glide.with(this).load(image).into(productImg);
 
         product_info.setText(info);
+        Url = Url + productId;
+        info = info + "\n" + Url;
+
         wishCheck=(CheckBox)findViewById(R.id.wishCheck);
         wishCheck.setOnCheckedChangeListener(new CheckBoxListener());
 
