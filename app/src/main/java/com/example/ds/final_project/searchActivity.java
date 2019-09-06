@@ -288,7 +288,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     protected void onPostResume() {
         super.onPostResume();
         if(user_name==""){
-            if(chatMessages.size()==0){
+          //  if(chatMessages.size()==0){
                 ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
                 chatMessages.add(chatMessage);
                 adapter.notifyDataSetChanged();
@@ -299,8 +299,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                         tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
                     }
                 }, 1000);
-            }
-        }else{makeMenuMsg();
+           // }
+       // }else{makeMenuMsg();
         }
 
     }
