@@ -60,8 +60,9 @@ public class WishListActivity extends AppCompatActivity {
 
         GetWishProduct task = new GetWishProduct();
         task.execute( "http://" + IP_ADDRESS + "/getWishProduct.php",uuid);
-
-        adapter = new WishAdapter(this, R.layout.activity_wish_list, images,infos);
+        adap_images=images;
+        adap_infos=infos;
+        adapter = new WishAdapter(this, R.layout.activity_wish_list, adap_images,adap_infos);
         gv.setAdapter(adapter);
 
 
@@ -89,8 +90,9 @@ public class WishListActivity extends AppCompatActivity {
                 adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
                 adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
             }
-            adapter = new WishAdapter(this, R.layout.activity_wish_list, adap_images, adap_infos);
-            gv.setAdapter(adapter);
+//            adapter = new WishAdapter(this, R.layout.activity_wish_list, adap_images, adap_infos);
+//            gv.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
         }
     }
     public void onPrevBtnClicked(View view){
@@ -106,8 +108,9 @@ public class WishListActivity extends AppCompatActivity {
                 adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
                 adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
             }
-            adapter = new WishAdapter(this, R.layout.activity_wish_list, adap_images, adap_infos);
-            gv.setAdapter(adapter);
+//            adapter = new WishAdapter(this, R.layout.activity_wish_list, adap_images, adap_infos);
+//            gv.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
         }
     }
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
@@ -209,18 +212,20 @@ private class GetWishProduct extends AsyncTask<String, Void, String> {
                     images.add(item.getString("image"));
 
 
-//                    adapter = new WishAdapter(this, R.layout.activity_wish_list, images,infos);
-//                    gv.setAdapter(adapter);
                 }
                 //adapter 설정
                 if(images.size()<=4) {
-                    adapter = new WishAdapter(this, R.layout.list_product_item, images, infos);
-                    gv.setAdapter(adapter);
+                    adap_images=images;
+                    adap_infos=infos;
+//                    adapter = new WishAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
+//                    gv.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                 }else{
                     adap_images=new ArrayList<String>(images.subList(0,4));
                     adap_infos=new ArrayList<String>(infos.subList(0,4));
-                    adapter = new WishAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
-                    gv.setAdapter(adapter);
+//                    adapter = new WishAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
+//                    gv.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                 }
             }
 

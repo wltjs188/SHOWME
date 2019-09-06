@@ -59,26 +59,16 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     //서버
     String IP_ADDRESS = "18.191.10.193";
     String TAG = "phptest";
-    //키워드
-    String keyword="";
-    String sub;
-    //
-    String Color="";
 
     //구글 SST 음성인식
     Intent sstIntent;
     SpeechRecognizer mRecognizer;
 
     //상품검색
-//    AIService aiService; 챗봇음성
     String query;
     String action;
     String speech;
     String remenu="";
-    //사용자정보 해쉬맵
-    Map<String,String> MyInfo = new HashMap<String,String>();
-    //사용자정보수정 해쉬맵
-    Map<String,String> MyInfoModi = new HashMap<String,String>();
 
     AIRequest aiRequest;
     AIDataService aiDataService;
@@ -319,7 +309,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         Log.i("액션",ACTION);
         Log.i("RESULT",""+result);
 
-       // AsyncTask task=null;
         //챗봇 액션 처리
         switch (ACTION){
             case "ACTION_USER"://사용자등록 : 이름받아오기

@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -80,12 +79,12 @@ public class ShopActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop2);
         productInfoIntent = new Intent(getApplicationContext(), ProductInfo.class);
-
+        gv = (GridView) findViewById(R.id.main_GridView);
        // gDetector = new GestureDetector(this);
 
-        adapter = new ProductAdapter(this, R.layout.list_product_item, images, infos);
-        gv = (GridView) findViewById(R.id.main_GridView);
+        adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
         gv.setAdapter(adapter);
+
         Intent intent = getIntent();
 
         //검색정보 받아오기
@@ -232,6 +231,7 @@ public class ShopActivity extends AppCompatActivity {
             }
             adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
             gv.setAdapter(adapter);
+          //  adapter.notifyDataSetChanged();
         }
     }
     public void onPrevBtnClicked(View view){
@@ -249,6 +249,7 @@ public class ShopActivity extends AppCompatActivity {
             }
             adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
             gv.setAdapter(adapter);
+           // adapter.notifyDataSetChanged();
         }
     }
 
@@ -376,15 +377,20 @@ public class ShopActivity extends AppCompatActivity {
 
             }
             if(images.size()<=4) {
-                adapter = new ProductAdapter(this, R.layout.list_product_item, images, infos);
-                gv.setAdapter(adapter);
+                adap_images=images;
+                adap_infos=infos;
+                Log.d("하이",adap_images.toString());
+//                adapter = new ProductAdapter(this, R.layout.list_product_item, images, infos);
+//                gv.setAdapter(adapter);
+                //adapter.notifyDataSetChanged();
             }else{
                 adap_images=new ArrayList<String>(images.subList(0,4));
                 adap_infos=new ArrayList<String>(infos.subList(0,4));
-                adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
-                gv.setAdapter(adapter);
-            }
 
+            }
+            adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
+            gv.setAdapter(adapter);
+            //  adapter.notifyDataSetChanged();
         } catch (JSONException e) {
             Log.d("showResult : ", e.getMessage());
             Log.d("phptest: ", mJsonString);
