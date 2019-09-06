@@ -242,6 +242,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
         tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
         adapter.notifyDataSetChanged();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+            }
+        }, 1000);
     }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
