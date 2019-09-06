@@ -319,35 +319,34 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         switch (ACTION){
             case "ACTION_USER"://사용자등록 : 이름받아오기
                 parameter=getParameter(result);
-                user_name=""+parameter.get("user_name");
-                result.getContexts().clear();
-                break;
-            case "ACTION_USERNAME": //사용자등록 : 이름만 입력했을때
-                //사용자 정보 DB에 넣기
-                InsertUser task = new InsertUser();
-                task.execute("http://" + IP_ADDRESS + "/insertUser.php",user_uuid,user_name,null,null);
-                Log.d("test","이름");
-                remenu=getRemenu(result);
-                result.getContexts().clear();
-                break;
-            case "ACTION_USERALL": //사용자등록 : 이름,번호,주소 입력했을때
-                parameter=getParameter(result);
+                //이름
+                if(parameter.containsKey("user_name")){
+                    user_name=""+parameter.get("user_name");
+                }
+                //핸드폰 번호
+                if(parameter.containsKey("user_phone")){
+                    user_phone=""+parameter.get("user_phone");
+                }
+                //주소 시,구,동
                 if(parameter.containsKey("city")) {
-                    //주소 시,구,동 받아오기
                     user_address = "" + parameter.get("city")+parameter.get("county");
                     if(parameter.containsKey("county1")){
                         user_address=user_address+parameter.get("county1");
                     }
-                    user_address=user_address+parameter.get("village");
+                    if(parameter.containsKey("village")){
+                        user_address=user_address+parameter.get("village");
+                    }
                     user_address=user_address.replaceAll("\"","");
-                    user_phone = "" + parameter.get("user_phone");
-                    //사용자 정보 DB에 넣기
-                    task = new InsertUser();
-                    task.execute("http://" + IP_ADDRESS + "/insertUser.php",user_uuid,user_name,user_address,user_phone);
-                    remenu=getRemenu(result);
-                    result.getContexts().clear();
                 }
-
+                //사용자 정보 DB에 넣기
+                if( !user_name.equals("") && !user_phone.equals("") && !user_address.equals("") ) {
+                    InsertUser task = new InsertUser();
+                    //Log.d("test","이름");
+                    System.out.println("이름 : "+user_name+"번호 : "+user_phone+"주소 : "+user_address);
+                    task.execute("http://" + IP_ADDRESS + "/insertUser.php",user_uuid,user_name,user_address,user_phone);
+//                    remenu=getRemenu(result);
+//                    result.getContexts().clear();
+                }
                 break;
             case "ACTION_M_NAME"://사용자정보수정 : 이름
                 parameter=getParameter(result);
