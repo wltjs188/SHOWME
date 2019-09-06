@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -291,8 +292,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
                 chatMessages.add(chatMessage);
                 adapter.notifyDataSetChanged();
-
-                tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+                    }
+                }, 1000);
             }
         }else{makeMenuMsg();
         }
