@@ -73,6 +73,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
     AIRequest aiRequest;
     AIDataService aiDataService;
+    ResponseMessage.ResponseSpeech responseMessageFirst;
+    ResponseMessage.ResponseSpeech responseMessageSecond;
 
     private ListView listView;
     private View btnSend;
@@ -225,8 +227,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
     //리메뉴
     protected String getRemenu(Result result){
-        ResponseMessage.ResponseSpeech responseMessage = (ResponseMessage.ResponseSpeech)result.getFulfillment().getMessages().get(1);
-        remenu=responseMessage.getSpeech().get(0);
+        responseMessageSecond = (ResponseMessage.ResponseSpeech)result.getFulfillment().getMessages().get(1);
+        remenu=responseMessageSecond.getSpeech().get(0);
         result.getContexts().clear();
         return remenu;
     }
@@ -300,7 +302,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     }
                 }, 1000);
             }
-       // }else{makeMenuMsg();
+        }else{makeMenuMsg();
         }
 
     }
@@ -329,7 +331,10 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 }
                 //주소 시,구,동
                 if(parameter.containsKey("city")) {
-                    user_address = "" + parameter.get("city")+parameter.get("county");
+                    user_address = "" + parameter.get("city");
+                    if(parameter.containsKey("county")){
+                        user_address=user_address+parameter.get("county");
+                    }
                     if(parameter.containsKey("county1")){
                         user_address=user_address+parameter.get("county1");
                     }
@@ -344,8 +349,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     //Log.d("test","이름");
                     System.out.println("이름 : "+user_name+"번호 : "+user_phone+"주소 : "+user_address);
                     task.execute("http://" + IP_ADDRESS + "/insertUser.php",user_uuid,user_name,user_address,user_phone);
-//                    remenu=getRemenu(result);
-//                    result.getContexts().clear();
+                    remenu=getRemenu(result);
+                    result.getContexts().clear();
                 }
                 break;
             case "ACTION_M_NAME"://사용자정보수정 : 이름
@@ -455,17 +460,23 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 break;
         }
 
-        speech = result.getFulfillment().getSpeech();
         query=result.getResolvedQuery();
-        action=result.getAction();
+        if(ACTION.equals("ACTION_USER")){
+            responseMessageSecond = (ResponseMessage.ResponseSpeech)result.getFulfillment().getMessages().get(0);
+            speech=responseMessageSecond.getSpeech().get(0);
+        }
+        else{
+            speech = result.getFulfillment().getSpeech();
+        }
+
+
+
 
         ChatMessage chatMessage;
-
         chatMessage = new ChatMessage(query, false);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
         editText.setText("");
-
         chatMessage = new ChatMessage(speech, true);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
@@ -477,7 +488,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
             remenu="";
         }
-
     }
     @Override
     public void onError(AIError error) { }
