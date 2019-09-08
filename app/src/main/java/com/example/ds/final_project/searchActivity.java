@@ -174,13 +174,18 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         aiDataService = new AIDataService(this,config);
         aiRequest = new AIRequest();
 
+
         //전송버튼
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (editText.getText().toString().trim().equals("")) {
                     Toast.makeText(searchActivity.this, "텍스트를 입력해주세요", Toast.LENGTH_SHORT).show();
-                } else {
+                }
+                else if(editText.getText().toString().length() !=8 && chatMessages.get(chatMessages.size()-1).toString().contains("번호")){
+                    Toast.makeText(getApplicationContext(),"010을 제외한 8자리 번호를 입력해주세요.",Toast.LENGTH_LONG).show();
+                }
+                else {
                     aiRequest.setQuery(editText.getText().toString());
                     Log.e("입력",editText.getText().toString());
                     new AITask().execute(aiRequest);
@@ -356,6 +361,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     //Log.d("test","이름");
                     System.out.println("이름 : "+user_name+"번호 : "+user_phone+"주소 : "+user_address);
                     task.execute("http://" + IP_ADDRESS + "/insertUser.php",user_uuid,user_name,user_address,user_phone);
+                    Log.i("액션USER",ACTION);
                     remenu=getRemenu(result);
                     result.getContexts().clear();
                 }
@@ -468,14 +474,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         }
 
         query=result.getResolvedQuery();
-        if(ACTION.equals("ACTION_USER")){
+        if(ACTION.equals("ACTION_USER") || ACTION.equals("ACTION_M_NAME") || ACTION.equals("ACTION_M_PHONE") || ACTION.equals("ACTION_M_ADDRESS") ){
             responseMessageSecond = (ResponseMessage.ResponseSpeech)result.getFulfillment().getMessages().get(0);
             speech=responseMessageSecond.getSpeech().get(0);
         }
-        else{
+        else {
             speech = result.getFulfillment().getSpeech();
         }
-
 
 
 
