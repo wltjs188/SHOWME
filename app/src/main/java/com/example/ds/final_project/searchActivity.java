@@ -336,6 +336,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 //이름
                 if(parameter.containsKey("user_name")){
                     user_name=""+parameter.get("user_name");
+                    user_name=user_name.substring(9);
+                    user_name=user_name.substring(0,user_name.length()-2);
                 }
                 //핸드폰 번호
                 if(parameter.containsKey("user_phone")){
@@ -343,15 +345,21 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 }
                 //주소 시,구,동
                 if(parameter.containsKey("city")) {
-                    user_address = "" + parameter.get("city");
-                    if(parameter.containsKey("county")){
+                    if(parameter.containsKey("state")){ //도
+                        user_address = "" + parameter.get("state");
+                    }
+                    user_address = user_address + parameter.get("city"); //시
+                    if(parameter.containsKey("county")){ //구,군
                         user_address=user_address+parameter.get("county");
                     }
-                    if(parameter.containsKey("county1")){
+                    if(parameter.containsKey("county1")){ //면,읍,리
                         user_address=user_address+parameter.get("county1");
                     }
-                    if(parameter.containsKey("village")){
+                    if(parameter.containsKey("village")){//동
                         user_address=user_address+parameter.get("village");
+                    }
+                    if(parameter.containsKey("address")){ //상세주소,도로명주소
+                        user_address=user_address+parameter.get("address");
                     }
                     user_address=user_address.replaceAll("\"","");
                 }
