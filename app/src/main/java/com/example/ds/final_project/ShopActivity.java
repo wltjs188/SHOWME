@@ -368,6 +368,7 @@ public class ShopActivity extends AppCompatActivity {
                         + item.getString("price") + "\n"
                         + item.getString("size") + "\n"
                         + item.getString("color") + "\n"
+                        + item.getString("color_detail") + "\n"
                         + item.getString("fabric") + "\n"
                         + item.getString("pattern") + "\n"
                         + item.getString("detail");

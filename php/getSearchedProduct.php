@@ -1,4 +1,5 @@
 <?php  
+//상품 검색
 error_reporting(E_ALL); 
 ini_set('display_errors',1); 
 
@@ -57,6 +58,7 @@ if ($category != "" ){
                 'price'=>$row["price"],
                 'size'=>$row["size"],
                 'color'=>$row["color"],
+                'color_detail'=>$row["color_detail"],
                 'fabric'=>$row["fabric"],
                 'pattern'=>$row["pattern"],
                 'detail'=>$row["detail"]
