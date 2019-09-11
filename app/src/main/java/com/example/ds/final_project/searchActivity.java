@@ -182,9 +182,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 if (editText.getText().toString().trim().equals("")) {
                     Toast.makeText(searchActivity.this, "텍스트를 입력해주세요", Toast.LENGTH_SHORT).show();
                 }
-                else if(editText.getText().toString().length() !=8 && chatMessages.get(chatMessages.size()-1).toString().contains("번호")){
-                    Toast.makeText(getApplicationContext(),"010을 제외한 8자리 번호를 입력해주세요.",Toast.LENGTH_LONG).show();
-                }
+//                else if(editText.getText().toString().length() !=8 && chatMessages.get(chatMessages.size()-1).toString().contains("번호")){
+//                    Toast.makeText(getApplicationContext(),"010을 제외한 8자리 번호를 입력해주세요.",Toast.LENGTH_LONG).show();
+//                }
                 else {
                     aiRequest.setQuery(editText.getText().toString());
                     Log.e("입력",editText.getText().toString());
