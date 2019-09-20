@@ -182,9 +182,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 if (editText.getText().toString().trim().equals("")) {
                     Toast.makeText(searchActivity.this, "텍스트를 입력해주세요", Toast.LENGTH_SHORT).show();
                 }
-                else if(editText.getText().toString().length() !=8 && chatMessages.get(chatMessages.size()-1).toString().contains("번호")){
-                    Toast.makeText(getApplicationContext(),"010을 제외한 8자리 번호를 입력해주세요.",Toast.LENGTH_LONG).show();
-                }
+//                else if(editText.getText().toString().length() !=8 && chatMessages.get(chatMessages.size()-1).toString().contains("번호")){
+//                    Toast.makeText(getApplicationContext(),"010을 제외한 8자리 번호를 입력해주세요.",Toast.LENGTH_LONG).show();
+//                }
                 else {
                     aiRequest.setQuery(editText.getText().toString());
                     Log.e("입력",editText.getText().toString());
@@ -336,6 +336,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 //이름
                 if(parameter.containsKey("user_name")){
                     user_name=""+parameter.get("user_name");
+                    user_name=user_name.substring(9);
+                    user_name=user_name.substring(0,user_name.length()-2);
                 }
                 //핸드폰 번호
                 if(parameter.containsKey("user_phone")){
@@ -343,15 +345,21 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 }
                 //주소 시,구,동
                 if(parameter.containsKey("city")) {
-                    user_address = "" + parameter.get("city");
-                    if(parameter.containsKey("county")){
+                    if(parameter.containsKey("state")){ //도
+                        user_address = "" + parameter.get("state");
+                    }
+                    user_address = user_address + parameter.get("city"); //시
+                    if(parameter.containsKey("county")){ //구,군
                         user_address=user_address+parameter.get("county");
                     }
-                    if(parameter.containsKey("county1")){
+                    if(parameter.containsKey("county1")){ //면,읍,리
                         user_address=user_address+parameter.get("county1");
                     }
-                    if(parameter.containsKey("village")){
+                    if(parameter.containsKey("village")){//동
                         user_address=user_address+parameter.get("village");
+                    }
+                    if(parameter.containsKey("address")){ //상세주소,도로명주소
+                        user_address=user_address+parameter.get("address");
                     }
                     user_address=user_address.replaceAll("\"","");
                 }
