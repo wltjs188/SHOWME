@@ -362,16 +362,18 @@ public class ShopActivity extends AppCompatActivity {
                 Log.d("상품", "?");
                 productIds.add(item.getString("productId"));
                 optionNums.add(item.getString("optionNum"));
-                String info = item.getString("name") + "\n"
-                        + item.getString("category") + "\n"
-                        + item.getString("length") + "\n"
-                        + item.getString("price") + "\n"
-                        + item.getString("size") + "\n"
-                        + item.getString("color") + "\n"
-                        + item.getString("color_detail") + "\n"
-                        + item.getString("fabric") + "\n"
-                        + item.getString("pattern") + "\n"
-                        + item.getString("detail");
+                String info="";
+                info+=item.getString("name").equals("null")?"":("상품명: " +item.getString("name")+ "\n");
+
+                info+=item.getString("length").equals("null")?"":item.getString("length")+" ";
+                info+=item.getString("category").equals("null")?"":item.getString("category")+ "\n";
+                info+=item.getString("price").equals("null")?"":"가격: " +item.getString("price")+"\n";
+                info+=item.getString("size").equals("null")?"":"사이즈: " +item.getString("size")+"\n";
+                info+=item.getString("color").equals("null")?"":"색상: " +item.getString("color")+"\n";
+                info+=item.getString("color_detail").equals("null")?"":"(" +item.getString("color_detail")+")\n";
+                info+=item.getString("fabric").equals("null")?"":"재질: " +item.getString("fabric")+"\n";
+                info+=item.getString("pattern").equals("null")?"":"패턴: " +item.getString("pattern")+"\n";
+                info+=item.getString("detail").equals("null")?"":"기타: " +item.getString("detail");
                 infos.add(info);
                 images.add(item.getString("image"));
                 Log.d("가져온 상품:", infos.get(i));
