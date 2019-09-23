@@ -90,9 +90,10 @@ public class WishListActivity extends AppCompatActivity {
                 adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
                 adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
             }
-//            adapter = new WishAdapter(this, R.layout.activity_wish_list, adap_images, adap_infos);
-//            gv.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
+
+           // adapter.notifyDataSetChanged();
+            adapter = new WishAdapter(this, R.layout.wish_item, adap_images, adap_infos);
+            gv.setAdapter(adapter);
         }
     }
     public void onPrevBtnClicked(View view){
@@ -108,9 +109,10 @@ public class WishListActivity extends AppCompatActivity {
                 adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
                 adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
             }
-//            adapter = new WishAdapter(this, R.layout.activity_wish_list, adap_images, adap_infos);
-//            gv.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
+
+         //   adapter.notifyDataSetChanged();
+            adapter = new WishAdapter(this, R.layout.wish_item, adap_images, adap_infos);
+            gv.setAdapter(adapter);
         }
     }
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
