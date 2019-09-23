@@ -303,7 +303,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         super.onPostResume();
         if(user_name==""){
             if(chatMessages.size()==0){
-                ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다~ 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
+                ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
                 chatMessages.add(chatMessage);
                 adapter.notifyDataSetChanged();
                 final Handler handler = new Handler();
