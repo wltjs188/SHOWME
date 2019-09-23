@@ -219,14 +219,16 @@ private class GetWishProduct extends AsyncTask<String, Void, String> {
                     adap_infos=infos;
 //                    adapter = new WishAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
 //                    gv.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
+                   // adapter.notifyDataSetChanged();
                 }else{
                     adap_images=new ArrayList<String>(images.subList(0,4));
                     adap_infos=new ArrayList<String>(infos.subList(0,4));
 //                    adapter = new WishAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
 //                    gv.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
+                    //adapter.notifyDataSetChanged();
                 }
+                adapter = new WishAdapter(this, R.layout.wish_item, adap_images, adap_infos);
+                gv.setAdapter(adapter);
             }
 
 
