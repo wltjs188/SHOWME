@@ -28,7 +28,7 @@ import android.widget.Toast;
 import com.example.ds.final_project.db.InsertUser;
 import com.example.ds.final_project.db.UpdateUser;
 import com.google.gson.JsonElement;
-
+import android.widget.Button;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -56,10 +56,9 @@ import ai.api.model.Result;
 import static android.speech.tts.TextToSpeech.ERROR;
 
 public class searchActivity extends AppCompatActivity implements AIListener{
-
+    Button btn_chat_send;
     //서버
     String IP_ADDRESS = "18.191.10.193";
-    String TAG = "phptest";
 
     //구글 SST 음성인식
     Intent sstIntent;
@@ -121,7 +120,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
         int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
         if (permission != PackageManager.PERMISSION_GRANTED) { makeRequest(); }
-
+        btn_chat_send=(Button)findViewById(R.id.btn_chat_send);
         wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
         shopIntent=new Intent(getApplicationContext(),ShopActivity.class); //상품검색
 
@@ -213,7 +212,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             String[] rs = new String[mResult.size()];
             mResult.toArray(rs);
             editText.setText(""+rs[0]);
-
+            btn_chat_send.callOnClick();
         }
         public void onReadyForSpeech(Bundle params) {
 
