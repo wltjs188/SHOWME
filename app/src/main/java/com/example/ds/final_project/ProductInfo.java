@@ -1,16 +1,19 @@
 package com.example.ds.final_project;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,20 +49,33 @@ public class ProductInfo extends AppCompatActivity {
     private TextView product_info; //상세정보 표시
     ImageView productImg; //상품 이미지 표시
     private CheckBox wishCheck; //관심상품 등록
-    private boolean infoBool; //관심상품 등록 여부
-
+    private boolean infoBool=true; //관심상품 등록 여부
+    private int check=0;
     //상품 정보
+    private String wishProductName=" ";
     private String uuid=" ";
     private String productId=" ";
     private String optionNum="";
     private String productURL=" ";
     private String info=" ";
     private String image=" ";
-
+    WishProductDialog dialog;
     private String Url="http://www.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        dialog=new WishProductDialog(this);
+        dialog.setDialogListener(new DialogListener() {
+            @Override
+            public void onPositiveClicked(String name) {
+                wishProductName=name;
+            }
+
+            @Override
+            public void onNegativeClicked() {
+                Log.d("dialog","취소");
+            }
+        });
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_info);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
@@ -71,6 +87,7 @@ public class ProductInfo extends AppCompatActivity {
         optionNum=intent.getStringExtra("optionNum");
         info=intent.getStringExtra("info");
         image=intent.getStringExtra("image");
+
 
         productImg=(ImageView)findViewById(R.id.productImg);
         Log.i("이미지",""+image);
@@ -149,15 +166,19 @@ public class ProductInfo extends AppCompatActivity {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             // 체크박스를 클릭해서 상태가 바꾸었을 경우 호출되는 콜백 메서드
-            if(wishCheck.isChecked()) {
-                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_LONG).show();
+            if(wishCheck.isChecked()&&check!=0) {
+                //check=1;
+                //Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
+
+                dialog.show();
                 //DB에 추가
                 InsertWishProduct task = new InsertWishProduct();
-                task.execute("http://" + IP_ADDRESS + "/insertWishProduct.php",uuid,productId,optionNum,image,info);
-
+                task.execute("http://" + IP_ADDRESS + "/insertWishProduct.php",uuid,productId,optionNum,image,info,wishProductName);
+                wishProductName="";
             }
-            else {
-                Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_LONG).show();
+            else if(!wishCheck.isChecked()&&check!=0){
+                //check=1;
+                Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_SHORT).show();
                 //DB에서 삭제
                 DeleteWishProduct task = new DeleteWishProduct();
                 task.execute("http://" + IP_ADDRESS + "/deleteWishProduct.php",uuid,productId,optionNum);
@@ -265,6 +286,7 @@ public class ProductInfo extends AppCompatActivity {
                 infoBool=true;
             }else { infoBool=false; }
             wishCheck.setChecked(infoBool);
+            check=1;
         } catch (JSONException e) {
             Log.d("showResult : ", e.getMessage());
             Log.d("showResult : ", mJsonString);
