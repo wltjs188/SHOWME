@@ -64,7 +64,7 @@ public class ShopActivity extends AppCompatActivity {
     String length = null;
     String size = null;
     String pattern = null;
-    String fabric = null;
+    //String fabric = null;
     String detail = null;
 
 //    private static final int SWIPE_MIN_DISTANCE = 120;
@@ -93,14 +93,14 @@ public class ShopActivity extends AppCompatActivity {
         length = intent.getStringExtra("length").replaceAll("[\"]", "");
         size = intent.getStringExtra("size").replaceAll("[\"]", "");
         pattern = intent.getStringExtra("pattern").replaceAll("[\"]", "");
-        fabric = intent.getStringExtra("fabric").replaceAll("[\"]", "");
+      //  fabric = intent.getStringExtra("fabric").replaceAll("[\"]", "");
         Log.d("category", category);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
         getSupportActionBar().setTitle(category + "검색 결과");
 
         GetProduct task = new GetProduct();
 
-        task.execute("http://" + IP_ADDRESS + "/getSearchedProduct.php", category, color, length, size, pattern, fabric, detail);
+        task.execute("http://" + IP_ADDRESS + "/getSearchedProduct.php", category, color, length, size, pattern, detail);
 
         //클릭시, 상세정보 페이지로 이동
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -285,9 +285,9 @@ public class ShopActivity extends AppCompatActivity {
             String length = params[3];
             String size = params[4];
             String pattern = params[5];
-            String fabric = params[6];
-            String detail = params[7];
-
+       //     String fabric = params[6];
+            String detail = params[6];
+        //    String category_detail = params[7];
             String serverURL = params[0];
 
 
@@ -300,10 +300,10 @@ public class ShopActivity extends AppCompatActivity {
                 postParameters += "&size=" + size;
             if (pattern != "" && pattern != null && !pattern.equals("없음"))
                 postParameters += "&pattern=" + pattern;
-            if (fabric != "" && fabric != null && !fabric.equals("없음")) {
-                Log.d("fabric:", fabric);
-                postParameters += "&fabric=" + fabric;
-            }
+//            if (fabric != "" && fabric != null && !fabric.equals("없음")) {
+//                Log.d("fabric:", fabric);
+//                postParameters += "&fabric=" + fabric;
+//            }
             if (detail != "" && detail != null && !detail.equals("없음")) {
                 postParameters += "&detail=" + detail;
             }
@@ -366,12 +366,13 @@ public class ShopActivity extends AppCompatActivity {
                 info+=item.getString("name").equals("null")?"":("상품명: " +item.getString("name")+ "\n");
 
                 info+=item.getString("length").equals("null")?"":item.getString("length")+" ";
-                info+=item.getString("category").equals("null")?"":item.getString("category")+ "\n";
+                info+=item.getString("category").equals("null")?"":item.getString("category");
+                info+=item.getString("category_detail").equals("null")?"\n":" > "+item.getString("category_detail")+ "\n";
                 info+=item.getString("price").equals("null")?"":"가격: " +item.getString("price")+"\n";
                 info+=item.getString("size").equals("null")?"":"사이즈: " +item.getString("size")+"\n";
                 info+=item.getString("color").equals("null")?"":"색상: " +item.getString("color")+"\n";
                 info+=item.getString("color_detail").equals("null")?"":"(" +item.getString("color_detail")+")\n";
-                info+=item.getString("fabric").equals("null")?"":"재질: " +item.getString("fabric")+"\n";
+              //  info+=item.getString("fabric").equals("null")?"":"재질: " +item.getString("fabric")+"\n";
                 info+=item.getString("pattern").equals("null")?"":"패턴: " +item.getString("pattern")+"\n";
                 info+=item.getString("detail").equals("null")?"":"기타: " +item.getString("detail");
                 infos.add(info);
@@ -382,7 +383,7 @@ public class ShopActivity extends AppCompatActivity {
             if(images.size()<=4) {
                 adap_images=images;
                 adap_infos=infos;
-                Log.d("하이",adap_images.toString());
+             //   Log.d("하이",adap_images.toString());
 //                adapter = new ProductAdapter(this, R.layout.list_product_item, images, infos);
 //                gv.setAdapter(adapter);
                 //adapter.notifyDataSetChanged();
