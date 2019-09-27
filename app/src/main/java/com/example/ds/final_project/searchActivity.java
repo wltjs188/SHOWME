@@ -97,7 +97,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String length = null;
     String size = null;
     String pattern = null;
-    String fabric = null;
+//    String fabric = null;
 
 //    private String gender;
 //    private String height;
@@ -148,6 +148,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 if (status != ERROR) {
                     // 언어를 선택한다.
                     tts.setLanguage(Locale.KOREAN);
+
                 }
             }
         });
@@ -451,20 +452,20 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     pattern = ""+parameter.get("Pattern");
                 }
                 //재질
-                if(parameter.containsKey("Material")){
-                    fabric = ""+parameter.get("Material");
-                }
-                System.out.println("카테고리 : "+category+"색상 : "+color+"기장 : "+length+"사이즈 : "+size+"패턴 : "+pattern+"재질 : "+fabric);
+//                if(parameter.containsKey("Material")){
+//                    fabric = ""+parameter.get("Material");
+//                }
+                System.out.println("카테고리 : "+category+"색상 : "+color+"기장 : "+length+"사이즈 : "+size+"패턴 : "+pattern);
 
-                if( category != null && color != null && length != null && size != null && pattern != null && fabric != null ) {
+                if( category != null && color != null && length != null && size != null && pattern != null) {
                     shopIntent.putExtra("category", category);
                     shopIntent.putExtra("color", color);
                     shopIntent.putExtra("length", length);
                     shopIntent.putExtra("size", size);
                     shopIntent.putExtra("pattern", pattern);
-                    shopIntent.putExtra("fabric", fabric);
+//                    shopIntent.putExtra("fabric", fabric);
 
-                    category = null; color = null; length = null; size = null; pattern = null; fabric = null;
+                    category = null; color = null; length = null; size = null; pattern = null;
                     result.getContexts().clear();
                     startActivity(shopIntent);
                 }
