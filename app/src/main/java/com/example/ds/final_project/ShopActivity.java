@@ -370,9 +370,9 @@ public class ShopActivity extends AppCompatActivity {
                 info+=item.getString("price").equals("null")?"":"가격: " +item.getString("price")+"\n";
                 info+=item.getString("size").equals("null")?"":"사이즈: " +item.getString("size")+"\n";
                 info+=item.getString("color").equals("null")?"":"색상: " +item.getString("color")+"\n";
-                info+=item.getString("color_detail").equals("null")?"":"(" +item.getString("color_detail")+")\n";
-                info+=item.getString("fabric").equals("null")?"":"재질: " +item.getString("fabric")+"\n";
+//                info+=item.getString("color_detail").equals("null")?"":"(" +item.getString("color_detail")+")\n";
                 info+=item.getString("pattern").equals("null")?"":"패턴: " +item.getString("pattern")+"\n";
+                info+=item.getString("fabric").equals("null")?"":"재질: " +item.getString("fabric")+"\n";
                 info+=item.getString("detail").equals("null")?"":"기타: " +item.getString("detail");
                 infos.add(info);
                 images.add(item.getString("image"));
