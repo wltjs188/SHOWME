@@ -42,8 +42,10 @@ public class WishListActivity extends AppCompatActivity {
     ArrayList<String> optionNums=new ArrayList<String>();
     ArrayList<String> infos=new ArrayList<String>(); //상품 상세 정보
     ArrayList<String> images=new ArrayList<String>(); //상품 옵션 대표 이미지
+    ArrayList<String> names=new ArrayList<String>(); //네이밍
     ArrayList<String> adap_infos = new ArrayList<String>(); //상품 상세 정보
     ArrayList<String> adap_images = new ArrayList<String>(); //상품 옵션 대표 이미지
+    ArrayList<String> adap_names = new ArrayList<String>();//네이밍
     int page = 0;
 
     @Override
@@ -62,7 +64,8 @@ public class WishListActivity extends AppCompatActivity {
         task.execute( "http://" + IP_ADDRESS + "/getWishProduct.php",uuid);
         adap_images=images;
         adap_infos=infos;
-        adapter = new WishAdapter(this, R.layout.activity_wish_list, adap_images,adap_infos);
+        adap_names=names;
+        adapter = new WishAdapter(this, R.layout.activity_wish_list, adap_images,adap_infos,adap_names);
         gv.setAdapter(adapter);
 
 
@@ -74,6 +77,7 @@ public class WishListActivity extends AppCompatActivity {
                 productInfoIntent.putExtra("optionNum", optionNums.get(position));
                 productInfoIntent.putExtra("info", infos.get(position));
                 productInfoIntent.putExtra("image", images.get(position));
+                Log.d("챈",names.get(position));
                 startActivity(productInfoIntent);
             }
         });
@@ -86,13 +90,15 @@ public class WishListActivity extends AppCompatActivity {
             if(images.size()<=page*4+3){
                 adap_images= new ArrayList<String>(images.subList(page*4,images.size()));
                 adap_infos=new ArrayList<String>(images.subList(page*4,infos.size()));
+                adap_names=new ArrayList<String>(names.subList(page*4,infos.size()));
             }else{
                 adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
                 adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
+                adap_names=new ArrayList<String>(names.subList(page*4,page*4+4));
             }
 
            // adapter.notifyDataSetChanged();
-            adapter = new WishAdapter(this, R.layout.wish_item, adap_images, adap_infos);
+            adapter = new WishAdapter(this, R.layout.wish_item, adap_images, adap_infos, adap_names);
             gv.setAdapter(adapter);
         }
     }
@@ -105,13 +111,15 @@ public class WishListActivity extends AppCompatActivity {
             if(images.size()<=page*4+3){
                 adap_images=new ArrayList<String>(images.subList(page*4,images.size()));
                 adap_infos=new ArrayList<String>(infos.subList(page*4,images.size()));
+                adap_names=new ArrayList<String>(names.subList(page*4,images.size()));
             }else{
                 adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
                 adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
+                adap_names=new ArrayList<String>(names.subList(page*4,page*4+4));
             }
 
          //   adapter.notifyDataSetChanged();
-            adapter = new WishAdapter(this, R.layout.wish_item, adap_images, adap_infos);
+            adapter = new WishAdapter(this, R.layout.wish_item, adap_images, adap_infos,adap_names);
             gv.setAdapter(adapter);
         }
     }
@@ -212,24 +220,26 @@ private class GetWishProduct extends AsyncTask<String, Void, String> {
                     optionNums.add(item.getString("optionNum"));
                     infos.add(item.getString("info")) ;
                     images.add(item.getString("image"));
-
+                    names.add(item.getString("wishProductName"));
 
                 }
                 //adapter 설정
                 if(images.size()<=4) {
                     adap_images=images;
                     adap_infos=infos;
+                    adap_names=names;
 //                    adapter = new WishAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
 //                    gv.setAdapter(adapter);
                    // adapter.notifyDataSetChanged();
                 }else{
                     adap_images=new ArrayList<String>(images.subList(0,4));
                     adap_infos=new ArrayList<String>(infos.subList(0,4));
+                    adap_names=new ArrayList<String>(names.subList(0,4));
 //                    adapter = new WishAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
 //                    gv.setAdapter(adapter);
                     //adapter.notifyDataSetChanged();
                 }
-                adapter = new WishAdapter(this, R.layout.wish_item, adap_images, adap_infos);
+                adapter = new WishAdapter(this, R.layout.wish_item, adap_images, adap_infos,adap_names);
                 gv.setAdapter(adapter);
             }
 
@@ -254,13 +264,15 @@ class WishAdapter extends ArrayAdapter<String> {
 
     ArrayList<String> images;
     ArrayList<String> infos;
+    ArrayList<String> names;
 
-    public WishAdapter(Context context, int resource, ArrayList<String> images,ArrayList<String> infos) {
+    public WishAdapter(Context context, int resource, ArrayList<String> images,ArrayList<String> infos,ArrayList<String> names) {
         super(context, resource,images);
         this.context = context;
         this.resource = resource;
         this.images = images;
         this.infos=infos;
+        this.names=names;
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -273,7 +285,9 @@ class WishAdapter extends ArrayAdapter<String> {
             holder.imageView
                     = (ImageView) convertView.findViewById(R.id.imageView1);
             convertView.setTag(holder);
-            holder.imageView.setContentDescription(getInfo(position));
+            //톡백 설정한 이름이 읽히게 변경
+            //holder.imageView.setContentDescription(getInfo(position));
+            holder.imageView.setContentDescription(getName(position));
         }
         else{
             holder = (ProductViewHolder) convertView.getTag();
@@ -283,6 +297,9 @@ class WishAdapter extends ArrayAdapter<String> {
     }
     public String getInfo(int i){
         return infos.get(i);
+    }
+    public String getName(int i){
+        return names.get(i);
     }
     static class ProductViewHolder{
         public ImageView imageView;

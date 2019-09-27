@@ -37,7 +37,8 @@ if ($uid != "" ){
                 'productId'=>$row["productId"],
                 'optionNum'=>$row["optionNum"],
                 'image'=>$row["image"],
-                'info'=>$row["info"]
+                'info'=>$row["info"],
+                'wishProductName'=>$row["wishProductName"]
             ));
         }
 

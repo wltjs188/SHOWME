@@ -19,15 +19,17 @@
         $optionNum=$_POST['optionNum'];
         $image=$_POST['image'];
         $info=$_POST['info'];
+		$wishProductName=$_POST['wishProductName'];
 
         if(!isset($errMSG)) // 이름과 나라 모두 입력이 되었다면 
         {
             try{
                 // SQL문을 실행하여 데이터를 MySQL 서버의 person 테이블에 저장합니다. 
-                $stmt = $con->prepare('INSERT INTO WishProduct(uid,productId,optionNum,image,info) VALUES(:uid, :productId,:optionNum,:image,:info)');
+                $stmt = $con->prepare('INSERT INTO WishProduct(uid,productId,optionNum,wishProductName,image,info) VALUES(:uid, :productId,:optionNum,:wishProductName,:image,:info)');
                 $stmt->bindParam(':uid', $uid);
                 $stmt->bindParam(':productId', $productId);
                 $stmt->bindParam(':optionNum', $optionNum);
+                $stmt->bindParam(':wishProductName', $wishProductName);
                 $stmt->bindParam(':image', $image);
                 $stmt->bindParam(':info', $info);
                if($stmt->execute())
