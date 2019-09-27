@@ -24,7 +24,9 @@
         <!-- android:name=".searchActivity" -->
         <!-- android:label="@string/title_activity_search" -->
         <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
-        <activity android:name=".searchActivity" />
+        <activity android:name=".searchActivity"
+            android:windowSoftInputMode="adjustPan"
+            />
         <activity android:name=".MyInfoActivity" />
         <activity android:name=".WishListActivity" />
         <activity android:name=".ShopActivity" />

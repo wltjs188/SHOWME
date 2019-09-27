@@ -1,6 +1,7 @@
 package com.example.ds.final_project;
 import android.Manifest;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -91,6 +92,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     private String user_address=null;
     private TextToSpeech tts;
 
+    //stt
+    private final int REQ_CODE_SPEECH_INPUT = 100;
+
     //검색 정보
     String category = null;
     String color = null;
@@ -159,12 +163,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         listView.setSelection(adapter.getCount() - 1);
         ChatMessage chatMessage;
 
-        //구글 sst 음성인식
-        sstIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        sstIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getApplicationContext().getPackageName());
-        sstIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR");
-        mRecognizer = SpeechRecognizer.createSpeechRecognizer(getApplicationContext());
-        mRecognizer.setRecognitionListener(listener);
+
 
         //dialogflow
         final AIConfiguration config = new AIConfiguration("b8dda671eb584e3586aba41efdd554cf",
@@ -195,39 +194,49 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         });
         //SST 버튼
         btnSST.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"지금부터 말을 해주세요!",Toast.LENGTH_LONG).show();
-                mRecognizer.startListening(sstIntent);
+                promptSpeechInput();
             }
         });
 
     }
-    //SST 리스너
-    private RecognitionListener listener = new RecognitionListener() {
-        public void onRmsChanged(float rmsdB) { }
-        public void onResults(Bundle results) {
-            String key = "";
-            key = SpeechRecognizer.RESULTS_RECOGNITION;
-            ArrayList<String> mResult = results.getStringArrayList(key);
-            String[] rs = new String[mResult.size()];
-            mResult.toArray(rs);
-            editText.setText(""+rs[0]);
-            btn_chat_send.callOnClick();
+    //stt
+    private void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                getString(R.string.speech_prompt));
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getApplicationContext(),
+                    getString(R.string.speech_not_supported),
+                    Toast.LENGTH_SHORT).show();
         }
-        public void onReadyForSpeech(Bundle params) {
+    }
+    //stt
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    editText.setText(result.get(0));
+                    btn_chat_send.callOnClick();
+                }
+                break;
+            }
 
         }
-        public void onPartialResults(Bundle partialResults) {}
-        public void onEvent(int eventType, Bundle params) {}
-        public void onError(int error) {
-            Toast.makeText(getApplicationContext(),"오류",Toast.LENGTH_LONG).show();
-        }
-        public void onEndOfSpeech() {}
-        public void onBufferReceived(byte[] buffer) {}
-        public void onBeginningOfSpeech() {
-        }
-    };
+    }
+
 
 
     //리메뉴
@@ -301,8 +310,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(user_name==""){
-            if(chatMessages.size()==0){
+        Log.i("채팅사이즈",""+chatMessages.size());
+        if(chatMessages.size()==0){
+            if(user_name==""){
                 ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
                 chatMessages.add(chatMessage);
                 adapter.notifyDataSetChanged();
@@ -314,10 +324,18 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     }
                 }, 1000);
             }
-        }else{makeMenuMsg();
+            else{
+                makeMenuMsg();
+            }
         }
+//        else  if(chatMessages.get(chatMessages.size()-1).getContent().contains("관심")||chatMessages.get(chatMessages.size()-1).getContent().contains("검색")){
+//            makeMenuMsg();
+//        }
+
 
     }
+
+
 
     public void onResult(AIResponse response) {
         final Result result = response.getResult();
@@ -342,6 +360,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 //핸드폰 번호
                 if(parameter.containsKey("user_phone")){
                     user_phone=""+parameter.get("user_phone");
+                    user_phone=(user_phone.replaceAll(" ","")).replaceAll("-","");
+
                 }
                 //주소 시,구,동
                 if(parameter.containsKey("city")) {
