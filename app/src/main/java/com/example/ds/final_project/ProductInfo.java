@@ -49,7 +49,7 @@ public class ProductInfo extends AppCompatActivity {
     private TextView product_info; //상세정보 표시
     ImageView productImg; //상품 이미지 표시
     private CheckBox wishCheck; //관심상품 등록
-    private boolean infoBool=true; //관심상품 등록 여부
+    private boolean infoBool=false; //관심상품 등록 여부
     private int check=0;
     //상품 정보
     private String wishProductName=" ";
@@ -284,12 +284,18 @@ public class ProductInfo extends AppCompatActivity {
             Log.d("jsonArray 길이:",jsonArray.length()+"");
             if(jsonArray.length()>0){
                 infoBool=true;
-            }else { infoBool=false; }
+                Log.d("관심","ㅇ");
+            }else { infoBool=false;
+            Log.d("관심","ㄴ");}
             wishCheck.setChecked(infoBool);
             check=1;
         } catch (JSONException e) {
             Log.d("showResult : ", e.getMessage());
             Log.d("showResult : ", mJsonString);
+            infoBool=false;
+            Log.d("관심","s");
+            wishCheck.setChecked(infoBool);
+            check=1;
         }
     }
 }
