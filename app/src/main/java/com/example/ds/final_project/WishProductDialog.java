@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,6 +56,7 @@ public class WishProductDialog extends Dialog implements View.OnClickListener{
                     Toast.makeText(context,"이름을 입력해주세요.",Toast.LENGTH_LONG).show();
                 }else{
                     listener.onPositiveClicked(wishProductName.getText().toString());
+                    Log.i("관심1",wishProductName.getText().toString());
                     Toast.makeText(context, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
                     dismiss();
                 }break;
