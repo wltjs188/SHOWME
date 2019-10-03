@@ -26,7 +26,7 @@ public class AddressActivity extends AppCompatActivity {
 
     }
     String findNum(String fname){
-        String number="";
+        String number=null;
         Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null,
                 ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " asc");
@@ -59,7 +59,10 @@ public class AddressActivity extends AppCompatActivity {
             }
         }// end while
         c.close();
-        return number;
+        if(number!=null)
+            return number;
+        else
+            return "그런 사람 없어";
     }
     void sendMSG(String number,String msg){
         try {

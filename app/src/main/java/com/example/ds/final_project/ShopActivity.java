@@ -398,6 +398,7 @@ public class ShopActivity extends AppCompatActivity {
             Log.d("showResult : ", e.getMessage());
             Log.d("phptest: ", mJsonString);
             Log.d("상품", "오류");
+            Toast.makeText(ShopActivity.this,"검색된 상품이 없습니다.",Toast.LENGTH_LONG).show();
         }
 
     }

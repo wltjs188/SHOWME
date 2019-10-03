@@ -23,7 +23,7 @@ public class InsertWishProduct extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
 
-        Log.d(TAG, "aaaaaaaaaaaa" + result);
+        Log.d(TAG, "관심상품 등록" + result);
     }
     @Override
     protected String doInBackground(String... params) {
@@ -71,6 +71,7 @@ public class InsertWishProduct extends AsyncTask<String, Void, String> {
                 sb.append(line);
             }
             bufferedReader.close();
+
             return sb.toString();
         } catch (Exception e) {
             Log.d(TAG, "UpdateData: Error ", e);

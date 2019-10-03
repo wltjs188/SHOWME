@@ -108,6 +108,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String fname=""; //공유할 사람 이름
     String fnumber=""; //공유할 사람 번호
     String msg="이 상품 구매 부탁드립니다!!";//공유할 메세지 내용
+    String sproduct=""; //공유할 관심상품
 //    private String gender;
 //    private String height;
 //    private String top;
@@ -211,7 +212,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     //stt
     //주소록에서 번호 가져오기
     String findNum(String fname){
-        String number="";
+        String number=null;
         Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null,
                 ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " asc");
@@ -244,7 +245,10 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             }
         }// end while
         c.close();
-        return number;
+        if(number!=null)
+            return number;
+        else
+            return "그런 사람 없어";
     }
     //공유 메세지 보내기 - 문자
     void sendMSG(String number,String msg){

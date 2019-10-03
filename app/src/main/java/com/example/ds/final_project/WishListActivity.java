@@ -247,6 +247,7 @@ private class GetWishProduct extends AsyncTask<String, Void, String> {
         } catch (JSONException e) {
             Log.d("showResult : ", e.getMessage());
             Log.d("phptest: ",mJsonString);
+            Toast.makeText(WishListActivity.this,"등록된 관심상품이 없습니다.",Toast.LENGTH_LONG).show();
         }
 
     }
