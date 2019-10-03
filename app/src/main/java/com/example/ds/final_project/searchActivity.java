@@ -108,7 +108,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String fname=""; //공유할 사람 이름
     String fnumber=""; //공유할 사람 번호
     String msg="이 상품 구매 부탁드립니다!!";//공유할 메세지 내용
-    String sproduct=""; //공유할 관심상품
+    String sproduct="ㅂ"; //공유할 관심상품
 //    private String gender;
 //    private String height;
 //    private String top;

@@ -21,6 +21,7 @@ public class AddressActivity extends AppCompatActivity {
     String fname="양시발";
     String fnumber=findNum(fname);
     String msg="치킨";//메세지 내용
+    String sproduct="ㅂ"; //공유할 관심상품
     Log.d("fnumber",fnumber);
     sendMSG("01039354325",msg);
 

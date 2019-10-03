@@ -183,7 +183,7 @@ public class ProductInfo extends AppCompatActivity {
 //                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
 
             }
-            else if(!wishCheck.isChecked()&&check!=0){
+            else if(!wishCheck.isChecked()&&check!=0&&error==0){
                 //check=1;ㅎ
                 Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_SHORT).show();
                 //DB에서 삭제
@@ -294,21 +294,15 @@ public class ProductInfo extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Log.d("error",error+"");
-//            if(error==1){
-//                infoBool=false;
-//                wishCheck.setChecked(infoBool);
-//                Toast.makeText(ProductInfo.this,"같은 이름으로 등록된 관심상품이 있습니다.",Toast.LENGTH_LONG).show();
-//                error=0;
-//            }
-            if (result == null){
+
+            if (result == null||result.equals("")){
                 Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
             }
             else {
                 mJsonString = result;
                 showResult2();
             }
-            Log.d(TAG, "관심상품 등록" + result);
+            Log.d(TAG, "관심상품 등록2" + result);
         }
         @Override
         protected String doInBackground(String... params) {
@@ -399,6 +393,7 @@ public class ProductInfo extends AppCompatActivity {
         infoBool=false;
         wishCheck.setChecked(infoBool);
         Toast.makeText(ProductInfo.this,"같은 이름으로 등록된 관심상품이 있습니다.",Toast.LENGTH_LONG).show();
+        error=0;
     }
 }
 

@@ -8,22 +8,22 @@ include('dbcon.php');
 
 //POST 값을 읽어온다.
 $uid=isset($_POST['uid']) ? $_POST['uid'] : '';
-$productId=isset($_POST['productId']) ? $_POST['productId'] : '';
-$optionNum=isset($_POST['optionNum']) ? $_POST['optionNum'] : '';
+$wishProductName=isset($_POST['wishProductName']) ? $_POST['wishProductName'] : '';
+
 $android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
 
 
 if ($uid != "" ){ 
 
-    $sql="select * from WishProduct where uid='$uid' and productId='$productId' and optionNum='$optionNum' ";
+    $sql="select * from WishProduct where uid='$uid' and wishProductName='$wishProductName' ";
     $stmt = $con->prepare($sql);
     $stmt->execute();
  
     if ($stmt->rowCount() == 0){
 
-        echo "'";
-        echo $uid;
-        echo "'은 찾을 수 없습니다. 사용자 입력을 해주세요.";
+        echo "'관심상품 중 ";
+        echo $wishProductName;
+        echo "' 은 찾을 수 없습니다. 다시 입력을 해주세요.";
     }
     else{
 
