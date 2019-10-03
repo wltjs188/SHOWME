@@ -57,7 +57,7 @@ public class WishProductDialog extends Dialog implements View.OnClickListener{
                 }else{
                     listener.onPositiveClicked(wishProductName.getText().toString());
                     Log.i("관심1",wishProductName.getText().toString());
-                    Toast.makeText(context, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
+
                     dismiss();
                 }break;
 

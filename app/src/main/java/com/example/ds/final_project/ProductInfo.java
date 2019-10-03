@@ -45,7 +45,7 @@ import java.util.Map;
 public class ProductInfo extends AppCompatActivity {
     String IP_ADDRESS = "18.191.10.193";
     private String mJsonString;
-
+    int error=0;
     private TextView product_info; //상세정보 표시
     ImageView productImg; //상품 이미지 표시
     private CheckBox wishCheck; //관심상품 등록
@@ -294,11 +294,20 @@ public class ProductInfo extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if(!infoBool){
-                wishCheck.setChecked(infoBool);
-                Toast.makeText(ProductInfo.this,"같은 이름으로 등록된 관심상품이 있습니다.",Toast.LENGTH_LONG).show();
+            Log.d("error",error+"");
+//            if(error==1){
+//                infoBool=false;
+//                wishCheck.setChecked(infoBool);
+//                Toast.makeText(ProductInfo.this,"같은 이름으로 등록된 관심상품이 있습니다.",Toast.LENGTH_LONG).show();
+//                error=0;
+//            }
+            if (result == null){
+                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
             }
-
+            else {
+                mJsonString = result;
+                showResult2();
+            }
             Log.d(TAG, "관심상품 등록" + result);
         }
         @Override
@@ -347,20 +356,19 @@ public class ProductInfo extends AppCompatActivity {
                     sb.append(line);
                 }
                 bufferedReader.close();
-                infoBool=true;
-                return sb.toString();
-            } catch (Exception e) {
-                infoBool=false;
 
+                return sb.toString().trim();
+            } catch (Exception e) {
+                error=1;
                 Log.d(TAG, "UpdateData: Error ", e);
                 Log.d("에러",e.getMessage());
-                return new String("Error: " + e.getMessage());
+                return "error";
             }
 
         }
     }
     private void showResult(){
-       // int count=0;
+        // int count=0;
         String TAG_JSON="getWishListItem";
         try {
             JSONObject jsonObject = new JSONObject(mJsonString);
@@ -372,8 +380,8 @@ public class ProductInfo extends AppCompatActivity {
 
             }else {
                 //관심상품아님
-            infoBool=false;
-            Log.d("관심","ㄴ");}
+                infoBool=false;
+                Log.d("관심","ㄴ");}
             wishCheck.setChecked(infoBool);
             check=1;
         } catch (JSONException e) {
@@ -386,6 +394,11 @@ public class ProductInfo extends AppCompatActivity {
 
             check=1;
         }
+    }
+    private void showResult2(){
+        infoBool=false;
+        wishCheck.setChecked(infoBool);
+        Toast.makeText(ProductInfo.this,"같은 이름으로 등록된 관심상품이 있습니다.",Toast.LENGTH_LONG).show();
     }
 }
 
