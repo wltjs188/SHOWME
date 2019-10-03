@@ -1,6 +1,7 @@
 package com.example.ds.final_project;
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,6 +34,11 @@ import com.example.ds.final_project.db.InsertUser;
 import com.example.ds.final_project.db.UpdateUser;
 import com.google.gson.JsonElement;
 import android.widget.Button;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -105,6 +111,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String size = null;
     String pattern = null;
 //    String fabric = null;
+    private String mJsonString;
     String fname=""; //공유할 사람 이름
     String fnumber=""; //공유할 사람 번호
     String msg="이 상품 구매 부탁드립니다!!";//공유할 메세지 내용
@@ -261,6 +268,115 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             Toast.makeText(getApplicationContext(), "SMS faild, please try again later!", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
+    }
+    //관심상품 이름으로 검색하고 문자보냄
+    private class GetProductToShare extends AsyncTask<String, Void, String> {
+
+        ProgressDialog progressDialog;
+        String errorString = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(searchActivity.this,
+                    "Please Wait", null, true, true);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+
+            if (result == null){
+            }
+            else {
+                mJsonString = result;
+                showResultGetProductToShare();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String uid = params[1];
+            String wishProductName = params[2];
+            String serverURL = params[0];
+            String postParameters = "uid=" + uid+"&wishProductName="+wishProductName;
+
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+                int responseStatusCode = httpURLConnection.getResponseCode();
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                StringBuilder sb = new StringBuilder();
+                String line;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+                bufferedReader.close();
+
+                return sb.toString().trim();
+
+
+            } catch (Exception e) {
+                errorString = e.toString();
+                return null;
+            }
+        }
+    }
+    private void showResultGetProductToShare(){
+        // int count=0;
+        String TAG_JSON="getProductToShare";
+        try {
+            JSONObject jsonObject = new JSONObject(mJsonString);
+            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
+            Log.d("jsonArray 길이:",jsonArray.length()+"");
+            if(jsonArray.length()>0){
+                //관심상품 sproduct 존재
+                for(int i=0;i<jsonArray.length();i++){
+                    JSONObject item = jsonArray.getJSONObject(i);
+                    String productId = item.getString("productId");
+                    String optionNum = item.getString("optionNum");
+                    msg+="\nhttp://www.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo="+productId+"\n옵션번호 : "+optionNum;
+                }
+                Log.d("메세지:",msg);
+                sendMSG("01039354325",msg);
+            }else {
+                //관심상품 sproduct 존재 안함
+                Toast.makeText(this,sproduct+" 없어용",Toast.LENGTH_LONG).show();
+            }
+
+        } catch (JSONException e) {
+            //관심상품 sproduct 존재 안함
+            Log.d("showResult : ", e.getMessage());
+            Log.d("showResult : ", mJsonString);
+            Toast.makeText(this,sproduct+" 없어용",Toast.LENGTH_LONG).show();
+        }
+
     }
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
