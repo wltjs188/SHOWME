@@ -5,9 +5,11 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -102,7 +104,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String size = null;
     String pattern = null;
 //    String fabric = null;
-
+    String fname=""; //공유할 사람 이름
+    String fnumber=""; //공유할 사람 번호
 //    private String gender;
 //    private String height;
 //    private String top;
@@ -127,6 +130,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         btn_chat_send=(Button)findViewById(R.id.btn_chat_send);
         wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
         shopIntent=new Intent(getApplicationContext(),ShopActivity.class); //상품검색
+
 
 
         listView = (ListView) findViewById(R.id.list_msg);
@@ -203,6 +207,42 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
     }
     //stt
+    String findNum(String fname){
+        String number="";
+        Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
+                null, null, null,
+                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " asc");
+        int i=0;
+        while (c.moveToNext()) {
+
+            // 연락처 id 값
+            String id = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
+            // 연락처 대표 이름
+            String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
+//            Log.d("name",name);
+            if(name.trim().equals(fname)) {
+
+                // ID로 전화 정보 조회
+                Cursor phoneCursor = getContentResolver().query(
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                        null,
+                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id,
+                        null, null);
+
+                // 데이터가 있는 경우
+                if (phoneCursor.moveToFirst()) {
+                    Log.d("name","찾");
+                    number = phoneCursor.getString(phoneCursor.getColumnIndex(
+                            ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                }
+                phoneCursor.close();
+
+            }
+        }// end while
+        c.close();
+        return number;
+    }
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,

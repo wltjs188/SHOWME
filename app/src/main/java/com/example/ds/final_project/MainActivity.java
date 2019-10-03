@@ -8,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -32,6 +33,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     String TAG = "phptest";
     public static Context CONTEXT;
     //메인화면
@@ -47,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle("쇼움이");
@@ -246,8 +253,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void onDBTestClicked(View view){ //DB테스트
 
-        InsertWishProduct task = new InsertWishProduct();
-        task.execute("http://" + IP_ADDRESS + "/insertWishProduct.php",uuid,"id","3","hhh","정보");
+//        InsertWishProduct task = new InsertWishProduct();
+//        task.execute("http://" + IP_ADDRESS + "/insertWishProduct.php",uuid,"id","3","hhh","정보");
+        Intent i=new Intent(getApplicationContext(), AddressActivity.class);
+        startActivity(i);
     }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
