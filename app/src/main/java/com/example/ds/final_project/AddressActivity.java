@@ -8,6 +8,8 @@ import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
+import android.telephony.SmsManager;
 import java.util.ArrayList;
 
 public class AddressActivity extends AppCompatActivity {
@@ -18,8 +20,9 @@ public class AddressActivity extends AppCompatActivity {
     setContentView(R.layout.activity_address);
     String fname="양시발";
     String fnumber=findNum(fname);
+    String msg="치킨";//메세지 내용
     Log.d("fnumber",fnumber);
-
+    sendMSG("01039354325",msg);
 
     }
     String findNum(String fname){
@@ -57,5 +60,16 @@ public class AddressActivity extends AppCompatActivity {
         }// end while
         c.close();
         return number;
+    }
+    void sendMSG(String number,String msg){
+        try {
+            //전송
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(number, null, msg, null, null);
+            Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "SMS faild, please try again later!", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
     }
 }

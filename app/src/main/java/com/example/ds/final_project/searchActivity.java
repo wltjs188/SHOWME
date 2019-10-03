@@ -17,6 +17,7 @@ import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -106,6 +107,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 //    String fabric = null;
     String fname=""; //공유할 사람 이름
     String fnumber=""; //공유할 사람 번호
+    String msg="이 상품 구매 부탁드립니다!!";//공유할 메세지 내용
 //    private String gender;
 //    private String height;
 //    private String top;
@@ -207,6 +209,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
     }
     //stt
+    //주소록에서 번호 가져오기
     String findNum(String fname){
         String number="";
         Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
@@ -242,6 +245,18 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         }// end while
         c.close();
         return number;
+    }
+    //공유 메세지 보내기 - 문자
+    void sendMSG(String number,String msg){
+        try {
+            //전송
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(number, null, msg, null, null);
+            Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "SMS faild, please try again later!", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
     }
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);

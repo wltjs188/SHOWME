@@ -54,6 +54,15 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
 
         }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            // Ask for permision
+            ActivityCompat.requestPermissions(this,new String[] { Manifest.permission.SEND_SMS}, 1);
+        }
+        else {
+// Permission has already been granted
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle("쇼움이");
