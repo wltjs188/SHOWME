@@ -112,10 +112,10 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String pattern = null;
 //    String fabric = null;
     private String mJsonString;
-    String fname=""; //공유할 사람 이름
-    String fnumber=""; //공유할 사람 번호
+    String fname= null; //공유할 사람 이름
+    String fnumber=null; //공유할 사람 번호
     String msg="이 상품 구매 부탁드립니다!!";//공유할 메세지 내용
-    String sproduct="ㅂ"; //공유할 관심상품
+    String sproduct= null; //공유할 관심상품
 //    private String gender;
 //    private String height;
 //    private String top;
@@ -149,6 +149,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         editText = (EditText) findViewById(R.id.msg_type);
 
         user_uuid = getPreferences("uuid");
+        //user_uuid = "ffffffff-e523-2a50-576f-dd2f1aeb1b07";
         user_name = getPreferences("name");
         user_address = getPreferences("address");
         user_phone = getPreferences("phoneNum");
@@ -221,8 +222,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String findNum(String fname){
         String number=null;
         Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
-                null, null, null,
-                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " asc");
+                null, null, null,null);
         int i=0;
         while (c.moveToNext()) {
 
@@ -364,7 +364,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     msg+="\nhttp://www.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo="+productId+"\n옵션번호 : "+optionNum;
                 }
                 Log.d("메세지:",msg);
-                sendMSG("01039354325",msg);
+                sendMSG(fnumber,msg);
             }else {
                 //관심상품 sproduct 존재 안함
                 Toast.makeText(this,sproduct+" 없어용",Toast.LENGTH_LONG).show();
@@ -426,7 +426,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         ChatMessage chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
                 "1. 상품검색\n" +
                 "2. 사용자 정보 수정\n" +
-                "3. 관심상품보기", true);
+                "3. 관심상품보기\n"+
+                "4. 관심상품 공유하기", true);
         chatMessages.add(chatMessage);
 
         tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
@@ -672,6 +673,36 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 if(parameter.containsKey("Wish_Item")){ //관심상품이동
                     startActivity(wishIntent);
                     result.getContexts().clear();
+                }
+                break;
+            case "Share_Message"://공유하기
+                parameter=getParameter(result);
+                //공유할 사람
+                if(parameter.containsKey("SharePerson")){
+                    fname = ""+parameter.get("SharePerson");
+                }
+                //공유할 상품
+                if(parameter.containsKey("ShareProduct")){
+                    sproduct = ""+parameter.get("ShareProduct");
+                }
+                Log.d("명","공유할사람:"+fname+"공유할상품"+sproduct);
+
+                //2가지 다 입력되었다면,
+               if( fname != null && sproduct != null){
+                   fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
+                   Log.d("먕","uuid"+user_uuid+"번호"+fnumber);
+
+                   if(!fnumber.equals("그런 사람 없어")){
+                       // 연락처 조회 된 경우, 공유 실행
+                       GetProductToShare task = new GetProductToShare();
+                       task.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
+                   }
+                   else{
+                       Toast.makeText(getApplicationContext(), fname+"번호없음", Toast.LENGTH_LONG).show();
+                   }
+                   fname = null; sproduct = null; fnumber = null;
+                   result.getContexts().clear();
+
                 }
                 break;
         }

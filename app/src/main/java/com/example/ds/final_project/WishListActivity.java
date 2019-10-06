@@ -59,6 +59,7 @@ public class WishListActivity extends AppCompatActivity {
         gv = (GridView)findViewById(R.id.gridView1);
 
         uuid = getPreferences("uuid");
+        //uuid = "ffffffff-e523-2a50-576f-dd2f1aeb1b07";
 
         GetWishProduct task = new GetWishProduct();
         task.execute( "http://" + IP_ADDRESS + "/getWishProduct.php",uuid);
