@@ -30,6 +30,7 @@ public class AddressActivity extends AppCompatActivity {
     String uuid="";
     String IP_ADDRESS = "18.191.10.193";
     String msg;
+    String fnumber;
     private String mJsonString;
     String sproduct;
     @Override
@@ -37,8 +38,8 @@ public class AddressActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_address);
     uuid = getPreferences("uuid");
-    String fname="양시발";
-    String fnumber=findNum(fname);
+    String fname="강정현";
+    fnumber=findNum(fname);
     msg="치킨";//메세지 내용
     sproduct="ㅂ"; //공유할 관심상품
     Log.d("fnumber",fnumber);
@@ -190,7 +191,7 @@ public class AddressActivity extends AppCompatActivity {
                     msg+="\nhttp://www.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo="+productId+"\n옵션번호 : "+optionNum;
                 }
                 Log.d("메세지:",msg);
-                sendMSG("01039354325",msg);
+                sendMSG(fnumber,"내용");
             }else {
                 //관심상품 sproduct 존재 안함
                 Toast.makeText(this,sproduct+" 없어용",Toast.LENGTH_LONG).show();

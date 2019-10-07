@@ -222,7 +222,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String findNum(String fname){
         String number=null;
         Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
-                null, null, null,null);
+                null, null, null,
+                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " asc");
         int i=0;
         while (c.moveToNext()) {
 
@@ -430,6 +431,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 "4. 관심상품 공유하기", true);
         chatMessages.add(chatMessage);
 
+        //TTS 챗봇 읽어주기
         tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
         adapter.notifyDataSetChanged();
         final Handler handler = new Handler();
@@ -679,18 +681,18 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 parameter=getParameter(result);
                 //공유할 사람
                 if(parameter.containsKey("SharePerson")){
-                    fname = ""+parameter.get("SharePerson");
+                    fname = parameter.get("SharePerson").toString().replace('\"',' ').trim();
                 }
                 //공유할 상품
                 if(parameter.containsKey("ShareProduct")){
-                    sproduct = ""+parameter.get("ShareProduct");
+                    sproduct = parameter.get("ShareProduct").toString().replace('\"',' ').trim();
                 }
                 Log.d("명","공유할사람:"+fname+"공유할상품"+sproduct);
 
                 //2가지 다 입력되었다면,
                if( fname != null && sproduct != null){
                    fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
-                   Log.d("먕","uuid"+user_uuid+"번호"+fnumber);
+                   Log.d("먕","uuid"+user_uuid+" 번호"+fnumber+" 이름"+fname+findNum("강정현"));
 
                    if(!fnumber.equals("그런 사람 없어")){
                        // 연락처 조회 된 경우, 공유 실행
