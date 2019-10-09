@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     String TAG = "phptest";
     public static Context CONTEXT;
     //메인화면
-    Intent searchIntent,wishIntent,infoIntent,webIntent,shopIntent,dbTestIntent; //쇼핑시작,나의관심상품,정보수정
+    Intent searchIntent,wishIntent,infoIntent,webIntent,shopIntent,dbTestIntent,reviewIntent; //쇼핑시작,나의관심상품,정보수정
     //서버
     String IP_ADDRESS = "18.191.10.193";
     private String mJsonString;
@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         infoIntent=new Intent(getApplicationContext(),MyInfoActivity.class);//나의정보수정
         webIntent=new Intent(getApplicationContext(),WebActivity.class);//나의정보수정
         shopIntent=new Intent(getApplicationContext(),ShopActivity.class);//나의정보수정
+        reviewIntent=new Intent(getApplicationContext(),ReviewActivity.class); //리뷰
 
         int permission2 = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
         if (permission2 != PackageManager.PERMISSION_GRANTED) { makeRequest(); }
@@ -256,6 +257,9 @@ public class MainActivity extends AppCompatActivity {
         if(resultCode==RESULT_OK) {
             Toast.makeText(getApplicationContext(), "정보 수정이 완료되었습니다.", Toast.LENGTH_LONG).show();
         }
+    }
+    public void onReviewClicked(View view) { //쇼핑시작
+        startActivity(reviewIntent);
     }
     public void onWebClicked(View view) { startActivity(webIntent); }
     public void onShopClicked(View view) { startActivity(shopIntent); }
