@@ -1,0 +1,5 @@
+check
+dots
+flower
+stripes
+tigger

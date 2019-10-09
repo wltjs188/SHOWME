@@ -1,0 +1,644 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>알럽스킨-나만의 케이스/스킨 주문제작 전문 쇼핑몰,태블릿,휴대폰 보호필름 부착 및 판매</title>
+<script type="text/javascript">
+<!--
+
+function count_change(temp,temp1)
+ { 
+   var test=document.skin_forms.cnt.value;
+   if(temp==temp-1)
+   {
+     test++;
+   }
+   if(temp==0){
+      test++;
+   }else if(temp==1){
+      if(test>1) test--;
+   }
+   document.skin_forms.cnt.value=test;
+ }
+ 
+ function clean(temp){
+   
+   if(temp=="s"){
+   document.skin_forms.film_cnt.value="1";
+   return;
+   }
+   if(temp=="i"){
+   document.skin_forms.film_cnt.value="";
+   return;
+   }
+ }
+ 
+function cart(p_id,d_id,g_part,g_type){
+
+var film = document.skin_forms.film.value;
+var film_cnt = document.skin_forms.film_cnt.value;
+ if(film=="" && film_cnt!=""){
+    alert("추가구성상품이 없습니다.");
+	document.skin_forms.film_cnt.value = "";
+	return;
+ }
+var cnt=document.skin_forms.cnt.value; 
+var film=document.skin_forms.film.value;
+var film_cnt=document.skin_forms.film_cnt.value;
+var url='cart_ok.asp?p_id='+p_id+'&d_id='+d_id+'&cnt='+cnt+'&film='+film+'&film_cnt='+film_cnt+'&g_part='+g_part+'&g_type='+g_type;
+location.href=url;
+}
+
+function order(){
+
+ var film = document.skin_forms.film.value;
+ var film_cnt = document.skin_forms.film_cnt.value;
+ if(film=="" && film_cnt!=""){
+    alert("추가구성상품이 없습니다.");
+	document.skin_forms.film_cnt.value = "";
+	return;
+ }
+ 
+ document.skin_forms.submit();
+
+}
+
+//-->
+</script>
+<script src="/image/flash/Scripts/AC_RunActiveContent.js" type="text/javascript"></script>
+<link href="/class/ilskin.css" rel="stylesheet" type="text/css" />
+</head>
+
+
+
+
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+  <tr>
+    <td><style type="text/css">
+body {
+ margin-left: 0px;
+ margin-top: 0px;
+ margin-right: 0px;
+ margin-bottom: 0px;
+}
+
+body,html,div,blockquote,img,label,p,h1,h2,h3,h4,h5,h6,pre,ul,ol,li,dl,dt,dd,form,a,fieldset,input,th,td{border:0;outline:none;margin:0;padding:0;}
+ul{list-style:none;}
+
+body {font: normal 13px Arial, sans-serif;}
+h2 {font: normal 26px Arial, sans-serif; padding: 20px 0; margin: 0 0 30px 0;}
+.wrap {width: 960px; margin: 0 auto;}
+
+</style>
+
+<script language="javascript">
+<!--
+function login(){
+    alert("로그인을 하세요.")
+}
+//-->
+</script>
+<script type='text/javascript' src='/class/jquery-1.7.2.min.js'></script>
+<script type="text/javascript">
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+</script>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <!-----top------>
+    <td valign="bottom"><table width="950" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="275" height="80" align="left"><a href="/shop_index.asp"><img src="/image/common/logo.gif" border="0" /></a></td>
+        <td>&nbsp;</td>
+        <!-------글로벌메뉴-------->
+        <td width="249" align="right" valign="bottom"><table width="249" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="51" align="left"><a href="/member/login.asp"><img src="/image/common/top_login.gif" width="36" height="10" border="0" /></a></td>
+            <td width="51" align="left"><a href="/member/join_us.asp"><img src="/image/common/top_join.gif" width="35" height="10" border="0" /></a></td>
+            <td width="59" align="left"><a href=javascript:login();><img src="/image/common/top_mypage.gif" width="45" height="10" border="0" /></a></td>
+            <td width="51" align="left"><a href="/shop/cart_list.asp"><img src="/image/common/top_cart.gif" width="37" height="10" border="0" /></a></td>
+            <td width="37" align="left"><a href=javascript:login();><img src="/image/common/top_order.gif" width="37" height="10" border="0" /></a></td>
+          </tr>
+          <tr>
+            <td height="7" colspan="5"></td>
+          </tr>
+        </table></td>
+        <!-------글로벌메뉴 끝-------->
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <!-----top 네비게이션 메뉴----->
+    <td bgcolor="363636">
+      <table width="950" border="0" align="center" cellpadding="0" cellspacing="0">
+       <tr>
+        <td width="841" height="35"><a href="/shop/model_list.asp" onmouseover="javascript:document.getElementById('skin').src='/image/common/nav_k01.gif'" onmouseout="javascript:document.getElementById('skin').src='/image/common/nav_e01.gif'"><img src="/image/common/nav_e01.gif" alt="휴대폰스킨" id="skin" /></a><a href="/shop/designcase_list.asp" onmouseover="javascript:document.getElementById('designcase').src='/image/common/nav_k02.gif'" onmouseout="javascript:document.getElementById('designcase').src='/image/common/nav_e02.gif'"><img src="/image/common/nav_e02.gif" alt="디자인케이스" id="designcase" /></a><a href="/shop/CasesAcc_list.asp" onmouseover="javascript:document.getElementById('c_acc').src='/image/common/nav_k03.gif'" onmouseout="javascript:document.getElementById('c_acc').src='/image/common/nav_e03.gif'"><img src="/image/common/nav_e03.gif" alt="케이스&액세서리" id="c_acc" /></a><a href="/shop/sticker_list.asp" onmouseover="javascript:document.getElementById('stiker').src='/image/common/nav_k04.gif'" onmouseout="javascript:document.getElementById('stiker').src='/image/common/nav_e04.gif'"><img src="/image/common/nav_e04.gif" alt="포인트스티커" id="stiker" /></a><a href="/photo_bbs/list.asp?boardmain=photo" onmouseover="javascript:document.getElementById('c').src='/image/common/nav_k05.gif'" onmouseout="javascript:document.getElementById('c').src='/image/common/nav_e05.gif'"><img src="/image/common/nav_e05.gif" alt="커뮤니티" id="c" /></a><a href="/bbs/list.asp?boardmain=qna" onmouseover="javascript:document.getElementById('n').src='/image/common/nav_k06.gif'" onmouseout="javascript:document.getElementById('n').src='/image/common/nav_e06.gif'"><img src="/image/common/nav_e06.gif" alt="고객센터" id="n" /></a></td>
+        <td width="109" align="right"><a href="/off_shop.asp"><img src="/image/common/offline.gif" width="96" height="25" border="0" /></a></td>
+      </tr>
+    </table></td>
+   <!-----top 끝------>
+  </tr>
+</table>
+<script type="text/javascript" src="/scroll_baner/jquery.Floater.js"></script>
+<script type="text/javascript">
+<!--
+
+$(function(){
+	var options = {
+		'speed'		: 500,
+		'initTop'	: 250,
+		'alwaysTop' : false,
+		'default_x' : false
+	}
+	$('#scrollbanner').Floater(options);
+});
+
+;
+//-->
+</script>
+<!--오른쪽배너-->
+<div id="scrollbanner" style="position:absolute; top:250px; left:50%; margin-left:490px; z-index:100;">
+  <table width="70" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>
+      <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#ffffff">
+        <tr>
+          <td align="center" bgcolor="#FFFFFF"><table width="70" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <!--td align="center" height="25"><a href="javascript:alert('2013년 1월부터 시행합니다.');location.href='/customer/notice_view.html?no=50'" class="stext"><span class="red">정품인증</span></a></td-->
+              <td align="center"><img src="/image/common/f1.gif" /></td>
+            </tr>
+            <tr>
+              <td height="5"></td>
+            </tr>
+            <tr>
+              <td align="center"><a href="http://www.jeonbukfc.com/" target="_blank"><img src="/image/common/f2.gif" border="0" /></a></td>
+            </tr>
+            <tr>
+              <td height="5"></td>
+            </tr>
+            <tr>
+              <td align="center"><a href="javascript:coupon('');"><img src="/image/common/f3.gif" border="0" /></a></td>
+            </tr>
+            <tr>
+              <td height="5"></td>
+            </tr>
+            <tr>
+              <td align="center"><a href="/shop/design_list.asp"><img src="/image/common/f4.gif" border="0" /></a></td>
+            </tr>
+            <tr>
+              <td height="1" class="bgdf"></td>
+            </tr>
+            <tr>
+              <td align="center" height="25">&nbsp;</td>
+            </tr>
+            <tr>
+              <td height="1" class="bgdf"></td>
+            </tr>
+            <tr>
+              <td height="7" align="center"></td>
+            </tr>
+            <tr>
+              <td class="stext" align="center" height="25">&nbsp;</td>
+            </tr>
+          </table></td>
+        </tr>
+      </table></td>
+    </tr>
+  </table>
+</div>
+<!--오른쪽배너end--></td>
+  </tr>
+  <tr>
+    <td align="center"><table width="950" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          
+          
+          
+  <!-----left menu------>       
+          <td width="160" valign="top">
+<script language="javascript">
+<!--
+
+function coupon(zzz) {
+  if(zzz=='n'){
+      alert('로그인을하세요.');
+	  return;
+  }
+  
+   var window_left = (screen.width-400)/2;
+   var window_top = (screen.height-300)/2;   
+   window.open ('/couponok.asp',"coupon","width=300,height=160,status=no,scrollbars=yes,top=" + window_top + ",left=" + window_left + "");
+}
+
+function TM_coupon(zzz) {
+  if(zzz=='n'){
+      alert('로그인을하세요.');
+	  return;
+  }
+  
+   var window_left = (screen.width-400)/2;
+   var window_top = (screen.height-300)/2;   
+   window.open ('/TM_couponok.asp',"coupon","width=400,height=160,status=no,scrollbars=yes,top=" + window_top + ",left=" + window_left + "");
+}
+
+function wallpaper(){
+   var window_left = (screen.width-700)/2;
+   var window_top = (screen.height-700)/2;   
+   window.open ('/board/fsboard.asp?id=wallpaper',"2","width=600,height=650,status=no,scrollbars=yes,top=" + window_top + ",left=" + window_left + "");  
+}
+function wallpaper_down() {
+   var window_left = (screen.width-700)/2;
+   var window_top = (screen.height-700)/2;   
+   window.open ('/board/fsboard.asp?id=wallpaper_down',"1","width=600,height=650,status=no,scrollbars=yes,top=" + window_top + ",left=" + window_left + "");
+}
+function make_to_order() {
+   var window_left = (screen.width-700)/2;
+   var window_top = (screen.height-700)/2;   
+   window.open ('/board/fsboard.asp?id=make_to_order',"1","width=600,height=650,status=no,scrollbars=yes,top=" + window_top + ",left=" + window_left + "");
+}
+
+//-->
+</script>
+<script type="text/javascript">
+<!--
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+//-->
+</script>
+<body onload="MM_preloadImages('/image/common/left_order_on.gif','/image/common/left_qa_on.gif','/image/common/left_cust_on.gif','/image/common/left_stic_on.gif','/image/common/left_cupon_on.gif','/image/common/left_notice_on.gif')">
+<table width="160" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td height="30"></td>
+  </tr>
+  <tr>
+    <td><img src="/image/common/sub_commu_tit.gif" width="160" height="15" /></td>
+  </tr>
+  <tr>
+    <td height="130" valign="top"><table width="160" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="8"></td>
+      </tr>
+      <tr>
+        <td height="23" align="left"><a href="/photo_bbs/list.asp?boardmain=photo" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image18','','/image/common/left_pr_on.gif',1)"><img src="/image/common/left_pr_off.gif" name="Image18" width="57" height="17" border="0" id="Image18" /></a></td>
+      </tr>
+      <tr>
+        <td height="23" align="left"><a href="/photo_bbs/list.asp?boardmain=recruit" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image19','','/image/common/left_exp_on.gif',1)"><img src="/image/common/left_exp_off.gif" name="Image19" width="67" height="17" border="0" id="Image19" /></a></td>
+      </tr>
+      
+      <tr>
+        <td height="23" align="left"><a href="javascript:wallpaper();" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image22','','/image/common/left_wpr_on.gif',1)"><img src="/image/common/left_wpr_off.gif" name="Image22" width="83" height="17" border="0" id="Image22" /></a></td>
+      </tr>
+      <tr>
+        <td height="23" align="left"><a href="javascript:wallpaper_down();" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image23','','/image/common/left_wpd_on.gif',1)"><img src="/image/common/left_wpd_off.gif" name="Image23" width="84" height="17" border="0" id="Image23" /></a></td>
+      </tr>
+      <tr>
+        <td height="23" align="left">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td><img src="/image/common/sub_sg_tit.gif" width="160" height="15" /></td>
+  </tr>
+  <tr>
+    <td><table width="160" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="8"></td>
+      </tr>
+      <tr>
+        <td height="23" align="left"><a href="javascript:login();" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image25','','/image/common/left_order_on.gif',1)"><img src="/image/common/left_order_off.gif" name="Image25" width="56" height="17" border="0" id="Image25" /></a></td>
+      </tr>
+
+      <tr>
+        <td height="23" align="left"><a href="javascript:make_to_order();" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image29','','/image/common/left_cust_on.gif',1)"><img src="/image/common/left_cust_off.gif" name="Image29" width="57" height="17" border="0" id="Image29" /></a></td>
+      </tr>
+      <tr>
+        <td height="23" align="left"><a href="/guide.asp" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image21','','/image/common/left_stic_on.gif',1)"><img src="/image/common/left_stic_off.gif" name="Image21" width="98" height="17" border="0" id="Image21" /></a><a href="javascript:make_to_order();" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image29','','/image/common/left_cust_on.gif',1)"></a></td>
+      </tr>
+      <tr>
+        <td height="23" align="left"><a href="javascript:coupon();" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image28','','/image/common/left_cupon_on.gif',1)"><img src="/image/common/left_cupon_off.gif" name="Image28" width="106" height="17" border="0" id="Image28" /></a><a href="/guide.asp" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image21','','/image/common/left_stic_on.gif',1)"></a></td>
+      </tr>
+
+      <tr>
+        <td height="23" align="left">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td><img src="/image/common/sub_cs_tit.gif" width="160" height="15" /></td>
+  </tr>
+  <tr>
+    <td><table width="160" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="8"></td>
+      </tr>
+      <tr>
+        <td height="23" align="left"><a href="/bbs/list.asp?boardmain=notice" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image1','','/image/common/left_notice_on.gif',1)"><img src="/image/common/left_notice_off.gif" name="Image1"  border="0" id="Image1" /></a></td>
+      </tr>
+      <tr>
+        <td height="23" align="left"><a href="/bbs/list.asp?boardmain=qna" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image24','','/image/common/left_qa_on.gif',1)"><img src="/image/common/left_qa_off.gif" name="Image24" width="38" height="17" border="0" id="Image24" /></a></td>
+      </tr>
+      <tr>
+        <td height="23" align="left"><a href="/bbs/list.asp?boardmain=faq" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image27','','/image/common/left_faq_on.gif',1)"><img src="/image/common/left_faq_off.gif" alt="" name="Image27"  border="0" id="Image27" /></a></td>
+      </tr>
+      <tr>
+        <td height="23" align="left"><a href="/bbs/list.asp?boardmain=event" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image210','','/image/common/left_event_on.gif',1)"><img src="/image/common/left_event_off.gif" alt="" name="Image210"  border="0" id="Image210" /></a></td>
+      </tr>
+
+
+      <tr>
+        <td height="23" align="left">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td height="1" bgcolor="dddddd"></td>
+  </tr>
+  <tr>
+    <td height="135" align="center"><img src="/image/common/left_cs_cnter.gif" width="149" height="100" /></td>
+  </tr>
+  <tr>
+    <td height="1" bgcolor="ddddddd"></td>
+  </tr>
+  <tr>
+    <td height="65" align="center"><img src="/image/common/left_banking.gif" /></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+</td>
+  <!-----left menu 끝------>
+          
+          
+          
+          <td width="5"></td>
+          
+
+  
+<!----Contents-------->         
+          <td align="right" valign="top"><table width="775" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td height="20"></td>
+            </tr>
+            <tr>
+              <td height="27" align="left" valign="top"><img src="/image/design_list/desing_info_tit.gif" width="160" height="18" /></td>
+            </tr>
+            <tr>
+              <td height="1" bgcolor="c9c9c9"></td>
+            </tr>
+            <tr>
+              <td height="30">&nbsp;</td>
+            </tr>
+            <tr>
+              <!-----디자인 정보 시작------>
+              <td align="center" valign="top"><table width="775" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td width="241" align="right"><table width="231" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td height="231" valign="top"><img src="/image/etc/s_img/스트라이프레드포인트.gif" width="231" height="231" /></td>
+                        </tr>
+                    </table></td>
+                    <td width="20" height="250"></td>
+                    <td width="1" bgcolor="c9c9c9"></td>
+                    <td align="right" valign="top">
+                    <form name="skin_forms" action="order_info.asp" method="post">
+                    
+                    <input type="hidden" name="p_id" value="베가S5">
+                    <input type="hidden" name="g_code" value="10071">
+                    <input type="hidden" name="m_part" value="phone">
+                    <input type="hidden" name="model" value="IM-A840S">
+                    <input type="hidden" name="type" value="패턴        ">
+                    <input type="hidden" name="m_type" value="스킨">                    
+                    <input type="hidden" name="d_name" value="스트라이프레드포인트">
+                    <input type="hidden" name="price" value="6000">
+                    <input type="hidden" name="point" value="120">
+                    <input type="hidden" name="order" value="Y">
+                    
+                    <table width="483" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td height="30" colspan="2" align="left" valign="middle" class="deta_tit_bold">스트라이프레드포인트</td>
+                        </tr>
+                      <tr>
+                        <td bgcolor="c9c9c9"></td>
+                          <td width="267" height="1" bgcolor="c9c9c9"></td>
+                        </tr>
+                      <tr>
+                        <td height="212" align="left" valign="top" class="deta_info"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                          
+                          <tr>
+                            <td align="left"><img src="/image/common/bul_deta_arr.gif" width="9" height="9" /> 적용기종 : 베가S5</td>
+                          </tr>
+                          <tr>
+                            <td align="left"><img src="/image/common/bul_deta_arr.gif" width="9" height="9" /> 모델NO : IM-A840S</td>
+                          </tr>
+                          
+                          <tr>
+                            <td align="left"><img src="/image/common/bul_deta_arr.gif" width="9" height="9" /> 종 류 : 패턴        </td>
+                          </tr>
+                          <tr>
+                            <td align="left"><img src="/image/common/bul_deta_arr.gif" width="9" height="9" /> 아티스트 : 알럽스킨</td>
+                          </tr>
+                          <tr>
+                            <td align="left"><img src="/image/common/bul_deta_arr.gif" width="9" height="9" /> 제조사 : 알럽스킨</td>
+                          </tr>
+                          
+                          <tr>
+                            <td align="left">
+                             <img src="/image/common/bul_deta_arr.gif" width="9" height="9" /> 적립금 : 120원                            </td>
+                          </tr>
+                          <tr>
+                            <td align="left"><img src="/image/common/bul_deta_arr.gif" width="9" height="9" /> 가 격 : <strong><font color="#666666"/><s>10,000원</s></font> <img src="/image/common/icon_sale.gif" width="9" height="9" /> <font color="#FF66CC"/>6,000원</font></strong></td>
+                          </tr>
+                          <tr>
+                            <td align="left"><table width="110" border="0" cellspacing="0"  cellpadding="0">
+                                <tr>
+                                  <td align="left"><img src="/image/common/bul_deta_arr.gif" width="9" height="9" /> 수 량 :</td>
+                                  <td align="left"><input readonly="readonly" name="cnt" type="text" class="tex01" id="textfield" value="1" size="3" maxlength="3" /></td>
+                                  <td align="right"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                      <tr>
+                                        <td width="13" height="10" align="center" valign="middle"><a href="javascript:count_change(0,1)"><img src="/image/common/btn/aro_h.gif" alt="수량올리기" width="11" height="6" border="0" /></a></td>
+                                      </tr>
+                                      <tr>
+                                        <td width="13" height="10" align="center" valign="middle"><a href="javascript:count_change(1,1)"><img src="/image/common/btn/aro_l.gif" alt="수량내리기" width="11" height="6" border="0" /></a></td>
+                                      </tr>
+                                  </table></td>
+                                  <td align="right">개</td>
+                                </tr>
+                              </table></td>
+                          </tr>
+                          
+                        </table>                        </td>
+                          <td align="center" valign="bottom" class="deta_info">
+                          
+                          <table width="232" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td align="left"><b>추가구성상품</b></td>
+                              </tr>
+                            <tr>
+                              <td height="60" align="right" valign="top">
+                                <select style="font-size:12px" name="film" onchange="clean('s');">
+                                <option value="">:::액정보호필름(선택기종):::</option>
+                                
+                                <option value="260\지문방지필름\4000">지문방지필름 +4,000원</option>
+                                
+                                <option value="261\고광택강화필름\4000">고광택강화필름 +4,000원</option>
+                                 
+                                </select>
+                                <input name="film_cnt" type="text" class="tex01" id="textfield" value="" size="2" onclick="clean('i');" />개
+                                <table width="207" border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td height="47" valign="bottom">
+									  
+                                         <a href="javascript:alert('로그인을하세요.');"><img src="/image/common/btn/btn_buy.gif" alt="즉시구매" width="98" height="31" border="0" /></a>
+									  
+                                     </td>
+                                    <td width="10"></td>
+                                    <td valign="bottom">
+									  
+                                        <a href="javascript:alert('로그인을하세요.');"><img src="/image/common/btn/btn_cart.gif" alt="장바구니" width="98" height="31" border="0" /></a>
+									  
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td valign="top"><img src="/image/common/btn/btn_buy_s.gif" width="98" height="31" /></td>
+                                    <td height="50"></td>
+                                    <td valign="top"><img src="/image/common/btn/btn_cart_s.gif" width="98" height="31" /></td>
+                                  </tr>
+                                  <tr>
+                                    <td height="30">&nbsp;</td>
+                                    <td></td>
+                                    <td align="right"><a href="design_list.asp?d_id=스트라이프레드포인트&amp;p_id=베가S5&amp;gotopage=&amp;ty=&m_type=스킨"><img src="/image/common/btn/btn_list.gif" alt="목록" width="49" height="21" border="0" /></a></td>
+                                  </tr>
+                                </table></td>
+                              </tr>
+                          </table>
+                                                     </td>
+                        </tr>
+                      </table>
+                      </form>                      </td>
+                  </tr>
+                </table></td>
+              <!-----디자인 정보 끝------>
+              </tr>
+            <tr>
+              <td height="30" align="right" valign="top" class="deta_info"><font color="#660000">* 상단 기종메뉴를  눌러 다른기종을 선택하실 수 있습니다.</font></td>
+            </tr>
+            <tr>
+              <td height="1" align="center" valign="top" bgcolor="c9c9c9"></td>
+            </tr>
+            <tr>
+              <td height="30" align="center" valign="top">&nbsp;</td>
+            </tr>
+            <tr>
+              <td height="1" align="center" valign="top"><img src="/image/common/detail_tit.gif" width="755" height="26" /></td>
+            </tr>
+            <tr> </tr>
+            <tr>
+              <td height="190" align="center" valign="bottom"><img src="/image/common/detail_top.gif" width="449" height="139" /></td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle"><br><br><br><img src="/image/etc/phone_img/갤럭시노트2/스트라이프레드포인트.jpg"><br>
+              이해를 돕기위한 이미지로 실제 휴대폰과 디자인이 다를 수 있습니다.<br><br><br><br><img src="/image/etc/detail/스트라이프레드포인트.gif"><br><br><br><br><br><br><br><br>
+              		  
+		 
+                                     <img src="http://gi.esmplus.com/ilskin/skin/film_info.jpg" width="755" />
+			                       
+              <br><br><br><br></td>
+            </tr>
+            <tr>
+              <td align="center" valign="top"><img src="/image/common/deliver_tit.gif" width="755" height="26" /></td>
+            </tr>
+            <tr>
+              <td height="450" align="center" valign="bottom"><img src="/image/common/deliver_info.gif" width="755"/></td>
+            </tr>
+            <tr>
+              <td height="50" align="center" valign="top">&nbsp;</td>
+            </tr>
+          </table></td>
+          <!-------Contents 끝--------> 
+          
+          
+          
+        </tr>
+      </table> </td></tr>
+  <tr>
+    <td height="1" align="center" valign="middle" bgcolor="e4e4e4"></td>
+  </tr>
+  <tr>
+    
+
+
+<!-------foot-------->    
+    <td height="90" align="center" valign="middle"><table height="130" width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center" valign="middle" background="image/common/foot_bg.gif"><table width="900" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="135" valign="middle"><img src="/image/common/foot_logo.gif" width="132" height="28" /></td>
+        <td width="14"></td>
+        <td width="492" align="left"><img src="/image/common/foot_copyright.gif" width="492" height="52" /></td>
+        <td width="173" rowspan="2" align="right" valign="top"><a href="#"><img src="/image/common/lg_escrow.gif" width="124" height="43" border="0" /></a></td>
+      </tr>
+      <tr>
+        <td height="25" valign="middle"></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</td>
+<!-------foot 끝-------->
+
+    
+    
+  </tr>
+</table>
+</body>
+</html>
