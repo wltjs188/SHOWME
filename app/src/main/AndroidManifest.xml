@@ -30,7 +30,7 @@
         <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
         <activity
             android:name=".searchActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".MyInfoActivity" />
         <activity android:name=".WishListActivity" />
         <activity android:name=".ShopActivity" />
