@@ -263,7 +263,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         try {
             //전송
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(number, null, msg, null, null);
+//            smsManager.sendTextMessage(number, null, msg, null, null);
+            smsManager.sendTextMessage(number, null, "성진아 누나야 어????", null, null);
+
             Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "SMS faild, please try again later!", Toast.LENGTH_LONG).show();
@@ -692,7 +694,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 //2가지 다 입력되었다면,
                if( fname != null && sproduct != null){
                    fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
-                   Log.d("먕","uuid"+user_uuid+" 번호"+fnumber+" 이름"+fname+findNum("강정현"));
+//                   Log.d("먕","uuid"+user_uuid+" 번호"+fnumber+" 이름"+fname+findNum("강정현"));
 
                    if(!fnumber.equals("그런 사람 없어")){
                        // 연락처 조회 된 경우, 공유 실행

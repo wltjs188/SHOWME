@@ -38,12 +38,12 @@ public class AddressActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_address);
     uuid = getPreferences("uuid");
-    String fname="강정현";
+    String fname="엄마";
     fnumber=findNum(fname);
     msg="치킨";//메세지 내용
     sproduct="ㅂ"; //공유할 관심상품
     Log.d("fnumber",fnumber);
-//    sendMSG("01039354325",msg);
+    sendMSG(findNum("엄마"),msg);
         GetProductToShare task = new GetProductToShare();
         task.execute( "http://" + IP_ADDRESS + "/getProductToShare.php",uuid,sproduct);
     }
