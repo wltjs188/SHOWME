@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:transcriptMode="normal">
-        <activity android:name=".AddressActivity"></activity>
+        <activity android:name=".ReviewActivity"></activity>
+        <activity android:name=".AddressActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +30,7 @@
         <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
         <activity
             android:name=".searchActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".MyInfoActivity" />
         <activity android:name=".WishListActivity" />
         <activity android:name=".ShopActivity" />
