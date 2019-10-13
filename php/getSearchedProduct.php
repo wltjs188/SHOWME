@@ -62,7 +62,11 @@ if ($category != "" ){
                 'color_detail'=>$row["color_detail"],
                // 'fabric'=>$row["fabric"],
                 'pattern'=>$row["pattern"],
-                'detail'=>$row["detail"]
+                'detail'=>$row["detail"],
+                'shipping'=>$row["shipping"],
+                'point'=>$row["point"],
+                'interestFree'=>$row["interestFree"],
+                'discount'=>$row["discount"]
             ));
         }
 

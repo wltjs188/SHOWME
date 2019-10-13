@@ -54,8 +54,10 @@ public class ShopActivity extends AppCompatActivity {
     ArrayList<String> productIds = new ArrayList<String>();
     ArrayList<String> optionNums = new ArrayList<String>();
     ArrayList<String> infos = new ArrayList<String>(); //상품 상세 정보
+//    ArrayList<String> discountInfos = new ArrayList<String>(); //상품 할인 정보
     ArrayList<String> images = new ArrayList<String>(); //상품 옵션 대표 이미지
     ArrayList<String> adap_infos = new ArrayList<String>(); //상품 상세 정보
+//    ArrayList<String> adap_discountInfos = new ArrayList<String>(); //상품 할인 정보
     ArrayList<String> adap_images = new ArrayList<String>(); //상품 옵션 대표 이미지
     int page = 0;
     //검색 정보
@@ -99,9 +101,9 @@ public class ShopActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(category + "검색 결과");
 
         GetProduct task = new GetProduct();
-
         task.execute("http://" + IP_ADDRESS + "/getSearchedProduct.php", category, color, length, size, pattern, detail);
-
+//        GetDiscountInfo task2 =new GetDiscountInfo();
+//        task2.execute("http://" + IP_ADDRESS + "/getDiscountInfo.php", category, color, length, size, pattern, detail);
         //클릭시, 상세정보 페이지로 이동
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -110,24 +112,11 @@ public class ShopActivity extends AppCompatActivity {
                 productInfoIntent.putExtra("productId", productIds.get(page*4+position));
                 productInfoIntent.putExtra("optionNum", optionNums.get(page*4+position));
                 productInfoIntent.putExtra("info", infos.get(page*4+position));
+//                productInfoIntent.putExtra("discount_info", discountInfos.get(page*4+position));
                 productInfoIntent.putExtra("image", images.get(page*4+position));
                 startActivity(productInfoIntent);
             }
         });
-/*
-        //더보기
-        moreBtn.setOnClickListener(new View.OnClickListener() {
-
-            @SuppressLint("WrongConstant")
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                System.out.println("카테고리 : " + category + "색상 : " + color + "기장 : " + length + "사이즈 : " + size + "패턴 : " + pattern + "재질 : " + fabric);
-
-            }
-
-        });
-*/
 
     }
 //    @Override
@@ -225,9 +214,11 @@ public class ShopActivity extends AppCompatActivity {
             if(images.size()<=page*4+3){
                 adap_images= new ArrayList<String>(images.subList(page*4,images.size()));
                 adap_infos=new ArrayList<String>(images.subList(page*4,infos.size()));
+//                adap_discountInfos=new ArrayList<String>(discountInfos.subList(page*4,discountInfos.size()));
             }else{
                 adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
                 adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
+//                adap_discountInfos=new ArrayList<String>(discountInfos.subList(page*4,page*4+4));
             }
             adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
             gv.setAdapter(adapter);
@@ -242,10 +233,12 @@ public class ShopActivity extends AppCompatActivity {
             page--;
             if(images.size()<=page*4+3){
                 adap_images=new ArrayList<String>(images.subList(page*4,images.size()));
-                adap_infos=new ArrayList<String>(infos.subList(page*4,images.size()));
+                adap_infos=new ArrayList<String>(infos.subList(page*4,infos.size()));
+//                adap_discountInfos=new ArrayList<String>(adap_discountInfos.subList(page*4,adap_discountInfos.size()));
             }else{
                 adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
                 adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
+//                adap_discountInfos=new ArrayList<String>(adap_discountInfos.subList(page*4,page*4+4));
             }
             adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
             gv.setAdapter(adapter);
@@ -253,6 +246,154 @@ public class ShopActivity extends AppCompatActivity {
         }
     }
 
+//    private class GetDiscountInfo extends AsyncTask<String, Void, String> {
+//
+//        ProgressDialog progressDialog;
+//        String errorString = null;
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            progressDialog = ProgressDialog.show(ShopActivity.this,
+//                    "Please Wait", null, true, true);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            progressDialog.dismiss();
+//
+//            if (result == null) {
+//
+//            } else {
+//                mJsonString = result;
+//                showDIResult();
+//            }
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            String category = params[1];
+//            String color = params[2];
+//            String length = params[3];
+//            String size = params[4];
+//            String pattern = params[5];
+//       //     String fabric = params[6];
+//            String detail = params[6];
+//        //    String category_detail = params[7];
+//            String serverURL = params[0];
+//
+//
+//            String postParameters = "category=" + category;
+//            if (color != "" && color != null && !color.equals("없음"))
+//                postParameters += "&color=" + color;
+//            if (length != "" && length != null && !length.equals("없음"))
+//                postParameters += "&length=" + length;
+//            if (size != "" && size != null && !size.equals("없음"))
+//                postParameters += "&size=" + size;
+//            if (pattern != "" && pattern != null && !pattern.equals("없음"))
+//                postParameters += "&pattern=" + pattern;
+////            if (fabric != "" && fabric != null && !fabric.equals("없음")) {
+////                Log.d("fabric:", fabric);
+////                postParameters += "&fabric=" + fabric;
+////            }
+//            if (detail != "" && detail != null && !detail.equals("없음")) {
+//                postParameters += "&detail=" + detail;
+//            }
+//            try {
+//
+//                URL url = new URL(serverURL);
+//                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+//
+//
+//                httpURLConnection.setReadTimeout(5000);
+//                httpURLConnection.setConnectTimeout(5000);
+//                httpURLConnection.setRequestMethod("POST");
+//                httpURLConnection.setDoInput(true);
+//                httpURLConnection.connect();
+//
+//                OutputStream outputStream = httpURLConnection.getOutputStream();
+//                outputStream.write(postParameters.getBytes("UTF-8"));
+//                outputStream.flush();
+//                outputStream.close();
+//
+//                int responseStatusCode = httpURLConnection.getResponseCode();
+//                InputStream inputStream;
+//                if (responseStatusCode == HttpURLConnection.HTTP_OK) {
+//                    inputStream = httpURLConnection.getInputStream();
+//                } else {
+//                    inputStream = httpURLConnection.getErrorStream();
+//                }
+//                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+//
+//                StringBuilder sb = new StringBuilder();
+//                String line;
+//
+//                while ((line = bufferedReader.readLine()) != null) {
+//                    sb.append(line);
+//                }
+//                bufferedReader.close();
+//                return sb.toString().trim();
+//            } catch (Exception e) {
+//                errorString = e.toString();
+//                return null;
+//            }
+//        }
+//    }
+//    private void showDIResult() {
+//
+//        String TAG_JSON = "SearchedProduct";
+//        try {
+//
+//            JSONObject jsonObject = new JSONObject(mJsonString);
+//            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
+//            Log.d("jsonArray", jsonArray.length() + "");
+//            for (int i = 0; i < jsonArray.length(); i++) {
+//                JSONObject item = jsonArray.getJSONObject(i);
+//                Log.d("상품", "?");
+//                productIds.add(item.getString("productId"));
+//                optionNums.add(item.getString("optionNum"));
+//                String info="";
+//                info+=item.getString("name").equals("null")?"":("상품명: " +item.getString("name")+ "\n");
+//
+//                info+=item.getString("length").equals("null")?"":item.getString("length")+" ";
+//                info+=item.getString("category").equals("null")?"":item.getString("category");
+//                info+=item.getString("category_detail").equals("null")?"\n":" > "+item.getString("category_detail")+ "\n";
+//                info+=item.getString("price").equals("null")?"":"가격: " +item.getString("price")+"\n";
+//                info+=item.getString("size").equals("null")?"":"사이즈: " +item.getString("size")+"\n";
+//                info+=item.getString("color").equals("null")?"":"색상: " +item.getString("color")+"\n";
+//                info+=item.getString("pattern").equals("null")?"":"패턴: " +item.getString("pattern")+"\n";
+////                info+=item.getString("fabric").equals("null")?"":"재질: " +item.getString("fabric")+"\n";
+//                info+=item.getString("detail").equals("null")?"":"기타: " +item.getString("detail");
+//                infos.add(info);
+//                images.add(item.getString("image"));
+//                Log.d("가져온 상품:", infos.get(i));
+//
+//            }
+//            if(images.size()<=4) {
+//                adap_images=images;
+//                adap_infos=infos;
+//             //   Log.d("하이",adap_images.toString());
+////                adapter = new ProductAdapter(this, R.layout.list_product_item, images, infos);
+////                gv.setAdapter(adapter);
+//                //adapter.notifyDataSetChanged();
+//            }else{
+//                adap_images=new ArrayList<String>(images.subList(0,4));
+//                adap_infos=new ArrayList<String>(infos.subList(0,4));
+//
+//            }
+//            adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
+//            gv.setAdapter(adapter);
+//            //  adapter.notifyDataSetChanged();
+//        } catch (JSONException e) {
+//            Log.d("showResult : ", e.getMessage());
+//            Log.d("phptest: ", mJsonString);
+//            Log.d("상품", "오류");
+//            Toast.makeText(ShopActivity.this,"검색된 상품이 없습니다.",Toast.LENGTH_LONG).show();
+//        }
+//
+//    }
     private class GetProduct extends AsyncTask<String, Void, String> {
 
         ProgressDialog progressDialog;
@@ -285,9 +426,9 @@ public class ShopActivity extends AppCompatActivity {
             String length = params[3];
             String size = params[4];
             String pattern = params[5];
-       //     String fabric = params[6];
+            //     String fabric = params[6];
             String detail = params[6];
-        //    String category_detail = params[7];
+            //    String category_detail = params[7];
             String serverURL = params[0];
 
 
@@ -348,7 +489,6 @@ public class ShopActivity extends AppCompatActivity {
             }
         }
     }
-
     private void showResult() {
 
         String TAG_JSON = "SearchedProduct";
@@ -373,7 +513,18 @@ public class ShopActivity extends AppCompatActivity {
                 info+=item.getString("color").equals("null")?"":"색상: " +item.getString("color")+"\n";
                 info+=item.getString("pattern").equals("null")?"":"패턴: " +item.getString("pattern")+"\n";
 //                info+=item.getString("fabric").equals("null")?"":"재질: " +item.getString("fabric")+"\n";
-                info+=item.getString("detail").equals("null")?"":"기타: " +item.getString("detail");
+                info+=item.getString("detail").equals("null")?"":"기타: " +item.getString("detail")+"\n";
+
+                String discount="";
+                discount+=item.getString("shipping").equals("null")?"":"배송정보: " +item.getString("shipping")+"\n";
+                discount+=item.getString("point").equals("null")?"":"포인트 적립: " +item.getString("point")+"\n";
+                discount+=item.getString("interestFree").equals("null")?"":"무이자 개월: " +item.getString("interestFree")+"\n";
+                discount+=item.getString("discount").equals("null")?"":"할인가격: " +item.getString("discount")+"\n";
+                if(discount!=""){
+                    info+="<할인정보>\n"+discount;
+                }else{
+                    Log.d("할인 없어","채윤");
+                }
                 infos.add(info);
                 images.add(item.getString("image"));
                 Log.d("가져온 상품:", infos.get(i));
@@ -382,7 +533,7 @@ public class ShopActivity extends AppCompatActivity {
             if(images.size()<=4) {
                 adap_images=images;
                 adap_infos=infos;
-             //   Log.d("하이",adap_images.toString());
+                //   Log.d("하이",adap_images.toString());
 //                adapter = new ProductAdapter(this, R.layout.list_product_item, images, infos);
 //                gv.setAdapter(adapter);
                 //adapter.notifyDataSetChanged();
@@ -401,33 +552,6 @@ public class ShopActivity extends AppCompatActivity {
             Toast.makeText(ShopActivity.this,"검색된 상품이 없습니다.",Toast.LENGTH_LONG).show();
         }
 
-    }
-
-    public Bitmap toBitmap(String imgurl) {
-        URL url;
-        Bitmap imgBitmap = null;
-        try {
-            url = new URL(imgurl);
-            URLConnection conn = url.openConnection();
-            conn.connect();
-            int nSize = conn.getContentLength();
-            BufferedInputStream bis = new BufferedInputStream(conn.getInputStream(), nSize);
-            imgBitmap = BitmapFactory.decodeStream(bis);
-            bis.close();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return imgBitmap;
-    }
-
-    // 값 저장하기
-    private void savePreferences(String key, String s) {
-        SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString(key, s);
-        editor.commit();
     }
 
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
