@@ -526,8 +526,11 @@ public class ShopActivity extends AppCompatActivity {
                     Log.d("할인 없어","채윤");
                 }
                 infos.add(info);
-                images.add(item.getString("image"));
-                Log.d("가져온 상품:", infos.get(i));
+                String img=item.getString("image");
+                img=img.replaceFirst("90x90","170x170");
+                images.add(img);
+
+                Log.d("가져온 상품:", img);
 
             }
             if(images.size()<=4) {
