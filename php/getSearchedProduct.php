@@ -65,8 +65,7 @@ if ($category != "" ){
                 'detail'=>$row["detail"],
                 'shipping'=>$row["shipping"],
                 'point'=>$row["point"],
-                'interestFree'=>$row["interestFree"],
-                'discount'=>$row["discount"]
+                'interestFree'=>$row["interestFree"]
             ));
         }
 

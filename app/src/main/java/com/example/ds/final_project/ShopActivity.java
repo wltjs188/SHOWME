@@ -519,7 +519,6 @@ public class ShopActivity extends AppCompatActivity {
                 discount+=item.getString("shipping").equals("null")?"":"배송정보: " +item.getString("shipping")+"\n";
                 discount+=item.getString("point").equals("null")?"":"포인트 적립: " +item.getString("point")+"\n";
                 discount+=item.getString("interestFree").equals("null")?"":"무이자 개월: " +item.getString("interestFree")+"\n";
-                discount+=item.getString("discount").equals("null")?"":"할인가격: " +item.getString("discount")+"\n";
                 if(discount!=""){
                     info+="<할인정보>\n"+discount;
                 }else{
