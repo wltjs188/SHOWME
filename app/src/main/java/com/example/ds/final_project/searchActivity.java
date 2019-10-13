@@ -114,7 +114,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     private String mJsonString;
     String fname= null; //공유할 사람 이름
     String fnumber=null; //공유할 사람 번호
-    String msg="이 상품 구매 부탁드립니다!!";//공유할 메세지 내용
+    String smsg="이 상품 구매 부탁드립니다!!";//공유할 메세지 내용
     String sproduct= null; //공유할 관심상품
 //    private String gender;
 //    private String height;
@@ -364,10 +364,10 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     JSONObject item = jsonArray.getJSONObject(i);
                     String productId = item.getString("productId");
                     String optionNum = item.getString("optionNum");
-                    msg+="\nhttp://www.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo="+productId+"\n옵션번호 : "+optionNum;
+                    smsg+="\nhttp://www.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo="+productId+"\n옵션번호 : "+optionNum;
                 }
-                Log.d("메세지:",msg);
-                sendMSG(fnumber,msg);
+                Log.d("메세지:",smsg);
+                sendMSG(fnumber,smsg);
             }else {
                 //관심상품 sproduct 존재 안함
                 Toast.makeText(this,sproduct+" 없어용",Toast.LENGTH_LONG).show();
