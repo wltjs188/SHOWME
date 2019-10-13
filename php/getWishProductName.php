@@ -8,22 +8,21 @@ include('dbcon.php');
 
 //POST 값을 읽어온다.
 $uid=isset($_POST['uid']) ? $_POST['uid'] : '';
-$wishProductName=isset($_POST['wishProductName']) ? $_POST['wishProductName'] : '';
 
 $android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
 
 
 if ($uid != "" ){ 
 
-    $sql="select * from WishProduct where uid='$uid' and wishProductName='$wishProductName' ";
+    $sql="select * from WishProduct where uid='$uid'";
     $stmt = $con->prepare($sql);
     $stmt->execute();
  
     if ($stmt->rowCount() == 0){
 
-        echo "'관심상품 중 ";
-        echo $wishProductName;
-        echo "' 은 찾을 수 없습니다. 다시 입력을 해주세요.";
+        echo "'";
+        echo $uid;
+        echo "'의 관심상품 없습니다.";
     }
     else{
 
@@ -34,9 +33,8 @@ if ($uid != "" ){
             extract($row);
 
             array_push($data, 
-                array('uid'=>$row["uid"],
-                'productId'=>$row["productId"],
-                'optionNum'=>$row["optionNum"]
+                array(
+                'wishProductName'=>$row["wishProductName"]
             ));
         }
 
@@ -48,7 +46,7 @@ if ($uid != "" ){
         }else
         {
             header('Content-Type: application/json; charset=utf8');
-            $json = json_encode(array("getProductToShare"=>$data), JSON_PRETTY_PRINT+JSON_UNESCAPED_UNICODE);
+            $json = json_encode(array("WishProductName"=>$data), JSON_PRETTY_PRINT+JSON_UNESCAPED_UNICODE);
             echo $json;
         }
     }
@@ -72,7 +70,7 @@ if (!$android){
    <body>
    
       <form action="<?php $_PHP_SELF ?>" method="POST">
-         uuid: <input type = "text" name = "uuid" />
+         uid: <input type = "text" name = "uid" />
          <input type = "submit" />
       </form>
    

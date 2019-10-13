@@ -134,7 +134,7 @@ public class WishListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-private class GetWishProduct extends AsyncTask<String, Void, String> {
+    private class GetWishProduct extends AsyncTask<String, Void, String> {
 
     ProgressDialog progressDialog;
     String errorString = null;

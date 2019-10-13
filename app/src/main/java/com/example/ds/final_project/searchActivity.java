@@ -116,6 +116,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String fnumber=null; //공유할 사람 번호
     String smsg="이 상품 구매 부탁드립니다!!";//공유할 메세지 내용
     String sproduct= null; //공유할 관심상품
+    ArrayList<String> wishProductNames;
 //    private String gender;
 //    private String height;
 //    private String top;
@@ -142,7 +143,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         shopIntent=new Intent(getApplicationContext(),ShopActivity.class); //상품검색
 
 
-
+        wishProductNames=new ArrayList<>();
         listView = (ListView) findViewById(R.id.list_msg);
         btnSend = findViewById(R.id.btn_chat_send);
         btnSST=findViewById(R.id.btn_stt);
@@ -264,11 +265,12 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             //전송
             SmsManager smsManager = SmsManager.getDefault();
 //            smsManager.sendTextMessage(number, null, msg, null, null);
-            smsManager.sendTextMessage(number, null, "성진아 누나야 어????", null, null);
+            smsManager.sendTextMessage(number, null, msg, null, null);
 
             Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "SMS faild, please try again later!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "SMS failed, please try again later!", Toast.LENGTH_LONG).show();
+            Log.d("메세지 오류",e.getMessage());
             e.printStackTrace();
         }
     }
@@ -295,6 +297,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             else {
                 mJsonString = result;
                 showResultGetProductToShare();
+                fname = null; sproduct = null; fnumber = null;
             }
         }
 
@@ -366,8 +369,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     String optionNum = item.getString("optionNum");
                     smsg+="\nhttp://www.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo="+productId+"\n옵션번호 : "+optionNum;
                 }
-                Log.d("메세지:",smsg);
+                Log.d("메세지:",smsg+"\n번호:"+fnumber);
                 sendMSG(fnumber,smsg);
+
             }else {
                 //관심상품 sproduct 존재 안함
                 Toast.makeText(this,sproduct+" 없어용",Toast.LENGTH_LONG).show();
@@ -526,7 +530,6 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
         Log.i("액션",ACTION);
         Log.i("RESULT",""+result);
-
         //챗봇 액션 처리
         switch (ACTION){
             case "ACTION_USER"://사용자등록 : 이름받아오기
@@ -680,6 +683,24 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 }
                 break;
             case "Share_Message"://공유하기
+                // 관심상품에 뭐가 있는지 토스트 메세지로 알려줌
+                if(sproduct==null) {
+//                    if(wishProductNames==null) {
+                        GetWishProductName task = new GetWishProductName();
+                        task.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user_uuid);
+//                    }
+//                    else {
+//                        String m="";
+//                        for (int i = 0; i < wishProductNames.size(); i++) {
+//                            if (i == wishProductNames.size() - 1)
+//                                m += wishProductNames.get(i);
+//                            else
+//                                m += wishProductNames.get(i) + ", ";
+//                        }
+//                        Toast.makeText(this.getApplicationContext(), "관심상품에 " + m + "가 있습니다.", Toast.LENGTH_LONG).show();
+//                    }
+                }
+//                Toast.makeText(this.getApplicationContext(),"관심상품에 ~~~가 있습니다.",Toast.LENGTH_LONG).show();
                 parameter=getParameter(result);
                 //공유할 사람
                 if(parameter.containsKey("SharePerson")){
@@ -693,18 +714,19 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
                 //2가지 다 입력되었다면,
                if( fname != null && sproduct != null){
+
                    fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
 //                   Log.d("먕","uuid"+user_uuid+" 번호"+fnumber+" 이름"+fname+findNum("강정현"));
-
+                   Log.d("메세지",fnumber);
                    if(!fnumber.equals("그런 사람 없어")){
                        // 연락처 조회 된 경우, 공유 실행
-                       GetProductToShare task = new GetProductToShare();
-                       task.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
+                       GetProductToShare task2 = new GetProductToShare();
+                       task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
                    }
                    else{
                        Toast.makeText(getApplicationContext(), fname+"번호없음", Toast.LENGTH_LONG).show();
                    }
-                   fname = null; sproduct = null; fnumber = null;
+//                   fname = null; sproduct = null; fnumber = null;
                    result.getContexts().clear();
 
                 }
@@ -750,10 +772,112 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     @Override
     public void onListeningFinished() { }
 
+    private class GetWishProductName extends AsyncTask<String, Void, String> {
 
+        ProgressDialog progressDialog;
+        String errorString = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(searchActivity.this,
+                    "Please Wait", null, true, true);
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+
+            if (result == null){
+
+            }
+            else {
+                mJsonString = result;
+                showResult();
+            }
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            String serverURL = params[0];
+            String postParameters = "uid=" + params[1];
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.connect();
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+                bufferedReader.close();
+                return sb.toString().trim();
+            } catch (Exception e) {
+                errorString = e.toString();
+                return null;
+            }
+        }
+    }
+    private void showResult(){
+        String TAG_JSON="WishProductName";
+        try {
+            JSONObject jsonObject = new JSONObject(mJsonString);
+            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
+            Log.d("jsonArray",jsonArray.length()+"");
+            for(int i=0;i<jsonArray.length();i++){
+                JSONObject item = jsonArray.getJSONObject(i);
+                String wishProductName = item.getString("wishProductName");
+                wishProductNames.add(wishProductName);
+
+            }
+
+            if(wishProductNames.size()>0) {
+                String m="";
+                for (int i=0;i<wishProductNames.size();i++){
+                    if(i==wishProductNames.size()-1)
+                        m+=wishProductNames.get(i);
+                    else
+                        m+=wishProductNames.get(i)+", ";
+                }
+                Toast.makeText(searchActivity.this, "관심상품에 "+m+"가 있습니다.", Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(searchActivity.this,"등록된 관심상품이 없습니다.",Toast.LENGTH_LONG).show();
+            }
+
+        } catch (JSONException e) {
+            Log.d("showResult : ", e.getMessage());
+            Log.d("phptest: ",mJsonString);
+            Toast.makeText(searchActivity.this,"등록된 관심상품이 없습니다.",Toast.LENGTH_LONG).show();
+        }
+
+    }
 
     // 값 불러오기
-    private String  getPreferences(String key){
+    public String  getPreferences(String key){
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
         return pref.getString(key, "");
     }
@@ -820,7 +944,10 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
 
         }
         holder.msg.setText(chatMessage.getContent());
+
+
         holder.msg.setContentDescription(messages.get(position)+"");
+
         return convertView;
     }
 

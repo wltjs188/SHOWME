@@ -42,9 +42,9 @@ public class AddressActivity extends AppCompatActivity {
     fnumber=findNum(fname);
 //    msg="치킨\n"+"http://shorturl.at/acwz8";//메세지 내용
         msg="http://www.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=797893777";
-    sproduct="ㅂ"; //공유할 관심상품
-    Log.d("fnumber",fnumber);
-    sendMSG(findNum("강정현"),msg);
+        sproduct="ㅂ"; //공유할 관심상품
+        Log.d("fnumber",fnumber);
+        sendMSG(findNum("강정현"),msg);
         GetProductToShare task = new GetProductToShare();
         task.execute( "http://" + IP_ADDRESS + "/getProductToShare.php",uuid,sproduct);
     }
