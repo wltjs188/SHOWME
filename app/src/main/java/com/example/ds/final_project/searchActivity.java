@@ -893,7 +893,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
 
 
-    public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
+    public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기 버튼 실행
         switch (item.getItemId()){
             case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
                 ((MainActivity)MainActivity.CONTEXT).onResume();

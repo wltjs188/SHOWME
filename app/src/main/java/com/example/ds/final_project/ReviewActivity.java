@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,6 +23,7 @@ public class ReviewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
         allRating=(TextView)findViewById(R.id.review_allRating);
         keyword=(TextView)findViewById(R.id.review_keword);
 
@@ -48,7 +50,16 @@ public class ReviewActivity extends AppCompatActivity {
         reviewDataList.add(new ReviewData(6,"4.2","색상이 맘에 들어요."));
 
     }
-
+    public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기 버튼 실행
+        switch (item.getItemId()){
+            case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
+                ((MainActivity)MainActivity.CONTEXT).onResume();
+                finish();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
 
 class ReviewAdapter extends BaseAdapter {
@@ -91,4 +102,5 @@ class ReviewAdapter extends BaseAdapter {
         review.setText(reviewList.get(position).getReview());
         return view;
     }
+
 }
