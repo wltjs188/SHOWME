@@ -49,6 +49,14 @@
             android:layout_gravity="center"
             android:text="공유하기"
             android:onClick="onKakaoClicked"/>
+
+        <Button
+            android:id="@+id/btn_review"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="리뷰보기"
+            android:onClick="onReviewClicked"/>
     </LinearLayout>
 
 </LinearLayout>

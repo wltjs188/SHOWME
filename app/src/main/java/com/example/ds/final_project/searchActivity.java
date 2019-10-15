@@ -110,7 +110,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String length = null;
     String size = null;
     String pattern = null;
-//    String fabric = null;
+    //    String fabric = null;
     private String mJsonString;
     String fname= null; //공유할 사람 이름
     String fnumber=null; //공유할 사람 번호
@@ -258,6 +258,21 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             return number;
         else
             return "그런 사람 없어";
+    }
+    protected void makeChatNoPerson(String name){
+        ChatMessage chatMessage = new ChatMessage(name + "으로 저장된 연락처는 없습니다. 정확한 이름을 다시한번 말씀해주세요.", true);
+        chatMessages.add(chatMessage);
+
+        //TTS 챗봇 읽어주기
+        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+        adapter.notifyDataSetChanged();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+            }
+        }, 1000);
     }
     //공유 메세지 보내기 - 문자
     void sendMSG(String number,String msg){
@@ -469,7 +484,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             }
         }
     }
-//    public void ButtonClicked(View view){
+    //    public void ButtonClicked(View view){
 //        aiService.startListening();
 //    }
     private class AITask extends AsyncTask<AIRequest, Void, AIResponse>{
@@ -686,8 +701,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 // 관심상품에 뭐가 있는지 토스트 메세지로 알려줌
                 if(sproduct==null) {
 //                    if(wishProductNames==null) {
-                        GetWishProductName task = new GetWishProductName();
-                        task.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user_uuid);
+                    GetWishProductName task = new GetWishProductName();
+                    task.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user_uuid);
 //                    }
 //                    else {
 //                        String m="";
@@ -704,7 +719,21 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 parameter=getParameter(result);
                 //공유할 사람
                 if(parameter.containsKey("SharePerson")){
-                    fname = parameter.get("SharePerson").toString().replace('\"',' ').trim();
+                    fname = parameter.get("SharePerson").toString();
+                    fname = fname.substring(8,fname.length()-1);
+
+                    fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
+
+                    if(!fnumber.equals("그런 사람 없어")){
+                        // 연락처 조회 된 경우, 공유 실행
+                        GetProductToShare task2 = new GetProductToShare();
+                        task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
+                    }
+                    else{
+                        makeChatNoPerson(fname);
+                        //Toast.makeText(getApplicationContext(), fname+"번호없음", Toast.LENGTH_LONG).show();
+                    }
+
                 }
                 //공유할 상품
                 if(parameter.containsKey("ShareProduct")){
@@ -713,23 +742,23 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 Log.d("명","공유할사람:"+fname+"공유할상품"+sproduct);
 
                 //2가지 다 입력되었다면,
-               if( fname != null && sproduct != null){
-
-                   fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
-//                   Log.d("먕","uuid"+user_uuid+" 번호"+fnumber+" 이름"+fname+findNum("강정현"));
-                   Log.d("메세지",fnumber);
-                   if(!fnumber.equals("그런 사람 없어")){
-                       // 연락처 조회 된 경우, 공유 실행
-                       GetProductToShare task2 = new GetProductToShare();
-                       task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
-                   }
-                   else{
-                       Toast.makeText(getApplicationContext(), fname+"번호없음", Toast.LENGTH_LONG).show();
-                   }
+//               if( fname != null && sproduct != null){
+//
+//                   fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
+////                   Log.d("먕","uuid"+user_uuid+" 번호"+fnumber+" 이름"+fname+findNum("강정현"));
+//                   Log.d("메세지",fnumber);
+//                   if(!fnumber.equals("그런 사람 없어")){
+//                       // 연락처 조회 된 경우, 공유 실행
+//                       GetProductToShare task2 = new GetProductToShare();
+//                       task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
+//                   }
+//                   else{
+//                       Toast.makeText(getApplicationContext(), fname+"번호없음", Toast.LENGTH_LONG).show();
+//                   }
 //                   fname = null; sproduct = null; fnumber = null;
-                   result.getContexts().clear();
-
-                }
+//                   result.getContexts().clear();
+//
+//                }
                 break;
         }
 
@@ -924,15 +953,15 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
         int layoutResource = 0; // determined by view type
-       // ChatMessage chatMessage = getItem(position);
+        // ChatMessage chatMessage = getItem(position);
 
         ChatMessage chatMessage = messages.get(position);
         if (chatMessage.isMine()) {
             layoutResource = R.layout.item_chat_left;
-           // Log.d("챗",position+chatMessage.getContent().toString()+"왼");ㅇ
+            // Log.d("챗",position+chatMessage.getContent().toString()+"왼");ㅇ
         } else {
             layoutResource = R.layout.item_chat_right;
-           // Log.d("챗",position+chatMessage.getContent().toString()+"오");
+            // Log.d("챗",position+chatMessage.getContent().toString()+"오");
         }
 
         if (convertView != null) {
