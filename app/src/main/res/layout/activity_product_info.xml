@@ -20,35 +20,53 @@
         android:layout_marginTop="10dp"
         android:textSize="20dp"
         android:text="상품상세정보" />
-    <TextView
-        android:id="@+id/product_info"
-        android:layout_width="350dp"
-        android:layout_height="120dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp" />
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-        <CheckBox
-            android:id="@+id/wishCheck"
-            android:layout_width="200px"
-            android:layout_height="200px"
-            android:layout_gravity="center"
-            android:button="@drawable/selector"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/product_info"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            android:scrollbars="vertical"
+            android:layout_weight="12"
+            android:textSize="20dp"
             />
 
-        <Button
-            android:id="@+id/kakaobutton"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="공유하기"
-            android:onClick="onKakaoClicked"/>
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="0dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            >
+
+            <CheckBox
+                android:id="@+id/wishCheck"
+                android:layout_width="200px"
+                android:layout_height="200px"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:button="@drawable/selector"
+                android:scaleType="fitCenter" />
+
+            <Button
+                android:id="@+id/kakaobutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onKakaoClicked"
+                android:text="공유하기" />
+        </LinearLayout>
     </LinearLayout>
+
 
 </LinearLayout>

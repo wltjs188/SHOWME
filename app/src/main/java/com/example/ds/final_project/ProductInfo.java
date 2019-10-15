@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Layout;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -87,6 +88,7 @@ public class ProductInfo extends AppCompatActivity {
         getSupportActionBar().setTitle("상품 상세 정보");
         uuid = getPreferences("uuid");
         product_info=(TextView)findViewById(R.id.product_info);
+        product_info.setMovementMethod(new ScrollingMovementMethod());
         Intent intent = getIntent();
         productId=intent.getStringExtra("productId");
         optionNum=intent.getStringExtra("optionNum");
