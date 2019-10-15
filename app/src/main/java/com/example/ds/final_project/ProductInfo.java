@@ -45,6 +45,7 @@ import java.util.Map;
 
 public class ProductInfo extends AppCompatActivity {
     String IP_ADDRESS = "18.191.10.193";
+    Intent reviewIntent;
     private String mJsonString;
     int error=0;
     private TextView product_info; //상세정보 표시
@@ -95,6 +96,7 @@ public class ProductInfo extends AppCompatActivity {
         info=intent.getStringExtra("info");
         image=intent.getStringExtra("image");
 
+        reviewIntent=new Intent(getApplicationContext(),ReviewActivity.class); //리뷰
 
         productImg=(ImageView)findViewById(R.id.productImg);
         Log.i("이미지",""+image);
@@ -112,6 +114,10 @@ public class ProductInfo extends AppCompatActivity {
         task.execute( "http://" + IP_ADDRESS + "/getWishListItem.php",uuid,productId,optionNum);
         wishCheck.setChecked(infoBool);
 
+    }
+    public void onReviewClicked(View view){
+        reviewIntent.putExtra("product", productId);
+        startActivity(reviewIntent);
     }
     public void onKakaoClicked(View view){
         ContentObject contentObject = ContentObject.newBuilder(
