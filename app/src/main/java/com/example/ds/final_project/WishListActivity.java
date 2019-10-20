@@ -83,6 +83,15 @@ public class WishListActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        Log.i("destroy","종료");
+        setResult(RESULT_OK);
+    }
+
     public void onNextBtnClicked(View view){
         if(images.size()<=page*4+3){
             Toast.makeText(getApplicationContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();

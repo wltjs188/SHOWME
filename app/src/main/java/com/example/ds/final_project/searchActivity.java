@@ -103,6 +103,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
     //stt
     private final int REQ_CODE_SPEECH_INPUT = 100;
+    private final int SHOP_ACTIVITY=200;
+    private final int WISHLIST_ACTIVITY=300;
 
     //검색 정보
     String category = null;
@@ -415,10 +417,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     Toast.LENGTH_SHORT).show();
         }
     }
-    //stt
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
@@ -430,7 +431,14 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 }
                 break;
             }
-
+            case SHOP_ACTIVITY:{
+                    makeMenuMsg();
+                break;
+            }
+            case WISHLIST_ACTIVITY:{
+                makeMenuMsg();
+                break;
+            }
         }
     }
 
@@ -445,11 +453,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     }
     //메뉴 메세지
     protected void makeMenuMsg(){
+
         ChatMessage chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
                 "1. 상품검색\n" +
-                "2. 사용자 정보 수정\n" +
-                "3. 관심상품보기\n"+
-                "4. 관심상품 공유하기", true);
+                "2. 이전 검색 다시보기\n" +
+                "3. 관심상품보기\n" +
+                "4. 관심상품 공유하기\n"+
+                "5. 사용자 정보 수정", true);
         chatMessages.add(chatMessage);
 
         //TTS 챗봇 읽어주기
@@ -588,7 +598,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     System.out.println("이름 : "+user_name+"번호 : "+user_phone+"주소 : "+user_address);
                     task.execute("http://" + IP_ADDRESS + "/insertUser.php",user_uuid,user_name,user_address,user_phone);
                     Log.i("액션USER",ACTION);
-                    remenu=getRemenu(result);
+//                    remenu=getRemenu(result);
                     result.getContexts().clear();
                 }
                 break;
@@ -597,14 +607,14 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 user_name = ""+parameter.get("user_name");
                 UpdateUser task1 = new UpdateUser(); //사용자정보 수정
                 task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"name",user_name);
-                remenu=getRemenu(result);
+//                remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;
             case "ACTION_M_PHONE"://사용자정보수정 : 핸드폰번호
                 parameter=getParameter(result);
                 task1 = new UpdateUser(); //사용자정보 수정
                 task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"phoneNum",user_phone);
-                remenu=getRemenu(result);
+//                remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;
             case "ACTION_M_ADDRESS"://사용자정보수정 : 주소
@@ -618,7 +628,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 user_address=user_address.replaceAll("\"","");
                 task1 = new UpdateUser(); //사용자정보 수정
                 task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"address",user_address);
-                remenu=getRemenu(result);
+//                remenu=getRemenu(result);
                 result.getContexts().clear();
 
                 break;
@@ -685,7 +695,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
                     category = null; color = null; length = null; size = null; pattern = null;
                     result.getContexts().clear();
-                    startActivity(shopIntent);
+                    startActivityForResult(shopIntent,SHOP_ACTIVITY);
                 }
 
                 break;
@@ -693,7 +703,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             case "ACTION_MENU" :
                 parameter=getParameter(result);
                 if(parameter.containsKey("Wish_Item")){ //관심상품이동
-                    startActivity(wishIntent);
+                    startActivityForResult(wishIntent,WISHLIST_ACTIVITY);
                     result.getContexts().clear();
                 }
                 break;
