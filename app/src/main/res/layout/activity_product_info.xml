@@ -30,7 +30,7 @@
         >
         <TextView
             android:id="@+id/product_info"
-            android:layout_width="350dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dp"
@@ -47,16 +47,8 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:layout_weight="1"
+            android:paddingBottom="20dp"
             >
-
-            <CheckBox
-                android:id="@+id/wishCheck"
-                android:layout_width="200px"
-                android:layout_height="200px"
-                android:layout_gravity="center"
-                android:adjustViewBounds="true"
-                android:button="@drawable/selector"
-                android:scaleType="fitCenter" />
 
             <Button
                 android:id="@+id/kakaobutton"
@@ -65,6 +57,14 @@
                 android:layout_gravity="center"
                 android:onClick="onKakaoClicked"
                 android:text="공유하기" />
+            <CheckBox
+                android:id="@+id/wishCheck"
+                android:layout_width="200px"
+                android:layout_height="200px"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:button="@drawable/selector"
+                android:scaleType="fitCenter" />
             <Button
                 android:id="@+id/btn_review"
                 android:layout_width="wrap_content"
