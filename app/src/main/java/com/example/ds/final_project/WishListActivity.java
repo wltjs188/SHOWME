@@ -8,8 +8,10 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -31,6 +33,11 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class WishListActivity extends AppCompatActivity {
+
+    private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_MAX_OFF_PATH = 250;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
     Intent productInfoIntent; //상세정보 intent
     GridView gv;
     String mJsonString;
@@ -47,6 +54,7 @@ public class WishListActivity extends AppCompatActivity {
     ArrayList<String> adap_images = new ArrayList<String>(); //상품 옵션 대표 이미지
     ArrayList<String> adap_names = new ArrayList<String>();//네이밍
     int page = 0;
+    private GestureDetector gDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +65,7 @@ public class WishListActivity extends AppCompatActivity {
 
         productInfoIntent = new Intent(getApplicationContext(),ProductInfo.class);
         gv = (GridView)findViewById(R.id.gridView1);
+        gDetector = new GestureDetector(gestureListener);
 
         uuid = getPreferences("uuid");
         //uuid = "ffffffff-e523-2a50-576f-dd2f1aeb1b07";
@@ -68,6 +77,13 @@ public class WishListActivity extends AppCompatActivity {
         adap_names=names;
         adapter = new WishAdapter(this, R.layout.activity_wish_list, adap_images,adap_infos,adap_names);
         gv.setAdapter(adapter);
+
+        gv.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent me) {
+                return gDetector.onTouchEvent(me);
+            }
+        });
 
 
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -83,47 +99,139 @@ public class WishListActivity extends AppCompatActivity {
             }
         });
     }
-    public void onNextBtnClicked(View view){
-        if(images.size()<=page*4+3){
-            Toast.makeText(getApplicationContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
-        }else{
-            page++;
-            if(images.size()<=page*4+3){
-                adap_images= new ArrayList<String>(images.subList(page*4,images.size()));
-                adap_infos=new ArrayList<String>(images.subList(page*4,infos.size()));
-                adap_names=new ArrayList<String>(names.subList(page*4,infos.size()));
-            }else{
-                adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
-                adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
-                adap_names=new ArrayList<String>(names.subList(page*4,page*4+4));
-            }
 
-           // adapter.notifyDataSetChanged();
-            adapter = new WishAdapter(this, R.layout.wish_item, adap_images, adap_infos, adap_names);
-            gv.setAdapter(adapter);
+    GestureDetector.OnGestureListener gestureListener = new GestureDetector.OnGestureListener() {
+        public boolean onDown(MotionEvent e) {
+            //   viewA.setText("-" + "DOWN" + "-");
+            return true;
         }
-    }
-    public void onPrevBtnClicked(View view){
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            try {
+                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+                    return false;
 
-        if(page==0){
-            Toast.makeText(getApplicationContext(), "첫번째 페이지 입니다.", Toast.LENGTH_SHORT).show();
-        }else{
-            page--;
-            if(images.size()<=page*4+3){
-                adap_images=new ArrayList<String>(images.subList(page*4,images.size()));
-                adap_infos=new ArrayList<String>(infos.subList(page*4,images.size()));
-                adap_names=new ArrayList<String>(names.subList(page*4,images.size()));
-            }else{
-                adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
-                adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
-                adap_names=new ArrayList<String>(names.subList(page*4,page*4+4));
+                // right to left swipe
+                if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    //다음
+                    //Toast.makeText(getApplicationContext(), "Left Swipe", Toast.LENGTH_SHORT).show();
+                    if(images.size()<=page*4+3){
+                        Toast.makeText(getApplicationContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
+                    }else{
+                        page++;
+                        if(images.size()<=page*4+3){
+                            adap_images= new ArrayList<String>(images.subList(page*4,images.size()));
+                            adap_infos=new ArrayList<String>(images.subList(page*4,infos.size()));
+                        }else{
+                            adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
+                            adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
+                        }
+                        adapter = new WishAdapter(getApplicationContext(), R.layout.wish_item, adap_images, adap_infos,adap_names);
+                        gv.setAdapter(adapter);
+                    }
+                }
+                // left to right swipe
+                else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    //이전
+                    //Toast.makeText(getApplicationContext(), "Right Swipe", Toast.LENGTH_SHORT).show();
+                    if(page==0){
+                        Toast.makeText(getApplicationContext(), "첫번째 페이지 입니다.", Toast.LENGTH_SHORT).show();
+                    }else{
+                        page--;
+                        if(images.size()<=page*4+3){
+                            adap_images=new ArrayList<String>(images.subList(page*4,images.size()));
+                            adap_infos=new ArrayList<String>(infos.subList(page*4,images.size()));
+                        }else{
+                            adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
+                            adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
+                        }
+                        adapter = new WishAdapter(getApplicationContext(), R.layout.wish_item, adap_images, adap_infos,adap_names);
+                        gv.setAdapter(adapter);
+                    }
+                }
+            // down to up swipe
+//            else if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+//                Toast.makeText(getApplicationContext(), "Swipe up", Toast.LENGTH_SHORT).show();
+//            }
+//            // up to down swipe
+//            else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+//                Toast.makeText(getApplicationContext(), "Swipe down", Toast.LENGTH_SHORT).show();
+//            }
+            } catch (Exception e) {
+
             }
-
-         //   adapter.notifyDataSetChanged();
-            adapter = new WishAdapter(this, R.layout.wish_item, adap_images, adap_infos,adap_names);
-            gv.setAdapter(adapter);
+            return true;
         }
+
+        public void onLongPress(MotionEvent e) {
+            Toast mToast = Toast.makeText(getApplicationContext(), "Long Press", Toast.LENGTH_SHORT);
+            mToast.show();
+        }
+
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            // viewA.setText("-" + "SCROLL" + "-");
+            return true;
+        }
+
+        public void onShowPress(MotionEvent e) {
+            //viewA.setText("-" + "SHOW PRESS" + "-");
+        }
+
+        public boolean onSingleTapUp(MotionEvent e) {
+            Toast mToast = Toast.makeText(getApplicationContext(), "두손가락으로 눌러주세요.", Toast.LENGTH_SHORT);
+            mToast.show();
+            return true;
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("destroy","종료");
+        setResult(RESULT_OK);
     }
+
+//    public void onNextBtnClicked(View view){
+//        if(images.size()<=page*4+3){
+//            Toast.makeText(getApplicationContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
+//        }else{
+//            page++;
+//            if(images.size()<=page*4+3){
+//                adap_images= new ArrayList<String>(images.subList(page*4,images.size()));
+//                adap_infos=new ArrayList<String>(images.subList(page*4,infos.size()));
+//                adap_names=new ArrayList<String>(names.subList(page*4,infos.size()));
+//            }else{
+//                adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
+//                adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
+//                adap_names=new ArrayList<String>(names.subList(page*4,page*4+4));
+//            }
+//
+//           // adapter.notifyDataSetChanged();
+//            adapter = new WishAdapter(this, R.layout.wish_item, adap_images, adap_infos, adap_names);
+//            gv.setAdapter(adapter);
+//        }
+//    }
+//    public void onPrevBtnClicked(View view){
+//
+//        if(page==0){
+//            Toast.makeText(getApplicationContext(), "첫번째 페이지 입니다.", Toast.LENGTH_SHORT).show();
+//        }else{
+//            page--;
+//            if(images.size()<=page*4+3){
+//                adap_images=new ArrayList<String>(images.subList(page*4,images.size()));
+//                adap_infos=new ArrayList<String>(infos.subList(page*4,images.size()));
+//                adap_names=new ArrayList<String>(names.subList(page*4,images.size()));
+//            }else{
+//                adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
+//                adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
+//                adap_names=new ArrayList<String>(names.subList(page*4,page*4+4));
+//            }
+//
+//         //   adapter.notifyDataSetChanged();
+//            adapter = new WishAdapter(this, R.layout.wish_item, adap_images, adap_infos,adap_names);
+//            gv.setAdapter(adapter);
+//        }
+//    }
+
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기버튼 실행
         switch (item.getItemId()){
             case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작

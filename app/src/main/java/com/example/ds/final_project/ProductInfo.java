@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Layout;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,6 +45,7 @@ import java.util.Map;
 
 public class ProductInfo extends AppCompatActivity {
     String IP_ADDRESS = "18.191.10.193";
+    Intent reviewIntent;
     private String mJsonString;
     int error=0;
     private TextView product_info; //상세정보 표시
@@ -87,12 +89,14 @@ public class ProductInfo extends AppCompatActivity {
         getSupportActionBar().setTitle("상품 상세 정보");
         uuid = getPreferences("uuid");
         product_info=(TextView)findViewById(R.id.product_info);
+        product_info.setMovementMethod(new ScrollingMovementMethod());
         Intent intent = getIntent();
         productId=intent.getStringExtra("productId");
         optionNum=intent.getStringExtra("optionNum");
         info=intent.getStringExtra("info");
         image=intent.getStringExtra("image");
 
+        reviewIntent=new Intent(getApplicationContext(),ReviewActivity.class); //리뷰
 
         productImg=(ImageView)findViewById(R.id.productImg);
         Log.i("이미지",""+image);
@@ -110,6 +114,10 @@ public class ProductInfo extends AppCompatActivity {
         task.execute( "http://" + IP_ADDRESS + "/getWishListItem.php",uuid,productId,optionNum);
         wishCheck.setChecked(infoBool);
 
+    }
+    public void onReviewClicked(View view){
+        reviewIntent.putExtra("product", productId);
+        startActivity(reviewIntent);
     }
     public void onKakaoClicked(View view){
         ContentObject contentObject = ContentObject.newBuilder(

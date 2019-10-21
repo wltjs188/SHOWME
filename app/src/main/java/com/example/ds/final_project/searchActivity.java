@@ -103,6 +103,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
     //stt
     private final int REQ_CODE_SPEECH_INPUT = 100;
+    private final int SHOP_ACTIVITY=200;
+    private final int WISHLIST_ACTIVITY=300;
 
     //검색 정보
     String category = null;
@@ -110,7 +112,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String length = null;
     String size = null;
     String pattern = null;
-//    String fabric = null;
+    //    String fabric = null;
     private String mJsonString;
     String fname= null; //공유할 사람 이름
     String fnumber=null; //공유할 사람 번호
@@ -259,6 +261,21 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         else
             return "그런 사람 없어";
     }
+    protected void makeChatNoPerson(String name){
+        ChatMessage chatMessage = new ChatMessage(name + "으로 저장된 연락처는 없습니다. 정확한 이름을 다시한번 말씀해주세요.", true);
+        chatMessages.add(chatMessage);
+
+        //TTS 챗봇 읽어주기
+        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+        adapter.notifyDataSetChanged();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+            }
+        }, 1000);
+    }
     //공유 메세지 보내기 - 문자
     void sendMSG(String number,String msg){
         try {
@@ -400,10 +417,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     Toast.LENGTH_SHORT).show();
         }
     }
-    //stt
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
@@ -415,7 +431,14 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 }
                 break;
             }
-
+            case SHOP_ACTIVITY:{
+                    makeMenuMsg();
+                break;
+            }
+            case WISHLIST_ACTIVITY:{
+                makeMenuMsg();
+                break;
+            }
         }
     }
 
@@ -430,11 +453,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     }
     //메뉴 메세지
     protected void makeMenuMsg(){
+
         ChatMessage chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
                 "1. 상품검색\n" +
-                "2. 사용자 정보 수정\n" +
-                "3. 관심상품보기\n"+
-                "4. 관심상품 공유하기", true);
+                "2. 이전 검색 다시보기\n" +
+                "3. 관심상품보기\n" +
+                "4. 관심상품 공유하기\n"+
+                "5. 사용자 정보 수정", true);
         chatMessages.add(chatMessage);
 
         //TTS 챗봇 읽어주기
@@ -469,7 +494,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             }
         }
     }
-//    public void ButtonClicked(View view){
+    //    public void ButtonClicked(View view){
 //        aiService.startListening();
 //    }
     private class AITask extends AsyncTask<AIRequest, Void, AIResponse>{
@@ -573,7 +598,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     System.out.println("이름 : "+user_name+"번호 : "+user_phone+"주소 : "+user_address);
                     task.execute("http://" + IP_ADDRESS + "/insertUser.php",user_uuid,user_name,user_address,user_phone);
                     Log.i("액션USER",ACTION);
-                    remenu=getRemenu(result);
+//                    remenu=getRemenu(result);
                     result.getContexts().clear();
                 }
                 break;
@@ -582,14 +607,14 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 user_name = ""+parameter.get("user_name");
                 UpdateUser task1 = new UpdateUser(); //사용자정보 수정
                 task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"name",user_name);
-                remenu=getRemenu(result);
+//                remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;
             case "ACTION_M_PHONE"://사용자정보수정 : 핸드폰번호
                 parameter=getParameter(result);
                 task1 = new UpdateUser(); //사용자정보 수정
                 task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"phoneNum",user_phone);
-                remenu=getRemenu(result);
+//                remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;
             case "ACTION_M_ADDRESS"://사용자정보수정 : 주소
@@ -603,7 +628,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 user_address=user_address.replaceAll("\"","");
                 task1 = new UpdateUser(); //사용자정보 수정
                 task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"address",user_address);
-                remenu=getRemenu(result);
+//                remenu=getRemenu(result);
                 result.getContexts().clear();
 
                 break;
@@ -670,7 +695,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
 
                     category = null; color = null; length = null; size = null; pattern = null;
                     result.getContexts().clear();
-                    startActivity(shopIntent);
+                    startActivityForResult(shopIntent,SHOP_ACTIVITY);
                 }
 
                 break;
@@ -678,7 +703,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             case "ACTION_MENU" :
                 parameter=getParameter(result);
                 if(parameter.containsKey("Wish_Item")){ //관심상품이동
-                    startActivity(wishIntent);
+                    startActivityForResult(wishIntent,WISHLIST_ACTIVITY);
                     result.getContexts().clear();
                 }
                 break;
@@ -686,8 +711,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 // 관심상품에 뭐가 있는지 토스트 메세지로 알려줌
                 if(sproduct==null) {
 //                    if(wishProductNames==null) {
-                        GetWishProductName task = new GetWishProductName();
-                        task.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user_uuid);
+                    GetWishProductName task = new GetWishProductName();
+                    task.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user_uuid);
 //                    }
 //                    else {
 //                        String m="";
@@ -704,7 +729,21 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 parameter=getParameter(result);
                 //공유할 사람
                 if(parameter.containsKey("SharePerson")){
-                    fname = parameter.get("SharePerson").toString().replace('\"',' ').trim();
+                    fname = parameter.get("SharePerson").toString();
+                    fname = fname.substring(8,fname.length()-1);
+
+                    fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
+
+                    if(!fnumber.equals("그런 사람 없어")){
+                        // 연락처 조회 된 경우, 공유 실행
+                        GetProductToShare task2 = new GetProductToShare();
+                        task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
+                    }
+                    else{
+                        makeChatNoPerson(fname);
+                        //Toast.makeText(getApplicationContext(), fname+"번호없음", Toast.LENGTH_LONG).show();
+                    }
+
                 }
                 //공유할 상품
                 if(parameter.containsKey("ShareProduct")){
@@ -713,23 +752,23 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 Log.d("명","공유할사람:"+fname+"공유할상품"+sproduct);
 
                 //2가지 다 입력되었다면,
-               if( fname != null && sproduct != null){
-
-                   fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
-//                   Log.d("먕","uuid"+user_uuid+" 번호"+fnumber+" 이름"+fname+findNum("강정현"));
-                   Log.d("메세지",fnumber);
-                   if(!fnumber.equals("그런 사람 없어")){
-                       // 연락처 조회 된 경우, 공유 실행
-                       GetProductToShare task2 = new GetProductToShare();
-                       task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
-                   }
-                   else{
-                       Toast.makeText(getApplicationContext(), fname+"번호없음", Toast.LENGTH_LONG).show();
-                   }
+//               if( fname != null && sproduct != null){
+//
+//                   fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
+////                   Log.d("먕","uuid"+user_uuid+" 번호"+fnumber+" 이름"+fname+findNum("강정현"));
+//                   Log.d("메세지",fnumber);
+//                   if(!fnumber.equals("그런 사람 없어")){
+//                       // 연락처 조회 된 경우, 공유 실행
+//                       GetProductToShare task2 = new GetProductToShare();
+//                       task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
+//                   }
+//                   else{
+//                       Toast.makeText(getApplicationContext(), fname+"번호없음", Toast.LENGTH_LONG).show();
+//                   }
 //                   fname = null; sproduct = null; fnumber = null;
-                   result.getContexts().clear();
-
-                }
+//                   result.getContexts().clear();
+//
+//                }
                 break;
         }
 
@@ -924,15 +963,15 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
         int layoutResource = 0; // determined by view type
-       // ChatMessage chatMessage = getItem(position);
+        // ChatMessage chatMessage = getItem(position);
 
         ChatMessage chatMessage = messages.get(position);
         if (chatMessage.isMine()) {
             layoutResource = R.layout.item_chat_left;
-           // Log.d("챗",position+chatMessage.getContent().toString()+"왼");ㅇ
+            // Log.d("챗",position+chatMessage.getContent().toString()+"왼");ㅇ
         } else {
             layoutResource = R.layout.item_chat_right;
-           // Log.d("챗",position+chatMessage.getContent().toString()+"오");
+            // Log.d("챗",position+chatMessage.getContent().toString()+"오");
         }
 
         if (convertView != null) {

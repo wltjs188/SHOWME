@@ -8,18 +8,19 @@
 
     <TextView
         android:id="@+id/review_allRating"
-        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:textSize="50sp"
+        android:gravity="center"
+        android:text="평점"
 
-        />
+        android:textSize="50sp" />
 
     <TextView
-        android:id="@+id/review_keword"
+        android:id="@+id/review_keyword"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:gravity="center"
+        android:text="키워드"
         android:textSize="20sp" />
 
     <ListView
