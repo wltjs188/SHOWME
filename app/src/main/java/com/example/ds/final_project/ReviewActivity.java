@@ -43,7 +43,7 @@ public class ReviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
-
+        getSupportActionBar().setTitle("리뷰보기");
         Intent intent = getIntent();
         productId=intent.getStringExtra("product");
         productUrl = testUrl+productId;
