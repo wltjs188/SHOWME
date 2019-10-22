@@ -709,7 +709,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     shopIntent.putExtra("size", size);
                     shopIntent.putExtra("pattern", pattern);
 //                    shopIntent.putExtra("fabric", fabric);
-                    r
+
                     category = null; color = null; length = null; size = null; pattern = null;
                     result.getContexts().clear();
                     startActivityForResult(shopIntent,SHOP_ACTIVITY);
@@ -722,6 +722,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 if(parameter.containsKey("Wish_Item")){ //관심상품이동
                     startActivityForResult(wishIntent,WISHLIST_ACTIVITY);
                     result.getContexts().clear();
+                }
+                else if(parameter.containsKey("pre_search")){
+                    //이전검색
                 }
                 break;
             case "Share_Message"://공유하기
