@@ -134,6 +134,19 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     String ACTION="";
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Gson gson = new GsonBuilder().create();
+        if(getPreferences("remember")==null||getPreferences("remember")=="") //이전 상품 존재 안함
+            remember=new Product();
+        else{ //이전 상품 존재함
+            String strContact=getPreferences("remember");
+            remember=gson.fromJson(strContact,Product.class);
+            Log.d("이전",strContact);
+            Log.d("이전",remember.toString());
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,14 +161,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
         shopIntent=new Intent(getApplicationContext(),ShopActivity.class); //상품검색
         Gson gson = new GsonBuilder().create();
-//        String strContact = gson.toJson(remember, Product.class);
-
-
-        if(getPreferences("remember")==null)
+        if(getPreferences("remember")==null||getPreferences("remember")=="") //이전 상품 존재 안함
             remember=new Product();
-        else{
+        else{ //이전 상품 존재함
             String strContact=getPreferences("remember");
             remember=gson.fromJson(strContact,Product.class);
+            Log.d("이전",strContact);
+            Log.d("이전",remember.toString());
         }
 
         wishProductNames=new ArrayList<>();
@@ -709,7 +721,10 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     shopIntent.putExtra("size", size);
                     shopIntent.putExtra("pattern", pattern);
 //                    shopIntent.putExtra("fabric", fabric);
-
+                    remember.setInfo(category,color,length,size,pattern);
+                    Gson gson = new GsonBuilder().create();
+                    String strContact = gson.toJson(remember, Product.class);
+                    savePreferences("remember",strContact);
                     category = null; color = null; length = null; size = null; pattern = null;
                     result.getContexts().clear();
                     startActivityForResult(shopIntent,SHOP_ACTIVITY);
