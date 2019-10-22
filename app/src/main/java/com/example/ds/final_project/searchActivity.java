@@ -569,7 +569,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 //핸드폰 번호
                 if(parameter.containsKey("user_phone")){
                     user_phone=""+parameter.get("user_phone");
-                    user_phone=(user_phone.replaceAll(" ","")).replaceAll("-","");
+                    user_phone=(user_phone.replaceAll("\"","")).replaceAll("-","");
 
                 }
                 //주소 시,구,동
@@ -605,7 +605,9 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 break;
             case "ACTION_M_NAME"://사용자정보수정 : 이름
                 parameter=getParameter(result);
-                user_name = ""+parameter.get("user_name");
+                user_name=""+parameter.get("user_name");
+                user_name=user_name.substring(9);
+                user_name=user_name.substring(0,user_name.length()-2);
                 UpdateUser task1 = new UpdateUser(); //사용자정보 수정
                 task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"name",user_name);
 //                remenu=getRemenu(result);
@@ -613,6 +615,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 break;
             case "ACTION_M_PHONE"://사용자정보수정 : 핸드폰번호
                 parameter=getParameter(result);
+                user_phone=""+parameter.get("user_phone");
+                user_phone=(user_phone.replaceAll("\"","")).replaceAll("-","");
                 task1 = new UpdateUser(); //사용자정보 수정
                 task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"phoneNum",user_phone);
 //                remenu=getRemenu(result);

@@ -19,6 +19,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.example.ds.final_project.db.InsertWishProduct;
+import com.example.ds.final_project.db.UpdateUser;
+import com.example.ds.final_project.db.UpdateWishProductName;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -265,11 +268,10 @@ public class MainActivity extends AppCompatActivity {
     public void onShopClicked(View view) { startActivity(shopIntent); }
 
     public void onDBTestClicked(View view){ //DB테스트
-
-//        InsertWishProduct task = new InsertWishProduct();
-//        task.execute("http://" + IP_ADDRESS + "/insertWishProduct.php",uuid,"id","3","hhh","정보");
-        Intent i=new Intent(getApplicationContext(), AddressActivity.class);
-        startActivity(i);
+        UpdateWishProductName task1 = new UpdateWishProductName(); //사용자정보 수정
+        task1.execute("http://" + IP_ADDRESS + "/updateWishProductName.php",uuid,"bb","new");
+        Log.d("나",uuid);
+        Toast.makeText(this,"업데이트",Toast.LENGTH_LONG).show();
     }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
