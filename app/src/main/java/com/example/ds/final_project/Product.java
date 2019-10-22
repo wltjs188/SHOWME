@@ -14,7 +14,13 @@ public class Product {
         this.size=size;
         this.pattern=pattern;
     }
-
+    public void setInfo(String category, String color, String length, String size, String pattern){
+        this.category = category;
+        this.color=color;
+        this.length=length;
+        this.size=size;
+        this.pattern=pattern;
+    }
     @Override
     public String toString() {
         return "카테고리: " + category + '\'' +
