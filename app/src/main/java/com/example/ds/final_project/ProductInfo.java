@@ -55,13 +55,14 @@ public class ProductInfo extends AppCompatActivity {
     private boolean infoBool=false; //관심상품 등록 여부
     private int check=0;
     //상품 정보
-    private String wishProductName=" ";
+    private String wishProductName="";
     private String uuid=" ";
     private String productId=" ";
     private String optionNum="";
     private String productURL=" ";
     private String info=" ";
     private String image=" ";
+//    private String wishProductName=" ";
     WishProductDialog dialog;
     private String Url="http://www.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=";
 
@@ -87,7 +88,7 @@ public class ProductInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_info);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
-        getSupportActionBar().setTitle("상품 상세 정보");
+
         uuid = getPreferences("uuid");
         product_info=(TextView)findViewById(R.id.product_info);
         product_info.setMovementMethod(new ScrollingMovementMethod());
@@ -96,7 +97,11 @@ public class ProductInfo extends AppCompatActivity {
         optionNum=intent.getStringExtra("optionNum");
         info=intent.getStringExtra("info");
         image=intent.getStringExtra("image");
-
+        wishProductName=intent.getStringExtra("wishProductName");
+        if(wishProductName=="")
+            getSupportActionBar().setTitle("상품 상세 정보");
+        else
+            getSupportActionBar().setTitle(wishProductName+" 상세 정보");
         reviewIntent=new Intent(getApplicationContext(),ReviewActivity.class); //리뷰
 
         productImg=(ImageView)findViewById(R.id.productImg);

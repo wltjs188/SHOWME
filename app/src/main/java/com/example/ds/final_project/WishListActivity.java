@@ -69,7 +69,6 @@ public class WishListActivity extends AppCompatActivity {
         gDetector = new GestureDetector(gestureListener);
 
         uuid = getPreferences("uuid");
-        //uuid = "ffffffff-e523-2a50-576f-dd2f1aeb1b07";
 
         GetWishProduct task = new GetWishProduct();
         task.execute( "http://" + IP_ADDRESS + "/getWishProduct.php",uuid);
@@ -95,6 +94,7 @@ public class WishListActivity extends AppCompatActivity {
                 productInfoIntent.putExtra("optionNum", optionNums.get(position));
                 productInfoIntent.putExtra("info", infos.get(position));
                 productInfoIntent.putExtra("image", images.get(position));
+                productInfoIntent.putExtra("wishProductName",names.get(position));
                 Log.d("챈",names.get(position));
                 startActivity(productInfoIntent);
             }
