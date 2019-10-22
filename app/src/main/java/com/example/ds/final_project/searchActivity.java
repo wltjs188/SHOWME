@@ -740,6 +740,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 }
                 else if(parameter.containsKey("pre_search")){
                     //이전검색
+
                 }
                 break;
             case "Share_Message"://공유하기
@@ -808,13 +809,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         }
 
         query=result.getResolvedQuery();
-        if(ACTION.equals("ACTION_USER") || ACTION.equals("ACTION_M_NAME") || ACTION.equals("ACTION_M_PHONE") || ACTION.equals("ACTION_M_ADDRESS") ){
-            responseMessageSecond = (ResponseMessage.ResponseSpeech)result.getFulfillment().getMessages().get(0);
-            speech=responseMessageSecond.getSpeech().get(0);
-        }
-        else {
+//        if(ACTION.equals("ACTION_USER") || ACTION.equals("ACTION_M_NAME") || ACTION.equals("ACTION_M_PHONE") || ACTION.equals("ACTION_M_ADDRESS") ){
+//            responseMessageSecond = (ResponseMessage.ResponseSpeech)result.getFulfillment().getMessages().get(0);
+//            speech=responseMessageSecond.getSpeech().get(0);
+//        }
+//        else {
             speech = result.getFulfillment().getSpeech();
-        }
+//        }
 
 
 
