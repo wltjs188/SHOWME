@@ -268,8 +268,10 @@ public class MainActivity extends AppCompatActivity {
     public void onShopClicked(View view) { startActivity(shopIntent); }
 
     public void onDBTestClicked(View view){ //DB테스트
+        String name="ㅂㅈ";
+        String change="sbsb";
         UpdateWishProductName task1 = new UpdateWishProductName(); //사용자정보 수정
-        task1.execute("http://" + IP_ADDRESS + "/updateWishProductName.php",uuid,"bb","new");
+        task1.execute("http://" + IP_ADDRESS + "/updateWishProductName.php",uuid,name,change);
         Log.d("나",uuid);
         Toast.makeText(this,"업데이트",Toast.LENGTH_LONG).show();
     }

@@ -15,7 +15,7 @@
 
 
 	$con = mysqli_connect("localhost","kimcheon","kim2cheon1","SHOWOOMI");
-	$sql="UPDATE WishProduct SET $wishProductName='$value' WHERE uid='$uid' and wishProductName='$wishProductName'";
+	$sql="UPDATE WishProduct SET wishProductName='$value' WHERE uid='$uid' and wishProductName='$wishProductName'";
 
 	mysqli_query($con,"set session character_set_connection=utf8;");
 	mysqli_query($con,"set session character_set_results=utf8;");
