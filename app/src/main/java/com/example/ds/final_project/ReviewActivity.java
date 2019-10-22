@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +77,12 @@ public class ReviewActivity extends AppCompatActivity {
         reviewDataList.add(new ReviewData(6,"4.2","색상이 맘에 들어요."));
 
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기 버튼 실행
         switch (item.getItemId()){
             case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
@@ -83,6 +90,10 @@ public class ReviewActivity extends AppCompatActivity {
                 finish();
                 return true;
             }
+            case R.id.showoomi:
+                Intent homeIntent=new Intent(this,MainActivity.class);
+                startActivity(homeIntent);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
