@@ -738,8 +738,25 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     startActivityForResult(wishIntent,WISHLIST_ACTIVITY);
                     result.getContexts().clear();
                 }
-                else if(parameter.containsKey("pre_search")){
-                    //이전검색
+                else if(parameter.containsKey("pre_search")) {
+                    //이전 검색
+                    if (remember == null) {
+                        //검색 못해
+                    } else {
+                        shopIntent.putExtra("category", remember.category);
+                        shopIntent.putExtra("color", remember.color);
+                        shopIntent.putExtra("length", remember.length);
+                        shopIntent.putExtra("size", remember.size);
+                        shopIntent.putExtra("pattern", remember.pattern);
+
+                        category = null;
+                        color = null;
+                        length = null;
+                        size = null;
+                        pattern = null;
+                        result.getContexts().clear();
+                        startActivityForResult(shopIntent, SHOP_ACTIVITY);
+                    }
 
                 }
                 break;
