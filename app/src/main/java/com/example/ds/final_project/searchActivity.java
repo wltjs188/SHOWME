@@ -33,6 +33,8 @@ import android.widget.Toast;
 
 import com.example.ds.final_project.db.InsertUser;
 import com.example.ds.final_project.db.UpdateUser;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import android.widget.Button;
 
@@ -107,7 +109,8 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     private final int SHOP_ACTIVITY=200;
     private final int WISHLIST_ACTIVITY=300;
 
-    //검색 정보
+    Product remember;
+   //검색 정보
     String category = null;
     String color = null;
     String length = null;
@@ -144,7 +147,16 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         btn_chat_send=(Button)findViewById(R.id.btn_chat_send);
         wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
         shopIntent=new Intent(getApplicationContext(),ShopActivity.class); //상품검색
+        Gson gson = new GsonBuilder().create();
+//        String strContact = gson.toJson(remember, Product.class);
 
+
+        if(getPreferences("remember")==null)
+            remember=new Product();
+        else{
+            String strContact=getPreferences("remember");
+            remember=gson.fromJson(strContact,Product.class);
+        }
 
         wishProductNames=new ArrayList<>();
         listView = (ListView) findViewById(R.id.list_msg);
@@ -697,7 +709,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     shopIntent.putExtra("size", size);
                     shopIntent.putExtra("pattern", pattern);
 //                    shopIntent.putExtra("fabric", fabric);
-
+                    r
                     category = null; color = null; length = null; size = null; pattern = null;
                     result.getContexts().clear();
                     startActivityForResult(shopIntent,SHOP_ACTIVITY);
@@ -919,7 +931,13 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         }
 
     }
-
+    // 값 저장하기
+    private void savePreferences(String key, String s){
+        SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(key, s);
+        editor.commit();
+    }
     // 값 불러오기
     public String  getPreferences(String key){
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
