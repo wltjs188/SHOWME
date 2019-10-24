@@ -1,12 +1,18 @@
 package com.example.ds.final_project;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.text.Layout;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -62,6 +68,11 @@ public class ProductInfo extends AppCompatActivity {
     private String productURL=" ";
     private String info=" ";
     private String image=" ";
+
+    //수신자 정보
+    String phoneName = "";
+    String phoneNo = "";
+
 //    private String wishProductName=" ";
     WishProductDialog dialog;
     private String Url="http://www.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=";
@@ -125,7 +136,136 @@ public class ProductInfo extends AppCompatActivity {
         reviewIntent.putExtra("product", productId);
         startActivity(reviewIntent);
     }
-    public void onKakaoClicked(View view){
+    //공유 다이얼로그
+    public void onShareClicked(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("공유 방식을 선택해주세요.");
+
+        builder.setItems(R.array.LAN, new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int pos)
+            {
+                String[] items = getResources().getStringArray(R.array.LAN);
+                Toast.makeText(getApplicationContext(),items[pos],Toast.LENGTH_LONG).show();
+                //문자공유
+                if(items[pos].equals("문자")){
+                    inputPhonNo();
+                    phoneNo = findNum(phoneName);
+                    if(!phoneNo.equals("그런 사람 없어")){
+                        sendMMS();
+                        Toast.makeText(getApplicationContext(),phoneName+"님께 해당 상품을 공유했습니다.",Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(),phoneName+"님의 연락처는 없습니다.",Toast.LENGTH_LONG).show();
+                    }
+                }
+                //카톡공유
+                else{
+                    ShareKakao();
+                }
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+    private void inputPhonNo(){
+        AlertDialog.Builder ad = new AlertDialog.Builder(ProductInfo.this);
+
+        // 제목 설정
+        ad.setTitle("누구에게 공유하시겠습니까? 주소록에 저장된 이름으로 입력해주세요.");
+        // 내용 설정
+        //ad.setMessage("Message");
+
+        // EditText 삽입하기
+        final EditText et = new EditText(ProductInfo.this);
+        ad.setView(et);
+
+        // 전송 버튼 설정
+        ad.setNegativeButton("보내기", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Log.v(TAG, "Yes Btn Click");
+
+                // Text 값 받아서 로그 남기기
+                phoneName = et.getText().toString();
+                //Log.v(TAG, value);
+
+                dialog.dismiss();     //닫기
+                // Event
+            }
+        });
+
+        // 취소 버튼 설정
+        ad.setPositiveButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Log.v(TAG,"No Btn Click");
+                dialog.dismiss();     //닫기
+                // Event
+            }
+        });
+
+        // 창 띄우기
+        ad.show();
+    }
+    //주소록에서 번호 가져오기
+    String findNum(String fname){
+        String number=null;
+        Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
+                null, null, null,
+                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " asc");
+        int i=0;
+        while (c.moveToNext()) {
+
+            // 연락처 id 값
+            String id = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
+            // 연락처 대표 이름
+            String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
+//            Log.d("name",name);
+            if(name.trim().equals(fname)) {
+
+                // ID로 전화 정보 조회
+                Cursor phoneCursor = getContentResolver().query(
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                        null,
+                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id,
+                        null, null);
+
+                // 데이터가 있는 경우
+                if (phoneCursor.moveToFirst()) {
+                    Log.d("name","찾");
+                    number = phoneCursor.getString(phoneCursor.getColumnIndex(
+                            ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                }
+                phoneCursor.close();
+
+            }
+        }// end while
+        c.close();
+        if(number!=null) {
+            return number;
+        }
+        else {
+            return "그런 사람 없어";
+        }
+    }
+    private void sendMMS() {
+        String sms = info;
+
+        try {
+            //전송
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(phoneNo, null, sms, null, null);
+            Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "SMS faild, please try again later!", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+    }
+    private void ShareKakao(){
         ContentObject contentObject = ContentObject.newBuilder(
                 info,
                 image,

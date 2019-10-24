@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -63,6 +64,7 @@ import ai.api.model.AIError;
 import ai.api.model.AIEvent;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
+import ai.api.model.Fulfillment;
 import ai.api.model.ResponseMessage;
 import ai.api.model.Result;
 
@@ -132,6 +134,12 @@ public class searchActivity extends AppCompatActivity implements AIListener{
     Intent wishIntent,shopIntent;
     //챗봇 액션
     String ACTION="";
+
+    // 5개까지의 멀티터치를 다루기 위한 배열
+    int id[] = new int[5];
+    int x[] = new int[5];
+    int y[] = new int[5];
+    String result;
 
 
     @Override
@@ -244,6 +252,49 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             }
         });
 
+    }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int pointer_count = event.getPointerCount(); //현재 터치 발생한 포인트 수를 얻는다.
+        if(pointer_count > 5) pointer_count = 5; //4개 이상의 포인트를 터치했더라도 3개까지만 처리를 한다.
+
+        switch(event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN: //한 개 포인트에 대한 DOWN을 얻을 때.
+                result = "싱글터치 : \n";
+                id[0] = event.getPointerId(0); //터치한 순간부터 부여되는 포인트 고유번호.
+                x[0] = (int) (event.getX());
+                y[0] = (int) (event.getY());
+                result = "싱글터치 : \n";
+                result += "("+x[0]+","+y[0]+")";
+                break;
+
+            case MotionEvent.ACTION_POINTER_DOWN: //두 개 이상의 포인트에 대한 DOWN을 얻을 때.
+                result = "멀티터치 :\n";
+                for(int i = 0; i < pointer_count; i++) {
+                    id[i] = event.getPointerId(i); //터치한 순간부터 부여되는 포인트 고유번호.
+                    x[i] = (int) (event.getX(i));
+                    y[i] = (int) (event.getY(i));
+                    result += "id[" + id[i] + "] ("+x[i]+","+y[i]+")\n";
+                }
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                result = "멀티터치 MOVE:\n";
+                for(int i = 0; i < pointer_count; i++) {
+                    id[i] = event.getPointerId(i);
+                    x[i] = (int) (event.getX(i));
+                    y[i] = (int) (event.getY(i));
+                    result += "id[" + id[i] + "] ("+x[i]+","+y[i]+")\n";
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                result = "";
+                break;
+        }
+
+        Log.d("좌표",result);
+
+        return super.onTouchEvent(event);
     }
     //stt
     //주소록에서 번호 가져오기
@@ -804,6 +855,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                 }
                 Log.d("명","공유할사람:"+fname+"공유할상품"+sproduct);
 
+
                 //2가지 다 입력되었다면,
 //               if( fname != null && sproduct != null){
 //
@@ -1076,6 +1128,8 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             msg = (TextView) v.findViewById(R.id.txt_msg);
         }
     }
+
+
 
 }
 

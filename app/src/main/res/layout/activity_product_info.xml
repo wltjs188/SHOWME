@@ -51,18 +51,19 @@
             >
 
             <Button
-                android:id="@+id/kakaobutton"
+                android:id="@+id/Sharebutton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:onClick="onKakaoClicked"
+                android:onClick="onShareClicked"
                 android:text="공유하기" />
             <CheckBox
                 android:id="@+id/wishCheck"
-                android:layout_width="200px"
+                android:layout_width="130px"
                 android:layout_height="200px"
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
+                android:layout_margin="10dp"
                 android:button="@drawable/selector"
                 android:scaleType="fitCenter" />
             <Button

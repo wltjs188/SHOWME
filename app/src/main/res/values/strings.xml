@@ -14,4 +14,9 @@
     <string name="tap_on_mic">Tap on mic to speak</string>
 
     <string name="image_picker_error">Something is wrong with that image. Pick a different one please.</string>
+
+    <string-array name = "LAN">
+        <item>"문자"</item>
+        <item>"카톡"</item>
+    </string-array>
 </resources>
