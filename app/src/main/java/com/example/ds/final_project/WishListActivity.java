@@ -111,7 +111,7 @@ public class WishListActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()){
                             case R.id.showProductInfo:
-                                Toast.makeText(getApplication(),"메뉴1",Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getApplication(),"메뉴1",Toast.LENGTH_SHORT).show();
                                 productInfoIntent.putExtra("productId", productId);
                                 productInfoIntent.putExtra("optionNum", optionNum);
                                 productInfoIntent.putExtra("info", info);
