@@ -70,7 +70,7 @@ import ai.api.model.Result;
 
 import static android.speech.tts.TextToSpeech.ERROR;
 
-public class searchActivity extends AppCompatActivity implements AIListener{
+public class ChatbotActivity extends AppCompatActivity implements AIListener{
     Button btn_chat_send;
     //서버
     String IP_ADDRESS = "18.191.10.193";
@@ -230,7 +230,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
             @Override
             public void onClick(View v) {
                 if (editText.getText().toString().trim().equals("")) {
-                    Toast.makeText(searchActivity.this, "텍스트를 입력해주세요", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChatbotActivity.this, "텍스트를 입력해주세요", Toast.LENGTH_SHORT).show();
                 }
 //                else if(editText.getText().toString().length() !=8 && chatMessages.get(chatMessages.size()-1).toString().contains("번호")){
 //                    Toast.makeText(getApplicationContext(),"010을 제외한 8자리 번호를 입력해주세요.",Toast.LENGTH_LONG).show();
@@ -376,7 +376,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = ProgressDialog.show(searchActivity.this,
+            progressDialog = ProgressDialog.show(ChatbotActivity.this,
                     "Please Wait", null, true, true);
         }
 
@@ -598,6 +598,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         Log.i("채팅사이즈",""+chatMessages.size());
         if(chatMessages.size()==0){
             if(user_name==""){
+                //사용자 정보 등록 안됨
                 ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
                 chatMessages.add(chatMessage);
                 adapter.notifyDataSetChanged();
@@ -924,7 +925,7 @@ public class searchActivity extends AppCompatActivity implements AIListener{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = ProgressDialog.show(searchActivity.this,
+            progressDialog = ProgressDialog.show(ChatbotActivity.this,
                     "Please Wait", null, true, true);
         }
         @Override
@@ -1007,15 +1008,15 @@ public class searchActivity extends AppCompatActivity implements AIListener{
                     else
                         m+=wishProductNames.get(i)+", ";
                 }
-                Toast.makeText(searchActivity.this, "관심상품에 "+m+"가 있습니다.", Toast.LENGTH_LONG).show();
+                Toast.makeText(ChatbotActivity.this, "관심상품에 "+m+"가 있습니다.", Toast.LENGTH_LONG).show();
             }else{
-                Toast.makeText(searchActivity.this,"등록된 관심상품이 없습니다.",Toast.LENGTH_LONG).show();
+                Toast.makeText(ChatbotActivity.this,"등록된 관심상품이 없습니다.",Toast.LENGTH_LONG).show();
             }
 
         } catch (JSONException e) {
             Log.d("showResult : ", e.getMessage());
             Log.d("phptest: ",mJsonString);
-            Toast.makeText(searchActivity.this,"등록된 관심상품이 없습니다.",Toast.LENGTH_LONG).show();
+            Toast.makeText(ChatbotActivity.this,"등록된 관심상품이 없습니다.",Toast.LENGTH_LONG).show();
         }
 
     }

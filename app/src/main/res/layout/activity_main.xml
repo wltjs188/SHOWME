@@ -24,7 +24,7 @@
         android:textSize="30dp" />
 
     <Button
-
+        android:visibility="gone"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -40,7 +40,6 @@
         android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-
         android:layout_marginTop="20dp"
         android:onClick="onWishClicked"
         android:text="나의 관심 상품"

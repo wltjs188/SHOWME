@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle("쇼우미");
         CONTEXT=this;
-        searchIntent=new Intent(getApplicationContext(),searchActivity.class);//쇼핑시작
+        searchIntent=new Intent(getApplicationContext(),ChatbotActivity.class);//쇼핑시작
         wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
         infoIntent=new Intent(getApplicationContext(),MyInfoActivity.class);//나의정보수정
         webIntent=new Intent(getApplicationContext(),WebActivity.class);//나의정보수정
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         savePreferences("uuid",uuid);
         Log.d("uuid",uuid);
         //서버연결
-        GetData task = new GetData();
+        GetUserData task = new GetUserData();
         task.execute( "http://" + IP_ADDRESS + "/getUser.php",uuid);
 
         //키해시 구하기
@@ -105,11 +105,11 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         savePreferences("uuid",uuid);
         //서버연결
-        GetData task = new GetData();
+       GetUserData task = new GetUserData();
         task.execute( "http://" + IP_ADDRESS + "/getUser.php",uuid);
     }
 
-    private class GetData extends AsyncTask<String, Void, String>{
+    private class GetUserData extends AsyncTask<String, Void, String>{
 
       //  ProgressDialog progressDialog;
         String errorString = null;
