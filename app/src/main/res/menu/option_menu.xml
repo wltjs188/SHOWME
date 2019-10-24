@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/showProductInfo"
+        android:title="상품 상세정보 보기" />
+    <item
+        android:id="@+id/editWishProductName"
+        android:title="별칭 수정"/>
+
+</menu>

@@ -2,6 +2,9 @@ package com.example.ds.final_project.db;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.example.ds.final_project.WishListActivity;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -23,6 +26,7 @@ public class UpdateWishProductName extends AsyncTask<String, Void, String> {
         super.onPostExecute(result);
 
         Log.d(TAG, "관심상품 별칭 수정 결과" + result);
+
     }
     @Override
     protected String doInBackground(String... params) {

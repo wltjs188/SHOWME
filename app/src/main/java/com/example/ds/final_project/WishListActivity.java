@@ -19,9 +19,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.ds.final_project.db.UpdateWishProductName;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +41,7 @@ public class WishListActivity extends AppCompatActivity {
     private static final int SWIPE_MIN_DISTANCE = 120;
     private static final int SWIPE_MAX_OFF_PATH = 250;
     private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-
+    WishProductDialog dialog;
     Intent productInfoIntent; //상세정보 intent
     GridView gv;
     String mJsonString;
@@ -68,6 +71,11 @@ public class WishListActivity extends AppCompatActivity {
         gv = (GridView)findViewById(R.id.gridView1);
         gDetector = new GestureDetector(gestureListener);
 
+
+
+        dialog=new WishProductDialog(this);
+
+
         uuid = getPreferences("uuid");
 
         GetWishProduct task = new GetWishProduct();
@@ -88,15 +96,59 @@ public class WishListActivity extends AppCompatActivity {
 
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
+                String productId=productIds.get(position);
+                String optionNum=optionNums.get(position);
+                String info=infos.get(position);
+                String image=images.get(position);
+                String wishProductName=names.get(position);
                // productInfoIntent.putExtra("info", infos.get(position));
-                productInfoIntent.putExtra("productId", productIds.get(position));
-                productInfoIntent.putExtra("optionNum", optionNums.get(position));
-                productInfoIntent.putExtra("info", infos.get(position));
-                productInfoIntent.putExtra("image", images.get(position));
-                productInfoIntent.putExtra("wishProductName",names.get(position));
-                Log.d("챈",names.get(position));
-                startActivity(productInfoIntent);
+                PopupMenu popup= new PopupMenu(getApplicationContext(), v);//v는 클릭된 뷰를 의미
+
+                getMenuInflater().inflate(R.menu.option_menu, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()){
+                            case R.id.showProductInfo:
+                                Toast.makeText(getApplication(),"메뉴1",Toast.LENGTH_SHORT).show();
+                                productInfoIntent.putExtra("productId", productId);
+                                productInfoIntent.putExtra("optionNum", optionNum);
+                                productInfoIntent.putExtra("info", info);
+                                productInfoIntent.putExtra("image", image);
+                                productInfoIntent.putExtra("wishProductName",wishProductName);
+                                Log.d("챈",names.get(position));
+                                startActivity(productInfoIntent);
+                                break;
+                            case R.id.editWishProductName:
+                                dialog.setDialogListener(new DialogListener() {
+                                    @Override
+                                    public void onPositiveClicked(String name) {
+//
+                                        UpdateWishProductName task1 = new UpdateWishProductName(); //사용자정보 수정
+                                        task1.execute("http://" + IP_ADDRESS + "/updateWishProductName.php",uuid,wishProductName,name);
+                                        Toast.makeText(getApplication(),"수정되었습니다.",Toast.LENGTH_LONG).show();
+                                    }
+
+                                    @Override
+                                    public void onNegativeClicked() {
+                                        Log.d("dialog","취소");
+                                    }
+                                });
+                                dialog.show();
+                                Toast.makeText(getApplication(),"메뉴1",Toast.LENGTH_SHORT).show();
+                                break;
+
+                            default:
+                                break;
+                        }
+                        return false;
+                    }
+                });
+
+                popup.show();//Popup Menu 보이기
+
+
             }
         });
     }
