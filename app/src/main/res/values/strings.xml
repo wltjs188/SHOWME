@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">쇼움이</string>
+    <string name="app_name">쇼우미</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="image_details_header">Details:</string>
     <string name="image_preview_header">Preview:</string>

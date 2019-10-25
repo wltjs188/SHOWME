@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
-import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
@@ -59,12 +58,9 @@ import ai.api.AIListener;
 import ai.api.AIServiceException;
 import ai.api.android.AIConfiguration;
 import ai.api.android.AIDataService;
-import ai.api.android.AIService;
 import ai.api.model.AIError;
-import ai.api.model.AIEvent;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
-import ai.api.model.Fulfillment;
 import ai.api.model.ResponseMessage;
 import ai.api.model.Result;
 
@@ -159,7 +155,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_chatbot);
         getSupportActionBar().setTitle("쇼움이");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기버튼
 
@@ -1102,9 +1098,14 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
 
         }
         holder.msg.setText(chatMessage.getContent());
-
-
         holder.msg.setContentDescription(messages.get(position)+"");
+        convertView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                // 여기서 이벤트를 막습니다.
+                return ;
+            }
+        });
 
         return convertView;
     }
