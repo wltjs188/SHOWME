@@ -156,7 +156,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatbot);
-        getSupportActionBar().setTitle("쇼움이");
+        getSupportActionBar().setTitle("쇼우미");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기버튼
 
         int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
@@ -526,7 +526,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     //메뉴 메세지
     protected void makeMenuMsg(){
 
-        ChatMessage chatMessage = new ChatMessage("메뉴를 선택해주세요\n" +
+        ChatMessage chatMessage = new ChatMessage(user_name+"님 안녕하세요?\n메뉴를 선택해주세요\n" +
                 "1. 상품검색\n" +
                 "2. 이전 검색 다시보기\n" +
                 "3. 관심상품보기\n" +
