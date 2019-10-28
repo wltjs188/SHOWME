@@ -975,14 +975,14 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
     private class GetWishProductName extends AsyncTask<String, Void, String> {
 
-        ProgressDialog progressDialog;
+//        ProgressDialog progressDialog;
         String errorString = null;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = ProgressDialog.show(ChatbotActivity.this,
-                    "잠시만 기다려주세요", null, true, true);
+//            progressDialog = ProgressDialog.show(ChatbotActivity.this,
+//                    "잠시만 기다려주세요", null, true, true);
         }
         @Override
         protected void onPostExecute(String result) {
