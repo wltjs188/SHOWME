@@ -13,7 +13,7 @@ import android.os.Handler;
 import android.provider.ContactsContract;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
-//import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -76,7 +76,7 @@ import ai.api.model.AIResponse;
 import ai.api.model.ResponseMessage;
 import ai.api.model.Result;
 
-//import static android.speech.tts.TextToSpeech.ERROR;
+import static android.speech.tts.TextToSpeech.ERROR;
 
 public class ChatbotActivity extends AppCompatActivity implements AIListener{
     Button btn_chat_send;
@@ -112,7 +112,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     private String user_name=null;
     private String user_phone=null;
     private String user_address=null;
-//    private TextToSpeech tts;
+    private TextToSpeech tts;
 
     //stt
     private final int REQ_CODE_SPEECH_INPUT = 100;
@@ -165,6 +165,35 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     }
 
     @Override
+    protected void onStart() {
+        Log.d("온스타트","ㅎㅎ");
+        super.onStart();
+        if(chatMessages.size()==0){
+            if(user_name==""){
+                //사용자 정보 등록 안됨
+                ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
+                chatMessages.add(chatMessage);
+                adapter.notifyDataSetChanged();
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+                    }
+                }, 1000);
+            }
+            else{
+                Log.d("채?","?");
+                makeMenuMsg();
+            }
+        }
+        else{
+            Log.d("채?","?");
+            makeMenuMsg();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatbot);
@@ -205,23 +234,24 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //        foot = getPreferences("foot");
 
 
-//        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-//            @Override
-//            public void onInit(int status) {
-//                if (status != ERROR) {
-//                    // 언어를 선택한다.
-//                    tts.setLanguage(Locale.KOREAN);
-//
-//                }
-//            }
-//        });
 
         //set ListView adapter first
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
         listView.setAdapter(adapter);
         listView.setSelection(adapter.getCount() - 1);
-        ChatMessage chatMessage;
+//        ChatMessage chatMessage;
 
+        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != ERROR) {
+                    // 언어를 선택한다.
+                    tts.setLanguage(Locale.KOREAN);
+
+                }
+            }
+        });
+        Log.d("채?","??????");
 
 
         //dialogflow
@@ -307,6 +337,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     //stt
     //주소록에서 번호 가져오기
     String findNum(String fname){
+        Log.d("채윤 이름:",fname);
         String number=null;
         Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null,
@@ -350,15 +381,15 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         chatMessages.add(chatMessage);
 
         //TTS 챗봇 읽어주기
-//        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
-//        adapter.notifyDataSetChanged();
-//        final Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
-//            }
-//        }, 1000);
+        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+        adapter.notifyDataSetChanged();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+            }
+        }, 1000);
     }
     //공유 메세지 보내기 - 문자
     void sendMSG(String number,String msg){
@@ -517,11 +548,11 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 break;
             }
             case SHOP_ACTIVITY:{
-                    makeMenuMsg();
+//                makeMenuMsg();
                 break;
             }
             case WISHLIST_ACTIVITY:{
-                makeMenuMsg();
+//                makeMenuMsg();
                 break;
             }
         }
@@ -548,15 +579,15 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         chatMessages.add(chatMessage);
 
         //TTS 챗봇 읽어주기
-//        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
-//        adapter.notifyDataSetChanged();
-//        final Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
-//            }
-//        }, 1000);
+        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+        adapter.notifyDataSetChanged();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+            }
+        }, 1000);
     }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
@@ -601,16 +632,16 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         }
     }
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        Log.i("채팅사이즈",""+chatMessages.size());
-        if(chatMessages.size()==0){
-            if(user_name==""){
-                //사용자 정보 등록 안됨
-                ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
+//    @Override
+//    protected void onPostResume() {
+//        super.onPostResume();
+//        Log.i("채팅사이즈",""+chatMessages.size());
+//        if(chatMessages.size()==0){
+//            if(user_name==""){
+//                //사용자 정보 등록 안됨
+//                ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
+//                chatMessages.add(chatMessage);
+//                adapter.notifyDataSetChanged();
 //                final Handler handler = new Handler();
 //                handler.postDelayed(new Runnable() {
 //                    @Override
@@ -618,27 +649,23 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
 //                    }
 //                }, 1000);
-            }
-            else{
-                makeMenuMsg();
-            }
-        }
-//        else  if(chatMessages.get(chatMessages.size()-1).getContent().contains("관심")||chatMessages.get(chatMessages.size()-1).getContent().contains("검색")){
-//            makeMenuMsg();
+//            }
+//            else{
+//                makeMenuMsg();
+//            }
 //        }
-
-
-    }
+////        else  if(chatMessages.get(chatMessages.size()-1).getContent().contains("관심")||chatMessages.get(chatMessages.size()-1).getContent().contains("검색")){
+////            makeMenuMsg();
+////        }
+//
+//
+//    }
 
 
 
     public void onResult(AIResponse response) {
         final Result result = response.getResult();
-
-
         ACTION=result.getAction();
-
-
         Log.i("액션",ACTION);
         Log.i("RESULT",""+result);
         //챗봇 액션 처리
@@ -922,7 +949,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //            speech=responseMessageSecond.getSpeech().get(0);
 //        }
 //        else {
-            speech = result.getFulfillment().getSpeech();
+//        if(get)
+        speech = result.getFulfillment().getSpeech();
 //        }
 
 
@@ -935,12 +963,12 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         chatMessage = new ChatMessage(speech, true);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
-//        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
         if(remenu!=""){
             chatMessage = new ChatMessage(remenu, true);
             chatMessages.add(chatMessage);
             adapter.notifyDataSetChanged();
-//            tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+            tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
             remenu="";
         }
     }

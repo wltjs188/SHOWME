@@ -5,6 +5,24 @@
     android:orientation="vertical"
     >
 
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.9">
+
+        <ListView
+            android:clickable="false"
+            android:id="@+id/list_msg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:listSelector="@android:color/transparent"
+            android:transcriptMode="alwaysScroll" />
+
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="50dp">
@@ -20,7 +38,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
-                android:background="@color/background_floating_material_dark"
+                android:background="@color/colorPrimary"
                 android:text="음성"
                 android:textColor="@color/background_material_light" />
 
@@ -41,32 +59,16 @@
             <!--android:textColor="@color/background_material_light"-->
             <!--android:onClick="ButtonClicked"-->
             <!--/>-->
-
             <Button
                 android:id="@+id/btn_chat_send"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
-                android:background="@color/background_floating_material_dark"
+                android:background="@color/colorPrimary"
                 android:text="전송"
-                android:textColor="@color/background_material_light" />
+                android:textColor="@color/background_material_light"
 
+                />
         </LinearLayout>
     </ScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.9">
-
-        <ListView
-            android:clickable="false"
-            android:id="@+id/list_msg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null"
-            android:listSelector="@android:color/transparent"
-            android:transcriptMode="alwaysScroll" />
-
-    </LinearLayout>
 </LinearLayout>
