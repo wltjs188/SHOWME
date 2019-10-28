@@ -14,7 +14,6 @@ import android.provider.ContactsContract;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -240,8 +239,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 }
             }
         });
-        Log.d("채?","??????");
-
 
         //dialogflow
         final AIConfiguration config = new AIConfiguration("b8dda671eb584e3586aba41efdd554cf",
@@ -1015,6 +1012,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     }
     private void showResult(){
         String TAG_JSON="WishProductName";
+        wishProductNames.clear();
         try {
             JSONObject jsonObject = new JSONObject(mJsonString);
             JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
