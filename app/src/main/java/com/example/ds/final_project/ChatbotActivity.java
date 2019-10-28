@@ -624,11 +624,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
     public void onResult(AIResponse response) {
         final Result result = response.getResult();
-
-
         ACTION=result.getAction();
-
-
         Log.i("액션",ACTION);
         Log.i("RESULT",""+result);
         //챗봇 액션 처리
