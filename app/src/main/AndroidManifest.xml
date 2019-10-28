@@ -19,7 +19,9 @@
         android:transcriptMode="normal">
         <activity android:name=".ReviewActivity"></activity>
         <activity android:name=".AddressActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
