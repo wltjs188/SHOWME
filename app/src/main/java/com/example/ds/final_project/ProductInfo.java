@@ -62,6 +62,7 @@ public class ProductInfo extends AppCompatActivity {
     private int check=0;
     //상품 정보
     private String wishProductName="";
+    private String category="";
     private String uuid=" ";
     private String productId=" ";
     private String optionNum="";
@@ -104,13 +105,14 @@ public class ProductInfo extends AppCompatActivity {
         product_info=(TextView)findViewById(R.id.product_info);
         product_info.setMovementMethod(new ScrollingMovementMethod());
         Intent intent = getIntent();
+        category = intent.getStringExtra("category");
         productId=intent.getStringExtra("productId");
         optionNum=intent.getStringExtra("optionNum");
         info=intent.getStringExtra("info");
         image=intent.getStringExtra("image");
         wishProductName=intent.getStringExtra("wishProductName");
-        if(wishProductName=="")
-            getSupportActionBar().setTitle("상품 상세 정보");
+        if(wishProductName==""||wishProductName==null)
+            getSupportActionBar().setTitle(category+" 상품 상세 정보");
         else
             getSupportActionBar().setTitle(wishProductName+" 상세 정보");
         reviewIntent=new Intent(getApplicationContext(),ReviewActivity.class); //리뷰
