@@ -407,20 +407,20 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     //관심상품 이름으로 검색하고 문자보냄
     private class GetProductToShare extends AsyncTask<String, Void, String> {
 
-        ProgressDialog progressDialog;
+//        ProgressDialog progressDialog;
         String errorString = null;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = ProgressDialog.show(ChatbotActivity.this,
-                    "Please Wait", null, true, true);
+//            progressDialog = ProgressDialog.show(ChatbotActivity.this,
+//                    "Please Wait", null, true, true);
         }
 
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            progressDialog.dismiss();
+//            progressDialog.dismiss();
 
             if (result == null){
             }
@@ -428,7 +428,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 mJsonString = result;
                 showResultGetProductToShare();
                 fname = null;
-                sproduct = null;
+//                sproduct = null;
                 fnumber = null;
             }
         }
