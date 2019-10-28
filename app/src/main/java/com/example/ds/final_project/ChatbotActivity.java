@@ -987,7 +987,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            progressDialog.dismiss();
+//            progressDialog.dismiss();
 
             if (result == null){
 
