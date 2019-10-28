@@ -1044,6 +1044,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         }
     }
     private void showResult(){
+        Log.i("공유","showREsult()");
         String TAG_JSON="WishProductName";
         wishProductNames.clear();
         try {
@@ -1054,9 +1055,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 JSONObject item = jsonArray.getJSONObject(i);
                 String wishProductName = item.getString("wishProductName");
                 wishProductNames.add(wishProductName);
-
             }
-
             if(wishProductNames.size()>0) {
                 String m="";
                 for (int i=0;i<wishProductNames.size();i++){
@@ -1066,7 +1065,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         m+=wishProductNames.get(i)+", ";
                 }
                 Toast.makeText(ChatbotActivity.this, "관심상품에 "+m+"가 있습니다.", Toast.LENGTH_LONG).show();
-            }else{
+            }
+            else{
                 Toast.makeText(ChatbotActivity.this,"등록된 관심상품이 없습니다.",Toast.LENGTH_LONG).show();
             }
 
