@@ -117,7 +117,7 @@ public class ShopActivity extends AppCompatActivity {
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                productInfoIntent.putExtra("category", category);
                 productInfoIntent.putExtra("productId", productIds.get(page*4+position));
                 productInfoIntent.putExtra("optionNum", optionNums.get(page*4+position));
                 productInfoIntent.putExtra("info", infos.get(page*4+position));

@@ -34,9 +34,6 @@
         android:text="DB Test"
         android:textSize="30dp" />
 
-
-
-
     <Button
         android:visibility="gone"
         android:layout_width="170dp"

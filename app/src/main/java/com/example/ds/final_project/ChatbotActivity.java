@@ -36,6 +36,17 @@ import com.example.ds.final_project.db.UpdateUser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.kakao.kakaolink.v2.KakaoLinkResponse;
+import com.kakao.kakaolink.v2.KakaoLinkService;
+import com.kakao.message.template.ButtonObject;
+import com.kakao.message.template.CommerceDetailObject;
+import com.kakao.message.template.CommerceTemplate;
+import com.kakao.message.template.ContentObject;
+import com.kakao.message.template.LinkObject;
+import com.kakao.network.ErrorResult;
+import com.kakao.network.callback.ResponseCallback;
+import com.kakao.util.helper.log.Logger;
+
 import android.widget.Button;
 
 import org.json.JSONArray;
@@ -385,9 +396,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //            smsManager.sendTextMessage(number, null, msg, null, null);
             smsManager.sendTextMessage(number, null, msg, null, null);
 
-            Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "SMS failed, please try again later!", Toast.LENGTH_LONG).show();
+            //메시지 실패 여기 바꿔라
+            //Toast.makeText(getApplicationContext(), fname+"님께 전송 완료!", Toast.LENGTH_LONG).show();
             Log.d("메세지 오류",e.getMessage());
             e.printStackTrace();
         }
@@ -494,14 +506,14 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
             }else {
                 //관심상품 sproduct 존재 안함
-                Toast.makeText(this,sproduct+" 없어용",Toast.LENGTH_LONG).show();
+                //Toast.makeText(this,sproduct+" 없어용",Toast.LENGTH_LONG).show();
             }
 
         } catch (JSONException e) {
             //관심상품 sproduct 존재 안함
             Log.d("showResult : ", e.getMessage());
             Log.d("showResult : ", mJsonString);
-            Toast.makeText(this,sproduct+" 없어용",Toast.LENGTH_LONG).show();
+            //Toast.makeText(this,sproduct+" 없어용",Toast.LENGTH_LONG).show();
         }
 
     }
@@ -836,12 +848,57 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                 }
                 break;
-            case "Share_Message"://공유하기
-                // 관심상품에 뭐가 있는지 토스트 메세지로 알려줌
+            case "Share_K_Product"://카카오 공유하기
                 if(sproduct==null) {
-//                    if(wishProductNames==null) {
                     GetWishProductName task = new GetWishProductName();
                     task.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user_uuid);
+                }
+
+                //공유할 상품
+                if(parameter.containsKey("ShareProduct")){
+                    sproduct = parameter.get("ShareProduct").toString().replace('\"',' ').trim();
+
+                    ShareKakao();
+                }
+                break;
+//            case "Share_M_Person"://메시지 공유하기_사람
+//
+//                //공유할 사람
+//                if(parameter.containsKey("SharePerson")){
+//                    fname = parameter.get("SharePerson").toString().replace('\"',' ').trim();
+//                    Toast.makeText(this.getApplicationContext(), fname, Toast.LENGTH_LONG).show();
+//                    //fname = fname.substring(8,fname.length()-1);
+//
+//                    fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
+//
+//                    if(!fnumber.equals("그런 사람 없어")){
+//                        // 연락처 조회 된 경우, 공유 실행
+//                        GetProductToShare task2 = new GetProductToShare();
+//                        task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
+//                    }
+//                    else{
+//                        makeChatNoPerson(fname);
+//                        //Toast.makeText(getApplicationContext(), fname+"번호없음", Toast.LENGTH_LONG).show();
+//                    }
+//
+//                }
+//                break;
+            case "Share_M_Person"://메시지 공유하기
+                parameter=getParameter(result);
+                //공유할 사람
+                if(parameter.containsKey("ShareMPerson")) {
+
+                    fname = parameter.get("ShareMPerson").toString().replace('\"',' ').trim();
+
+                }
+                if(sproduct==null) {
+                    GetWishProductName task = new GetWishProductName();
+                    task.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user_uuid);
+                }
+                //공유할 상품
+                if(parameter.containsKey("ShareMProduct")){
+                    sproduct = parameter.get("ShareMProduct").toString().replace('\"',' ').trim();
+                }
 //                    }
 //                    else {
 //                        String m="";
@@ -853,52 +910,26 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                        }
 //                        Toast.makeText(this.getApplicationContext(), "관심상품에 " + m + "가 있습니다.", Toast.LENGTH_LONG).show();
 //                    }
-                }
+
 //                Toast.makeText(this.getApplicationContext(),"관심상품에 ~~~가 있습니다.",Toast.LENGTH_LONG).show();
-                parameter=getParameter(result);
-                //공유할 사람
-                if(parameter.containsKey("SharePerson")){
-                    fname = parameter.get("SharePerson").toString();
-                    fname = fname.substring(8,fname.length()-1);
-
-                    fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
-
-                    if(!fnumber.equals("그런 사람 없어")){
-                        // 연락처 조회 된 경우, 공유 실행
-                        GetProductToShare task2 = new GetProductToShare();
-                        task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
-                    }
-                    else{
-                        makeChatNoPerson(fname);
-                        //Toast.makeText(getApplicationContext(), fname+"번호없음", Toast.LENGTH_LONG).show();
-                    }
-
-                }
-                //공유할 상품
-                if(parameter.containsKey("ShareProduct")){
-                    sproduct = parameter.get("ShareProduct").toString().replace('\"',' ').trim();
-                }
-                Log.d("명","공유할사람:"+fname+"공유할상품"+sproduct);
-
 
                 //2가지 다 입력되었다면,
-//               if( fname != null && sproduct != null){
-//
-//                   fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
-////                   Log.d("먕","uuid"+user_uuid+" 번호"+fnumber+" 이름"+fname+findNum("강정현"));
-//                   Log.d("메세지",fnumber);
-//                   if(!fnumber.equals("그런 사람 없어")){
-//                       // 연락처 조회 된 경우, 공유 실행
-//                       GetProductToShare task2 = new GetProductToShare();
-//                       task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
-//                   }
-//                   else{
-//                       Toast.makeText(getApplicationContext(), fname+"번호없음", Toast.LENGTH_LONG).show();
-//                   }
-//                   fname = null; sproduct = null; fnumber = null;
-//                   result.getContexts().clear();
-//
-//                }
+               if( fname != null && sproduct != null){
+
+                   fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
+//                   Log.d("먕","uuid"+user_uuid+" 번호"+fnumber+" 이름"+fname+findNum("강정현"));
+                   Log.d("메세지",fnumber);
+                   if(!fnumber.equals("그런 사람 없어")){
+                       // 연락처 조회 된 경우, 공유 실행
+                       GetProductToShare task2 = new GetProductToShare();
+                       task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
+                   }
+                   else{
+                       Toast.makeText(getApplicationContext(), fname+"번호없음", Toast.LENGTH_LONG).show();
+                   }
+                    fnumber = null; //sproduct = null; //fname = null;
+                   result.getContexts().clear();
+                }
                 break;
         }
 
@@ -951,7 +982,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = ProgressDialog.show(ChatbotActivity.this,
-                    "Please Wait", null, true, true);
+                    "잠시만 기다려주세요", null, true, true);
         }
         @Override
         protected void onPostExecute(String result) {
@@ -1088,7 +1119,56 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         return super.onOptionsItemSelected(item);
     }
 
+    private void ShareKakao(){
+        ContentObject contentObject = ContentObject.newBuilder(
+                sproduct,
+                null,
+                LinkObject.newBuilder()
+                        .setWebUrl("https://style.kakao.com/main/women/contentId=100")
+                        .setMobileWebUrl("https://m.style.kakao.com/main/women/contentId=100")
+                        .build())
+                .build();
 
+        CommerceDetailObject commerceDetailObject = CommerceDetailObject.newBuilder(208800)
+                .setDiscountPrice(146160)
+                .setDiscountRate(30)
+                .build();
+
+        ButtonObject firstButtonObject = new ButtonObject("구매하기",
+                LinkObject.newBuilder()
+                        .setWebUrl("https://style.kakao.com/main/women/contentId=100/buy")
+                        .setMobileWebUrl("https://style.kakao.com/main/women/contentId=100/buy")
+                        .build());
+
+        ButtonObject secondButtobObject = new ButtonObject("공유하기",
+                LinkObject.newBuilder()
+                        .setWebUrl("https://style.kakao.com/main/women/contentId=100/share")
+                        .setMobileWebUrl("https://m.style.kakao.com/main/women/contentId=100/share")
+                        .setAndroidExecutionParams("contentId=100&share=true")
+                        .setIosExecutionParams("contentId=100&share=true")
+                        .build());
+
+        CommerceTemplate params =  CommerceTemplate.newBuilder(contentObject, commerceDetailObject)
+                .addButton(firstButtonObject)
+                .addButton(secondButtobObject)
+                .build();
+
+        Map<String, String> serverCallbackArgs = new HashMap<String, String>();
+        serverCallbackArgs.put("user_id", "${current_user_id}");
+        serverCallbackArgs.put("product_id", "${shared_product_id}");
+
+        KakaoLinkService.getInstance().sendDefault(this, params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
+            @Override
+            public void onFailure(ErrorResult errorResult) {
+                Logger.e(errorResult.toString());
+                Log.d("kakao",errorResult.toString());
+            }
+            @Override
+            public void onSuccess(KakaoLinkResponse result) {
+                // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
+            }
+        });
+    }
 }
 
 class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
@@ -1160,6 +1240,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             msg = (TextView) v.findViewById(R.id.txt_msg);
         }
     }
+
 
 
 

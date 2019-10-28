@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().setTitle("쇼우미");
+//        getSupportActionBar().setTitle("쇼우미");
         CONTEXT=this;
         searchIntent=new Intent(getApplicationContext(),ChatbotActivity.class);//쇼핑시작
         wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
