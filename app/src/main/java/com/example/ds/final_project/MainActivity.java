@@ -18,8 +18,6 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-import com.example.ds.final_project.db.InsertWishProduct;
-import com.example.ds.final_project.db.UpdateUser;
 import com.example.ds.final_project.db.UpdateWishProductName;
 
 import org.json.JSONArray;
