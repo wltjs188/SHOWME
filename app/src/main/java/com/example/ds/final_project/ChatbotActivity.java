@@ -891,14 +891,15 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     fname = parameter.get("ShareMPerson").toString().replace('\"',' ').trim();
 
                 }
-                if(sproduct==null) {
-                    GetWishProductName task = new GetWishProductName();
-                    task.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user_uuid);
-                }
                 //공유할 상품
                 if(parameter.containsKey("ShareMProduct")){
                     sproduct = parameter.get("ShareMProduct").toString().replace('\"',' ').trim();
                 }
+                if(sproduct==null) {
+                    GetWishProductName task = new GetWishProductName();
+                    task.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user_uuid);
+                }
+
 //                    }
 //                    else {
 //                        String m="";
