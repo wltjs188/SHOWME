@@ -109,7 +109,7 @@ public class ProductInfo extends AppCompatActivity {
         info=intent.getStringExtra("info");
         image=intent.getStringExtra("image");
         wishProductName=intent.getStringExtra("wishProductName");
-        if(wishProductName=="")
+        if(wishProductName==""||wishProductName==null)
             getSupportActionBar().setTitle("상품 상세 정보");
         else
             getSupportActionBar().setTitle(wishProductName+" 상세 정보");
