@@ -428,7 +428,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 mJsonString = result;
                 showResultGetProductToShare();
                 fname = null;
-//                sproduct = null;
+                sproduct = null;
                 fnumber = null;
             }
         }
@@ -928,7 +928,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                    else{
                        Toast.makeText(getApplicationContext(), fname+"번호없음", Toast.LENGTH_LONG).show();
                    }
-                    fnumber = null; //sproduct = null; //fname = null;
+                    fnumber = null; sproduct = null; fname = null;
                    result.getContexts().clear();
                 }
                 break;
