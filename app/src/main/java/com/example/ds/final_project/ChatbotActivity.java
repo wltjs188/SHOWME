@@ -399,9 +399,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //            smsManager.sendTextMessage(number, null, msg, null, null);
             smsManager.sendTextMessage(number, null, msg, null, null);
 
-            Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "SMS failed, please try again later!", Toast.LENGTH_LONG).show();
+            //메시지 실패 여기 바꿔라
+            //Toast.makeText(getApplicationContext(), fname+"님께 전송 완료!", Toast.LENGTH_LONG).show();
             Log.d("메세지 오류",e.getMessage());
             e.printStackTrace();
         }
@@ -506,14 +507,14 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
             }else {
                 //관심상품 sproduct 존재 안함
-                Toast.makeText(this,sproduct+" 없어용",Toast.LENGTH_LONG).show();
+                //Toast.makeText(this,sproduct+" 없어용",Toast.LENGTH_LONG).show();
             }
 
         } catch (JSONException e) {
             //관심상품 sproduct 존재 안함
             Log.d("showResult : ", e.getMessage());
             Log.d("showResult : ", mJsonString);
-            Toast.makeText(this,sproduct+" 없어용",Toast.LENGTH_LONG).show();
+            //Toast.makeText(this,sproduct+" 없어용",Toast.LENGTH_LONG).show();
         }
 
     }
@@ -849,22 +850,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 }
                 break;
             case "Share_K_Product"://카카오 공유하기
-
                 if(sproduct==null) {
-//                    if(wishProductNames==null) {
                     GetWishProductName task = new GetWishProductName();
                     task.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user_uuid);
-//                    }
-//                    else {
-//                        String m="";
-//                        for (int i = 0; i < wishProductNames.size(); i++) {
-//                            if (i == wishProductNames.size() - 1)
-//                                m += wishProductNames.get(i);
-//                            else
-//                                m += wishProductNames.get(i) + ", ";
-//                        }
-//                        Toast.makeText(this.getApplicationContext(), "관심상품에 " + m + "가 있습니다.", Toast.LENGTH_LONG).show();
-//                    }
                 }
 
                 //공유할 상품
@@ -874,33 +862,44 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     ShareKakao();
                 }
                 break;
-            case "Share_M_Person"://메시지 공유하기_사람
-
+//            case "Share_M_Person"://메시지 공유하기_사람
+//
+//                //공유할 사람
+//                if(parameter.containsKey("SharePerson")){
+//                    fname = parameter.get("SharePerson").toString().replace('\"',' ').trim();
+//                    Toast.makeText(this.getApplicationContext(), fname, Toast.LENGTH_LONG).show();
+//                    //fname = fname.substring(8,fname.length()-1);
+//
+//                    fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
+//
+//                    if(!fnumber.equals("그런 사람 없어")){
+//                        // 연락처 조회 된 경우, 공유 실행
+//                        GetProductToShare task2 = new GetProductToShare();
+//                        task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
+//                    }
+//                    else{
+//                        makeChatNoPerson(fname);
+//                        //Toast.makeText(getApplicationContext(), fname+"번호없음", Toast.LENGTH_LONG).show();
+//                    }
+//
+//                }
+//                break;
+            case "Share_M_Person"://메시지 공유하기
+                parameter=getParameter(result);
                 //공유할 사람
-                if(parameter.containsKey("SharePerson")){
-                    fname = parameter.get("SharePerson").toString().replace('\"',' ').trim();
-                    //fname = fname.substring(8,fname.length()-1);
+                if(parameter.containsKey("ShareMPerson")) {
 
-                    fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
-
-                    if(!fnumber.equals("그런 사람 없어")){
-                        // 연락처 조회 된 경우, 공유 실행
-                        GetProductToShare task2 = new GetProductToShare();
-                        task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
-                    }
-                    else{
-                        makeChatNoPerson(fname);
-                        //Toast.makeText(getApplicationContext(), fname+"번호없음", Toast.LENGTH_LONG).show();
-                    }
+                    fname = parameter.get("ShareMPerson").toString().replace('\"',' ').trim();
 
                 }
-                break;
-            case "Share_M_Product"://메시지 공유하기_상품선택
-                // 관심상품에 뭐가 있는지 토스트 메세지로 알려줌
                 if(sproduct==null) {
-//                    if(wishProductNames==null) {
                     GetWishProductName task = new GetWishProductName();
                     task.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user_uuid);
+                }
+                //공유할 상품
+                if(parameter.containsKey("ShareMProduct")){
+                    sproduct = parameter.get("ShareMProduct").toString().replace('\"',' ').trim();
+                }
 //                    }
 //                    else {
 //                        String m="";
@@ -912,34 +911,26 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                        }
 //                        Toast.makeText(this.getApplicationContext(), "관심상품에 " + m + "가 있습니다.", Toast.LENGTH_LONG).show();
 //                    }
-                }
-//                Toast.makeText(this.getApplicationContext(),"관심상품에 ~~~가 있습니다.",Toast.LENGTH_LONG).show();
-                parameter=getParameter(result);
-                //공유할 상품
-                if(parameter.containsKey("ShareProduct")){
-                    sproduct = parameter.get("ShareProduct").toString().replace('\"',' ').trim();
-                }
-                Log.d("명","공유할사람:"+fname+"공유할상품"+sproduct);
 
+//                Toast.makeText(this.getApplicationContext(),"관심상품에 ~~~가 있습니다.",Toast.LENGTH_LONG).show();
 
                 //2가지 다 입력되었다면,
-//               if( fname != null && sproduct != null){
-//
-//                   fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
-////                   Log.d("먕","uuid"+user_uuid+" 번호"+fnumber+" 이름"+fname+findNum("강정현"));
-//                   Log.d("메세지",fnumber);
-//                   if(!fnumber.equals("그런 사람 없어")){
-//                       // 연락처 조회 된 경우, 공유 실행
-//                       GetProductToShare task2 = new GetProductToShare();
-//                       task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
-//                   }
-//                   else{
-//                       Toast.makeText(getApplicationContext(), fname+"번호없음", Toast.LENGTH_LONG).show();
-//                   }
-//                   fname = null; sproduct = null; fnumber = null;
-//                   result.getContexts().clear();
-//
-//                }
+               if( fname != null && sproduct != null){
+
+                   fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
+//                   Log.d("먕","uuid"+user_uuid+" 번호"+fnumber+" 이름"+fname+findNum("강정현"));
+                   Log.d("메세지",fnumber);
+                   if(!fnumber.equals("그런 사람 없어")){
+                       // 연락처 조회 된 경우, 공유 실행
+                       GetProductToShare task2 = new GetProductToShare();
+                       task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
+                   }
+                   else{
+                       Toast.makeText(getApplicationContext(), fname+"번호없음", Toast.LENGTH_LONG).show();
+                   }
+                    fnumber = null; //sproduct = null; //fname = null;
+                   result.getContexts().clear();
+                }
                 break;
         }
 
@@ -992,7 +983,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = ProgressDialog.show(ChatbotActivity.this,
-                    "Please Wait", null, true, true);
+                    "잠시만 기다려주세요", null, true, true);
         }
         @Override
         protected void onPostExecute(String result) {
