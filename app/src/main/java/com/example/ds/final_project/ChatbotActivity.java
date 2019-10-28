@@ -154,6 +154,35 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     }
 
     @Override
+    protected void onStart() {
+        Log.d("온스타트","ㅎㅎ");
+        super.onStart();
+        if(chatMessages.size()==0){
+            if(user_name==""){
+                //사용자 정보 등록 안됨
+                ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
+                chatMessages.add(chatMessage);
+                adapter.notifyDataSetChanged();
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+                    }
+                }, 1000);
+            }
+            else{
+                Log.d("채?","?");
+                makeMenuMsg();
+            }
+        }
+        else{
+            Log.d("채?","?");
+            makeMenuMsg();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatbot);
@@ -194,6 +223,13 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //        foot = getPreferences("foot");
 
 
+
+        //set ListView adapter first
+        adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
+        listView.setAdapter(adapter);
+        listView.setSelection(adapter.getCount() - 1);
+//        ChatMessage chatMessage;
+
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -204,13 +240,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 }
             }
         });
-
-        //set ListView adapter first
-        adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
-        listView.setAdapter(adapter);
-        listView.setSelection(adapter.getCount() - 1);
-        ChatMessage chatMessage;
-
+        Log.d("채?","??????");
 
 
         //dialogflow
@@ -507,11 +537,11 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 break;
             }
             case SHOP_ACTIVITY:{
-                    makeMenuMsg();
+//                makeMenuMsg();
                 break;
             }
             case WISHLIST_ACTIVITY:{
-                makeMenuMsg();
+//                makeMenuMsg();
                 break;
             }
         }
@@ -591,34 +621,34 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         }
     }
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        Log.i("채팅사이즈",""+chatMessages.size());
-        if(chatMessages.size()==0){
-            if(user_name==""){
-                //사용자 정보 등록 안됨
-                ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
-                    }
-                }, 1000);
-            }
-            else{
-                makeMenuMsg();
-            }
-        }
-//        else  if(chatMessages.get(chatMessages.size()-1).getContent().contains("관심")||chatMessages.get(chatMessages.size()-1).getContent().contains("검색")){
-//            makeMenuMsg();
+//    @Override
+//    protected void onPostResume() {
+//        super.onPostResume();
+//        Log.i("채팅사이즈",""+chatMessages.size());
+//        if(chatMessages.size()==0){
+//            if(user_name==""){
+//                //사용자 정보 등록 안됨
+//                ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
+//                chatMessages.add(chatMessage);
+//                adapter.notifyDataSetChanged();
+//                final Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+//                    }
+//                }, 1000);
+//            }
+//            else{
+//                makeMenuMsg();
+//            }
 //        }
-
-
-    }
+////        else  if(chatMessages.get(chatMessages.size()-1).getContent().contains("관심")||chatMessages.get(chatMessages.size()-1).getContent().contains("검색")){
+////            makeMenuMsg();
+////        }
+//
+//
+//    }
 
 
 
