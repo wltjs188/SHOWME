@@ -415,7 +415,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             else {
                 mJsonString = result;
                 showResultGetProductToShare();
-                fname = null; sproduct = null; fnumber = null;
+                fname = null;
+                sproduct = null;
+                fnumber = null;
             }
         }
 
