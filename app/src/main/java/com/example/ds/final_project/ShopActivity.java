@@ -84,16 +84,16 @@ public class ShopActivity extends AppCompatActivity {
         setContentView(R.layout.activity_shop2);
         productInfoIntent = new Intent(getApplicationContext(), ProductInfo.class);
         gv=(GridView) findViewById(R.id.main_GridView);
-        gDetector = new GestureDetector(gestureListener);
+//        gDetector = new GestureDetector(gestureListener);
         adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
         gv.setAdapter(adapter);
 
-        gv.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v,MotionEvent me) {
-                return gDetector.onTouchEvent(me);
-            }
-        });
+//        gv.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v,MotionEvent me) {
+//                return gDetector.onTouchEvent(me);
+//            }
+//        });
 
 
         Intent intent = getIntent();
@@ -134,88 +134,88 @@ public class ShopActivity extends AppCompatActivity {
 //        return gDetector.onTouchEvent(me);
 //    }
 
-    OnGestureListener gestureListener = new OnGestureListener() {
-        public boolean onDown(MotionEvent e) {
-            //   viewA.setText("-" + "DOWN" + "-");
-            return true;
-        }
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            try {
-                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-                    return false;
-
-                // right to left swipe
-                if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    //다음
-                    //Toast.makeText(getApplicationContext(), "Left Swipe", Toast.LENGTH_SHORT).show();
-                    if(images.size()<=page*4+3){
-                        Toast.makeText(getApplicationContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
-                    }else{
-                        page++;
-                        if(images.size()<=page*4+3){
-                            adap_images= new ArrayList<String>(images.subList(page*4,images.size()));
-                            adap_infos=new ArrayList<String>(images.subList(page*4,infos.size()));
-                        }else{
-                            adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
-                            adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
-                        }
-                        adapter = new ProductAdapter(getApplicationContext(), R.layout.list_product_item, adap_images, adap_infos);
-                        gv.setAdapter(adapter);
-                    }
-                }
-                // left to right swipe
-                else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    //이전
-                    //Toast.makeText(getApplicationContext(), "Right Swipe", Toast.LENGTH_SHORT).show();
-                    if(page==0){
-                        Toast.makeText(getApplicationContext(), "첫번째 페이지 입니다.", Toast.LENGTH_SHORT).show();
-                    }else{
-                        page--;
-                        if(images.size()<=page*4+3){
-                            adap_images=new ArrayList<String>(images.subList(page*4,images.size()));
-                            adap_infos=new ArrayList<String>(infos.subList(page*4,images.size()));
-                        }else{
-                            adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
-                            adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
-                        }
-                        adapter = new ProductAdapter(getApplicationContext(), R.layout.list_product_item, adap_images, adap_infos);
-                        gv.setAdapter(adapter);
-                    }
-                }
-//            // down to up swipe
-//            else if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-//                Toast.makeText(getApplicationContext(), "Swipe up", Toast.LENGTH_SHORT).show();
+//    OnGestureListener gestureListener = new OnGestureListener() {
+//        public boolean onDown(MotionEvent e) {
+//            //   viewA.setText("-" + "DOWN" + "-");
+//            return true;
+//        }
+//        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+//            try {
+//                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+//                    return false;
+//
+//                // right to left swipe
+//                if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+//                    //다음
+//                    //Toast.makeText(getApplicationContext(), "Left Swipe", Toast.LENGTH_SHORT).show();
+//                    if(images.size()<=page*4+3){
+//                        Toast.makeText(getApplicationContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
+//                    }else{
+//                        page++;
+//                        if(images.size()<=page*4+3){
+//                            adap_images= new ArrayList<String>(images.subList(page*4,images.size()));
+//                            adap_infos=new ArrayList<String>(images.subList(page*4,infos.size()));
+//                        }else{
+//                            adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
+//                            adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
+//                        }
+//                        adapter = new ProductAdapter(getApplicationContext(), R.layout.list_product_item, adap_images, adap_infos);
+//                        gv.setAdapter(adapter);
+//                    }
+//                }
+//                // left to right swipe
+//                else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+//                    //이전
+//                    //Toast.makeText(getApplicationContext(), "Right Swipe", Toast.LENGTH_SHORT).show();
+//                    if(page==0){
+//                        Toast.makeText(getApplicationContext(), "첫번째 페이지 입니다.", Toast.LENGTH_SHORT).show();
+//                    }else{
+//                        page--;
+//                        if(images.size()<=page*4+3){
+//                            adap_images=new ArrayList<String>(images.subList(page*4,images.size()));
+//                            adap_infos=new ArrayList<String>(infos.subList(page*4,images.size()));
+//                        }else{
+//                            adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
+//                            adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
+//                        }
+//                        adapter = new ProductAdapter(getApplicationContext(), R.layout.list_product_item, adap_images, adap_infos);
+//                        gv.setAdapter(adapter);
+//                    }
+//                }
+////            // down to up swipe
+////            else if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+////                Toast.makeText(getApplicationContext(), "Swipe up", Toast.LENGTH_SHORT).show();
+////            }
+////            // up to down swipe
+////            else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+////                Toast.makeText(getApplicationContext(), "Swipe down", Toast.LENGTH_SHORT).show();
+////            }
+//            } catch (Exception e) {
+//
 //            }
-//            // up to down swipe
-//            else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-//                Toast.makeText(getApplicationContext(), "Swipe down", Toast.LENGTH_SHORT).show();
-//            }
-            } catch (Exception e) {
-
-            }
-            return true;
-        }
-
-        public void onLongPress(MotionEvent e) {
-            Toast mToast = Toast.makeText(getApplicationContext(), "Long Press", Toast.LENGTH_SHORT);
-            mToast.show();
-        }
-
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            // viewA.setText("-" + "SCROLL" + "-");
-            return true;
-        }
-
-        public void onShowPress(MotionEvent e) {
-            //viewA.setText("-" + "SHOW PRESS" + "-");
-        }
-
-        public boolean onSingleTapUp(MotionEvent e) {
-            Toast mToast = Toast.makeText(getApplicationContext(), "두손가락으로 눌러주세요.", Toast.LENGTH_SHORT);
-            mToast.show();
-            return true;
-        }
-    };
+//            return true;
+//        }
+//
+//        public void onLongPress(MotionEvent e) {
+//            Toast mToast = Toast.makeText(getApplicationContext(), "Long Press", Toast.LENGTH_SHORT);
+//            mToast.show();
+//        }
+//
+//        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+//            // viewA.setText("-" + "SCROLL" + "-");
+//            return true;
+//        }
+//
+//        public void onShowPress(MotionEvent e) {
+//            //viewA.setText("-" + "SHOW PRESS" + "-");
+//        }
+//
+//        public boolean onSingleTapUp(MotionEvent e) {
+//            Toast mToast = Toast.makeText(getApplicationContext(), "두손가락으로 눌러주세요.", Toast.LENGTH_SHORT);
+//            mToast.show();
+//            return true;
+//        }
+//    };
 //    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 //        try {
 //            Log.d("동작","되냐");
