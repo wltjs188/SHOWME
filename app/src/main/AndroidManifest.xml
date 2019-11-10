@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.SEND_MMS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -18,7 +21,7 @@
         android:theme="@style/AppTheme"
         android:transcriptMode="normal">
         <activity android:name=".ReviewActivity"></activity>
-        <activity android:name=".AddressActivity" />
+        <activity android:name=".AddressActivity"></activity>
         <activity android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             >

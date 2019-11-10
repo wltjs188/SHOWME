@@ -2,15 +2,19 @@ package com.example.ds.final_project;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 import android.telephony.SmsManager;
 
@@ -88,15 +92,43 @@ public class AddressActivity extends AppCompatActivity {
             return "그런 사람 없어";
     }
     void sendMSG(String number,String msg){
-        try {
-            //전송
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(number, null, msg, null, null);
-            Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "SMS faild, please try again later!", Toast.LENGTH_LONG).show();
+        String strMessage = "구매 부탁드립니다.\nhttp://www.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1131760352\n옵션번호:1";
+//        String strAttachUrl = "file://"+ Environment.getExternalStorageDirectory()+"/test.jpg";
+
+//        Uri uri = Uri.parse("file://"+ Environment.getExternalStorageDirectory()+"/test.jpg");
+        try{
+            Intent sendIntent = new Intent(Intent.ACTION_SEND);
+            sendIntent.putExtra("address", number);
+            sendIntent.putExtra("subject", "MMS Test");
+            sendIntent.putExtra("sms_body", strMessage);
+            sendIntent.setType("image/*");
+            startActivity(Intent.createChooser(sendIntent, getResources().getString(R.string.app_name)));
+        }catch (Exception e){
             e.printStackTrace();
         }
+
+
+
+//        Intent sendIntent = new Intent(Intent.ACTION_SEND);
+//        sendIntent.setPackage("com.android.mms");
+//        sendIntent.setClassName("com.android.mms", "com.android.mms.ui.ComposeMessageActivity");
+//        sendIntent.putExtra("address", number);
+//        sendIntent.putExtra("sms_body", strMessage);
+////        sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(strAttachUrl));
+////
+////        sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(sendIntent);
+
+
+//        try {
+//            //전송
+//            SmsManager smsManager = SmsManager.getDefault();
+//            smsManager.sendTextMessage(number, null, msg, null, null);
+//            Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
+//        } catch (Exception e) {
+//            Toast.makeText(getApplicationContext(), "SMS faild, please try again later!", Toast.LENGTH_LONG).show();
+//            e.printStackTrace();
+//        }
     }
     private class GetProductToShare extends AsyncTask<String, Void, String> {
 
