@@ -1029,55 +1029,55 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 }
 
                 break;
-            case "Again_Share_M"://문자 다시
-                Log.d("챗봇","again");
-                parameter=getParameter(result);
-                //공유할 사람
-                if(parameter.containsKey("AgainMPerson")) {
-
-                    fname = parameter.get("AgainMPerson").toString().replace('\"',' ').trim();
-                    //Toast.makeText(getApplicationContext(), fname+"재시도", Toast.LENGTH_LONG).show();
-                }
-                //공유할 상품
-                if(parameter.containsKey("AgainMProduct")){
-                    sproduct = parameter.get("AgainMProduct").toString().replace('\"',' ').trim();
-                }
-                if(sproduct==null) {
-                    GetWishProductName task = new GetWishProductName();
-                    task.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user_uuid);
-                }
-                //2가지 다 입력되었다면,
-                if( fname != null && sproduct != null){
-                    fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
-//                   Log.d("먕","uuid"+user_uuid+" 번호"+fnumber+" 이름"+fname+findNum("강정현"));
-                    Log.d("메세지",fnumber);
-                    if(!fnumber.equals("그런 사람 없어")) {
-                        //관심상품 있는지 검사
-                        //if(있으면){
-                        // 연락처 조회 된 경우, 공유 실행
-                        GetProductToShare task2 = new GetProductToShare();
-                        task2.execute("http://" + IP_ADDRESS + "/getProductToShare.php", user_uuid, sproduct);
-                        //}
-//                        else{
-//                            Toast.makeText(getApplicationContext(), sproduct+"상품은 없습니다. 다시 입력해주세요.", Toast.LENGTH_LONG).show();
-//                            //failShare((fname));
-//                            aiRequest.setQuery("문자다시");
-//                            Log.e("입력",editText.getText().toString());
-//                            new AITask().execute(aiRequest);
-//                        }
-                    }
-                    else{
-                        Toast.makeText(getApplicationContext(), fname+"님의 번호가 없습니다. 다시 입력해주세요.", Toast.LENGTH_LONG).show();
-                        //failShare((fname));
-                        fnumber = null; sproduct = null; fname = null;
-                        aiRequest.setQuery("문자다시");
-                        Log.e("입력",editText.getText().toString());
-                        new AITask().execute(aiRequest);
-                    }
-//                    fnumber = null; sproduct = null; fname = null;
-                    result.getContexts().clear();
-                }
-                break;
+//            case "Again_Share_M"://문자 다시
+//                Log.d("챗봇","again");
+//                parameter=getParameter(result);
+//                //공유할 사람
+//                if(parameter.containsKey("AgainMPerson")) {
+//
+//                    fname = parameter.get("AgainMPerson").toString().replace('\"',' ').trim();
+//                    //Toast.makeText(getApplicationContext(), fname+"재시도", Toast.LENGTH_LONG).show();
+//                }
+//                //공유할 상품
+//                if(parameter.containsKey("AgainMProduct")){
+//                    sproduct = parameter.get("AgainMProduct").toString().replace('\"',' ').trim();
+//                }
+//                if(sproduct==null) {
+//                    GetWishProductName task = new GetWishProductName();
+//                    task.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user_uuid);
+//                }
+//                //2가지 다 입력되었다면,
+//                if( fname != null && sproduct != null){
+//                    fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
+////                   Log.d("먕","uuid"+user_uuid+" 번호"+fnumber+" 이름"+fname+findNum("강정현"));
+//                    Log.d("메세지",fnumber);
+//                    if(!fnumber.equals("그런 사람 없어")) {
+//                        //관심상품 있는지 검사
+//                        //if(있으면){
+//                        // 연락처 조회 된 경우, 공유 실행
+//                        GetProductToShare task2 = new GetProductToShare();
+//                        task2.execute("http://" + IP_ADDRESS + "/getProductToShare.php", user_uuid, sproduct);
+//                        //}
+////                        else{
+////                            Toast.makeText(getApplicationContext(), sproduct+"상품은 없습니다. 다시 입력해주세요.", Toast.LENGTH_LONG).show();
+////                            //failShare((fname));
+////                            aiRequest.setQuery("문자다시");
+////                            Log.e("입력",editText.getText().toString());
+////                            new AITask().execute(aiRequest);
+////                        }
+//                    }
+//                    else{
+//                        Toast.makeText(getApplicationContext(), fname+"님의 번호가 없습니다. 다시 입력해주세요.", Toast.LENGTH_LONG).show();
+//                        //failShare((fname));
+//                        fnumber = null; sproduct = null; fname = null;
+//                        aiRequest.setQuery("문자다시");
+//                        Log.e("입력",editText.getText().toString());
+//                        new AITask().execute(aiRequest);
+//                    }
+////                    fnumber = null; sproduct = null; fname = null;
+//                    result.getContexts().clear();
+//                }
+//                break;
         }
 
         query=result.getResolvedQuery();
