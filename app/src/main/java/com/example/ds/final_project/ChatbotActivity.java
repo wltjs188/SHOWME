@@ -745,6 +745,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         Log.i("RESULT",""+result);
         //챗봇 액션 처리
         switch (ACTION){
+
             case "ACTION_USER"://사용자등록 : 이름받아오기
                 parameter=getParameter(result);
                 //이름
@@ -929,9 +930,12 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     task.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user_uuid);
                 }
 
+                parameter=getParameter(result);
+                Log.d("카카오",parameter.toString());
                 //공유할 상품
-                if(parameter.containsKey("ShareProduct")){
-                    sproduct = parameter.get("ShareProduct").toString().replace('\"',' ').trim();
+                if(parameter.containsKey("ShareKProduct")){
+                    Log.d("카카오","카카카캌");
+                    sproduct = parameter.get("ShareKProduct").toString().replace('\"',' ').trim();
 
                     ShareKakao();
                 }
@@ -959,6 +963,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                }
 //                break;
             case "Share_M_Person"://메시지 공유하기
+                Log.d("챗봇","문자");
                 parameter=getParameter(result);
                 //공유할 사람
                 if(parameter.containsKey("ShareMPerson")) {
@@ -1013,6 +1018,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 }
                 break;
             case "Again_Share_M"://카카오 공유하기
+                Log.d("챗봇","again");
                 parameter=getParameter(result);
                 //공유할 사람
                 if(parameter.containsKey("AgainMPerson")) {
@@ -1249,6 +1255,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     }
 
     private void ShareKakao(){
+        Log.d("공유","카카오");
         TextTemplate params = TextTemplate.newBuilder(sproduct, LinkObject.newBuilder().setWebUrl("https://developers.kakao.com").setMobileWebUrl("https://developers.kakao.com").build()).build();
 
         Map<String, String> serverCallbackArgs = new HashMap<String, String>();
