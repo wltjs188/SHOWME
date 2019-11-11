@@ -95,6 +95,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
     AIRequest aiRequest;
     AIDataService aiDataService;
+    AIRequest aiRequest2;
+    AIDataService aiDataService2;
     ResponseMessage.ResponseSpeech responseMessageFirst;
     ResponseMessage.ResponseSpeech responseMessageSecond;
 
@@ -167,29 +169,60 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     @Override
     protected void onStart() {
         super.onStart();
-        if(chatMessages.size()==0){
-            if(user_name==""){
-                //사용자 정보 등록 안됨
-                ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+        if(user_name==""||user_address==""||user_phone==""){
+            //사용자 정보 등록 안됨
+            //등록되지 않은 사용자
+            final AIConfiguration config2 = new AIConfiguration("9642984963944e239cd1381a0e174ff0",
+                    AIConfiguration.SupportedLanguages.Korean,
+                    AIConfiguration.RecognitionEngine.System);
+
+            aiDataService2 = new AIDataService(this,config2);
+            aiRequest2 = new AIRequest();
+
+            ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼우미입니다 쇼우미를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
+            chatMessages.add(chatMessage);
+            adapter.notifyDataSetChanged();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
                     }
                 }, 1000);
-            }
-            else{
-                Log.d("채?","?");
-                makeMenuMsg();
-            }
-        }
-        else{
+        }else{
+            //등록된 사용자
+//            final AIConfiguration config = new AIConfiguration("b8dda671eb584e3586aba41efdd554cf",
+//                    AIConfiguration.SupportedLanguages.Korean,
+//                    AIConfiguration.RecognitionEngine.System);
+
+//            aiDataService = new AIDataService(this,config);
+//            aiRequest = new AIRequest();
             Log.d("채?","?");
             makeMenuMsg();
         }
+//        if(chatMessages.size()==0){
+//            if(user_name==""){
+//                //사용자 정보 등록 안됨
+//                ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼우미입니다 쇼우미를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
+//                chatMessages.add(chatMessage);
+//                adapter.notifyDataSetChanged();
+//                final Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+//                    }
+//                }, 1000);
+//            }
+//            else{
+//                Log.d("채?","?");
+//                makeMenuMsg();
+//            }
+//        }
+//        else{
+//            Log.d("채?","?");
+//            makeMenuMsg();
+//        }
     }
 
     @Override
@@ -254,9 +287,14 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         final AIConfiguration config = new AIConfiguration("b8dda671eb584e3586aba41efdd554cf",
                 AIConfiguration.SupportedLanguages.Korean,
                 AIConfiguration.RecognitionEngine.System);
+//        final AIConfiguration config2 = new AIConfiguration("9642984963944e239cd1381a0e174ff0",
+//                AIConfiguration.SupportedLanguages.Korean,
+//                AIConfiguration.RecognitionEngine.System);
 
         aiDataService = new AIDataService(this,config);
         aiRequest = new AIRequest();
+//        aiDataService2 = new AIDataService(this,config2);
+//        aiRequest2 = new AIRequest();
 
 
         //전송버튼
@@ -270,9 +308,18 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                    Toast.makeText(getApplicationContext(),"010을 제외한 8자리 번호를 입력해주세요.",Toast.LENGTH_LONG).show();
 //                }
                 else {
-                    aiRequest.setQuery(editText.getText().toString());
-                    Log.e("입력",editText.getText().toString());
-                    new AITask().execute(aiRequest);
+                    if(user_name==""||user_address==""||user_phone==""){
+                        //등록되지 않은 사용자
+                        aiRequest2.setQuery(editText.getText().toString());
+                        Log.e("입력",editText.getText().toString());
+                        new AITask().execute(aiRequest2);
+                    }else{
+                        //등록된 사용자
+                        aiRequest.setQuery(editText.getText().toString());
+                        Log.e("입력",editText.getText().toString());
+                        new AITask().execute(aiRequest);
+                    }
+
 
                 }
             }
@@ -638,8 +685,15 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         protected AIResponse doInBackground(AIRequest... requests) {
             final AIRequest request = requests[0];
             try {
-                final AIResponse response = aiDataService.request(aiRequest);
-                return response;
+                final AIResponse response;
+                if(user_name==""||user_phone==""||user_address==""){
+                    response= aiDataService2.request(aiRequest2);
+                    return response;
+                }else {
+                    response= aiDataService.request(aiRequest);
+                    return response;
+                }
+
             } catch (AIServiceException e) {
                 Log.e("에러",e.getMessage());
             }
