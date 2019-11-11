@@ -166,7 +166,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
     @Override
     protected void onStart() {
-        Log.d("온스타트","ㅎㅎ");
         super.onStart();
         if(chatMessages.size()==0){
             if(user_name==""){
@@ -214,7 +213,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             Log.d("이전",strContact);
             Log.d("이전",remember.toString());
         }
-
         wishProductNames=new ArrayList<>();
         listView = (ListView) findViewById(R.id.list_msg);
         btnSend = findViewById(R.id.btn_chat_send);

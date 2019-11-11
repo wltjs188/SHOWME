@@ -58,9 +58,9 @@ public class ShopActivity extends AppCompatActivity {
     ArrayList<String> infos = new ArrayList<String>(); //상품 상세 정보
 //    ArrayList<String> discountInfos = new ArrayList<String>(); //상품 할인 정보
     ArrayList<String> images = new ArrayList<String>(); //상품 옵션 대표 이미지
-    ArrayList<String> adap_infos = new ArrayList<String>(); //상품 상세 정보
+//    ArrayList<String> adap_infos = new ArrayList<String>(); //상품 상세 정보
 //    ArrayList<String> adap_discountInfos = new ArrayList<String>(); //상품 할인 정보
-    ArrayList<String> adap_images = new ArrayList<String>(); //상품 옵션 대표 이미지
+//    ArrayList<String> adap_images = new ArrayList<String>(); //상품 옵션 대표 이미지
     int page = 0;
     //검색 정보
     String category = null;
@@ -71,9 +71,9 @@ public class ShopActivity extends AppCompatActivity {
     //String fabric = null;
     String detail = null;
 
-    private static final int SWIPE_MIN_DISTANCE = 120;
-    private static final int SWIPE_MAX_OFF_PATH = 250;
-    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+//    private static final int SWIPE_MIN_DISTANCE = 120;
+//    private static final int SWIPE_MAX_OFF_PATH = 250;
+//    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
     private GestureDetector gDetector;
 
@@ -85,7 +85,8 @@ public class ShopActivity extends AppCompatActivity {
         productInfoIntent = new Intent(getApplicationContext(), ProductInfo.class);
         gv=(GridView) findViewById(R.id.main_GridView);
 //        gDetector = new GestureDetector(gestureListener);
-        adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
+//        adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
+        adapter = new ProductAdapter(this, R.layout.list_product_item, images, infos);
         gv.setAdapter(adapter);
 
 //        gv.setOnTouchListener(new View.OnTouchListener() {
@@ -619,19 +620,20 @@ public class ShopActivity extends AppCompatActivity {
                 Log.d("가져온 상품:", img);
 
             }
-            if(images.size()<=4) {
-                adap_images=images;
-                adap_infos=infos;
-                //   Log.d("하이",adap_images.toString());
-//                adapter = new ProductAdapter(this, R.layout.list_product_item, images, infos);
-//                gv.setAdapter(adapter);
-                //adapter.notifyDataSetChanged();
-            }else{
-                adap_images=new ArrayList<String>(images.subList(0,4));
-                adap_infos=new ArrayList<String>(infos.subList(0,4));
-
-            }
-            adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
+//            if(images.size()<=4) {
+//                adap_images=images;
+//                adap_infos=infos;
+//                //   Log.d("하이",adap_images.toString());
+////                adapter = new ProductAdapter(this, R.layout.list_product_item, images, infos);
+////                gv.setAdapter(adapter);
+//                //adapter.notifyDataSetChanged();
+//            }else{
+//                adap_images=new ArrayList<String>(images.subList(0,4));
+//                adap_infos=new ArrayList<String>(infos.subList(0,4));
+//
+//            }
+//            adapter = new ProductAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
+            adapter = new ProductAdapter(this, R.layout.list_product_item, images, infos);
             gv.setAdapter(adapter);
             //  adapter.notifyDataSetChanged();
         } catch (JSONException e) {
