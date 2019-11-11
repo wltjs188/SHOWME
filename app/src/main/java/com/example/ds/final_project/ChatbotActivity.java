@@ -557,11 +557,15 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
             }else {
                 //관심상품 sproduct 존재 안함
+
                 Toast.makeText(this,sproduct+" 없어용",Toast.LENGTH_LONG).show();
 //                Toast.makeText(getApplicationContext(), sproduct+"상품은 없습니다. 다시 입력해주세요.", Toast.LENGTH_LONG).show();
 //                aiRequest.setQuery("문자다시");
 //                Log.e("입력",editText.getText().toString());
 //                new AITask().execute(aiRequest);
+                aiRequest.setQuery("문자다시");
+                Log.e("입력",editText.getText().toString());
+                new AITask().execute(aiRequest);
             }
 
         } catch (JSONException e) {
@@ -569,6 +573,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             Log.d("showResult : ", e.getMessage());
             Log.d("showResult : ", mJsonString);
             //Toast.makeText(this,sproduct+" 없어용",Toast.LENGTH_LONG).show();
+            aiRequest.setQuery("문자다시");
+            Log.e("입력",editText.getText().toString());
+            new AITask().execute(aiRequest);
         }
 
     }
@@ -1020,8 +1027,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                    fnumber = null; sproduct = null; fname = null;
                    result.getContexts().clear();
                 }
+
                 break;
-            case "Again_Share_M"://카카오 공유하기
+            case "Again_Share_M"://문자 다시
                 Log.d("챗봇","again");
                 parameter=getParameter(result);
                 //공유할 사람
@@ -1277,6 +1285,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
             }
         });
+        sproduct=null;
     }
 }
 
