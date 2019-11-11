@@ -6,6 +6,9 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -15,6 +18,7 @@ import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.text.Layout;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +39,7 @@ import com.kakao.message.template.CommerceDetailObject;
 import com.kakao.message.template.CommerceTemplate;
 import com.kakao.message.template.ContentObject;
 import com.kakao.message.template.LinkObject;
+import com.kakao.message.template.TextTemplate;
 import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
 import com.kakao.util.helper.log.Logger;
@@ -47,6 +52,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -147,7 +153,7 @@ public class ProductInfo extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int pos)
             {
                 String[] items = getResources().getStringArray(R.array.LAN);
-                Toast.makeText(getApplicationContext(),items[pos],Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),items[pos],Toast.LENGTH_LONG).show();
                 //문자공유
                 if(items[pos].equals("문자")){
                     inputPhonNo();
@@ -157,12 +163,13 @@ public class ProductInfo extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),phoneName+"님께 해당 상품을 공유했습니다.",Toast.LENGTH_LONG).show();
                     }
                     else{
-                        Toast.makeText(getApplicationContext(),phoneName+"님의 연락처는 없습니다.",Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(),phoneName+"님의 연락처는 없습니다.",Toast.LENGTH_LONG).show();
                     }
                 }
                 //카톡공유
                 else{
                     ShareKakao();
+                    getAppKeyHash();
                 }
             }
         });
@@ -253,7 +260,7 @@ public class ProductInfo extends AppCompatActivity {
         }
     }
     private void sendMMS() {
-        String sms = info;
+        String sms = "http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1708920758&cls=3791&trTypeCd=102";
 
         try {
             //전송
@@ -265,39 +272,55 @@ public class ProductInfo extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    private void getAppKeyHash() {
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md;
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String something = new String(Base64.encode(md.digest(), 0));
+                Log.e("Hash key", something);
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            Log.e("name not found", e.toString());
+        }
+    }
     private void ShareKakao(){
-        ContentObject contentObject = ContentObject.newBuilder(
-                info,
-                image,
-                LinkObject.newBuilder()
-                        .setWebUrl("https://style.kakao.com/main/women/contentId=100")
-                        .setMobileWebUrl("https://m.style.kakao.com/main/women/contentId=100")
-                        .build())
-                .build();
-
-        CommerceDetailObject commerceDetailObject = CommerceDetailObject.newBuilder(208800)
-                .setDiscountPrice(146160)
-                .setDiscountRate(30)
-                .build();
-
-        ButtonObject firstButtonObject = new ButtonObject("구매하기",
-                LinkObject.newBuilder()
-                        .setWebUrl("https://style.kakao.com/main/women/contentId=100/buy")
-                        .setMobileWebUrl("https://style.kakao.com/main/women/contentId=100/buy")
-                        .build());
-
-        ButtonObject secondButtobObject = new ButtonObject("공유하기",
-                LinkObject.newBuilder()
-                        .setWebUrl("https://style.kakao.com/main/women/contentId=100/share")
-                        .setMobileWebUrl("https://m.style.kakao.com/main/women/contentId=100/share")
-                        .setAndroidExecutionParams("contentId=100&share=true")
-                        .setIosExecutionParams("contentId=100&share=true")
-                        .build());
-
-        CommerceTemplate params =  CommerceTemplate.newBuilder(contentObject, commerceDetailObject)
-                .addButton(firstButtonObject)
-                .addButton(secondButtobObject)
-                .build();
+//        ContentObject contentObject = ContentObject.newBuilder(
+////                info,
+////                image,
+////                LinkObject.newBuilder()
+////                        .setWebUrl("https://style.kakao.com/main/women/contentId=100")
+////                        .setMobileWebUrl("https://m.style.kakao.com/main/women/contentId=100")
+////                        .build())
+////                .build();
+////
+////        CommerceDetailObject commerceDetailObject = CommerceDetailObject.newBuilder(208800)
+////                .setDiscountPrice(146160)
+////                .setDiscountRate(30)
+////                .build();
+////
+////        ButtonObject firstButtonObject = new ButtonObject("구매하기",
+////                LinkObject.newBuilder()
+////                        .setWebUrl("https://style.kakao.com/main/women/contentId=100/buy")
+////                        .setMobileWebUrl("https://style.kakao.com/main/women/contentId=100/buy")
+////                        .build());
+////
+////        ButtonObject secondButtobObject = new ButtonObject("공유하기",
+////                LinkObject.newBuilder()
+////                        .setWebUrl("https://style.kakao.com/main/women/contentId=100/share")
+////                        .setMobileWebUrl("https://m.style.kakao.com/main/women/contentId=100/share")
+////                        .setAndroidExecutionParams("contentId=100&share=true")
+////                        .setIosExecutionParams("contentId=100&share=true")
+////                        .build());
+////
+////        CommerceTemplate params =  CommerceTemplate.newBuilder(contentObject, commerceDetailObject)
+////                .addButton(firstButtonObject)
+////                .addButton(secondButtobObject)
+////                .build();
+        TextTemplate params = TextTemplate.newBuilder(info, LinkObject.newBuilder().setWebUrl("https://developers.kakao.com").setMobileWebUrl("https://developers.kakao.com").build()).build();
 
         Map<String, String> serverCallbackArgs = new HashMap<String, String>();
         serverCallbackArgs.put("user_id", "${current_user_id}");
