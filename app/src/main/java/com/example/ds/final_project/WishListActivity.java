@@ -87,12 +87,12 @@ public class WishListActivity extends AppCompatActivity {
         adapter = new WishAdapter(this, R.layout.activity_wish_list, images,infos,names);
         gv.setAdapter(adapter);
 
-        gv.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent me) {
-                return gDetector.onTouchEvent(me);
-            }
-        });
+//        gv.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent me) {
+//                return gDetector.onTouchEvent(me);
+//            }
+//        });
 
 
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {

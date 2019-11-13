@@ -3,19 +3,23 @@ package com.example.ds.final_project;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.telephony.TelephonyManager;
 import android.text.Layout;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
@@ -78,6 +82,12 @@ public class ProductInfo extends AppCompatActivity {
     //수신자 정보
     String phoneName = "";
     String phoneNo = "";
+
+    //통신사 정보
+    String ret_operator = null;
+    String MMSCenterUrl = null;
+    String MMSProxy = null;
+    int MMSPort = 0;
 
 //    private String wishProductName=" ";
     WishProductDialog dialog;
@@ -157,14 +167,6 @@ public class ProductInfo extends AppCompatActivity {
                 //문자공유
                 if(items[pos].equals("문자")){
                     inputPhonNo();
-                    phoneNo = findNum(phoneName);
-                    if(!phoneNo.equals("그런 사람 없어")){
-                        sendMMS();
-                        Toast.makeText(getApplicationContext(),phoneName+"님께 해당 상품을 공유했습니다.",Toast.LENGTH_LONG).show();
-                    }
-                    else{
-                        //Toast.makeText(getApplicationContext(),phoneName+"님의 연락처는 없습니다.",Toast.LENGTH_LONG).show();
-                    }
                 }
                 //카톡공유
                 else{
@@ -198,7 +200,7 @@ public class ProductInfo extends AppCompatActivity {
                 // Text 값 받아서 로그 남기기
                 phoneName = et.getText().toString();
                 //Log.v(TAG, value);
-
+                findNum(phoneName);
                 dialog.dismiss();     //닫기
                 // Event
             }
@@ -218,7 +220,7 @@ public class ProductInfo extends AppCompatActivity {
         ad.show();
     }
     //주소록에서 번호 가져오기
-    String findNum(String fname){
+    private void findNum(String fname){
         String number=null;
         Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null,
@@ -253,14 +255,17 @@ public class ProductInfo extends AppCompatActivity {
         }// end while
         c.close();
         if(number!=null) {
-            return number;
+            phoneNo = number;
+            sendMMS();
+            Toast.makeText(getApplicationContext(),phoneName+"님께 해당 상품을 공유했습니다.",Toast.LENGTH_LONG).show();
         }
         else {
-            return "그런 사람 없어";
+            Toast.makeText(getApplicationContext(),phoneName+"님의 연락처는 없습니다.",Toast.LENGTH_LONG).show();
         }
     }
     private void sendMMS() {
-        String sms = "http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1708920758&cls=3791&trTypeCd=102";
+        //String sms = "http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1708920758&cls=3791&trTypeCd=102";
+        String sms = info;
 
         try {
             //전송
@@ -272,6 +277,25 @@ public class ProductInfo extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    private void getStateUsim(Context ctx) {
+        String com = null;
+        TelephonyManager tm = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
+        com = tm.getSimOperator();
+        if(com == null  && com.length() <=0) {
+            //통신사 조회 안됨
+        }
+        //Operator Error(Other)
+        if(com.equals("45008")){
+            ret_operator = "kt";
+        }else if(com.equals("45005")||com.equals("45002")){
+            ret_operator = "skt";
+        }else if(com.equals("45006")){
+            ret_operator = "lgt";
+        }else{
+            ret_operator = "other";
+        }
+    }
+
     private void getAppKeyHash() {
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
@@ -288,38 +312,6 @@ public class ProductInfo extends AppCompatActivity {
         }
     }
     private void ShareKakao(){
-//        ContentObject contentObject = ContentObject.newBuilder(
-////                info,
-////                image,
-////                LinkObject.newBuilder()
-////                        .setWebUrl("https://style.kakao.com/main/women/contentId=100")
-////                        .setMobileWebUrl("https://m.style.kakao.com/main/women/contentId=100")
-////                        .build())
-////                .build();
-////
-////        CommerceDetailObject commerceDetailObject = CommerceDetailObject.newBuilder(208800)
-////                .setDiscountPrice(146160)
-////                .setDiscountRate(30)
-////                .build();
-////
-////        ButtonObject firstButtonObject = new ButtonObject("구매하기",
-////                LinkObject.newBuilder()
-////                        .setWebUrl("https://style.kakao.com/main/women/contentId=100/buy")
-////                        .setMobileWebUrl("https://style.kakao.com/main/women/contentId=100/buy")
-////                        .build());
-////
-////        ButtonObject secondButtobObject = new ButtonObject("공유하기",
-////                LinkObject.newBuilder()
-////                        .setWebUrl("https://style.kakao.com/main/women/contentId=100/share")
-////                        .setMobileWebUrl("https://m.style.kakao.com/main/women/contentId=100/share")
-////                        .setAndroidExecutionParams("contentId=100&share=true")
-////                        .setIosExecutionParams("contentId=100&share=true")
-////                        .build());
-////
-////        CommerceTemplate params =  CommerceTemplate.newBuilder(contentObject, commerceDetailObject)
-////                .addButton(firstButtonObject)
-////                .addButton(secondButtobObject)
-////                .build();
         TextTemplate params = TextTemplate.newBuilder(info, LinkObject.newBuilder().setWebUrl("https://developers.kakao.com").setMobileWebUrl("https://developers.kakao.com").build()).build();
 
         Map<String, String> serverCallbackArgs = new HashMap<String, String>();
