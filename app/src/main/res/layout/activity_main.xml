@@ -6,24 +6,23 @@
     android:orientation="vertical"
     >
 
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="쇼핑 도우미"-->
-        <!--android:textSize="40dp"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:layout_marginTop="100dp"-->
-        <!--android:visibility="invisible"-->
-        <!--/>-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="쇼핑 도우미"
+        android:textSize="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+    />
 
     <Button
-
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:text="쇼우미"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         android:layout_gravity="center"
         android:onClick="onSearchClicked"
         android:textSize="30dp"
-        android:background="@drawable/main_img"
         />
 
     <Button
@@ -46,17 +45,6 @@
         android:textSize="22dp" />
     />
 
-    <Button
-        android:visibility="gone"
-        android:id="@+id/info"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:onClick="onInfoClicked"
-        android:text="나의 정보 수정"
-        android:textSize="22dp" />
-    />
 
     <Button
         android:visibility="gone"
