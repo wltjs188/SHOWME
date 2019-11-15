@@ -58,6 +58,7 @@
                 android:onClick="onShareClicked"
                 android:text="공유하기" />
             <CheckBox
+                android:text="관심상품 등록하기"
                 android:id="@+id/wishCheck"
                 android:layout_width="130px"
                 android:layout_height="200px"
