@@ -149,6 +149,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     String result;
 
 
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -179,7 +180,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼우미입니다 쇼우미를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
             chatMessages.add(chatMessage);
             adapter.notifyDataSetChanged();
-            final Handler handler = new Handler();
+            final Handler handler=new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
