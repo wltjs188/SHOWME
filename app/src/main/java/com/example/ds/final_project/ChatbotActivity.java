@@ -245,9 +245,11 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         }
         wishProductNames=new ArrayList<>();
         listView = (ListView) findViewById(R.id.list_msg);
+        listView.setEnabled(false);
         btnSend = findViewById(R.id.btn_chat_send);
         btnSTT=findViewById(R.id.btn_stt);
         editText = (EditText) findViewById(R.id.msg_type);
+
 
         user_uuid = getPreferences("uuid");
         //user_uuid = "ffffffff-e523-2a50-576f-dd2f1aeb1b07";
@@ -316,9 +318,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         Log.e("입력",editText.getText().toString());
                         new AITask().execute(aiRequest);
                     }
-
-
                 }
+//                editText.requestFocus();
             }
         });
         //STT 버튼
@@ -1351,17 +1352,15 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             convertView = inflater.inflate(layoutResource, parent, false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
-
         }
         holder.msg.setText(chatMessage.getContent());
         holder.msg.setContentDescription(messages.get(position)+"");
-        convertView.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                // 여기서 이벤트를 막습니다.
-                return ;
-            }
-        });
+//        convertView.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                // 여기서 이벤트를 막습니다.
+//                return ;
+//            }
+//        });
 
         return convertView;
     }

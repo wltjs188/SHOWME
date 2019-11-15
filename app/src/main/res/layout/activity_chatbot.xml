@@ -5,22 +5,19 @@
     android:orientation="vertical"
     >
 
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.9">
-
         <ListView
-            android:clickable="false"
             android:id="@+id/list_msg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:choiceMode="none"
+            android:clickable="false"
             android:divider="@null"
             android:listSelector="@android:color/transparent"
             android:transcriptMode="alwaysScroll" />
-
     </LinearLayout>
 
     <ScrollView
@@ -39,7 +36,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
                 android:background="@color/colorPrimary"
-                android:text="음성"
+                android:text="말하기"
                 android:textColor="@color/background_material_light" />
 
             <EditText
