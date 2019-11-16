@@ -123,6 +123,7 @@ public class ProductInfo extends AppCompatActivity {
         productId=intent.getStringExtra("productId");
         optionNum=intent.getStringExtra("optionNum");
         info=intent.getStringExtra("info");
+
         image=intent.getStringExtra("image");
         wishProductName=intent.getStringExtra("wishProductName");
         if(wishProductName==""||wishProductName==null)

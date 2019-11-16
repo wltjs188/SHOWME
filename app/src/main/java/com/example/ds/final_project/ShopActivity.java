@@ -591,6 +591,8 @@ public class ShopActivity extends AppCompatActivity {
                 productIds.add(item.getString("productId"));
                 optionNums.add(item.getString("optionNum"));
                 String info="";
+
+//                info+=(i+1)+"번째 상품입니다.\n";
                 info+=item.getString("name").equals("null")?"":("상품명: " +item.getString("name")+ "\n");
 
                 info+=item.getString("length").equals("null")?"":item.getString("length")+" ";
