@@ -20,11 +20,9 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-<<<<<<< HEAD
-=======
 import com.example.ds.final_project.db.UpdateWishProductName;
-import com.example.ds.final_project.db.serverTest;
->>>>>>> 89d92875ac1d3c51356e1284fcef67e34a667422
+import com.example.ds.final_project.db.InsertUser2;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -89,8 +87,6 @@ public class MainActivity extends AppCompatActivity {
         uuid = GetDevicesUUID(getBaseContext());
         savePreferences("uuid",uuid);
         Log.d("uuid",uuid);
-        serverTest a= new serverTest();
-        a.execute();
         //서버연결
         GetUserData task = new GetUserData();
         task.execute( "http://" + IP_ADDRESS + "/getUser.php",uuid);
@@ -303,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
 ////        task1.execute("http://" + IP_ADDRESS + "/updateWishProductName.php",uuid,name,change);
 ////        Log.d("나",uuid);
 ////        Toast.makeText(this,"업데이트",Toast.LENGTH_LONG).show();
-        Intent intent=new Intent(getApplicationContext(), ServerTest.class);
+        Intent intent=new Intent(getApplicationContext(), UpdateWishProductName.class);
         startActivity(intent);
     }
     protected void makeRequest() {
