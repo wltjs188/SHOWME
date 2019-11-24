@@ -26,7 +26,6 @@
         />
 
     <Button
-        android:visibility="gone"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

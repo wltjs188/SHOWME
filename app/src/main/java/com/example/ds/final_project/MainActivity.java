@@ -20,7 +20,6 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-import com.example.ds.final_project.db.UpdateWishProductName;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -296,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
 ////        task1.execute("http://" + IP_ADDRESS + "/updateWishProductName.php",uuid,name,change);
 ////        Log.d("나",uuid);
 ////        Toast.makeText(this,"업데이트",Toast.LENGTH_LONG).show();
-        Intent intent=new Intent(getApplicationContext(),AddressActivity.class);
+        Intent intent=new Intent(getApplicationContext(), ServerTest.class);
         startActivity(intent);
     }
     protected void makeRequest() {
