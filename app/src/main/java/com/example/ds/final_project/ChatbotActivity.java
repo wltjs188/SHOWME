@@ -1135,6 +1135,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //        }
 //        else {
 //        if(get)
+
         speech = result.getFulfillment().getSpeech();
 //        }
 
