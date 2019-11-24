@@ -20,6 +20,11 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+<<<<<<< HEAD
+=======
+import com.example.ds.final_project.db.UpdateWishProductName;
+import com.example.ds.final_project.db.serverTest;
+>>>>>>> 89d92875ac1d3c51356e1284fcef67e34a667422
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private TextToSpeech tts;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
 
@@ -83,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
         uuid = GetDevicesUUID(getBaseContext());
         savePreferences("uuid",uuid);
         Log.d("uuid",uuid);
+        serverTest a= new serverTest();
+        a.execute();
         //서버연결
         GetUserData task = new GetUserData();
         task.execute( "http://" + IP_ADDRESS + "/getUser.php",uuid);
