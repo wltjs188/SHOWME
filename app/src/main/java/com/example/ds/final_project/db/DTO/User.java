@@ -1,4 +1,4 @@
-package com.example.ds.final_project.db;
+package com.example.ds.final_project.db.DTO;
 
 public class User {
     String id;
