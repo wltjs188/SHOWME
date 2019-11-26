@@ -21,7 +21,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.example.ds.final_project.db.UpdateWishProductName;
-import com.example.ds.final_project.db.InsertUser2;
 
 
 import org.json.JSONArray;

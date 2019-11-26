@@ -1,11 +1,8 @@
-package com.example.ds.final_project.db;
+package com.example.ds.final_project.db.DAO;
 
-import android.app.ProgressDialog;
+
 import android.os.AsyncTask;
 import android.util.Log;
-
-import com.example.ds.final_project.MainActivity;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -51,9 +48,9 @@ public class InsertUser2 extends AsyncTask<String, Void, String> {
             HttpConnectionParams.setTcpNoDelay(httpParameters, true);
 
             // 주소 : aws서버
-//            String postURL = "http://52.78.143.125:8080/showme/InsertUser";
+            String postURL = "http://52.78.143.125:8080/showme6/InsertUser";
             // 로컬서버
-            String postURL = "http://10.0.2.2:8080/showme/InsertUser";
+//            String postURL = "http://10.0.2.2:8080/showme/InsertUser";
 
             HttpPost post = new HttpPost(postURL);
             //서버에 보낼 파라미터
@@ -63,6 +60,7 @@ public class InsertUser2 extends AsyncTask<String, Void, String> {
             postParameters.add(new BasicNameValuePair("name", name));
             postParameters.add(new BasicNameValuePair("address", address));
             postParameters.add(new BasicNameValuePair("phoneNum", phoneNum));
+
 
             //파라미터 보내기
             UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);
@@ -75,9 +73,17 @@ public class InsertUser2 extends AsyncTask<String, Void, String> {
             long elapsedTime = System.currentTimeMillis() - startTime;
             Log.v("debugging", elapsedTime + " ");
 
+
             HttpEntity resEntity = responsePOST.getEntity();
             if (resEntity != null) {
                 LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
+                System.out.println(LoadData);
+            }
+            if(responsePOST.getStatusLine().getStatusCode()==200){
+                System.out.println("오류없음");
+            }
+            else{
+                System.out.println("오류");
             }
 
         } catch (Exception e) {
