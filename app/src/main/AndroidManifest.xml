@@ -18,8 +18,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+<<<<<<< HEAD
         android:transcriptMode="normal">
         <activity android:name=".db.DAO.ServertestActivity"></activity>
+=======
+        android:transcriptMode="normal"
+        android:usesCleartextTraffic="true">
+>>>>>>> b317f109561d4b6399168eb57e2551c10288e2cd
         <activity android:name=".ReviewActivity" />
         <activity android:name=".AddressActivity" />
         <activity

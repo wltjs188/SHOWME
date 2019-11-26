@@ -32,7 +32,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ds.final_project.db.DAO.InsertUser2;
+<<<<<<< HEAD
+=======
+import com.example.ds.final_project.db.DTO.User;
+>>>>>>> b317f109561d4b6399168eb57e2551c10288e2cd
 import com.example.ds.final_project.db.UpdateUser;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -857,9 +862,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 }
                 //사용자 정보 DB에 넣기
                 if( !user_name.equals("") && !user_phone.equals("") && !user_address.equals("") ) {
-                    InsertUser2 task = new InsertUser2();
-                    //Log.d("test","이름");
                     System.out.println("이름 : "+user_name+"번호 : "+user_phone+"주소 : "+user_address);
+                    InsertUser2 task = new InsertUser2();
                     task.execute(user_uuid,user_name,user_address,user_phone);
                     Log.i("액션USER",ACTION);
 //                    remenu=getRemenu(result);
