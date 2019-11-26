@@ -32,10 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ds.final_project.db.DAO.InsertUser2;
-<<<<<<< HEAD
-=======
 import com.example.ds.final_project.db.DTO.User;
->>>>>>> b317f109561d4b6399168eb57e2551c10288e2cd
 import com.example.ds.final_project.db.UpdateUser;
 
 import com.google.gson.Gson;

@@ -1,8 +1,5 @@
 package com.example.ds.final_project.db.DAO;
-<<<<<<< HEAD:app/src/main/java/com/example/ds/final_project/db/DAO/InsertUser2.java
-=======
 
->>>>>>> b317f109561d4b6399168eb57e2551c10288e2cd:app/src/main/java/com/example/ds/final_project/db/DAO/InsertUser2.java
 
 import android.os.AsyncTask;
 import android.util.Log;
