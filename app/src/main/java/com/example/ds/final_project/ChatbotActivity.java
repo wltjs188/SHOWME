@@ -1,7 +1,6 @@
 package com.example.ds.final_project;
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,8 +31,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ds.final_project.db.InsertUser;
-import com.example.ds.final_project.db.InsertUser2;
+import com.example.ds.final_project.db.DAO.InsertUser2;
 import com.example.ds.final_project.db.UpdateUser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

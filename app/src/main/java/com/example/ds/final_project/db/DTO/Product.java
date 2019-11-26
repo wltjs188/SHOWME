@@ -19,6 +19,20 @@ public class Product {
     String ave_dilevery;
     String size_table;
 
+    public Product(){
+
+        size=null;
+        brand=null;
+        color=null;
+        fabric=null;
+        texture=null;
+        stretch=null;
+        see_through=null;
+        thick=null;
+        season=null;
+        ave_dilevery=null;
+        size_table=null;
+    }
     public int getId() {
         return id;
     }
