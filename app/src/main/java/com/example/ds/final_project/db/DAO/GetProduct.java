@@ -1,5 +1,6 @@
 package com.example.ds.final_project.db.DAO;
 
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import com.example.ds.final_project.db.DTO.Product;
@@ -43,7 +44,8 @@ public class GetProduct implements Runnable {
                 Product dto =new Product();
                 dto.setId(row.getInt("ID"));
                 dto.setName(row.getString("NAME"));
-
+                Log.i("가져온 데이터",dto.getId()+"");
+                Log.i("가져온 데이터",dto.getName()+"");
                 // ArrayList에 add
                 items.add(dto);
             }

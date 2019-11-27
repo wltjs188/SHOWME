@@ -28,6 +28,8 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 
 import java.util.ArrayList;
@@ -129,6 +131,22 @@ public class ServertestActivity extends AppCompatActivity {
                 if (resEntity != null) {
                     LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
                     Log.i("가져온 데이터",LoadData);
+                    JSONObject jsonObj =new JSONObject(LoadData);
+                    // json객체.get("변수명")
+                    JSONArray jArray = (JSONArray)jsonObj.get("getData");
+                    items=new ArrayList<Product>();
+                    for(int i=0; i<jArray.length();i++){
+                        // json배열.getJSONObject(인덱스)
+                        JSONObject row = jArray.getJSONObject(i);
+                        Product dto =new Product();
+                        dto.setId(row.getInt("ID"));
+                        dto.setName(row.getString("NAME"));
+
+                        // ArrayList에 add
+                        items.add(dto);
+                        Log.i("가져온 데이터",dto.getId()+"");
+                        Log.i("가져온 데이터",dto.getName()+"");
+                    }
                 }
 
             } catch (Exception e) {
