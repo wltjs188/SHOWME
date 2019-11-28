@@ -112,7 +112,7 @@ public class ServertestActivity extends AppCompatActivity {
                 HttpConnectionParams.setTcpNoDelay(httpParameters, true);
 
                 // 주소
-                String postURL = "http://52.78.143.125:8080/showme/GetProduct";
+                String postURL = "http://52.78.143.125:8080/showme/DeleteWishProduct";
 
                 HttpPost post = new HttpPost(postURL);
                 ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -128,26 +128,26 @@ public class ServertestActivity extends AppCompatActivity {
                 Log.v("debugging", elapsedTime + " ");
 
                 HttpEntity resEntity = responsePOST.getEntity();
-                if (resEntity != null) {
-                    LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
-                    Log.i("가져온 데이터",LoadData);
-                    JSONObject jsonObj =new JSONObject(LoadData);
-                    // json객체.get("변수명")
-                    JSONArray jArray = (JSONArray)jsonObj.get("getData");
-                    items=new ArrayList<Product>();
-                    for(int i=0; i<jArray.length();i++){
-                        // json배열.getJSONObject(인덱스)
-                        JSONObject row = jArray.getJSONObject(i);
-                        Product dto =new Product();
-                        dto.setId(row.getInt("ID"));
-                        dto.setName(row.getString("NAME"));
-
-                        // ArrayList에 add
-                        items.add(dto);
-                        Log.i("가져온 데이터",dto.getId()+"");
-                        Log.i("가져온 데이터",dto.getName()+"");
-                    }
-                }
+//                if (resEntity != null) {
+//                    LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
+//                    Log.i("가져온 데이터",LoadData);
+//                    JSONObject jsonObj =new JSONObject(LoadData);
+//                    // json객체.get("변수명")
+//                    JSONArray jArray = (JSONArray)jsonObj.get("getData");
+//                    items=new ArrayList<Product>();
+//                    for(int i=0; i<jArray.length();i++){
+//                        // json배열.getJSONObject(인덱스)
+//                        JSONObject row = jArray.getJSONObject(i);
+//                        Product dto =new Product();
+//                        dto.setId(row.getInt("ID"));
+//                        dto.setName(row.getString("NAME"));
+//
+//                        // ArrayList에 add
+//                        items.add(dto);
+//                        Log.i("가져온 데이터",dto.getId()+"");
+//                        Log.i("가져온 데이터",dto.getName()+"");
+//                    }
+//                }
 
             } catch (Exception e) {
                 e.printStackTrace();
