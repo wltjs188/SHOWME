@@ -173,6 +173,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     @Override
     protected void onStart() {
         super.onStart();
+
+
         params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,"stringId"); //tts
         if(user_name==""||user_address==""||user_phone==""){
             //사용자 정보 등록 안됨
