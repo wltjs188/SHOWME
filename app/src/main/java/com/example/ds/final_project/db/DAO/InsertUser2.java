@@ -36,6 +36,12 @@ public class InsertUser2 extends AsyncTask<String, Void, String> {
         String name = (String)params[1];
         String address = (String)params[2];
         String phoneNum = (String)params[3];
+//        String uid = (String)params[0];
+//        String infoName = (String)params[1];
+//        String infoValue = (String)params[2];
+
+
+
 
         try {
             HttpParams httpParameters = new BasicHttpParams();
@@ -48,7 +54,8 @@ public class InsertUser2 extends AsyncTask<String, Void, String> {
             HttpConnectionParams.setTcpNoDelay(httpParameters, true);
 
             // 주소 : aws서버
-            String postURL = "http://52.78.143.125:8080/showme6/InsertUser";
+            String postURL = "http://52.78.143.125:8080/showme/InsertUser";
+
             // 로컬서버
 //            String postURL = "http://10.0.2.2:8080/showme/InsertUser";
 
@@ -60,6 +67,17 @@ public class InsertUser2 extends AsyncTask<String, Void, String> {
             postParameters.add(new BasicNameValuePair("name", name));
             postParameters.add(new BasicNameValuePair("address", address));
             postParameters.add(new BasicNameValuePair("phoneNum", phoneNum));
+//            postParameters.add(new BasicNameValuePair("uid", uid));
+//            postParameters.add(new BasicNameValuePair("infoName", infoName));
+//            postParameters.add(new BasicNameValuePair("infoValue", infoValue));
+//            for(int i=0;i<params.length;i++){
+//                postParameters.add(new BasicNameValuePair("\""+(String)params[i]+"\"",(String)params[i]));
+//                System.out.println("\""+(String)params[i]+"\","+(String)params[i]);
+//            }
+//            postParameters.add(new BasicNameValuePair("uid", "0"));
+//            postParameters.add(new BasicNameValuePair("wishProductName", "1"));
+//            postParameters.add(new BasicNameValuePair("value", "123"));
+
 
 
             //파라미터 보내기
