@@ -34,8 +34,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+import com.example.ds.final_project.db.DTO.Product;
 import com.example.ds.final_project.db.DeleteWishProduct;
 import com.example.ds.final_project.db.InsertWishProduct;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
 import com.kakao.kakaolink.v2.KakaoLinkService;
 import com.kakao.message.template.ButtonObject;
@@ -120,11 +123,15 @@ public class ProductInfo extends AppCompatActivity {
         product_info=(TextView)findViewById(R.id.product_info);
         product_info.setMovementMethod(new ScrollingMovementMethod());
         Intent intent = getIntent();
-        productId=intent.getStringExtra("productId");
-        optionNum=intent.getStringExtra("optionNum");
-        info=intent.getStringExtra("info");
+        String strContact =intent.getStringExtra("product");
+        Gson gson = new GsonBuilder().create();
 
-        image=intent.getStringExtra("image");
+        Product product=gson.fromJson(strContact,Product.class);
+
+//        optionNum=intent.getStringExtra("optionNum");
+        info=product.toString();
+        image=product.getImage();
+
         wishProductName=intent.getStringExtra("wishProductName");
         if(wishProductName==""||wishProductName==null)
             getSupportActionBar().setTitle("상품 상세 정보");

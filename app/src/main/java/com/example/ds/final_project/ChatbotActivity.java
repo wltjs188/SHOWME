@@ -1,4 +1,5 @@
 package com.example.ds.final_project;
+import com.example.ds.final_project.db.DTO.Product;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -32,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ds.final_project.db.DAO.InsertUser2;
+import com.example.ds.final_project.db.DTO.Product;
 import com.example.ds.final_project.db.DTO.User;
 import com.example.ds.final_project.db.UpdateUser;
 
@@ -336,18 +338,19 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                    Toast.makeText(getApplicationContext(),"010을 제외한 8자리 번호를 입력해주세요.",Toast.LENGTH_LONG).show();
 //                }
                 else {
-                    tts.speak(editText.getText().toString()+"라고 말했습니다.",TextToSpeech.QUEUE_FLUSH, params);
-//                    if(user_name==""||user_address==""||user_phone==""){
-//                        //등록되지 않은 사용자
-//                        aiRequest2.setQuery(editText.getText().toString());
-//                        Log.e("입력",editText.getText().toString());
-//                        new AITask().execute(aiRequest2);
-//                    }else{
-//                        //등록된 사용자
-//                        aiRequest.setQuery(editText.getText().toString());
-//                        Log.e("입력",editText.getText().toString());
-//                        new AITask().execute(aiRequest);
-//                    }
+
+//                    tts.speak(editText.getText().toString()+"라고 말했습니다.",TextToSpeech.QUEUE_FLUSH, params);
+                    if(user_name==""||user_address==""||user_phone==""){
+                        //등록되지 않은 사용자
+                        aiRequest2.setQuery(editText.getText().toString());
+                        Log.e("입력",editText.getText().toString());
+                        new AITask().execute(aiRequest2);
+                    }else{
+                        //등록된 사용자
+                        aiRequest.setQuery(editText.getText().toString());
+                        Log.e("입력",editText.getText().toString());
+                        new AITask().execute(aiRequest);
+                    }
                 }
 //                editText.requestFocus();
             }
@@ -961,7 +964,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     shopIntent.putExtra("size", size);
                     shopIntent.putExtra("pattern", pattern);
 //                    shopIntent.putExtra("fabric", fabric);
-                    remember.setInfo(category,color,length,size,pattern);
+                    remember.setCategory(category);
+                    remember.setCategory(color);
+                    remember.setCategory(size);
                     Gson gson = new GsonBuilder().create();
                     String strContact = gson.toJson(remember, Product.class);
                     savePreferences("remember",strContact);
@@ -983,11 +988,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     if (remember == null) {
                         //검색 못해
                     } else {
-                        shopIntent.putExtra("category", remember.category);
-                        shopIntent.putExtra("color", remember.color);
-                        shopIntent.putExtra("length", remember.length);
-                        shopIntent.putExtra("size", remember.size);
-                        shopIntent.putExtra("pattern", remember.pattern);
+                        shopIntent.putExtra("category", remember.getCategory());
+                        shopIntent.putExtra("color", remember.getCategory());
+                        shopIntent.putExtra("size", remember.getSize());
 
                         category = null;
                         color = null;
