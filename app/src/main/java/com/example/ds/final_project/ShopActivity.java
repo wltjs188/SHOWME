@@ -96,7 +96,7 @@ public class ShopActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(category + "검색 결과");
 
         GetProduct task = new GetProduct();
-        task.execute("GetProduct", category, color, size);
+        task.execute("SelectProduct", category, color, size);
 //        GetDiscountInfo task2 =new GetDiscountInfo();
 //        task2.execute("http://" + IP_ADDRESS + "/getDiscountInfo.php", category, color, length, size, pattern, detail);
         //클릭시, 상세정보 페이지로 이동

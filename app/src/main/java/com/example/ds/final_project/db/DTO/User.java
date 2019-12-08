@@ -5,7 +5,7 @@ public class User {
     String name="";
     String address="";
     String phoneNum="";
-
+    public User(){}
     public User(String id,String name, String address, String phoneNum){
         this.id=id;
         this.name=name;

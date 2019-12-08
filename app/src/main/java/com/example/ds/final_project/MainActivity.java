@@ -1,6 +1,7 @@
 package com.example.ds.final_project;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,11 +21,27 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
+import com.example.ds.final_project.db.DTO.User;
 import com.example.ds.final_project.db.DAO.ServertestActivity;
 import com.example.ds.final_project.db.UpdateWishProductName;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,18 +53,20 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.UUID;
 import static android.speech.tts.TextToSpeech.ERROR;
+import org.apache.http.message.BasicNameValuePair;
 public class MainActivity extends AppCompatActivity {
 
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
-    String TAG = "phptest";
+
     public static Context CONTEXT;
     //메인화면
     Intent searchIntent,wishIntent,infoIntent,webIntent,shopIntent,dbTestIntent,reviewIntent; //쇼핑시작,나의관심상품,정보수정
     //서버
-    String IP_ADDRESS = "18.191.10.193";
+    String IP_ADDRESS = "52.78.143.125";
     private String mJsonString;
     //사용자 정보
     private String uuid; //스마트폰 고유번호
@@ -89,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
         savePreferences("uuid",uuid);
         Log.d("uuid",uuid);
         //서버연결
-        GetUserData task = new GetUserData();
-        task.execute( "http://" + IP_ADDRESS + "/getUser.php",uuid);
+        SelectData task = new SelectData();
+        task.execute( "SelectUser",uuid);
 
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -131,120 +150,134 @@ public class MainActivity extends AppCompatActivity {
 //       tts.speak("화면 아무 곳이나 터치하시면 쇼우미가 시작됩니다.",TextToSpeech.QUEUE_FLUSH, null);
         savePreferences("uuid",uuid);
         //서버연결
-       GetUserData task = new GetUserData();
-        task.execute( "http://" + IP_ADDRESS + "/getUser.php",uuid);
+       SelectData task = new SelectData();
+        task.execute( "SelectUser",uuid);
     }
 
-    private class GetUserData extends AsyncTask<String, Void, String>{
-
-      //  ProgressDialog progressDialog;
-        String errorString = null;
-
+    class SelectData extends AsyncTask<String, Void,String> {
+        String LoadData;
+        private ProgressDialog pDialog;
         @Override
         protected void onPreExecute() {
+            pDialog = new ProgressDialog(MainActivity.this);
+            pDialog.setMessage("검색중입니다..");
+            pDialog.setCancelable(false);
+            pDialog.show();
             super.onPreExecute();
-//            progressDialog = ProgressDialog.show(MainActivity.this,
-//                    "Please Wait", null, true, true);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-          //  progressDialog.dismiss();
-
-            if (result == null){
-                Log.i(TAG,"RESULT="+result);
-
-            }
-            else {
-                Log.i(TAG,"RESULT="+result);
-                mJsonString = result;
-                showResult();
-            }
         }
 
         @Override
         protected String doInBackground(String... params) {
-            String serverURL = params[0];
-            String postParameters = "uid=" + params[1];
-
+            // TODO Auto-generated method stub
+            String project = (String)params[0];
+            String uid = (String)params[1];
             try {
-                URL url = new URL(serverURL);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                HttpParams httpParameters = new BasicHttpParams();
+                HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
 
-                httpURLConnection.setReadTimeout(5000);
-                httpURLConnection.setConnectTimeout(5000);
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.connect();
+                HttpClient client = new DefaultHttpClient(httpParameters);
+
+                HttpConnectionParams.setConnectionTimeout(httpParameters, 7000);
+                HttpConnectionParams.setSoTimeout(httpParameters, 7000);
+                HttpConnectionParams.setTcpNoDelay(httpParameters, true);
+
+                // 주소 : aws서버
+                String postURL = "http://"+IP_ADDRESS+":8080/showme/";
+
+                // 로컬서버
+//            String postURL = "http://10.0.2.2:8080/showme/InsertUser";
+
+                HttpPost post = new HttpPost(postURL+project);
+                //서버에 보낼 파라미터
+                ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+                //파라미터 추가하기
+
+            postParameters.add(new BasicNameValuePair("uid", uid));
 
 
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                outputStream.write(postParameters.getBytes("UTF-8"));
-                outputStream.flush();
-                outputStream.close();
+                //파라미터 보내기
+                UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);
+                post.setEntity(ent);
+
+                long startTime = System.currentTimeMillis();
+
+                HttpResponse responsePOST = client.execute(post);
+
+                long elapsedTime = System.currentTimeMillis() - startTime;
+                Log.v("debugging", elapsedTime + " ");
 
 
-                int responseStatusCode = httpURLConnection.getResponseCode();
+                HttpEntity resEntity = responsePOST.getEntity();
+                if (resEntity != null) {
+                    LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
 
-                InputStream inputStream;
-                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
-                    inputStream = httpURLConnection.getInputStream();
+                    Log.i("가져온 데이터", LoadData);
+                    return LoadData;
+                }
+                if(responsePOST.getStatusLine().getStatusCode()==200){
+                    System.out.println("오류없음");
                 }
                 else{
-                    inputStream = httpURLConnection.getErrorStream();
+
+                    System.out.println("오류");
+                    return null;
                 }
 
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-                StringBuilder sb = new StringBuilder();
-                String line;
-
-                while((line = bufferedReader.readLine()) != null){
-                    sb.append(line);
-                }
-
-                bufferedReader.close();
-
-                return sb.toString().trim();
             } catch (Exception e) {
-                errorString = e.toString();
-                return null;
+                e.printStackTrace();
             }
+            return null;
         }
-    }
-    private void showResult(){
 
-        String TAG_JSON="User";
-        String TAG_ID = "uid";
-        String TAG_NAME = "name";
-        String TAG_ADDRESS = "address";
-        String TAG_PHONENUM ="phoneNum";
+        @Override
+        protected void onPostExecute(String result) {
+            pDialog.dismiss();
+            if (result == null){
+                Log.i("로긴","실패");
+                Toast.makeText(getApplicationContext(),"실패",Toast.LENGTH_LONG).show();
+            }
+            else {
+                try {
+                    JSONObject jsonObj = new JSONObject(LoadData);
+                    // json객체.get("변수명")
+                    JSONArray jArray = (JSONArray) jsonObj.get("userData");
+//                    items = new ArrayList<Product>();
+                    if(jArray.length()==0){
+                        Log.d("로긴","로그인 실패");
+                    }else {
+                        Log.i("로긴","성공"+result);
+                        User user=new User();
+                        for (int i = 0; i < jArray.length(); i++) {
+                            // json배열.getJSONObject(인덱스)
+                            JSONObject row = jArray.getJSONObject(i);
+                            String id=row.getString("id");
+                            String name=row.getString("name");
+                            String address=row.getString("address");
+                            String phoneNum=row.getString("phoneNum");
 
-        try {
-            JSONObject jsonObject = new JSONObject(mJsonString);
-            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
+                            user.setId(id);
+                            user.setName(name);
+                            user.setAddress(address);
+                            user.setPhoneNum(phoneNum);
 
-            for(int i=0;i<jsonArray.length();i++){
-                JSONObject item = jsonArray.getJSONObject(i);
-                String uuid = item.getString(TAG_ID);
-                Log.d("가져온 uuid",uuid);
-                Log.d("리얼 uuid",this.uuid);
-                if(uuid.equals(this.uuid)){
-                    name = item.getString(TAG_NAME);
-                    address = item.getString(TAG_ADDRESS);
-                    phoneNum = item.getString(TAG_PHONENUM);
+                            Gson gson = new GsonBuilder().create();
+
+                            String strContact = gson.toJson(user, User.class);
+                            savePreferences("user",strContact);
+
+                            Log.i("가져온 데이터",id);
+                            Log.i("가져온 데이터", address);
+                            Log.i("가져온 데이터", name);
+                            Log.i("가져온 데이터", phoneNum);
+                        }
+
+                    }
+
+                } catch (JSONException e) {
+                    Log.d("error : ", e.getMessage());
                 }
             }
-
-        } catch (JSONException e) {
-            Log.d("showResult : ", e.getMessage());
         }
-        Log.d("채윤",uuid+", "+name+","+address+","+phoneNum);
-        savePreferences("name",name);
-        savePreferences("address",address);
-        savePreferences("phoneNum",phoneNum);
     }
 
     // 값 저장하기
