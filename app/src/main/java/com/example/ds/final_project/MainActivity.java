@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
         uuid = GetDevicesUUID(getBaseContext());
         savePreferences("uuid",uuid);
-        Log.d("uuid",uuid);
+        Log.d("연결 uuid",uuid);
         //서버연결
         SelectData task = new SelectData();
         task.execute( "SelectUser",uuid);
@@ -121,14 +121,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                tts.speak("화면 아무 곳이나 터치하시면 쇼우미가 시작됩니다.",TextToSpeech.QUEUE_FLUSH, null);
-            }
-        }, 1000);
+//
+//        final Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                tts.speak("화면 아무 곳이나 터치하시면 쇼우미가 시작됩니다.",TextToSpeech.QUEUE_FLUSH, null);
+//            }
+//        }, 1000);
         //키해시 구하기
         try {
             PackageInfo info = getPackageManager().getPackageInfo("com.example.ds.final_project", PackageManager.GET_SIGNATURES);
@@ -159,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
         private ProgressDialog pDialog;
         @Override
         protected void onPreExecute() {
+            Log.d("?","?");
             pDialog = new ProgressDialog(MainActivity.this);
             pDialog.setMessage("검색중입니다..");
             pDialog.setCancelable(false);
@@ -182,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                 HttpConnectionParams.setTcpNoDelay(httpParameters, true);
 
                 // 주소 : aws서버
-                String postURL = "http://"+IP_ADDRESS+":8080/showme/";
+                String postURL = "http://52.78.143.125:8080/showme/";
 
                 // 로컬서버
 //            String postURL = "http://10.0.2.2:8080/showme/InsertUser";
@@ -211,15 +212,14 @@ public class MainActivity extends AppCompatActivity {
                 if (resEntity != null) {
                     LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
 
-                    Log.i("가져온 데이터", LoadData);
+                    Log.d("가져온 데이터", LoadData);
                     return LoadData;
                 }
                 if(responsePOST.getStatusLine().getStatusCode()==200){
-                    System.out.println("오류없음");
+                    Log.d("오류","없");
                 }
                 else{
-
-                    System.out.println("오류");
+                    Log.d("error","오류");
                     return null;
                 }
 
@@ -231,19 +231,33 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            Log.d("??","?");
+            Log.d("??",result);
+
             pDialog.dismiss();
-            if (result == null){
-                Log.i("로긴","실패");
-                Toast.makeText(getApplicationContext(),"실패",Toast.LENGTH_LONG).show();
+            if (result == null||result==""){
+                Log.d("로긴","실패");
+//                User user=new User();
+//                Gson gson = new GsonBuilder().create();
+//
+//                String strContact = gson.toJson(user, User.class);
+//                savePreferences("USER",strContact);
+                removePreferences("USER");
+//                Toast.makeText(getApplicationContext(),"실패",Toast.LENGTH_LONG).show();
             }
             else {
                 try {
-                    JSONObject jsonObj = new JSONObject(LoadData);
+                    JSONObject jsonObj = new JSONObject(result);
                     // json객체.get("변수명")
                     JSONArray jArray = (JSONArray) jsonObj.get("userData");
 //                    items = new ArrayList<Product>();
                     if(jArray.length()==0){
+//                        User user=new User();
+//                        Gson gson = new GsonBuilder().create();
+//
+//                        String strContact = gson.toJson(user, User.class);
                         Log.d("로긴","로그인 실패");
+                        removePreferences("USER");
                     }else {
                         Log.i("로긴","성공"+result);
                         User user=new User();
@@ -263,12 +277,12 @@ public class MainActivity extends AppCompatActivity {
                             Gson gson = new GsonBuilder().create();
 
                             String strContact = gson.toJson(user, User.class);
-                            savePreferences("user",strContact);
+                            savePreferences("USER",strContact);
 
-                            Log.i("가져온 데이터",id);
-                            Log.i("가져온 데이터", address);
-                            Log.i("가져온 데이터", name);
-                            Log.i("가져온 데이터", phoneNum);
+                            Log.d("가져온 데이터",id);
+                            Log.d("가져온 데이터", address);
+                            Log.d("가져온 데이터", name);
+                            Log.d("가져온 데이터", phoneNum);
                         }
 
                     }
@@ -288,6 +302,13 @@ public class MainActivity extends AppCompatActivity {
         editor.commit();
     }
 
+    // 값 삭제하기
+    public void removePreferences(String key){
+        SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.remove(key);
+        editor.commit();
+    }
     //스마트폰 고유번호 가져오기
     private String GetDevicesUUID(Context mContext){
         final TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);

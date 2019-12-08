@@ -95,7 +95,7 @@ public class InsertUser2 extends AsyncTask<String, Void, String> {
             HttpEntity resEntity = responsePOST.getEntity();
             if (resEntity != null) {
                 LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
-                System.out.println(LoadData);
+                Log.d("성공",LoadData);
             }
             if(responsePOST.getStatusLine().getStatusCode()==200){
                 System.out.println("오류없음");

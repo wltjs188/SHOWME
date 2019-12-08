@@ -107,13 +107,15 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     //boolean isMine;
     static private List<ChatMessage> chatMessages = new ArrayList<>();
     private ArrayAdapter<ChatMessage> adapter;//= new MessageAdapter(this, 0, chatMessages);
-
+    Gson gson = new GsonBuilder().create();
     //사용자 정보
     HashMap<String,JsonElement> parameter=new HashMap<String,JsonElement>();
-    private String user_uuid;
-    private String user_name=null;
-    private String user_phone=null;
-    private String user_address=null;
+    private User user=null;
+    private String uuid;
+//    private String user_uuid;
+//    private String user_name=null;
+//    private String user_phone=null;
+//    private String user_address=null;
     private TextToSpeech tts;
 
     //stt
@@ -161,7 +163,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     @Override
     protected void onResume() {
         super.onResume();
-        Gson gson = new GsonBuilder().create();
         if(getPreferences("remember")==null||getPreferences("remember")=="") //이전 상품 존재 안함
             remember=new Product();
         else{ //이전 상품 존재함
@@ -176,7 +177,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     protected void onStart() {
         super.onStart();
         params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,"stringId"); //tts
-        if(user_name==""||user_address==""||user_phone==""){
+        if(user==null){
+
             //사용자 정보 등록 안됨
             //등록되지 않은 사용자
             final AIConfiguration config2 = new AIConfiguration("9642984963944e239cd1381a0e174ff0",
@@ -243,7 +245,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         btn_chat_send=(Button)findViewById(R.id.btn_chat_send);
         wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
         shopIntent=new Intent(getApplicationContext(),ShopActivity.class); //상품검색
-        Gson gson = new GsonBuilder().create();
+
+
+
         if(getPreferences("remember")==null||getPreferences("remember")=="") //이전 상품 존재 안함
             remember=new Product();
         else{ //이전 상품 존재함
@@ -259,18 +263,13 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         btnSTT=findViewById(R.id.btn_stt);
         editText = (EditText) findViewById(R.id.msg_type);
 
-
-        user_uuid = getPreferences("uuid");
-        //user_uuid = "ffffffff-e523-2a50-576f-dd2f1aeb1b07";
-        user_name = getPreferences("name");
-        user_address = getPreferences("address");
-        user_phone = getPreferences("phoneNum");
-        Log.d("uuid 정보",user_name+user_address+user_phone);
-//        gender = getPreferences("gender");
-//        height = getPreferences("height");
-//        top = getPreferences("top");
-//        bottom = getPreferences("bottom");
-//        foot = getPreferences("foot");
+        //사용자 정보 받아오기
+        uuid=getPreferences("uuid");
+        if(!(getPreferences("USER")==null||getPreferences("USER")=="")){
+            String strContact=getPreferences("USER");
+            user=gson.fromJson(strContact,User.class);
+            Log.d("uuid 정보",user.getName()+user.getAddress()+user.getPhoneNum());
+        }
 
 
 
@@ -296,7 +295,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             }
             @Override
             public void onDone(String utteranceId) {
-                if(user_name==""||user_address==""||user_phone==""){
+                if(user==null){
                     //등록되지 않은 사용자
                     aiRequest2.setQuery(editText.getText().toString());
                     Log.e("입력",editText.getText().toString());
@@ -340,7 +339,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 else {
 
 //                    tts.speak(editText.getText().toString()+"라고 말했습니다.",TextToSpeech.QUEUE_FLUSH, params);
-                    if(user_name==""||user_address==""||user_phone==""){
+                    if(user==null){
                         //등록되지 않은 사용자
                         aiRequest2.setQuery(editText.getText().toString());
                         Log.e("입력",editText.getText().toString());
@@ -680,7 +679,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     //메뉴 메세지
     protected void makeMenuMsg(){
 
-        ChatMessage chatMessage = new ChatMessage(user_name+"님 안녕하세요?\n메뉴를 선택해주세요\n" +
+        ChatMessage chatMessage = new ChatMessage(user.getName()+"님 안녕하세요?\n메뉴를 선택해주세요\n" +
                 "1. 상품검색\n" +
                 "2. 이전 검색 다시보기\n" +
                 "3. 관심상품보기\n" +
@@ -766,7 +765,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             final AIRequest request = requests[0];
             try {
                 final AIResponse response;
-                if(user_name==""||user_phone==""||user_address==""){
+                if(user==null){
                     response= aiDataService2.request(aiRequest2);
                     return response;
                 }else {
@@ -827,44 +826,53 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         switch (ACTION){
 
             case "ACTION_USER"://사용자등록 : 이름받아오기
+                String name="";
+                String address="";
+                String phoneNum="";
                 parameter=getParameter(result);
                 //이름
                 if(parameter.containsKey("user_name")){
-                    user_name=""+parameter.get("user_name");
-                    user_name=user_name.substring(9);
-                    user_name=user_name.substring(0,user_name.length()-2);
+                    name=""+parameter.get("user_name");
+                    name=name.substring(9);
+                    name=name.substring(0,name.length()-2);
                 }
                 //핸드폰 번호
                 if(parameter.containsKey("user_phone")){
-                    user_phone=""+parameter.get("user_phone");
-                    user_phone=(user_phone.replaceAll("\"","")).replaceAll("-","");
+                    phoneNum=""+parameter.get("user_phone");
+                    phoneNum=(phoneNum.replaceAll("\"","")).replaceAll("-","");
 
                 }
                 //주소 시,구,동
                 if(parameter.containsKey("city")) {
                     if(parameter.containsKey("state")){ //도
-                        user_address = "" + parameter.get("state");
+                        address = "" + parameter.get("state");
                     }
-                    user_address = user_address + parameter.get("city"); //시
+                    address = address + parameter.get("city"); //시
                     if(parameter.containsKey("county")){ //구,군
-                        user_address=user_address+parameter.get("county");
+                        address=address+parameter.get("county");
                     }
                     if(parameter.containsKey("county1")){ //면,읍,리
-                        user_address=user_address+parameter.get("county1");
+                        address=address+parameter.get("county1");
                     }
                     if(parameter.containsKey("village")){//동
-                        user_address=user_address+parameter.get("village");
+                        address=address+parameter.get("village");
                     }
                     if(parameter.containsKey("address")){ //상세주소,도로명주소
-                        user_address=user_address+parameter.get("address");
+                        address=address+parameter.get("address");
                     }
-                    user_address=user_address.replaceAll("\"","");
+                    address=address.replaceAll("\"","");
                 }
+
                 //사용자 정보 DB에 넣기
-                if( !user_name.equals("") && !user_phone.equals("") && !user_address.equals("") ) {
-                    System.out.println("이름 : "+user_name+"번호 : "+user_phone+"주소 : "+user_address);
+                if( !name.equals("") && !address.equals("") && !phoneNum.equals("") ) {
+                    user=new User(uuid,name,address,phoneNum);
+
+                    String strContact = gson.toJson(user, User.class);
+                    savePreferences("USER",strContact);
+                    Log.d("사용자 정보 DB등록",user.getName()+", "+user.getAddress()+","+user.getPhoneNum());
+
                     InsertUser2 task = new InsertUser2();
-                    task.execute(user_uuid,user_name,user_address,user_phone);
+                    task.execute(user.getId(),user.getName(),user.getAddress(),user.getPhoneNum());
                     Log.i("액션USER",ACTION);
 //                    remenu=getRemenu(result);
                     result.getContexts().clear();
@@ -872,34 +880,45 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 break;
             case "ACTION_M_NAME"://사용자정보수정 : 이름
                 parameter=getParameter(result);
-                user_name=""+parameter.get("user_name");
-                user_name=user_name.substring(9);
-                user_name=user_name.substring(0,user_name.length()-2);
+                name=""+parameter.get("user_name");
+                name=name.substring(9);
+                name=name.substring(0,name.length()-2);
+                user.setName(name);
+
+
+                String strContact = gson.toJson(user, User.class);
+                savePreferences("USER",strContact);
                 UpdateUser task1 = new UpdateUser(); //사용자정보 수정
-                task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"name",user_name);
+                task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user.getId(),"name",user.getName());
 //                remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;
             case "ACTION_M_PHONE"://사용자정보수정 : 핸드폰번호
-                parameter=getParameter(result);
-                user_phone=""+parameter.get("user_phone");
-                user_phone=(user_phone.replaceAll("\"","")).replaceAll("-","");
+                phoneNum=""+parameter.get("user_phone");
+                phoneNum=(phoneNum.replaceAll("\"","")).replaceAll("-","");
+                user.setPhoneNum(phoneNum);
+
+                strContact = gson.toJson(user, User.class);
+                savePreferences("USER",strContact);
                 task1 = new UpdateUser(); //사용자정보 수정
-                task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"phoneNum",user_phone);
+                task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user.getId(),"phoneNum",user.getPhoneNum());
 //                remenu=getRemenu(result);
                 result.getContexts().clear();
                 break;
             case "ACTION_M_ADDRESS"://사용자정보수정 : 주소
                 parameter=getParameter(result);
                 //주소 시,구,동 받아오기
-                user_address = "" + parameter.get("city")+parameter.get("county");
+                address = "" + parameter.get("city")+parameter.get("county");
                 if(parameter.containsKey("county1")){
-                    user_address=user_address+parameter.get("county1");
+                    address=address+parameter.get("county1");
                 }
-                user_address=user_address+parameter.get("village");
-                user_address=user_address.replaceAll("\"","");
+                address=address+parameter.get("village");
+                address=address.replaceAll("\"","");
+                user.setAddress(address);
+                strContact = gson.toJson(user, User.class);
+                savePreferences("USER",strContact);
                 task1 = new UpdateUser(); //사용자정보 수정
-                task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user_uuid,"address",user_address);
+                task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user.getId(),"address",user.getAddress());
 //                remenu=getRemenu(result);
                 result.getContexts().clear();
 
@@ -967,8 +986,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     remember.setCategory(category);
                     remember.setCategory(color);
                     remember.setCategory(size);
-                    Gson gson = new GsonBuilder().create();
-                    String strContact = gson.toJson(remember, Product.class);
+
+                    strContact = gson.toJson(remember, Product.class);
                     savePreferences("remember",strContact);
                     category = null; color = null; length = null; size = null; pattern = null;
                     result.getContexts().clear();
@@ -1014,13 +1033,13 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 }
 
                 if(sproduct==null) {
-                    GetWishProductName task = new GetWishProductName();
-                    task.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user_uuid);
+                    GetWishProductName task3 = new GetWishProductName();
+                    task3.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user.getId());
                 }
                 else{
                     ShareType = "카톡";
                     GetProductToShare task2 = new GetProductToShare();
-                    task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
+                    task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user.getId(),sproduct);
                 }
 
                 break;
@@ -1036,8 +1055,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     sproduct = parameter.get("ShareMProduct").toString().replace('\"',' ').trim();
                 }
                 if(sproduct==null) {
-                    GetWishProductName task = new GetWishProductName();
-                    task.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user_uuid);
+                    GetWishProductName task4 = new GetWishProductName();
+                    task4.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user.getId());
                 }
 
 //                    }
@@ -1065,7 +1084,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                        // 연락처 조회 된 경우, 공유 실행
                        ShareType = "문자";
                        GetProductToShare task2 = new GetProductToShare();
-                       task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user_uuid,sproduct);
+                       task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user.getId(),sproduct);
 
                    }
                    else{
