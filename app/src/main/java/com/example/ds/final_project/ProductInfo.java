@@ -148,6 +148,7 @@ public class ProductInfo extends AppCompatActivity {
         info = info + "\n" + Url;
 
         wishCheck=(CheckBox)findViewById(R.id.wishCheck);
+//        wishCheck.setContentDescription("이렇게하면");
         wishCheck.setOnCheckedChangeListener(new CheckBoxListener());
 
         //등록된 상품인지 확인
@@ -166,15 +167,15 @@ public class ProductInfo extends AppCompatActivity {
 
         builder.setTitle("공유 방식을 선택해주세요.");
 
-        builder.setItems(R.array.LAN, new DialogInterface.OnClickListener(){
+        builder.setItems(R.array.Messenger, new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int pos)
             {
-                String[] items = getResources().getStringArray(R.array.LAN);
+                String[] items = getResources().getStringArray(R.array.Messenger);
                 //Toast.makeText(getApplicationContext(),items[pos],Toast.LENGTH_LONG).show();
                 //문자공유
                 if(items[pos].equals("문자")){
-                    inputPhonNo();
+                    ShareMessage();
                 }
                 //카톡공유
                 else{
@@ -187,11 +188,78 @@ public class ProductInfo extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+    public void ShareMessage(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("연락처 입력 방식을 선택해주세요");
+
+        builder.setItems(R.array.Input, new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int pos)
+            {
+                String[] items = getResources().getStringArray(R.array.Input);
+                //Toast.makeText(getApplicationContext(),items[pos],Toast.LENGTH_LONG).show();
+                // 주소록 검색
+                if(items[pos].equals("주소록 검색")){
+                    searchPhone();
+                }
+                // 직접 입력
+                else{
+                    inputPhonNo();
+                }
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+    //연락처 검색_연락처 입력
+    private void searchPhone(){
+        AlertDialog.Builder ad = new AlertDialog.Builder(ProductInfo.this);
+
+        // 제목 설정
+        ad.setTitle("주소록에서 검색하실 연락처를 입력해주세요.");
+        // 내용 설정
+        //ad.setMessage("Message");
+
+        // EditText 삽입하기
+        final EditText et = new EditText(ProductInfo.this);
+        ad.setView(et);
+
+        // 전송 버튼 설정
+        ad.setNegativeButton("검색", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Log.v(TAG, "Yes Btn Click");
+
+                // Text 값 받아서 로그 남기기
+                phoneName = et.getText().toString();
+                //Log.v(TAG, value);
+                findNum(phoneName);
+                dialog.dismiss();     //닫기
+                // Event
+            }
+        });
+
+        // 취소 버튼 설정
+        ad.setPositiveButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Log.v(TAG,"No Btn Click");
+                dialog.dismiss();     //닫기
+                // Event
+            }
+        });
+
+        // 창 띄우기
+        ad.show();
+    }
+    // 번호 직접 입력
     private void inputPhonNo(){
         AlertDialog.Builder ad = new AlertDialog.Builder(ProductInfo.this);
 
         // 제목 설정
-        ad.setTitle("누구에게 공유하시겠습니까? 주소록에 저장된 이름으로 입력해주세요.");
+        ad.setTitle("메시지를 받으실 분의 번호를 정확히 입력해주세요.");
         // 내용 설정
         //ad.setMessage("Message");
 
@@ -205,10 +273,10 @@ public class ProductInfo extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 //Log.v(TAG, "Yes Btn Click");
 
-                // Text 값 받아서 로그 남기기
-                phoneName = et.getText().toString();
-                //Log.v(TAG, value);
-                findNum(phoneName);
+                // Text 값 받아서 수신자로 지정
+                phoneNo = et.getText().toString();
+                sendMMS();
+                Toast.makeText(getApplicationContext(),"해당번호로 상품을 공유했습니다.",Toast.LENGTH_LONG).show();
                 dialog.dismiss();     //닫기
                 // Event
             }
@@ -399,7 +467,7 @@ public class ProductInfo extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = ProgressDialog.show(ProductInfo.this,
-                    "Please Wait", null, true, true);
+                    "잠시만 기다려주세요", null, true, true);
         }
 
         @Override
