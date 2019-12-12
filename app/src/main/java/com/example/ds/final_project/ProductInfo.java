@@ -123,7 +123,7 @@ public class ProductInfo extends AppCompatActivity {
         product_info=(TextView)findViewById(R.id.product_info);
         product_info.setMovementMethod(new ScrollingMovementMethod());
         Intent intent = getIntent();
-        
+
         productId=intent.getStringExtra("id");
         info=intent.getStringExtra("info");
         image=intent.getStringExtra("image");
