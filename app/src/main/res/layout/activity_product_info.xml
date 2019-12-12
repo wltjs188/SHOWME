@@ -57,24 +57,25 @@
                 android:layout_gravity="center"
                 android:onClick="onShareClicked"
                 android:text="공유하기" />
-            <CheckBox
-                android:text="관심상품 등록하기"
+            <Button
                 android:id="@+id/wishCheck"
-                android:layout_width="130px"
-                android:layout_height="200px"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
                 android:layout_margin="10dp"
-                android:button="@drawable/selector"
-                android:scaleType="fitCenter" />
-            <!--<Button-->
-                <!--android:id="@+id/btn_review"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:text="리뷰보기"-->
-                <!--android:onClick="onReviewClicked"-->
-                <!--/>-->
+                android:background="@drawable/off"
+                android:scaleType="fitCenter"
+                android:onClick="onWishBtnClicked"
+                style="?android:attr/borderlessButtonStyle"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_review"
+                android:layout_gravity="center"
+                android:text="리뷰보기"
+                android:onClick="onReviewClicked"
+                />
         </LinearLayout>
 
     </LinearLayout>
