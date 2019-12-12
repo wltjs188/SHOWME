@@ -1,6 +1,5 @@
 package com.example.ds.final_project;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,12 +12,10 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
@@ -62,12 +59,7 @@ public class ShopActivity extends AppCompatActivity {
     ArrayList<Product> products=new ArrayList<Product>();
     ArrayList<String> infos = new ArrayList<String>(); //상품 상세 정보
     ArrayList<String> images = new ArrayList<String>(); //상품 옵션 대표 이미지
-    int page = 0;
-    //검색 정보
-//    String category = null;
-//    String style=null;
-//    String color = null;
-
+    ArrayList<String> ids = new ArrayList<String>();
     private GestureDetector gDetector;
 
 
@@ -81,13 +73,7 @@ public class ShopActivity extends AppCompatActivity {
         gv.setAdapter(adapter);
 
 
-
-        Intent intent = getIntent();
-
         //검색정보 받아오기
-//        category = intent.getStringExtra("category").replaceAll("[\"]", "");
-//        color = intent.getStringExtra("color").replaceAll("[\"]", "");
-//        size = intent.getStringExtra("size").replaceAll("[\"]", "");
         Gson gson = new GsonBuilder().create();
         String strContact=getPreferences("remember");
         searchedProduct=gson.fromJson(strContact,Product.class);
@@ -108,17 +94,19 @@ public class ShopActivity extends AppCompatActivity {
             task = new SearchProduct();
             task.execute("SearchThree", searchedProduct.getCategory(),searchedProduct.getStyle(),searchedProduct.getColor());
         }
-//        GetDiscountInfo task2 =new GetDiscountInfo();
-//        task2.execute("http://" + IP_ADDRESS + "/getDiscountInfo.php", category, color, length, size, pattern, detail);
         //클릭시, 상세정보 페이지로 이동
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Gson gson = new GsonBuilder().create();
+                Log.d("position",position+"");
+//                Gson gson = new GsonBuilder().create();
 
-                String strContact = gson.toJson(products.get(position), Product.class);
+//                String strContact = gson.toJson(products.get(position), Product.class);
 
-                productInfoIntent.putExtra("product", strContact);
+//                productInfoIntent.putExtra("product", strContact);
+                productInfoIntent.putExtra("image",images.get(position));
+                productInfoIntent.putExtra("id",ids.get(position));
+                productInfoIntent.putExtra("info",infos.get(position));
                 startActivity(productInfoIntent);
             }
         });
@@ -271,6 +259,7 @@ class SearchProduct extends AsyncTask<String, Void,String> {
                         products.add(product);
                         infos.add(product.toString());
                         images.add(product.getImage());
+                        ids.add(product.getId()+"");
                         Log.i("가져온 데이터", product.toString());
 
                     }
