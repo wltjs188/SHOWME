@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
                     return LoadData;
                 }
                 if(responsePOST.getStatusLine().getStatusCode()==200){
-                    Log.d("오류","없");
+                    Log.d("오류없음","굳");
                 }
                 else{
                     Log.d("error","오류");

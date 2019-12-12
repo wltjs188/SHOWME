@@ -2,6 +2,7 @@ package com.example.ds.final_project;
 import com.example.ds.final_project.db.DTO.Product;
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -50,6 +51,21 @@ import com.kakao.util.helper.log.Logger;
 
 import android.widget.Button;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -123,6 +139,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     private final int SHOP_ACTIVITY=200;
     private final int WISHLIST_ACTIVITY=300;
 
+    ArrayList<Product> searched_products=new ArrayList<Product>(); //검색된 상품들, 버튼으로 띄울 애덜
     Product remember;
    //검색 정보
     String category = null;
@@ -136,11 +153,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     String smsg="";//공유할 메세지 내용
     String sproduct= null; //공유할 관심상품
     ArrayList<String> wishProductNames;
-//    private String gender;
-//    private String height;
-//    private String top;
-//    private String bottom;
-//    private String foot;
 
     Intent wishIntent,shopIntent;
     //챗봇 액션
@@ -838,7 +850,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 UpdateUser task1 = new UpdateUser(); //사용자정보 수정
                 task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user.getId(),"name",user.getName());
 //                remenu=getRemenu(result);
-                result.getContexts().clear();
                 break;
             case "ACTION_M_PHONE"://사용자정보수정 : 핸드폰번호
                 phoneNum=""+parameter.get("user_phone");
@@ -850,7 +861,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 task1 = new UpdateUser(); //사용자정보 수정
                 task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user.getId(),"phoneNum",user.getPhoneNum());
 //                remenu=getRemenu(result);
-                result.getContexts().clear();
                 break;
             case "ACTION_M_ADDRESS"://사용자정보수정 : 주소
                 parameter=getParameter(result);
@@ -876,6 +886,14 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 break;
             case "Search_Style.Search_Style-no": //카테고리만 입력
                 so=category;
+                remember.setCategory(category);
+                strContact = gson.toJson(remember, Product.class);
+                savePreferences("remember",strContact);
+
+                SearchProduct task = new SearchProduct();
+                task.execute("SearchOne", category);
+
+                category = null; style=null; color = null;
                 Log.d("yoon search","카테고리로 검색: "+so);
                 break;
 
@@ -886,6 +904,15 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 break;
             case "Search_Style.Search_Color.Search_Color-no": //카테고리, 스타일로 검색
                 so=category+", "+style;
+                remember.setCategory(category);
+                remember.setStyle(style);
+                strContact = gson.toJson(remember, Product.class);
+                savePreferences("remember",strContact);
+
+                task = new SearchProduct();
+                task.execute("SearchTwo", category,style);
+
+                category = null; style=null; color = null;
                 Log.d("yoon search","카테고리, 스타일로 검색: "+so);
 
                 break;
@@ -897,20 +924,18 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 so="카테고리: "+category+" 스타일:"+style+" 색상 : "+color;
                 Log.d("yoon search","카테고리, 스타일, 색상 으로 검색: "+so);
 
-                if( category != null && style != null&& color != null) {
-                    shopIntent.putExtra("category", category);
-                    shopIntent.putExtra("style",style);
-                    shopIntent.putExtra("color", color);
-//                    shopIntent.putExtra("fabric", fabric);
-                    remember.setCategory(category);
-                    remember.setStyle(style);
-                    remember.setColor(color);
-                    strContact = gson.toJson(remember, Product.class);
-                    savePreferences("remember",strContact);
-                    category = null; style=null; color = null;
 
+                remember.setCategory(category);
+                remember.setStyle(style);
+                remember.setColor(color);
+                strContact = gson.toJson(remember, Product.class);
+                savePreferences("remember",strContact);
 
-                }
+                task = new SearchProduct();
+                task.execute("SearchThree", category,style,color);
+
+                category = null; style=null; color = null;
+
 
                 break;
 
@@ -924,17 +949,19 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 else if(parameter.containsKey("pre_search")) {
                     //이전 검색
                     if (remember == null) {
-                        //검색 못해
+                        //이전 검색 못해
                     } else {
-                        shopIntent.putExtra("category", remember.getCategory());
-                        shopIntent.putExtra("style", remember.getStyle());
-                        shopIntent.putExtra("color", remember.getColor());
+                        if(remember.getStyle()==null){
+                            task = new SearchProduct();
+                            task.execute("SearchOne", remember.getCategory());
+                        }else if(remember.getColor()==null){
+                            task = new SearchProduct();
+                            task.execute("SearchTwo", remember.getCategory(), remember.getStyle());
+                        }else{
+                            task = new SearchProduct();
+                            task.execute("SearchThree", remember.getCategory(),remember.getStyle(),remember.getColor());
+                        }
 
-                        category = null;
-                        style=null;
-                        color = null;
-                        result.getContexts().clear();
-                        startActivityForResult(shopIntent, SHOP_ACTIVITY);
                     }
 
                 }
@@ -1235,7 +1262,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
     //챗봇 파라미터 가져오기
     private HashMap<String,JsonElement> getParameter(Result result){
-        Log.d("yoon",result.toString());
         HashMap<String,JsonElement> parameter=new HashMap<String, JsonElement>();
         for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
             parameter.put(entry.getKey(),entry.getValue());
@@ -1282,6 +1308,159 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
             }
         });
+    }
+    class SearchProduct extends AsyncTask<String, Void,String> {
+        String LoadData;
+        private ProgressDialog pDialog;
+        @Override
+        protected void onPreExecute() {
+            pDialog = new ProgressDialog(ChatbotActivity.this);
+            pDialog.setMessage("검색중입니다..");
+            pDialog.setCancelable(false);
+            pDialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            // TODO Auto-generated method stub
+            String style=null;
+            String color=null;
+
+            String project = (String) params[0];
+            String category = (String) params[1];
+            if(params.length==3){
+                style = (String) params[2];
+            }else if(params.length==4){
+                style = (String) params[2];
+                color = (String) params[3];
+            }
+
+
+
+
+            try {
+                HttpParams httpParameters = new BasicHttpParams();
+                HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
+
+                HttpClient client = new DefaultHttpClient(httpParameters);
+
+                HttpConnectionParams.setConnectionTimeout(httpParameters, 7000);
+                HttpConnectionParams.setSoTimeout(httpParameters, 7000);
+                HttpConnectionParams.setTcpNoDelay(httpParameters, true);
+
+                // 주소 : aws서버
+                String postURL = "http://52.78.143.125:8080/showme/";
+
+                // 로컬서버
+//            String postURL = "http://10.0.2.2:8080/showme/InsertUser";
+
+                HttpPost post = new HttpPost(postURL + project);
+                //서버에 보낼 파라미터
+                ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+                //파라미터 추가하기
+                if(project.equals("SearchOne")){
+                    postParameters.add(new BasicNameValuePair("category", category));
+                }else if(project.equals("SearchTwo")){
+                    postParameters.add(new BasicNameValuePair("category", category));
+                    postParameters.add(new BasicNameValuePair("style", style));
+                }else if(project.equals("SearchThree")){
+                    postParameters.add(new BasicNameValuePair("category", category));
+                    postParameters.add(new BasicNameValuePair("style", style));
+                    postParameters.add(new BasicNameValuePair("color", color));
+                }
+
+
+                //파라미터 보내기
+                UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);
+                post.setEntity(ent);
+
+                long startTime = System.currentTimeMillis();
+
+                HttpResponse responsePOST = client.execute(post);
+
+                long elapsedTime = System.currentTimeMillis() - startTime;
+                Log.v("debugging", elapsedTime + " ");
+
+
+                HttpEntity resEntity = responsePOST.getEntity();
+                if (resEntity != null) {
+//                ToastMessage("로그인 성공");
+
+                    LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
+                    Log.i("가져온 데이터", LoadData);
+                    return LoadData;
+
+                }
+                if (responsePOST.getStatusLine().getStatusCode() == 200) {
+                    Log.d("search","오류없음");
+
+                } else {
+                    Log.d("search","오류있음");
+                    return null;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            pDialog.dismiss();
+            if (result == null){
+                Log.i("로긴","실패");
+//            Toast.makeText(getApplicationContext(),"실패",Toast.LENGTH_LONG).show();
+            }
+            else {
+                try {
+                    JSONObject jsonObj = new JSONObject(LoadData);
+                    // json객체.get("변수명")
+                    JSONArray jArray = (JSONArray) jsonObj.get("getData");
+//                    items = new ArrayList<Product>();
+                    if(jArray.length()==0){
+                        Log.d("검색"," 실패");
+                    }else {
+                        Log.i("검색","성공"+result);
+                        Product product=new Product();
+                        for (int i = 0; i < jArray.length(); i++) {
+                            // json배열.getJSONObject(인덱스)
+                            JSONObject row = jArray.getJSONObject(i);
+                            String name=row.getString("NAME");
+                            String category=row.getString("CATEGORY");
+                            int id=row.getInt("ID");
+                            String image = row.getString("IMAGE");
+                            String style=row.getString("STYLE");
+                            String color=row.getString("COLOR");
+                            String size=row.getString("SIZE");
+                            int price=row.getInt("PRICE");
+
+                            product.setName(name);
+                            product.setId(id);
+                            product.setCategory(category);
+                            product.setColor(color);
+                            product.setSize(size);
+                            product.setImage(image);
+                            product.setStyle(style);
+                            product.setPrice(price);
+
+                            searched_products.add(product);
+
+                            Log.i("가져온 데이터", product.toString());
+
+                        }
+
+                    }
+
+                } catch (JSONException e) {
+                    Log.d("검색 오류 : ", e.getMessage());
+                }
+
+            }
+        }
     }
 }
 
