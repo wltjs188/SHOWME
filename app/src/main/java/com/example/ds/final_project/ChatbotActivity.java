@@ -126,10 +126,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     Product remember;
    //검색 정보
     String category = null;
+    String style=null;
     String color = null;
-    String length = null;
-    String size = null;
-    String pattern = null;
     //    String fabric = null;
     private String mJsonString;
     String ShareType = null; //공유타입(문자/카톡)
@@ -188,7 +186,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             aiDataService2 = new AIDataService(this,config2);
             aiRequest2 = new AIRequest();
 
-            ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼우미입니다 쇼우미를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
+            ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼우미입니다 쇼우미를 이용하시려면 사용자 정보를 입력하셔야합니다. \n 이름을 입력해주세요.", true);
             chatMessages.add(chatMessage);
             adapter.notifyDataSetChanged();
             handler.postDelayed(new Runnable() {
@@ -208,29 +206,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             Log.d("채?","?");
             makeMenuMsg();
         }
-//        if(chatMessages.size()==0){
-//            if(user_name==""){
-//                //사용자 정보 등록 안됨
-//                ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼우미입니다 쇼우미를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
-//                chatMessages.add(chatMessage);
-//                adapter.notifyDataSetChanged();
-//                final Handler handler = new Handler();
-//                handler.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
-//                    }
-//                }, 1000);
-//            }
-//            else{
-//                Log.d("채?","?");
-//                makeMenuMsg();
-//            }
-//        }
-//        else{
-//            Log.d("채?","?");
-//            makeMenuMsg();
-//        }
     }
 
     @Override
@@ -786,42 +761,14 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         }
     }
 
-//    @Override
-//    protected void onPostResume() {
-//        super.onPostResume();
-//        Log.i("채팅사이즈",""+chatMessages.size());
-//        if(chatMessages.size()==0){
-//            if(user_name==""){
-//                //사용자 정보 등록 안됨
-//                ChatMessage chatMessage = new ChatMessage("안녕하세요. 쇼움이입니다 쇼움이를 이용하시려면 사용자 정보를 입력하셔야합니다. 사용자 정보를 입력하시겠습니까?", true);
-//                chatMessages.add(chatMessage);
-//                adapter.notifyDataSetChanged();
-//                final Handler handler = new Handler();
-//                handler.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
-//                    }
-//                }, 1000);
-//            }
-//            else{
-//                makeMenuMsg();
-//            }
-//        }
-////        else  if(chatMessages.get(chatMessages.size()-1).getContent().contains("관심")||chatMessages.get(chatMessages.size()-1).getContent().contains("검색")){
-////            makeMenuMsg();
-////        }
-//
-//
-//    }
-
 
 
     public void onResult(AIResponse response) {
         final Result result = response.getResult();
+//        Log.d("yoon response",response.toString());
         ACTION=result.getAction();
         Log.i("액션",ACTION);
-        Log.i("RESULT",""+result);
+        String so=null;
         //챗봇 액션 처리
         switch (ACTION){
 
@@ -923,78 +870,50 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 result.getContexts().clear();
 
                 break;
-            case "ACTION_SEARCH": //상품검색 :
+            case "Product_Category": //카테고리
                 parameter=getParameter(result);
-                //검색조건(카테고리,색상,기장,사이즈,패턴,재질) 받아오기
-                //카테고리
-                if(parameter.containsKey("Top")){
-                    category = ""+parameter.get("Top");
-                }
-                else if(parameter.containsKey("Dress")){
-                    category = ""+parameter.get("Dress");
-                }
-                else if(parameter.containsKey("Outer")){
-                    category = ""+parameter.get("Outer");
-                }
-                else if(parameter.containsKey("Pants")){
-                    category = ""+parameter.get("Pants");
-                }
-                else if(parameter.containsKey("Shoes")){
-                    category = ""+parameter.get("Shoes");
-                }
-                else if(parameter.containsKey("Skirt")){
-                    category = ""+parameter.get("Skirt");
-                }
-                else if(parameter.containsKey("Swimsuit")){
-                    category = ""+parameter.get("Swimsuit");
-                }
-                //색상
-                if(parameter.containsKey("Color")){
-                    color = ""+parameter.get("Color");
-                }
-                //기장, 바지기장
-                if(parameter.containsKey("Length")){
-                    length = ""+parameter.get("Length");
-                }
-                if(parameter.containsKey("PantsLength")){
-                    length = ""+parameter.get("PantsLength");
-                }
-                //사이즈
-                if(parameter.containsKey("Size")){
-                    size = ""+parameter.get("Size");
-                }
-                if(parameter.containsKey("ShoesSize")){
-                    size = ""+parameter.get("ShoesSize");
-                }
-                //패턴
-                if(parameter.containsKey("Pattern")){
-                    pattern = ""+parameter.get("Pattern");
-                }
-                //재질
-//                if(parameter.containsKey("Material")){
-//                    fabric = ""+parameter.get("Material");
-//                }
-                System.out.println("카테고리 : "+category+"색상 : "+color+"기장 : "+length+"사이즈 : "+size+"패턴 : "+pattern);
+                category = parameter.get("Category").toString().replaceAll("\"","");
+                break;
+            case "Search_Style.Search_Style-no": //카테고리만 입력
+                so=category;
+                Log.d("yoon search","카테고리로 검색: "+so);
+                break;
 
-                if( category != null && color != null && length != null && size != null && pattern != null) {
+            case "Product_Style": //스타일
+                parameter=getParameter(result);
+                style = parameter.get("Style").toString().replaceAll("\"","");
+                Log.d("yoon style",style);
+                break;
+            case "Search_Style.Search_Color.Search_Color-no": //카테고리, 스타일로 검색
+                so=category+", "+style;
+                Log.d("yoon search","카테고리, 스타일로 검색: "+so);
+
+                break;
+            case "Product_Color": //색상 , (카테고리,스타일,색상 다 입력 됨)
+                parameter=getParameter(result);
+                Log.d("yoon color",parameter.toString());
+                color = parameter.get("Color").toString().replaceAll("\"","");
+
+                so="카테고리: "+category+" 스타일:"+style+" 색상 : "+color;
+                Log.d("yoon search","카테고리, 스타일, 색상 으로 검색: "+so);
+
+                if( category != null && style != null&& color != null) {
                     shopIntent.putExtra("category", category);
+                    shopIntent.putExtra("style",style);
                     shopIntent.putExtra("color", color);
-                    shopIntent.putExtra("length", length);
-                    shopIntent.putExtra("size", size);
-                    shopIntent.putExtra("pattern", pattern);
 //                    shopIntent.putExtra("fabric", fabric);
                     remember.setCategory(category);
-                    remember.setCategory(color);
-                    remember.setCategory(size);
-
+                    remember.setStyle(style);
+                    remember.setColor(color);
                     strContact = gson.toJson(remember, Product.class);
                     savePreferences("remember",strContact);
-                    category = null; color = null; length = null; size = null; pattern = null;
-                    result.getContexts().clear();
-                    startActivityForResult(shopIntent,SHOP_ACTIVITY);
+                    category = null; style=null; color = null;
+
+
                 }
 
                 break;
+
 
             case "ACTION_MENU" :
                 parameter=getParameter(result);
@@ -1008,14 +927,12 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         //검색 못해
                     } else {
                         shopIntent.putExtra("category", remember.getCategory());
-                        shopIntent.putExtra("color", remember.getCategory());
-                        shopIntent.putExtra("size", remember.getSize());
+                        shopIntent.putExtra("style", remember.getStyle());
+                        shopIntent.putExtra("color", remember.getColor());
 
                         category = null;
+                        style=null;
                         color = null;
-                        length = null;
-                        size = null;
-                        pattern = null;
                         result.getContexts().clear();
                         startActivityForResult(shopIntent, SHOP_ACTIVITY);
                     }
@@ -1318,6 +1235,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
     //챗봇 파라미터 가져오기
     private HashMap<String,JsonElement> getParameter(Result result){
+        Log.d("yoon",result.toString());
         HashMap<String,JsonElement> parameter=new HashMap<String, JsonElement>();
         for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
             parameter.put(entry.getKey(),entry.getValue());
