@@ -156,14 +156,14 @@ public class MainActivity extends AppCompatActivity {
 
     class SelectData extends AsyncTask<String, Void,String> {
         String LoadData;
-        private ProgressDialog pDialog;
+//        private ProgressDialog pDialog;
         @Override
         protected void onPreExecute() {
-            Log.d("?","?");
-            pDialog = new ProgressDialog(MainActivity.this);
-            pDialog.setMessage("검색중입니다..");
-            pDialog.setCancelable(false);
-            pDialog.show();
+//            Log.d("?","?");
+//            pDialog = new ProgressDialog(MainActivity.this);
+//            pDialog.setMessage("검색중입니다..");
+//            pDialog.setCancelable(false);
+//            pDialog.show();
             super.onPreExecute();
         }
 
@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("??","?");
             Log.d("??",result);
 
-            pDialog.dismiss();
+//            pDialog.dismiss();
             if (result == null||result==""){
                 Log.d("로긴","실패");
 //                User user=new User();
