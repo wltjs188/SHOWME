@@ -1,8 +1,9 @@
 package com.example.ds.final_project.db.DAO;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.ds.final_project.db.DTO.WishProduct;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,26 +20,29 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class UpdateUser extends AsyncTask<String, Void,String> {
+public class InsertWishProduct extends AsyncTask<String, Void, String> {
     String LoadData;
     @Override
     protected void onPreExecute() {
-
         super.onPreExecute();
     }
 
     @Override
     protected String doInBackground(String... params) {
         // TODO Auto-generated method stub
+
         String project = (String)params[0];
         String uid = (String)params[1];
-        String attribute = (String)params[2];
-        String value = (String)params[3];
+        String alias = (String)params[2];
+        String id = (String)params[3];
+        String image = (String)params[4];
+        String info = (String)params[5];
+
+
+
         try {
             HttpParams httpParameters = new BasicHttpParams();
             HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
@@ -58,12 +62,12 @@ public class UpdateUser extends AsyncTask<String, Void,String> {
             HttpPost post = new HttpPost(postURL+project);
             //서버에 보낼 파라미터
             ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
-            //파라미터 추가하기
+//            파라미터 추가하기
             postParameters.add(new BasicNameValuePair("uid", uid));
-            postParameters.add(new BasicNameValuePair("attribute", attribute));
-            postParameters.add(new BasicNameValuePair("value", value));
-
-
+            postParameters.add(new BasicNameValuePair("alias", alias));
+            postParameters.add(new BasicNameValuePair("id", id));
+            postParameters.add(new BasicNameValuePair("image", image));
+            postParameters.add(new BasicNameValuePair("info", info));
 
             //파라미터 보내기
             UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);
@@ -80,30 +84,13 @@ public class UpdateUser extends AsyncTask<String, Void,String> {
             HttpEntity resEntity = responsePOST.getEntity();
             if (resEntity != null) {
                 LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
-                Log.i("수정 가져온 데이터", LoadData);
-                JSONObject jsonObj = new JSONObject(LoadData);
-                // json객체.get("변수명")
-                JSONArray jArray = (JSONArray) jsonObj.get("count");
-//                    items = new ArrayList<Product>();
-//                    for (int i = 0; i < jArray.length(); i++) {
-                // json배열.getJSONObject(인덱스)
-//                        JSONObject row = jArray.getJSONObject(i);
-//                        Product dto = new Product();
-//                        dto.setId(row.getInt("ID"));
-//                        dto.setName(row.getString("NAME"));
-
-                // ArrayList에 add
-//                        items.add(dto);
-
-//                        Log.i("가져온 데이터", dto.getId() + "");
-//                        Log.i("가져온 데이터", dto.getName() + "");
-//                    }
+                Log.d("성공",LoadData);
             }
             if(responsePOST.getStatusLine().getStatusCode()==200){
-                Log.d("수정","오류없음");
-            }
+                Log.d("디비 ","성공 ");            }
             else{
-                Log.d("수정","오류");
+
+                Log.d("실패 ","떙 ");
             }
 
         } catch (Exception e) {
@@ -114,6 +101,7 @@ public class UpdateUser extends AsyncTask<String, Void,String> {
 
     @Override
     protected void onPostExecute(String result) {
-
     }
 }
+
+

@@ -127,10 +127,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     HashMap<String,JsonElement> parameter=new HashMap<String,JsonElement>();
     private User user=null;
     private String uuid;
-//    private String user_uuid;
-//    private String user_name=null;
-//    private String user_phone=null;
-//    private String user_address=null;
     private TextToSpeech tts;
 
     //stt
@@ -892,6 +888,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                 category = null; style=null; color = null;
                 Log.d("yoon search","카테고리로 검색: "+so);
+
+                startActivity(shopIntent);
                 break;
 
             case "Product_Style": //스타일
@@ -912,6 +910,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 category = null; style=null; color = null;
                 Log.d("yoon search","카테고리, 스타일로 검색: "+so);
 
+                startActivity(shopIntent);
                 break;
             case "Product_Color": //색상 , (카테고리,스타일,색상 다 입력 됨)
                 parameter=getParameter(result);
@@ -931,9 +930,11 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 task = new SearchProduct();
                 task.execute("SearchThree", category,style,color);
 
+
+
                 category = null; style=null; color = null;
 
-
+                startActivity(shopIntent);
                 break;
 
 

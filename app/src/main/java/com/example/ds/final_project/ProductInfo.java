@@ -64,7 +64,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ProductInfo extends AppCompatActivity {
-    String IP_ADDRESS = "18.191.10.193";
     Intent reviewIntent;
     private String mJsonString;
     int error=0;
@@ -74,11 +73,12 @@ public class ProductInfo extends AppCompatActivity {
     private boolean infoBool=false; //관심상품 등록 여부
     private int check=0;
     //상품 정보
+//    private Product product;
     private String wishProductName="";
     private String uuid=" ";
     private String productId=" ";
-    private String optionNum="";
-    private String productURL=" ";
+//    private String optionNum="";
+//    private String productURL=" ";
     private String info=" ";
     private String image=" ";
 
@@ -105,7 +105,7 @@ public class ProductInfo extends AppCompatActivity {
                 wishProductName=name;
                 Log.i("관심상품등록",uuid+wishProductName);
                 InsertWishProduct task = new InsertWishProduct();
-                task.execute("http://" + IP_ADDRESS + "/insertWishProduct.php",uuid,productId,optionNum,image,info,wishProductName);
+                task.execute("InsertWishProduct2",uuid,wishProductName,productId,image,info);
 //                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
                 Log.i("관심2",wishProductName);
             }
@@ -123,14 +123,10 @@ public class ProductInfo extends AppCompatActivity {
         product_info=(TextView)findViewById(R.id.product_info);
         product_info.setMovementMethod(new ScrollingMovementMethod());
         Intent intent = getIntent();
-        String strContact =intent.getStringExtra("product");
-        Gson gson = new GsonBuilder().create();
 
-        Product product=gson.fromJson(strContact,Product.class);
-
-//        optionNum=intent.getStringExtra("optionNum");
-        info=product.toString();
-        image=product.getImage();
+        productId=intent.getStringExtra("id");
+        info=intent.getStringExtra("info");
+        image=intent.getStringExtra("image");
 
         wishProductName=intent.getStringExtra("wishProductName");
         if(wishProductName==""||wishProductName==null)
@@ -140,12 +136,12 @@ public class ProductInfo extends AppCompatActivity {
         reviewIntent=new Intent(getApplicationContext(),ReviewActivity.class); //리뷰
 
         productImg=(ImageView)findViewById(R.id.productImg);
-        Log.i("이미지",""+image);
+//        Log.i("이미지",""+image);
         Glide.with(this).load(image).into(productImg);
 
         product_info.setText(info);
         Url = Url + productId;
-        info = info + "\n" + Url;
+//        info = info + "\n" + Url;
 
         wishCheck=(CheckBox)findViewById(R.id.wishCheck);
 //        wishCheck.setContentDescription("이렇게하면");
@@ -153,8 +149,8 @@ public class ProductInfo extends AppCompatActivity {
 
         //등록된 상품인지 확인
         GetWishListItem task = new GetWishListItem();
-        task.execute( "http://" + IP_ADDRESS + "/getWishListItem.php",uuid,productId,optionNum);
-        wishCheck.setChecked(infoBool);
+//        task.execute( "http://" + IP_ADDRESS + "/getWishListItem.php",uuid,productId,optionNum);
+//        wishCheck.setChecked(infoBool);
 
     }
     public void onReviewClicked(View view){
@@ -432,8 +428,8 @@ public class ProductInfo extends AppCompatActivity {
                 //check=1;ㅎ
                 Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_SHORT).show();
                 //DB에서 삭제
-                DeleteWishProduct task = new DeleteWishProduct();
-                task.execute("http://" + IP_ADDRESS + "/deleteWishProduct.php",uuid,productId,optionNum);
+//                DeleteWishProduct task = new DeleteWishProduct();
+//                task.execute("http://" + IP_ADDRESS + "/deleteWishProduct.php",uuid,productId,optionNum);
             }
         }
     }
