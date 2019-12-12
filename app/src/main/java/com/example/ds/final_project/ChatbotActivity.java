@@ -34,9 +34,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ds.final_project.db.DAO.InsertUser2;
-import com.example.ds.final_project.db.DTO.Product;
 import com.example.ds.final_project.db.DTO.User;
-import com.example.ds.final_project.db.UpdateUser;
+import com.example.ds.final_project.db.DAO.UpdateUser;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -833,8 +832,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     InsertUser2 task = new InsertUser2();
                     task.execute(user.getId(),user.getName(),user.getAddress(),user.getPhoneNum());
                     Log.i("액션USER",ACTION);
-//                    remenu=getRemenu(result);
-                    result.getContexts().clear();
                 }
                 break;
             case "ACTION_M_NAME"://사용자정보수정 : 이름
@@ -848,7 +845,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 String strContact = gson.toJson(user, User.class);
                 savePreferences("USER",strContact);
                 UpdateUser task1 = new UpdateUser(); //사용자정보 수정
-                task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user.getId(),"name",user.getName());
+                task1.execute("UpdateUser",user.getId(),"name",user.getName());
 //                remenu=getRemenu(result);
                 break;
             case "ACTION_M_PHONE"://사용자정보수정 : 핸드폰번호
@@ -859,7 +856,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 strContact = gson.toJson(user, User.class);
                 savePreferences("USER",strContact);
                 task1 = new UpdateUser(); //사용자정보 수정
-                task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user.getId(),"phoneNum",user.getPhoneNum());
+                task1.execute("UpdateUser",user.getId(),"phoneNum",user.getPhoneNum());
 //                remenu=getRemenu(result);
                 break;
             case "ACTION_M_ADDRESS"://사용자정보수정 : 주소
@@ -875,7 +872,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 strContact = gson.toJson(user, User.class);
                 savePreferences("USER",strContact);
                 task1 = new UpdateUser(); //사용자정보 수정
-                task1.execute("http://" + IP_ADDRESS + "/updateUser.php",user.getId(),"address",user.getAddress());
+                task1.execute("UpdateUser",user.getId(),"address",user.getAddress());
 //                remenu=getRemenu(result);
                 result.getContexts().clear();
 
