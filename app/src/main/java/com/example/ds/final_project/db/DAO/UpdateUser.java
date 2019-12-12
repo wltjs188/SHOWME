@@ -63,15 +63,6 @@ public class UpdateUser extends AsyncTask<String, Void,String> {
             postParameters.add(new BasicNameValuePair("attribute", attribute));
             postParameters.add(new BasicNameValuePair("value", value));
 
-//            postParameters.add(new BasicNameValuePair("infoValue", infoValue));
-//            for(int i=0;i<params.length;i++){
-//                postParameters.add(new BasicNameValuePair("\""+(String)params[i]+"\"",(String)params[i]));
-//                System.out.println("\""+(String)params[i]+"\","+(String)params[i]);
-//            }
-//            postParameters.add(new BasicNameValuePair("uid", "0"));
-//            postParameters.add(new BasicNameValuePair("wishProductName", "1"));
-//            postParameters.add(new BasicNameValuePair("value", "123"));
-
 
 
             //파라미터 보내기
