@@ -440,31 +440,6 @@ public class ProductInfo extends AppCompatActivity {
         return pref.getString(key, "");
     }
 
-    public class CheckBoxListener implements CompoundButton.OnCheckedChangeListener{
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            // 체크박스를 클릭해서 상태가 바꾸었을 경우 호출되는 콜백 메서드
-            if(wishCheck.isChecked()&&check!=0) {
-                //check=1;
-//                wishProductName="";
-
-                dialog.show();
-                //DB에 추가
-                //InsertWishProduct task = new InsertWishProduct();
-//                Log.i("관심상품등록",uuid+wishProductName);
-//                task.execute("http://" + IP_ADDRESS + "/insertWishProduct.php",uuid,productId,optionNum,image,info,wishProductName);
-//                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
-
-            }
-            else if(!wishCheck.isChecked()&&check!=0&&error==0){
-                //check=1;ㅎ
-                Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_SHORT).show();
-                //DB에서 삭제
-//                DeleteWishProduct task = new DeleteWishProduct();
-//                task.execute("http://" + IP_ADDRESS + "/deleteWishProduct.php",uuid,productId,optionNum);
-            }
-        }
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
