@@ -27,15 +27,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
-<<<<<<< HEAD
-import com.example.ds.final_project.db.DTO.Product;
-import com.example.ds.final_project.db.DeleteWishProduct;
 import com.example.ds.final_project.db.DAO.InsertWishProduct;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-=======
-import com.example.ds.final_project.db.DAO.InsertWishProduct;
->>>>>>> a0e1e7d84da87cbad7c777f5a83c7828b43b21e6
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
 import com.kakao.kakaolink.v2.KakaoLinkService;
 import com.kakao.message.template.LinkObject;
@@ -532,12 +526,11 @@ public class ProductInfo extends AppCompatActivity {
             }
         }
     }
-<<<<<<< HEAD
-=======
+
     private class CheckWishProduct {
 
     }
->>>>>>> a0e1e7d84da87cbad7c777f5a83c7828b43b21e6
+
 //    public class InsertWishProduct extends AsyncTask<String, Void, String> {
 //        //    ProgressDialog progressDialog;
 //        String TAG = "phptest";
