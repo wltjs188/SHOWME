@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -69,7 +70,7 @@ public class ProductInfo extends AppCompatActivity {
     int error=0;
     private TextView product_info; //상세정보 표시
     ImageView productImg; //상품 이미지 표시
-    private CheckBox wishCheck; //관심상품 등록
+    private Button wishCheck; //관심상품 등록
     private boolean infoBool=false; //관심상품 등록 여부
     private int check=0;
     //상품 정보
@@ -143,9 +144,8 @@ public class ProductInfo extends AppCompatActivity {
         Url = Url + productId;
 //        info = info + "\n" + Url;
 
-        wishCheck=(CheckBox)findViewById(R.id.wishCheck);
-//        wishCheck.setContentDescription("이렇게하면");
-        wishCheck.setOnCheckedChangeListener(new CheckBoxListener());
+        wishCheck=(Button) findViewById(R.id.wishCheck);
+        wishCheck.setContentDescription("관심상품등록");
 
         //등록된 상품인지 확인
         GetWishListItem task = new GetWishListItem();
@@ -153,6 +153,56 @@ public class ProductInfo extends AppCompatActivity {
 //        wishCheck.setChecked(infoBool);
 
     }
+    // 관심상품버튼 클릭
+    public void onWishBtnClicked(View view){
+        // 관심상품 등록
+        if(infoBool == false){
+            dialog.show();
+        }
+        // 관심상품 취소
+        else{
+            Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_SHORT).show();
+        }
+       WishBtnChanged(infoBool);
+    }
+    // 관심상품버튼 상태 변경
+    private void WishBtnChanged(Boolean infoBool){
+        // 관심상품일 경우 : 관심상품취소버튼
+        if(infoBool == true){
+            wishCheck.setContentDescription("관심상품취소");
+            wishCheck.setBackgroundResource(R.drawable.on);
+        }
+        // 관심상품아닐 경우 : 관심상품등록버튼
+        else{
+            wishCheck.setContentDescription("관심상품등록");
+            wishCheck.setBackgroundResource(R.drawable.off);
+        }
+    }
+//    public class CheckBoxListener implements CompoundButton.OnCheckedChangeListener{
+//        @Override
+//        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//            // 체크박스를 클릭해서 상태가 바꾸었을 경우 호출되는 콜백 메서드
+//            if(wishCheck.isChecked()&&check!=0) {
+//                //check=1;
+////                wishProductName="";
+//
+//                dialog.show();
+//                //DB에 추가
+//                //InsertWishProduct task = new InsertWishProduct();
+////                Log.i("관심상품등록",uuid+wishProductName);
+////                task.execute("http://" + IP_ADDRESS + "/insertWishProduct.php",uuid,productId,optionNum,image,info,wishProductName);
+////                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
+//
+//            }
+//            else if(!wishCheck.isChecked()&&check!=0&&error==0){
+//                //check=1;ㅎ
+//                Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_SHORT).show();
+//                //DB에서 삭제
+////                DeleteWishProduct task = new DeleteWishProduct();
+////                task.execute("http://" + IP_ADDRESS + "/deleteWishProduct.php",uuid,productId,optionNum);
+//            }
+//        }
+//    }
     public void onReviewClicked(View view){
         reviewIntent.putExtra("product", productId);
         startActivity(reviewIntent);
@@ -349,24 +399,6 @@ public class ProductInfo extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    private void getStateUsim(Context ctx) {
-        String com = null;
-        TelephonyManager tm = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        com = tm.getSimOperator();
-        if(com == null  && com.length() <=0) {
-            //통신사 조회 안됨
-        }
-        //Operator Error(Other)
-        if(com.equals("45008")){
-            ret_operator = "kt";
-        }else if(com.equals("45005")||com.equals("45002")){
-            ret_operator = "skt";
-        }else if(com.equals("45006")){
-            ret_operator = "lgt";
-        }else{
-            ret_operator = "other";
-        }
-    }
 
     private void getAppKeyHash() {
         try {
@@ -408,31 +440,6 @@ public class ProductInfo extends AppCompatActivity {
         return pref.getString(key, "");
     }
 
-    public class CheckBoxListener implements CompoundButton.OnCheckedChangeListener{
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            // 체크박스를 클릭해서 상태가 바꾸었을 경우 호출되는 콜백 메서드
-            if(wishCheck.isChecked()&&check!=0) {
-                //check=1;
-//                wishProductName="";
-
-                dialog.show();
-                //DB에 추가
-                //InsertWishProduct task = new InsertWishProduct();
-//                Log.i("관심상품등록",uuid+wishProductName);
-//                task.execute("http://" + IP_ADDRESS + "/insertWishProduct.php",uuid,productId,optionNum,image,info,wishProductName);
-//                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
-
-            }
-            else if(!wishCheck.isChecked()&&check!=0&&error==0){
-                //check=1;ㅎ
-                Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_SHORT).show();
-                //DB에서 삭제
-//                DeleteWishProduct task = new DeleteWishProduct();
-//                task.execute("http://" + IP_ADDRESS + "/deleteWishProduct.php",uuid,productId,optionNum);
-            }
-        }
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -539,8 +546,6 @@ public class ProductInfo extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-
         }
         @Override
         protected void onPostExecute(String result) {
@@ -622,12 +627,11 @@ public class ProductInfo extends AppCompatActivity {
             if(jsonArray.length()>0){
                 //관심상품임
                 infoBool=true;
-
             }else {
                 //관심상품아님
                 infoBool=false;
                 Log.d("관심","ㄴ");}
-            wishCheck.setChecked(infoBool);
+//            wishCheck.setChecked(infoBool);
             check=1;
         } catch (JSONException e) {
             //관심상품아님
@@ -635,16 +639,17 @@ public class ProductInfo extends AppCompatActivity {
             Log.d("showResult : ", mJsonString);
             infoBool=false;
             Log.d("관심","s");
-            wishCheck.setChecked(infoBool);
-
+//            wishCheck.setChecked(infoBool);
             check=1;
         }
+        WishBtnChanged(infoBool);
     }
     private void showResult2(){
         infoBool=false;
-        wishCheck.setChecked(infoBool);
+//        wishCheck.setChecked(infoBool);
         Toast.makeText(ProductInfo.this,"같은 이름으로 등록된 관심상품이 있습니다.",Toast.LENGTH_LONG).show();
         error=0;
+        WishBtnChanged(infoBool);
     }
 }
 
