@@ -2,12 +2,12 @@ package com.example.ds.final_project;
 
 public class ReviewData {
     private int num; //리뷰번호
-    private String Rating; //개인 평점
-    private String review; //리뷰
+    private String title; //리뷰 제목
+    private String review; //리뷰 내용
 
-    public ReviewData(int num, String Rating,String review){
+    public ReviewData(int num, String title, String review){
         this.num = num;
-        this.Rating = Rating;
+        this.title = title;
         this.review=review;
     }
     public int getNum() {
@@ -18,12 +18,12 @@ public class ReviewData {
         this.num = num;
     }
 
-    public String getRating() {
-        return Rating;
+    public String getTitle() {
+        return title;
     }
 
-    public void setRating(String rating) {
-        Rating = rating;
+    public void setTitle(String rating) {
+        this.title = title;
     }
 
     public String getReview() {
