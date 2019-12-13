@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.ds.final_project.db.DTO.WishProduct;
+import com.example.ds.final_project.db.DeleteWishProduct;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
@@ -167,7 +168,11 @@ public class ProductInfo extends AppCompatActivity {
         // 관심상품 취소
         else{
             infoBool=false;
+            DeleteWishProduct task = new DeleteWishProduct();
+            Log.d("delete",uuid+", "+wishProductName);
+            task.execute( "DeleteWishProduct",uuid,wishProductName);
             Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_SHORT).show();
+            WishBtnChanged(infoBool);
         }
        WishBtnChanged(infoBool);
     }
@@ -184,31 +189,7 @@ public class ProductInfo extends AppCompatActivity {
             wishCheck.setBackgroundResource(R.drawable.on);
         }
     }
-//    public class CheckBoxListener implements CompoundButton.OnCheckedChangeListener{
-//        @Override
-//        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//            // 체크박스를 클릭해서 상태가 바꾸었을 경우 호출되는 콜백 메서드
-//            if(wishCheck.isChecked()&&check!=0) {
-//                //check=1;
-////                wishProductName="";
-//
-//                dialog.show();
-//                //DB에 추가
-//                //InsertWishProduct task = new InsertWishProduct();
-////                Log.i("관심상품등록",uuid+wishProductName);
-////                task.execute("http://" + IP_ADDRESS + "/insertWishProduct.php",uuid,productId,optionNum,image,info,wishProductName);
-////                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
-//
-//            }
-//            else if(!wishCheck.isChecked()&&check!=0&&error==0){
-//                //check=1;ㅎ
-//                Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_SHORT).show();
-//                //DB에서 삭제
-////                DeleteWishProduct task = new DeleteWishProduct();
-////                task.execute("http://" + IP_ADDRESS + "/deleteWishProduct.php",uuid,productId,optionNum);
-//            }
-//        }
-//    }
+
     public void onReviewClicked(View view){
         reviewIntent.putExtra("product", productId);
         startActivity(reviewIntent);
@@ -497,9 +478,6 @@ public class ProductInfo extends AppCompatActivity {
                 // 주소 : aws서버
                 String postURL = "http://52.78.143.125:8080/showme/";
 
-                // 로컬서버
-//            String postURL = "http://10.0.2.2:8080/showme/InsertUser";
-
                 HttpPost post = new HttpPost(postURL+project);
                 //서버에 보낼 파라미터
                 ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
@@ -572,7 +550,7 @@ public class ProductInfo extends AppCompatActivity {
 
                             wishProduct.setId(id);
                             wishProduct.setAlias(alias);
-
+                            wishProductName=alias;
                             Log.d("가져온 데이터",id+", "+alias);
                         }
                         infoBool=true;
@@ -702,39 +680,6 @@ public class ProductInfo extends AppCompatActivity {
         WishBtnChanged(infoBool);
         Toast.makeText(getApplicationContext(),"별칭이 중복되어 관심상품 등록에 실패했습니다.",Toast.LENGTH_LONG).show();
     }
-    private void showResult(String mJsonString){
-        // int count=0;
-        String TAG_JSON="getData";
-        try {
-            JSONObject jsonObject = new JSONObject(mJsonString);
-            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
-            Log.d("jsonArray 길이:",jsonArray.length()+"");
-            if(jsonArray.length()>0){
-                //관심상품임
-                infoBool=true;
-            }else {
-                //관심상품아님
-                infoBool=false;
-                Log.d("관심","ㄴ");}
-//            wishCheck.setChecked(infoBool);
-//            check=1;
-        } catch (JSONException e) {
-            //관심상품아님
-            Log.d("showResult : ", e.getMessage());
-            Log.d("showResult : ", mJsonString);
-            infoBool=false;
-            Log.d("관심","s");
-//            wishCheck.setChecked(infoBool);
-//            check=1;
-        }
-        WishBtnChanged(infoBool);
-    }
-    private void showResult2(){
-        infoBool=false;
-//        wishCheck.setChecked(infoBool);
-        Toast.makeText(ProductInfo.this,"같은 이름으로 등록된 관심상품이 있습니다.",Toast.LENGTH_LONG).show();
-        error=0;
-        WishBtnChanged(infoBool);
-    }
+
 }
 
