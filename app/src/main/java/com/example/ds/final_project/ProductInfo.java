@@ -2,8 +2,6 @@ package com.example.ds.final_project;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -12,15 +10,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
-import android.telephony.TelephonyManager;
-import android.text.Layout;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
@@ -28,24 +22,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+<<<<<<< HEAD
 import com.example.ds.final_project.db.DTO.Product;
 import com.example.ds.final_project.db.DeleteWishProduct;
 import com.example.ds.final_project.db.DAO.InsertWishProduct;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+=======
+import com.example.ds.final_project.db.DAO.InsertWishProduct;
+>>>>>>> a0e1e7d84da87cbad7c777f5a83c7828b43b21e6
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
 import com.kakao.kakaolink.v2.KakaoLinkService;
-import com.kakao.message.template.ButtonObject;
-import com.kakao.message.template.CommerceDetailObject;
-import com.kakao.message.template.CommerceTemplate;
-import com.kakao.message.template.ContentObject;
 import com.kakao.message.template.LinkObject;
 import com.kakao.message.template.TextTemplate;
 import com.kakao.network.ErrorResult;
@@ -148,7 +140,7 @@ public class ProductInfo extends AppCompatActivity {
         wishCheck.setContentDescription("관심상품등록");
 
         //등록된 상품인지 확인
-        GetWishListItem task = new GetWishListItem();
+        CheckWishProduct task = new CheckWishProduct();
 //        task.execute( "http://" + IP_ADDRESS + "/getWishListItem.php",uuid,productId,optionNum);
 //        wishCheck.setChecked(infoBool);
 
@@ -540,6 +532,12 @@ public class ProductInfo extends AppCompatActivity {
             }
         }
     }
+<<<<<<< HEAD
+=======
+    private class CheckWishProduct {
+
+    }
+>>>>>>> a0e1e7d84da87cbad7c777f5a83c7828b43b21e6
 //    public class InsertWishProduct extends AsyncTask<String, Void, String> {
 //        //    ProgressDialog progressDialog;
 //        String TAG = "phptest";
