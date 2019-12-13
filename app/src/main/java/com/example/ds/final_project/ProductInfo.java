@@ -132,7 +132,7 @@ public class ProductInfo extends AppCompatActivity {
         wishCheck.setContentDescription("관심상품등록");
 
         //등록된 상품인지 확인
-        GetWishListItem task = new GetWishListItem();
+        CheckWishProduct task = new CheckWishProduct();
 //        task.execute( "http://" + IP_ADDRESS + "/getWishListItem.php",uuid,productId,optionNum);
 //        wishCheck.setChecked(infoBool);
 
@@ -523,6 +523,9 @@ public class ProductInfo extends AppCompatActivity {
                 return null;
             }
         }
+    }
+    private class CheckWishProduct {
+
     }
 //    public class InsertWishProduct extends AsyncTask<String, Void, String> {
 //        //    ProgressDialog progressDialog;
