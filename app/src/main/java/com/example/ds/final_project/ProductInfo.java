@@ -105,7 +105,7 @@ public class ProductInfo extends AppCompatActivity {
                 wishProductName=name;
                 Log.i("관심상품등록",uuid+wishProductName);
                 InsertWishProduct task = new InsertWishProduct();
-                task.execute("InsertWishProduct2",uuid,wishProductName,productId,image,info);
+                task.execute("InsertWishProduct",uuid,wishProductName,productId,image,info);
 //                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
                 Log.i("관심2",wishProductName);
             }
