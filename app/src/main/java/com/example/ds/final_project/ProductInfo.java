@@ -154,12 +154,12 @@ public class ProductInfo extends AppCompatActivity {
         // 관심상품일 경우 : 관심상품취소버튼
         if(infoBool == true){
             wishCheck.setContentDescription("관심상품취소");
-            wishCheck.setBackgroundResource(R.drawable.on);
+            wishCheck.setBackgroundResource(R.drawable.off);
         }
         // 관심상품아닐 경우 : 관심상품등록버튼
         else{
             wishCheck.setContentDescription("관심상품등록");
-            wishCheck.setBackgroundResource(R.drawable.off);
+            wishCheck.setBackgroundResource(R.drawable.on);
         }
     }
 //    public class CheckBoxListener implements CompoundButton.OnCheckedChangeListener{
