@@ -37,7 +37,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.ds.final_project.db.DTO.Product;
 import com.example.ds.final_project.db.DeleteWishProduct;
-import com.example.ds.final_project.db.InsertWishProduct;
+import com.example.ds.final_project.db.DAO.InsertWishProduct;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
@@ -170,12 +170,12 @@ public class ProductInfo extends AppCompatActivity {
         // 관심상품일 경우 : 관심상품취소버튼
         if(infoBool == true){
             wishCheck.setContentDescription("관심상품취소");
-            wishCheck.setBackgroundResource(R.drawable.on);
+            wishCheck.setBackgroundResource(R.drawable.off);
         }
         // 관심상품아닐 경우 : 관심상품등록버튼
         else{
             wishCheck.setContentDescription("관심상품등록");
-            wishCheck.setBackgroundResource(R.drawable.off);
+            wishCheck.setBackgroundResource(R.drawable.on);
         }
     }
 //    public class CheckBoxListener implements CompoundButton.OnCheckedChangeListener{
@@ -540,83 +540,83 @@ public class ProductInfo extends AppCompatActivity {
             }
         }
     }
-    public class InsertWishProduct extends AsyncTask<String, Void, String> {
-        //    ProgressDialog progressDialog;
-        String TAG = "phptest";
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            if (result == null||result.equals("")){
-                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                mJsonString = result;
-                showResult2();
-            }
-            Log.d(TAG, "관심상품 등록2" + result);
-        }
-        @Override
-        protected String doInBackground(String... params) {
-
-            String uid = (String)params[1];
-            String productId = (String)params[2];
-            String optionNum = (String)params[3];
-            String image = (String)params[4];
-            String info = (String)params[5];
-            String wishProductName = (String)params[6];
-            String serverURL = (String)params[0];
-            String postParameters = "uid=" + uid + "&productId=" + productId+"&optionNum=" + optionNum+"&image=" + image+"&info=" + info+"&wishProductName=" + wishProductName ;
-
-            try {
-
-                URL url = new URL(serverURL);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
-                httpURLConnection.setReadTimeout(5000);
-                httpURLConnection.setConnectTimeout(5000);
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.connect();
-
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                outputStream.write(postParameters.getBytes("UTF-8"));
-                outputStream.flush();
-                outputStream.close();
-
-                int responseStatusCode = httpURLConnection.getResponseCode();
-                Log.d(TAG, "POST response code - " + responseStatusCode);
-
-                InputStream inputStream;
-                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
-                    inputStream = httpURLConnection.getInputStream();
-                }
-                else{
-                    inputStream = httpURLConnection.getErrorStream();
-                }
-
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                StringBuilder sb = new StringBuilder();
-                String line = null;
-                while((line = bufferedReader.readLine()) != null){
-                    sb.append(line);
-                }
-                bufferedReader.close();
-
-                return sb.toString().trim();
-            } catch (Exception e) {
-                error=1;
-                Log.d(TAG, "UpdateData: Error ", e);
-                Log.d("에러",e.getMessage());
-                return "error";
-            }
-
-        }
-    }
+//    public class InsertWishProduct extends AsyncTask<String, Void, String> {
+//        //    ProgressDialog progressDialog;
+//        String TAG = "phptest";
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//        }
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//
+//            if (result == null||result.equals("")){
+//                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
+//            }
+//            else {
+//                mJsonString = result;
+//                showResult2();
+//            }
+//            Log.d(TAG, "관심상품 등록2" + result);
+//        }
+//        @Override
+//        protected String doInBackground(String... params) {
+//
+//            String uid = (String)params[1];
+//            String productId = (String)params[2];
+//            String optionNum = (String)params[3];
+//            String image = (String)params[4];
+//            String info = (String)params[5];
+//            String wishProductName = (String)params[6];
+//            String serverURL = (String)params[0];
+//            String postParameters = "uid=" + uid + "&productId=" + productId+"&optionNum=" + optionNum+"&image=" + image+"&info=" + info+"&wishProductName=" + wishProductName ;
+//
+//            try {
+//
+//                URL url = new URL(serverURL);
+//                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+//
+//                httpURLConnection.setReadTimeout(5000);
+//                httpURLConnection.setConnectTimeout(5000);
+//                httpURLConnection.setRequestMethod("POST");
+//                httpURLConnection.connect();
+//
+//                OutputStream outputStream = httpURLConnection.getOutputStream();
+//                outputStream.write(postParameters.getBytes("UTF-8"));
+//                outputStream.flush();
+//                outputStream.close();
+//
+//                int responseStatusCode = httpURLConnection.getResponseCode();
+//                Log.d(TAG, "POST response code - " + responseStatusCode);
+//
+//                InputStream inputStream;
+//                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+//                    inputStream = httpURLConnection.getInputStream();
+//                }
+//                else{
+//                    inputStream = httpURLConnection.getErrorStream();
+//                }
+//
+//                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+//                StringBuilder sb = new StringBuilder();
+//                String line = null;
+//                while((line = bufferedReader.readLine()) != null){
+//                    sb.append(line);
+//                }
+//                bufferedReader.close();
+//
+//                return sb.toString().trim();
+//            } catch (Exception e) {
+//                error=1;
+//                Log.d(TAG, "UpdateData: Error ", e);
+//                Log.d("에러",e.getMessage());
+//                return "error";
+//            }
+//
+//        }
+//    }
     private void showResult(){
         // int count=0;
         String TAG_JSON="getWishListItem";
