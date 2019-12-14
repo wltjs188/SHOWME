@@ -963,6 +963,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                remenu=getRemenu(result);
                 break;
             case "ACTION_M_PHONE"://사용자정보수정 : 핸드폰번호
+                parameter=getParameter(result);
                 phoneNum=""+parameter.get("user_phone");
                 phoneNum=(phoneNum.replaceAll("\"","")).replaceAll("-","");
                 user.setPhoneNum(phoneNum);
@@ -970,19 +971,43 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 strContact = gson.toJson(user, User.class);
                 savePreferences("USER",strContact);
                 task1 = new UpdateUser(); //사용자정보 수정
+                Log.d("check",parameter.toString());
+                Log.d("check",phoneNum);
+                Log.d("check",user.getPhoneNum());
                 task1.execute("UpdateUser",user.getId(),"phoneNum",user.getPhoneNum());
 //                remenu=getRemenu(result);
                 break;
             case "ACTION_M_ADDRESS"://사용자정보수정 : 주소
+
                 parameter=getParameter(result);
-                //주소 시,구,동 받아오기
-                address = "" + parameter.get("city")+parameter.get("county");
-                if(parameter.containsKey("county1")){
-                    address=address+parameter.get("county1");
+                String maddress="";
+                if(parameter.containsKey("state")){ //도
+                    maddress = "" + parameter.get("state");
                 }
-                address=address+parameter.get("village");
-                address=address.replaceAll("\"","");
-                user.setAddress(address);
+                Log.d("city",parameter.get("city").toString());
+                maddress = maddress + parameter.get("city"); //시
+                if(parameter.containsKey("county")){ //구,군
+                    maddress=maddress+parameter.get("county");
+                }
+                if(parameter.containsKey("county1")){ //면,읍,리
+                    maddress=maddress+parameter.get("county1");
+                }
+                if(parameter.containsKey("village")){//동
+                    maddress=maddress+parameter.get("village");
+                }
+                if(parameter.containsKey("address")){ //상세주소,도로명주소
+                    maddress=maddress+parameter.get("address");
+                }
+                maddress=maddress.replaceAll("\"","");
+//                maddress=maddress.replaceAll("\[","");
+//                //주소 시,구,동 받아오기
+//                address = "" + parameter.get("city")+parameter.get("county");
+//                if(parameter.containsKey("county1")){
+//                    maddress=address+parameter.get("county1");
+//                }
+//                address=address+parameter.get("village");
+//                address=address.replaceAll("\"","");
+                user.setAddress(maddress);
                 strContact = gson.toJson(user, User.class);
                 savePreferences("USER",strContact);
                 task1 = new UpdateUser(); //사용자정보 수정
