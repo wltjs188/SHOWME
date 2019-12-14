@@ -1085,7 +1085,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 parameter=getParameter(result);
                 if(parameter.containsKey("Wish_Item")){ //관심상품이동
                     startActivityForResult(wishIntent,WISHLIST_ACTIVITY);
-                    result.getContexts().clear();
+
                 }
                 else if(parameter.containsKey("pre_search")) {
                     //이전 검색
