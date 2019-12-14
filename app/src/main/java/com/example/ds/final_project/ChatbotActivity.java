@@ -41,6 +41,7 @@ import com.example.ds.final_project.db.DAO.InsertUser2;
 import com.example.ds.final_project.db.DTO.User;
 import com.example.ds.final_project.db.DAO.UpdateUser;
 
+import com.example.ds.final_project.db.DTO.WishProduct;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -295,29 +296,29 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             }
         });
         //tts 완료 시점 이후 실행함
-        tts.setOnUtteranceProgressListener(new UtteranceProgressListener(){
-            @Override
-            public void onStart(String utteranceId) {
-            }
-            @Override
-            public void onDone(String utteranceId) {
-                String input=editText.getText().toString();
-                if(user==null){
-                    //등록되지 않은 사용자
-                    aiRequest2.setQuery(input);
-                    Log.e("입력",input);
-                    new AITask().execute(aiRequest2);
-                }else{
-                    //등록된 사용자
-                    aiRequest.setQuery(input);
-                    Log.e("입력",input);
-                    new AITask().execute(aiRequest);
-                }
-            }
-            @Override
-            public void onError(String utteranceId) {
-            }
-        });
+//        tts.setOnUtteranceProgressListener(new UtteranceProgressListener(){
+//            @Override
+//            public void onStart(String utteranceId) {
+//            }
+//            @Override
+//            public void onDone(String utteranceId) {
+//                String input=editText.getText().toString();
+//                if(user==null){
+//                    //등록되지 않은 사용자
+//                    aiRequest2.setQuery(input);
+//                    Log.e("입력",input);
+//                    new AITask().execute(aiRequest2);
+//                }else{
+//                    //등록된 사용자
+//                    aiRequest.setQuery(input);
+//                    Log.e("입력",input);
+//                    new AITask().execute(aiRequest);
+//                }
+//            }
+//            @Override
+//            public void onError(String utteranceId) {
+//            }
+//        });
 
         //dialogflow
         final AIConfiguration config = new AIConfiguration("b8dda671eb584e3586aba41efdd554cf",
@@ -370,12 +371,23 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                                    adapter.notifyDataSetChanged();
 //                                    editText.setText("");
 //                                input="문자상품다시";
+                                    CheckShareProduct task=new CheckShareProduct();
+                                    task.execute("CheckShareProduct",uuid,input);
                                 }
                                 else if (findNum(input) == null){//없는 사람
                                     chatMessages.add(chatMessage);
                                     adapter.notifyDataSetChanged();
                                     editText.setText("");
                                     input = "문자사람다시";
+                                    aiRequest.setQuery(input);
+
+                                    Log.e("입력", input);
+                                    new AITask().execute(aiRequest);
+                                }else {
+                                    aiRequest.setQuery(input);
+
+                                    Log.e("입력", input);
+                                    new AITask().execute(aiRequest);
                                 }
                             }
                         if (shareType.equals("kakao")) { //카톡 공유
@@ -385,12 +397,17 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                                    adapter.notifyDataSetChanged();
 //                                    editText.setText("");
 //                                input="카톡상품다시";
+                                CheckShareProduct task=new CheckShareProduct();
+                                task.execute("CheckShareProduct",uuid,input);
                             }
                         }
                     }
-                    aiRequest.setQuery(input);
-                    Log.e("입력", input);
-                    new AITask().execute(aiRequest);
+                    else {
+                            aiRequest.setQuery(input);
+
+                            Log.e("입력", input);
+                            new AITask().execute(aiRequest);
+                        }
                     }
                 }
 //                editText.requestFocus();
@@ -1112,6 +1129,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 Log.d("share mProduct",mPerson);
 
                 //문자 공유 시작
+                mPerson=null;
+                mProduct=null;
                 shareType=null;
                 break;
 
@@ -1121,141 +1140,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 Log.d("share mProduct",kProduct);
 
                 //카톡 공유 시작
-
+                kProduct=null;
                 shareType=null;
                 break;
-
-//            case "Share_K_Product"://카카오 공유하기
-//                parameter=getParameter(result);
-//                Log.d("카카오",parameter.toString());
-//
-//                //공유할 상품
-//                if(parameter.containsKey("ShareKProduct")){
-//                    Log.d("카카오","카카카캌");
-//                    sproduct = parameter.get("ShareKProduct").toString().replace('\"',' ').trim();
-//                }
-//
-//                if(sproduct==null) {
-//                    GetWishProductName task3 = new GetWishProductName();
-//                    task3.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user.getId());
-//                }
-//                else{
-//                    ShareType = "카톡";
-//                    GetProductToShare task2 = new GetProductToShare();
-//                    task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user.getId(),sproduct);
-//                }
-//
-//                break;
-//            case "Share_M_Person"://메시지 공유하기
-//                Log.d("챗봇","문자");
-//                parameter=getParameter(result);
-//                //공유할 사람
-//                if(parameter.containsKey("ShareMPerson")) {
-//                    fname = parameter.get("ShareMPerson").toString().replace('\"',' ').trim();
-//                }
-//                //공유할 상품
-//                if(parameter.containsKey("ShareMProduct")){
-//                    sproduct = parameter.get("ShareMProduct").toString().replace('\"',' ').trim();
-//                }
-//                if(sproduct==null) {
-//                    GetWishProductName task4 = new GetWishProductName();
-//                    task4.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user.getId());
-//                }
-//
-////                    }
-////                    else {
-////                        String m="";
-////                        for (int i = 0; i < wishProductNames.size(); i++) {
-////                            if (i == wishProductNames.size() - 1)
-////                                m += wishProductNames.get(i);
-////                            else
-////                                m += wishProductNames.get(i) + ", ";
-////                        }
-////                        Toast.makeText(this.getApplicationContext(), "관심상품에 " + m + "가 있습니다.", Toast.LENGTH_LONG).show();
-////                    }
-//
-////                Toast.makeText(this.getApplicationContext(),"관심상품에 ~~~가 있습니다.",Toast.LENGTH_LONG).show();
-//
-//                //2가지 다 입력되었다면,
-//               if( fname != null && sproduct != null){
-//
-//                   fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
-//
-//                   if(!fnumber.equals("그런 사람 없어")){
-//                       //관심상품 있는지 검사
-//                       Log.d("메세지",fnumber);
-//                       // 연락처 조회 된 경우, 공유 실행
-//                       ShareType = "문자";
-//                       GetProductToShare task2 = new GetProductToShare();
-//                       task2.execute( "http://" + IP_ADDRESS+"/getProductToShare.php",user.getId(),sproduct);
-//
-//                   }
-//                   else{
-//                       Toast.makeText(getApplicationContext(), fname+"님의 번호가 없습니다. 다시 입력해주세요.", Toast.LENGTH_LONG).show();
-//                       fnumber = null; sproduct = null; fname = null;
-//
-//                       aiRequest.setQuery("문자다시");
-//                       Log.e("입력",editText.getText().toString());
-//                       new AITask().execute(aiRequest);
-//                   }
-//                   result.getContexts().clear();
-//                }
-//
-//                break;
-//            case "Again_Share_M"://문자 다시
-//                Log.d("챗봇","again");
-//                parameter=getParameter(result);
-//                //공유할 사람
-//                if(parameter.containsKey("AgainMPerson")) {
-//
-//                    fname = parameter.get("AgainMPerson").toString().replace('\"',' ').trim();
-//                    //Toast.makeText(getApplicationContext(), fname+"재시도", Toast.LENGTH_LONG).show();
-//                }
-//                //공유할 상품
-//                if(parameter.containsKey("AgainMProduct")){
-//                    sproduct = parameter.get("AgainMProduct").toString().replace('\"',' ').trim();
-//                }
-//                if(sproduct==null) {
-//                    GetWishProductName task = new GetWishProductName();
-//                    task.execute("http://" + IP_ADDRESS + "/getWishProductName.php", user_uuid);
-//                }
-//                //2가지 다 입력되었다면,
-//                if( fname != null && sproduct != null){
-//                    fnumber = findNum(fname); // 공유자 이름으로 번호 찾기
-////                   Log.d("먕","uuid"+user_uuid+" 번호"+fnumber+" 이름"+fname+findNum("강정현"));
-//                    Log.d("메세지",fnumber);
-//                    if(!fnumber.equals("그런 사람 없어")) {
-//                        //관심상품 있는지 검사
-//                        //if(있으면){
-//                        // 연락처 조회 된 경우, 공유 실행
-//                        GetProductToShare task2 = new GetProductToShare();
-//                        task2.execute("http://" + IP_ADDRESS + "/getProductToShare.php", user_uuid, sproduct);
-//                        //}
-////                        else{
-////                            Toast.makeText(getApplicationContext(), sproduct+"상품은 없습니다. 다시 입력해주세요.", Toast.LENGTH_LONG).show();
-////                            //failShare((fname));
-////                            aiRequest.setQuery("문자다시");
-////                            Log.e("입력",editText.getText().toString());
-////                            new AITask().execute(aiRequest);
-////                        }
-//                    }
-//                    else{
-//                        Toast.makeText(getApplicationContext(), fname+"님의 번호가 없습니다. 다시 입력해주세요.", Toast.LENGTH_LONG).show();
-//                        //failShare((fname));
-//                        fnumber = null; sproduct = null; fname = null;
-//                        aiRequest.setQuery("문자다시");
-//                        Log.e("입력",editText.getText().toString());
-//                        new AITask().execute(aiRequest);
-//                    }
-////                    fnumber = null; sproduct = null; fname = null;
-//                    result.getContexts().clear();
-//                }
-//                break;
-//            default:
-//                chatMessage2 = new ChatMessage("버튼",true);
-//                chatMessage2.setButton(BTN_TYPE_CATEGORY); //버튼으로 설정
-//                adapter.setButton(btnSendListener); //버튼리스터 설정
-//                break;
 
         }
 
@@ -1526,6 +1413,139 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     Log.d("검색 오류 : ", e.getMessage());
                 }
 
+            }
+        }
+    }
+    //관심상품 등록 확인 클래스
+    private class CheckShareProduct extends AsyncTask<String, Void,String> {
+        String LoadData;
+        String input;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            // TODO Auto-generated method stub
+            String project = (String)params[0];
+            String uid = (String)params[1];
+            String alias = (String)params[2];
+            input=alias;
+            for(String p:params){
+                Log.d("hi",p);
+            }
+            try {
+                HttpParams httpParameters = new BasicHttpParams();
+                HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
+
+                HttpClient client = new DefaultHttpClient(httpParameters);
+
+                HttpConnectionParams.setConnectionTimeout(httpParameters, 7000);
+                HttpConnectionParams.setSoTimeout(httpParameters, 7000);
+                HttpConnectionParams.setTcpNoDelay(httpParameters, true);
+
+                // 주소 : aws서버
+                String postURL = "http://52.78.143.125:8080/showme/";
+
+                HttpPost post = new HttpPost(postURL+project);
+                //서버에 보낼 파라미터
+                ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+                //파라미터 추가하기
+
+                postParameters.add(new BasicNameValuePair("uid", uid));
+                postParameters.add(new BasicNameValuePair("alias", alias));
+
+                //파라미터 보내기
+                UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);
+                post.setEntity(ent);
+
+                long startTime = System.currentTimeMillis();
+
+                HttpResponse responsePOST = client.execute(post);
+
+                long elapsedTime = System.currentTimeMillis() - startTime;
+                Log.v("debugging", elapsedTime + " ");
+
+
+                HttpEntity resEntity = responsePOST.getEntity();
+                if (resEntity != null) {
+                    LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
+
+                    Log.d("가져온 데이터", LoadData);
+                    return LoadData;
+                }
+                if(responsePOST.getStatusLine().getStatusCode()==200){
+                    Log.d("오류없음","굳");
+                }
+                else{
+                    Log.d("error","오류");
+                    return null;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+//            pDialog.dismiss();
+            if (result == null||result==""){
+                Log.d("wishList","아님 ");
+//                check=1;
+                ChatMessage chatMessage;
+                chatMessage = new ChatMessage(input, false);
+
+                chatMessages.add(chatMessage);
+                adapter.notifyDataSetChanged();
+                editText.setText("");
+                if(shareType.equals("msg")){
+                    input="문자상품다시";
+                }else{
+                    input="카톡상품다시";
+                }
+
+
+            }
+            else {
+                try {
+                    JSONObject jsonObj = new JSONObject(result);
+                    // json객체.get("변수명")
+                    JSONArray jArray = (JSONArray) jsonObj.get("getData");
+//                    items = new ArrayList<Product>();
+                    if(jArray.length()==0){
+                        Log.d("wishList","아님");
+                        ChatMessage chatMessage;
+                        chatMessage = new ChatMessage(input, false);
+
+                        chatMessages.add(chatMessage);
+                        adapter.notifyDataSetChanged();
+                        editText.setText("");
+                        if(shareType.equals("msg")){
+                            input="문자상품다시";
+                        }else{
+                            input="카톡상품다시";
+                        }
+                    }else {
+                        Log.d("wishList","맞음");
+
+//                        ChatMessage chatMessage;
+//                        chatMessage = new ChatMessage(input, false);
+//
+//                        chatMessages.add(chatMessage);
+//                        adapter.notifyDataSetChanged();
+//                        editText.setText("");
+
+                    }
+                    aiRequest.setQuery(input);
+                    Log.e("입력", input);
+                    new AITask().execute(aiRequest);
+                } catch (JSONException e) {
+                    Log.d("error : ", e.getMessage());
+                }
             }
         }
     }
