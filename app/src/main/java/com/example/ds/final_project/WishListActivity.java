@@ -57,8 +57,6 @@ public class WishListActivity extends AppCompatActivity {
     WishProductDialog dialog;
     Intent productInfoIntent; //상세정보 intent
     GridView gv;
-    String mJsonString;
-    String IP_ADDRESS = "18.191.10.193";
     private WishAdapter adapter;
     String uuid="";
     //상품정보 List
@@ -69,6 +67,7 @@ public class WishListActivity extends AppCompatActivity {
     ArrayList<String> images=new ArrayList<String>(); //상품 옵션 대표 이미지
     ArrayList<String> aliases=new ArrayList<String>(); //네이밍
 
+    int pos;
     String alias;
     String Name;
     int page = 0;
@@ -130,6 +129,7 @@ public class WishListActivity extends AppCompatActivity {
                                         UpdateWishProductAlias task1 = new UpdateWishProductAlias(); //사용자정보 수정
                                         task1.execute("UpdateWishProductAlias",uuid,alias,name);
                                         Name=name;
+                                        pos=position;
                                     }
 
                                     @Override
@@ -397,6 +397,7 @@ public class WishListActivity extends AppCompatActivity {
                     }else {
                         if(count>0) {
                             alias=Name;
+                            aliases.set(pos,alias);
                             Toast.makeText(getApplicationContext(),"별칭을 "+Name+"으로 수정하였습니다.",Toast.LENGTH_LONG).show();;
                             Log.i("별칭 수정", "성공" + result);
                         }
