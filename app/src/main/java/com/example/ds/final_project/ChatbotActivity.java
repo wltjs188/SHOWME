@@ -352,9 +352,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                                 if (mProduct == null) {
                                     // 없는 상품
 
-                                    chatMessages.add(chatMessage);
-                                    adapter.notifyDataSetChanged();
-                                    editText.setText("");
+//                                    chatMessages.add(chatMessage);
+//                                    adapter.notifyDataSetChanged();
+//                                    editText.setText("");
 
 //                                input="문자상품다시";
                                 } else if (findNum(input) == null){//없는 사람
@@ -370,10 +370,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                                 if(mProduct==null){
                                     // 없는 상품
 
-                                    chatMessages.add(chatMessage);
-                                    adapter.notifyDataSetChanged();
-                                    editText.setText("");
-                                    
+//                                    chatMessages.add(chatMessage);
+//                                    adapter.notifyDataSetChanged();
+//                                    editText.setText("");
+//
 //                                input="카톡상품다시";
                                 }
 
