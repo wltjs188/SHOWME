@@ -391,6 +391,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                                     Log.e("입력", input);
                                     new AITask().execute(aiRequest);
+
                                 }
                             }
                         if (shareType.equals("kakao")) { //카톡 공유
@@ -1015,14 +1016,22 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 mProduct=parameter.get("any").toString().replaceAll("\"","");
                 Log.d("share mProduct",mProduct);
                 break;
-            case "Share_m-person": //메세지 공유할 사람
+            case "Share_m-person": //메세지 공유할 사람 또는 번호
                 parameter=getParameter(result);
-                mPerson=parameter.get("any").toString().replaceAll("\"","");
-                Log.d("share mProduct",mPerson);
+                String param=parameter.get("any").toString().replaceAll("\"","");
+//                if(이름이){ //이름이면
+//                    mPerson=param;
+//                }else{ //번호면
+//                    mNumber=param;
+//                }
+                Log.d("share msg",param);
 
                 //문자 공유 시작
+
+                //공유 끝나면 변수 초기화
                 mPerson=null;
                 mProduct=null;
+                mNumber=null;
                 shareType=null;
                 break;
 
