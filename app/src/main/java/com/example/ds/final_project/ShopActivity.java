@@ -105,7 +105,7 @@ public class ShopActivity extends AppCompatActivity {
 
 //                productInfoIntent.putExtra("product", strContact);
                 productInfoIntent.putExtra("image",images.get(position));
-                productInfoIntent.putExtra("id",ids.get(position));
+                productInfoIntent.putExtra("productId",ids.get(position));
                 productInfoIntent.putExtra("info",infos.get(position));
                 startActivity(productInfoIntent);
             }
@@ -235,6 +235,9 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
 //                    items = new ArrayList<Product>();
                 if(jArray.length()==0){
                     Log.d("검색"," 실패");
+                    Toast.makeText(getApplicationContext(),"검색된 상품이 없습니다.",Toast.LENGTH_LONG).show();
+
+
                 }else {
 //                    Log.i("검색","성공"+result);
                     Product product=new Product();

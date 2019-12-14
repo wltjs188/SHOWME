@@ -79,7 +79,7 @@ public class ProductInfo extends AppCompatActivity {
     private int check=0;
     //상품 정보
 //    private Product product;
-    private String wishProductName="";
+    private String productAlias="";
     private String uuid=" ";
     private String productId=" ";
 //    private String optionNum="";
@@ -114,15 +114,15 @@ public class ProductInfo extends AppCompatActivity {
         product_info.setMovementMethod(new ScrollingMovementMethod());
         Intent intent = getIntent();
 
-        productId=intent.getStringExtra("id");
+        productId=intent.getStringExtra("productId");
         info=intent.getStringExtra("info");
         image=intent.getStringExtra("image");
 
-        wishProductName=intent.getStringExtra("wishProductName");
-        if(wishProductName==""||wishProductName==null)
+        productAlias=intent.getStringExtra("alias");
+        if(productAlias==""||productAlias==null)
             getSupportActionBar().setTitle("상품 상세 정보");
         else
-            getSupportActionBar().setTitle(wishProductName+" 상세 정보");
+            getSupportActionBar().setTitle(productAlias+" 상세 정보");
         reviewIntent=new Intent(getApplicationContext(),ReviewActivity.class); //리뷰
 
         productImg=(ImageView)findViewById(R.id.productImg);
@@ -143,13 +143,13 @@ public class ProductInfo extends AppCompatActivity {
         dialog.setDialogListener(new DialogListener() {
             @Override
             public void onPositiveClicked(String name) {
-                wishProductName=name;
+                productAlias=name;
                 infoBool=true;
-                Log.i("관심상품등록",uuid+wishProductName);
+                Log.i("관심상품등록",uuid+productAlias);
                 InsertWishProduct task = new InsertWishProduct();
-                task.execute("InsertWishProduct",uuid,wishProductName,productId,image,info);
+                task.execute("InsertWishProduct",uuid,productAlias,productId,image,info);
 //                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
-                Log.i("관심2",wishProductName);
+                Log.i("관심2",productAlias);
                 WishBtnChanged(infoBool);
             }
 
@@ -169,8 +169,8 @@ public class ProductInfo extends AppCompatActivity {
         else{
             infoBool=false;
             DeleteWishProduct task = new DeleteWishProduct();
-            Log.d("delete",uuid+", "+wishProductName);
-            task.execute( "DeleteWishProduct",uuid,wishProductName);
+            Log.d("delete",uuid+", "+productAlias);
+            task.execute( "DeleteWishProduct",uuid,productAlias);
             Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_SHORT).show();
             WishBtnChanged(infoBool);
         }
@@ -550,7 +550,8 @@ public class ProductInfo extends AppCompatActivity {
 
                             wishProduct.setId(id);
                             wishProduct.setAlias(alias);
-                            wishProductName=alias;
+
+                            productAlias=alias;
                             Log.d("가져온 데이터",id+", "+alias);
                         }
                         infoBool=true;

@@ -23,8 +23,24 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.ds.final_project.db.DTO.WishProduct;
 import com.example.ds.final_project.db.UpdateWishProductName;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,25 +54,22 @@ import java.util.ArrayList;
 
 public class WishListActivity extends AppCompatActivity {
 
-//    private static final int SWIPE_MIN_DISTANCE = 120;
-//    private static final int SWIPE_MAX_OFF_PATH = 250;
-//    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
     WishProductDialog dialog;
     Intent productInfoIntent; //상세정보 intent
     GridView gv;
-    String mJsonString;
-    String IP_ADDRESS = "18.191.10.193";
     private WishAdapter adapter;
     String uuid="";
     //상품정보 List
+    ArrayList<WishProduct> wishProducts=new ArrayList<WishProduct>();
     ArrayList<String> productIds=new ArrayList<String>();
     ArrayList<String> optionNums=new ArrayList<String>();
     ArrayList<String> infos=new ArrayList<String>(); //상품 상세 정보
     ArrayList<String> images=new ArrayList<String>(); //상품 옵션 대표 이미지
-    ArrayList<String> names=new ArrayList<String>(); //네이밍
-//    ArrayList<String> adap_infos = new ArrayList<String>(); //상품 상세 정보
-//    ArrayList<String> adap_images = new ArrayList<String>(); //상품 옵션 대표 이미지
-//    ArrayList<String> adap_names = new ArrayList<String>();//네이밍
+    ArrayList<String> aliases=new ArrayList<String>(); //네이밍
+
+    int pos;
+    String alias;
+    String Name;
     int page = 0;
     private GestureDetector gDetector;
 
@@ -69,7 +82,6 @@ public class WishListActivity extends AppCompatActivity {
 
         productInfoIntent = new Intent(getApplicationContext(),ProductInfo.class);
         gv = (GridView)findViewById(R.id.gridView1);
-//        gDetector = new GestureDetector(gestureListener);
 
 
 
@@ -79,30 +91,18 @@ public class WishListActivity extends AppCompatActivity {
         uuid = getPreferences("uuid");
 
         GetWishProduct task = new GetWishProduct();
-        task.execute( "http://" + IP_ADDRESS + "/getWishProduct.php",uuid);
-//        adap_images=images;
-//        adap_infos=infos;
-//        adap_names=names;
-//        adapter = new WishAdapter(this, R.layout.activity_wish_list, adap_images,adap_infos,adap_names);
-        adapter = new WishAdapter(this, R.layout.activity_wish_list, images,infos,names);
+        task.execute( "GetWishProduct",uuid);
+
+        adapter = new WishAdapter(this, R.layout.activity_wish_list, images,infos,aliases);
         gv.setAdapter(adapter);
-
-//        gv.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent me) {
-//                return gDetector.onTouchEvent(me);
-//            }
-//        });
-
 
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
                 String productId=productIds.get(position);
-                String optionNum=optionNums.get(position);
                 String info=infos.get(position);
                 String image=images.get(position);
-                String wishProductName=names.get(position);
+                alias=aliases.get(position);
                // productInfoIntent.putExtra("info", infos.get(position));
                 PopupMenu popup= new PopupMenu(getApplicationContext(), v);//v는 클릭된 뷰를 의미
 
@@ -114,21 +114,22 @@ public class WishListActivity extends AppCompatActivity {
                             case R.id.showProductInfo:
 //                                Toast.makeText(getApplication(),"메뉴1",Toast.LENGTH_SHORT).show();
                                 productInfoIntent.putExtra("productId", productId);
-                                productInfoIntent.putExtra("optionNum", optionNum);
                                 productInfoIntent.putExtra("info", info);
                                 productInfoIntent.putExtra("image", image);
-                                productInfoIntent.putExtra("wishProductName",wishProductName);
-                                Log.d("챈",names.get(position));
+                                productInfoIntent.putExtra("alias",alias);
+                                Log.d("챈",aliases.get(position));
                                 startActivity(productInfoIntent);
                                 break;
                             case R.id.editWishProductName:
+                                //별칭 수정
                                 dialog.setDialogListener(new DialogListener() {
                                     @Override
                                     public void onPositiveClicked(String name) {
 //
-                                        UpdateWishProductName task1 = new UpdateWishProductName(); //사용자정보 수정
-                                        task1.execute("http://" + IP_ADDRESS + "/updateWishProductName.php",uuid,wishProductName,name);
-                                        Toast.makeText(getApplication(),"수정되었습니다.",Toast.LENGTH_LONG).show();
+                                        UpdateWishProductAlias task1 = new UpdateWishProductAlias(); //사용자정보 수정
+                                        task1.execute("UpdateWishProductAlias",uuid,alias,name);
+                                        Name=name;
+                                        pos=position;
                                     }
 
                                     @Override
@@ -137,7 +138,7 @@ public class WishListActivity extends AppCompatActivity {
                                     }
                                 });
                                 dialog.show();
-                                Toast.makeText(getApplication(),"메뉴1",Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getApplication(),"메뉴1",Toast.LENGTH_SHORT).show();
                                 break;
 
                             default:
@@ -154,88 +155,6 @@ public class WishListActivity extends AppCompatActivity {
         });
     }
 
-//    GestureDetector.OnGestureListener gestureListener = new GestureDetector.OnGestureListener() {
-//        public boolean onDown(MotionEvent e) {
-//            //   viewA.setText("-" + "DOWN" + "-");
-//            return true;
-//        }
-//        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-//            try {
-//                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-//                    return false;
-//
-//                // right to left swipe
-//                if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-//                    //다음
-//                    //Toast.makeText(getApplicationContext(), "Left Swipe", Toast.LENGTH_SHORT).show();
-//                    if(images.size()<=page*4+3){
-//                        Toast.makeText(getApplicationContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
-//                    }else{
-//                        page++;
-//                        if(images.size()<=page*4+3){
-//                            adap_images= new ArrayList<String>(images.subList(page*4,images.size()));
-//                            adap_infos=new ArrayList<String>(images.subList(page*4,infos.size()));
-//                        }else{
-//                            adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
-//                            adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
-//                        }
-//                        adapter = new WishAdapter(getApplicationContext(), R.layout.wish_item, adap_images, adap_infos,adap_names);
-//                        gv.setAdapter(adapter);
-//                    }
-//                }
-//                // left to right swipe
-//                else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-//                    //이전
-//                    //Toast.makeText(getApplicationContext(), "Right Swipe", Toast.LENGTH_SHORT).show();
-//                    if(page==0){
-//                        Toast.makeText(getApplicationContext(), "첫번째 페이지 입니다.", Toast.LENGTH_SHORT).show();
-//                    }else{
-//                        page--;
-//                        if(images.size()<=page*4+3){
-//                            adap_images=new ArrayList<String>(images.subList(page*4,images.size()));
-//                            adap_infos=new ArrayList<String>(infos.subList(page*4,images.size()));
-//                        }else{
-//                            adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
-//                            adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
-//                        }
-//                        adapter = new WishAdapter(getApplicationContext(), R.layout.wish_item, adap_images, adap_infos,adap_names);
-//                        gv.setAdapter(adapter);
-//                    }
-//                }
-//            // down to up swipe
-////            else if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-////                Toast.makeText(getApplicationContext(), "Swipe up", Toast.LENGTH_SHORT).show();
-////            }
-////            // up to down swipe
-////            else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-////                Toast.makeText(getApplicationContext(), "Swipe down", Toast.LENGTH_SHORT).show();
-////            }
-//            } catch (Exception e) {
-//
-//            }
-//            return true;
-//        }
-//
-//        public void onLongPress(MotionEvent e) {
-//            Toast mToast = Toast.makeText(getApplicationContext(), "Long Press", Toast.LENGTH_SHORT);
-//            mToast.show();
-//        }
-//
-//        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-//            // viewA.setText("-" + "SCROLL" + "-");
-//            return true;
-//        }
-//
-//        public void onShowPress(MotionEvent e) {
-//            //viewA.setText("-" + "SHOW PRESS" + "-");
-//        }
-//
-//        public boolean onSingleTapUp(MotionEvent e) {
-//            Toast mToast = Toast.makeText(getApplicationContext(), "두손가락으로 눌러주세요.", Toast.LENGTH_SHORT);
-//            mToast.show();
-//            return true;
-//        }
-//    };
 
     @Override
     protected void onDestroy() {
@@ -243,48 +162,6 @@ public class WishListActivity extends AppCompatActivity {
         Log.i("destroy","종료");
         setResult(RESULT_OK);
     }
-
-//    public void onNextBtnClicked(View view){
-//        if(images.size()<=page*4+3){
-//            Toast.makeText(getApplicationContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
-//        }else{
-//            page++;
-//            if(images.size()<=page*4+3){
-//                adap_images= new ArrayList<String>(images.subList(page*4,images.size()));
-//                adap_infos=new ArrayList<String>(images.subList(page*4,infos.size()));
-//                adap_names=new ArrayList<String>(names.subList(page*4,infos.size()));
-//            }else{
-//                adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
-//                adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
-//                adap_names=new ArrayList<String>(names.subList(page*4,page*4+4));
-//            }
-//
-//           // adapter.notifyDataSetChanged();
-//            adapter = new WishAdapter(this, R.layout.wish_item, adap_images, adap_infos, adap_names);
-//            gv.setAdapter(adapter);
-//        }
-//    }
-//    public void onPrevBtnClicked(View view){
-//
-//        if(page==0){
-//            Toast.makeText(getApplicationContext(), "첫번째 페이지 입니다.", Toast.LENGTH_SHORT).show();
-//        }else{
-//            page--;
-//            if(images.size()<=page*4+3){
-//                adap_images=new ArrayList<String>(images.subList(page*4,images.size()));
-//                adap_infos=new ArrayList<String>(infos.subList(page*4,images.size()));
-//                adap_names=new ArrayList<String>(names.subList(page*4,images.size()));
-//            }else{
-//                adap_images=new ArrayList<String>(images.subList(page*4,page*4+4));
-//                adap_infos=new ArrayList<String>(infos.subList(page*4,page*4+4));
-//                adap_names=new ArrayList<String>(names.subList(page*4,page*4+4));
-//            }
-//
-//         //   adapter.notifyDataSetChanged();
-//            adapter = new WishAdapter(this, R.layout.wish_item, adap_images, adap_infos,adap_names);
-//            gv.setAdapter(adapter);
-//        }
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -306,125 +183,238 @@ public class WishListActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    private class GetWishProduct extends AsyncTask<String, Void, String> {
-
-    ProgressDialog progressDialog;
-    String errorString = null;
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        progressDialog = ProgressDialog.show(WishListActivity.this,
-                "Please Wait", null, true, true);
-    }
-    @Override
-    protected void onPostExecute(String result) {
-        super.onPostExecute(result);
-        progressDialog.dismiss();
-
-        if (result == null){
-
+    //관심상품 가져오기
+    private class GetWishProduct extends AsyncTask<String, Void,String> {
+        String LoadData;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
         }
-        else {
-            mJsonString = result;
-            showResult();
-        }
-    }
-    @Override
-    protected String doInBackground(String... params) {
-        String serverURL = params[0];
-        String postParameters = "uid=" + params[1];
-        try {
 
-            URL url = new URL(serverURL);
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
-
-            httpURLConnection.setReadTimeout(5000);
-            httpURLConnection.setConnectTimeout(5000);
-            httpURLConnection.setRequestMethod("POST");
-            httpURLConnection.setDoInput(true);
-            httpURLConnection.connect();
-
-            OutputStream outputStream = httpURLConnection.getOutputStream();
-            outputStream.write(postParameters.getBytes("UTF-8"));
-            outputStream.flush();
-            outputStream.close();
-
-            int responseStatusCode = httpURLConnection.getResponseCode();
-            InputStream inputStream;
-            if(responseStatusCode == HttpURLConnection.HTTP_OK) {
-                inputStream = httpURLConnection.getInputStream();
+        @Override
+        protected String doInBackground(String... params) {
+            // TODO Auto-generated method stub
+            String project = (String)params[0];
+            String uid = (String)params[1];
+            for(String p:params){
+                Log.d("hi",p);
             }
-            else{
-                inputStream = httpURLConnection.getErrorStream();
-            }
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            try {
+                HttpParams httpParameters = new BasicHttpParams();
+                HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
 
-            StringBuilder sb = new StringBuilder();
-            String line;
+                HttpClient client = new DefaultHttpClient(httpParameters);
 
-            while((line = bufferedReader.readLine()) != null){
-                sb.append(line);
+                HttpConnectionParams.setConnectionTimeout(httpParameters, 7000);
+                HttpConnectionParams.setSoTimeout(httpParameters, 7000);
+                HttpConnectionParams.setTcpNoDelay(httpParameters, true);
+
+                // 주소 : aws서버
+                String postURL = "http://52.78.143.125:8080/showme/";
+
+                HttpPost post = new HttpPost(postURL+project);
+                //서버에 보낼 파라미터
+                ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+                //파라미터 추가하기
+
+                postParameters.add(new BasicNameValuePair("uid", uid));
+
+                //파라미터 보내기
+                UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);
+                post.setEntity(ent);
+
+                long startTime = System.currentTimeMillis();
+
+                HttpResponse responsePOST = client.execute(post);
+
+                long elapsedTime = System.currentTimeMillis() - startTime;
+                Log.v("debugging", elapsedTime + " ");
+
+
+                HttpEntity resEntity = responsePOST.getEntity();
+                if (resEntity != null) {
+                    LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
+
+                    Log.d("가져온 데이터", LoadData);
+                    return LoadData;
+                }
+                if(responsePOST.getStatusLine().getStatusCode()==200){
+                    Log.d("오류없음","굳");
+                }
+                else{
+                    Log.d("error","오류");
+                    return null;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            bufferedReader.close();
-            return sb.toString().trim();
-        } catch (Exception e) {
-            errorString = e.toString();
             return null;
         }
-    }
-}
-    private void showResult(){
-        String TAG_JSON="WishProduct";
-        try {
-            JSONObject jsonObject = new JSONObject(mJsonString);
-            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
-            Log.d("jsonArray",jsonArray.length()+"");
-            for(int i=0;i<jsonArray.length();i++){
-                JSONObject item = jsonArray.getJSONObject(i);
-                String uuid = item.getString("uid");
 
-                if(uuid.equals(this.uuid)){
-                    Log.d("가져온 data",item.getString("productId"));
-                    Log.d("가져온 data",item.getString("optionNum"));
-                    productIds.add(item.getString("productId"));
-                    optionNums.add(item.getString("optionNum"));
-                    infos.add(item.getString("info")) ;
-                    images.add(item.getString("image"));
-                    names.add(item.getString("wishProductName"));
+        @Override
+        protected void onPostExecute(String result) {
 
-                }
-                adapter = new WishAdapter(this, R.layout.list_product_item, images, infos,names);
-                //adapter 설정
-//                if(images.size()<=4) {
-//                    adap_images=images;
-//                    adap_infos=infos;
-//                    adap_names=names;
-////                    adapter = new WishAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
-////                    gv.setAdapter(adapter);
-//                   // adapter.notifyDataSetChanged();
-//                }else{
-//                    adap_images=new ArrayList<String>(images.subList(0,4));
-//                    adap_infos=new ArrayList<String>(infos.subList(0,4));
-//                    adap_names=new ArrayList<String>(names.subList(0,4));
-////                    adapter = new WishAdapter(this, R.layout.list_product_item, adap_images, adap_infos);
-////                    gv.setAdapter(adapter);
-//                    //adapter.notifyDataSetChanged();
-//                }
-//                adapter = new WishAdapter(this, R.layout.wish_item, adap_images, adap_infos,adap_names);
-                gv.setAdapter(adapter);
+//            pDialog.dismiss();
+            if (result == null||result==""){
+                Log.d("wishList","없  ");
             }
+            else {
+                try {
+                    JSONObject jsonObj = new JSONObject(result);
+                    // json객체.get("변수명")
+                    JSONArray jArray = (JSONArray) jsonObj.get("getData");
+//                    items = new ArrayList<Product>();
+                    if(jArray.length()==0){
+                        Log.d("wishList","");
+                    }else {
+                        Log.d("wishList","맞음");
+                        WishProduct wishProduct=new WishProduct();
+                        for (int i = 0; i < jArray.length(); i++) {
+                            // json배열.getJSONObject(인덱스)
+                            JSONObject row = jArray.getJSONObject(i);
+                            String uid=row.getString("UID");
+                            String alias=row.getString("ALIAS");
+                            String id=row.getString("ID");
+                            String image=row.getString("IMAGE");
+                            String info=row.getString("INFO");
 
-
-        } catch (JSONException e) {
-            Log.d("showResult : ", e.getMessage());
-            Log.d("phptest: ",mJsonString);
-            Toast.makeText(WishListActivity.this,"등록된 관심상품이 없습니다.",Toast.LENGTH_LONG).show();
+                            wishProduct.setUid(uid);
+                            wishProduct.setId(id);
+                            wishProduct.setAlias(alias);
+                            wishProduct.setImage(image);
+                            wishProduct.setInfo(info);
+                            Log.d("가져온 데이터",wishProduct.getInfo());
+                            productIds.add(id);
+                            images.add(image);
+                            infos.add(info);
+                            aliases.add(alias);
+                            wishProducts.add(wishProduct);
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+//                    adapter = new WishAdapter(WishListActivity.this, R.layout.list_product_item, images, infos,aliases);
+//                    gv.setAdapter(adapter);
+                } catch (JSONException e) {
+                    Log.d("error : ", e.getMessage());
+                }
+            }
+        }
+    }
+    //관심상품 등록 클래스
+    public class UpdateWishProductAlias extends AsyncTask<String, Void, String> {
+        String LoadData;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
         }
 
+        @Override
+        protected String doInBackground(String... params) {
+            // TODO Auto-generated method stub
+
+            String project = (String)params[0];
+            String uid = (String)params[1];
+            String alias = (String)params[2];
+            String value = (String)params[3];
+
+            for(String p:params){
+                Log.d("hi",p);
+            }
+            try {
+                HttpParams httpParameters = new BasicHttpParams();
+                HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
+
+                HttpClient client = new DefaultHttpClient(httpParameters);
+
+                HttpConnectionParams.setConnectionTimeout(httpParameters, 7000);
+                HttpConnectionParams.setSoTimeout(httpParameters, 7000);
+                HttpConnectionParams.setTcpNoDelay(httpParameters, true);
+
+                // 주소 : aws서버
+                String postURL = "http://52.78.143.125:8080/showme/";
+
+                // 로컬서버
+//            String postURL = "http://10.0.2.2:8080/showme/InsertUser";
+
+                HttpPost post = new HttpPost(postURL+project);
+                //서버에 보낼 파라미터
+                ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+//            파라미터 추가하기
+                postParameters.add(new BasicNameValuePair("uid", uid));
+                postParameters.add(new BasicNameValuePair("alias", alias));
+                postParameters.add(new BasicNameValuePair("value", value));
+
+                //파라미터 보내기
+                UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);
+                post.setEntity(ent);
+
+                long startTime = System.currentTimeMillis();
+
+                HttpResponse responsePOST = client.execute(post);
+
+                long elapsedTime = System.currentTimeMillis() - startTime;
+                Log.v("debugging", elapsedTime + " ");
+
+
+                HttpEntity resEntity = responsePOST.getEntity();
+                if (resEntity != null) {
+                    LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
+                    Log.d("성공",LoadData);
+                }
+                if(responsePOST.getStatusLine().getStatusCode()==200){
+//                    Log.d("디비 ","성공 이지만 중복이라 실패 ");
+
+//                    return "fail";
+                }
+                else{
+
+                    Log.d("실패 ","떙 ");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (LoadData == null){
+                insertFail();
+            }
+            else {
+                try {
+                    JSONObject jsonObj = new JSONObject(LoadData);
+
+                    // json객체.get("변수명")
+                    JSONArray jArray = (JSONArray) jsonObj.get("count");
+                    int count=(int)jArray.get(0);
+                    Log.d("ㅇㅍㄴ",count+"");
+                    if(jArray.length()==0){
+                        Log.d("별칭 수정"," 실패");
+                        insertFail();
+                    }else {
+                        if(count>0) {
+                            alias=Name;
+                            aliases.set(pos,alias);
+                            Toast.makeText(getApplicationContext(),"별칭을 "+Name+"으로 수정하였습니다.",Toast.LENGTH_LONG).show();;
+                            Log.i("별칭 수정", "성공" + result);
+                        }
+                        else
+                            insertFail();
+                    }
+
+                } catch (JSONException e) {
+                    insertFail();
+                    Log.d("별칭수정 오류 : ", e.getMessage());
+                }
+
+            }
+        }
+    }
+    private void insertFail(){
+        Toast.makeText(getApplicationContext(),"별칭이 중복되어 관심상품 등록에 실패했습니다.",Toast.LENGTH_LONG).show();
     }
 
     // 값 불러오기
@@ -440,15 +430,15 @@ class WishAdapter extends ArrayAdapter<String> {
 
     ArrayList<String> images;
     ArrayList<String> infos;
-    ArrayList<String> names;
+    ArrayList<String> aliases;
 
-    public WishAdapter(Context context, int resource, ArrayList<String> images,ArrayList<String> infos,ArrayList<String> names) {
+    public WishAdapter(Context context, int resource, ArrayList<String> images,ArrayList<String> infos,ArrayList<String> aliases) {
         super(context, resource,images);
         this.context = context;
         this.resource = resource;
         this.images = images;
         this.infos=infos;
-        this.names=names;
+        this.aliases=aliases;
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -475,7 +465,7 @@ class WishAdapter extends ArrayAdapter<String> {
         return infos.get(i);
     }
     public String getName(int i){
-        return names.get(i);
+        return aliases.get(i);
     }
     static class ProductViewHolder{
         public ImageView imageView;
