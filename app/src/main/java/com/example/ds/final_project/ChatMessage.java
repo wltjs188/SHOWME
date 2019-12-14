@@ -1,10 +1,12 @@
 package com.example.ds.final_project;
 
 public class ChatMessage {
-    //메세지 하하
+    //메세지
+
     private String content;
     private boolean isMine;
     private boolean isButton=false; //버튼 선택 메세지 확인
+    private int isButtonType=0;
 
     public ChatMessage(String content, boolean isMine) {
         this.content = content;
@@ -17,8 +19,9 @@ public class ChatMessage {
         return content;
     }
 
-    public void setButton(){ //버튼설정
+    public void setButton(int isButtonType){ //버튼설정
         this.isButton = true;
+        this.isButtonType=isButtonType;
     }
     public boolean isMine() {
         return isMine;
@@ -26,4 +29,5 @@ public class ChatMessage {
     public boolean isButton(){
         return isButton;
     }
+    public int isButtonType(){return isButtonType;}
 }

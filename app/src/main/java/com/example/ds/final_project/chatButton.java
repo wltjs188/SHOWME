@@ -14,8 +14,10 @@ import java.util.ArrayList;
 public class chatButton {
 
     ArrayList<Button> list = new ArrayList<Button>();
+    ArrayList<String> btnNames = new ArrayList<String>();
 
     public chatButton(ArrayList<String> btnNames, LinearLayout layout, Context context, View.OnClickListener listener){
+        this.btnNames = btnNames;
         for(int i=0;i<btnNames.size();i++){
             Button btn = new Button(context);
             btn.setText(btnNames.get(i));
@@ -26,7 +28,7 @@ public class chatButton {
             list.add(btn);
         }
     }
-
+    public ArrayList<String> getBtnNames(){return btnNames;}
     public ArrayList<Button> getList() {
         return list;
     }

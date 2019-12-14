@@ -99,6 +99,7 @@ import ai.api.model.Result;
 
 import static android.speech.tts.TextToSpeech.ERROR;
 
+
 public class ChatbotActivity extends AppCompatActivity implements AIListener{
     Button btn_chat_send;
 
@@ -112,10 +113,15 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     String speech;
     String remenu="";
 
-    //챗봇 메뉴 버튼
-    ArrayList<String> btnNamesMenu= new ArrayList<String>(
-            Arrays.asList("상품 검색하기","이전 검색 다시보기","관심 상품 보기","관심 상품 공유하기","사용자 정보 수정")
-    );
+    //버튼 타입 정의
+    final int BTN_TYPE_MENU=1;
+    final int BTN_TYPE_CATEGORY=2;
+    final int BTN_TYPE_STYLE_TOP=3;
+    final int BTN_TYPE_STYLE_PANTS=4;
+    final int BTN_TYPE_STYLE_SKIRT=5;
+    final int BTN_TYPE_STYLE_DRESS=6;
+    final int BTN_TYPE_STYLE_OUTER=7;
+    final int BTN_TYPE_COLOR=8;
 
     //챗봇 전송 리스너
     View.OnClickListener btnSendListener;
@@ -332,7 +338,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             @Override
             public void onClick(View v) {
                 String input="";
-                Log.i("버튼누름","버튼누름"+input);
+//                Log.i("버튼누름","버튼누름"+input);
                 if (editText.getText().toString().trim().equals("") && v.getId()==R.id.btn_chat_send) {
                     tts.speak("텍스트를 입력해주세요.",TextToSpeech.QUEUE_FLUSH, null);
                 }
@@ -344,7 +350,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         input = editText.getText().toString();
                     else {
                         input = ((Button) v).getText().toString(); //버튼으로 전송할때
-                        Log.i("버튼누름","버튼누름"+input);
+//                        Log.i("버튼누름","버튼누름"+input);
                     }
 //                    tts.speak(editText.getText().toString()+"라고 말했습니다.",TextToSpeech.QUEUE_FLUSH, params);
                     if(user==null){
@@ -753,9 +759,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         chatMessages.add(chatMessage);
 
         //메뉴 버튼
-        ChatMessage chatMessage2 = new ChatMessage("a",true);
-        chatMessage2.setButton(); //버튼으로 설정
-        adapter.setButton(btnNamesMenu,btnSendListener); //버튼이름 설정
+        ChatMessage chatMessage2 = new ChatMessage("버튼",true);
+        chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
+        adapter.setButton(btnSendListener); //버튼이름 설정
         chatMessages.add(chatMessage2);
 
         //TTS 챗봇 읽어주기
@@ -775,9 +781,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         ChatMessage chatMessage = new ChatMessage(name+"님께 공유했습니다.\n메뉴를 선택해주세요\n", true);
         chatMessages.add(chatMessage);
 
-        ChatMessage chatMessage2 = new ChatMessage("a",true);
-        chatMessage2.setButton(); //버튼으로 설정
-        adapter.setButton(btnNamesMenu,btnSendListener); //버튼이름 설정
+        ChatMessage chatMessage2 = new ChatMessage("버튼",true);
+        chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
+        adapter.setButton(btnSendListener); //버튼이름 설정
         chatMessages.add(chatMessage2);
 
         //TTS 챗봇 읽어주기
@@ -866,6 +872,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         Log.i("액션",ACTION);
         String so=null;
         //챗봇 액션 처리
+
+        ChatMessage chatMessage2= new ChatMessage("",true);//버튼 메세지
+        Log.i("액션",ACTION);
+
         switch (ACTION){
 
             case "ACTION_USER"://사용자등록 : 이름받아오기
@@ -965,6 +975,27 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             case "Product_Category": //카테고리
                 parameter=getParameter(result);
                 category = parameter.get("Category").toString().replaceAll("\"","");
+                int btn_type=0;
+                chatMessage2 = new ChatMessage("버튼",true);
+                switch (category){
+                    case "상의":
+                        btn_type=BTN_TYPE_STYLE_TOP;
+                        break;
+                    case "바지":
+                        btn_type=BTN_TYPE_STYLE_PANTS;
+                        break;
+                    case "스커트":
+                        btn_type=BTN_TYPE_STYLE_SKIRT;
+                        break;
+                    case "원피스":
+                        btn_type=BTN_TYPE_STYLE_DRESS;
+                        break;
+                    case "아우터":
+                        btn_type=BTN_TYPE_STYLE_OUTER;
+                        break;
+                }
+                chatMessage2.setButton(btn_type); //버튼으로 설정
+                adapter.setButton(btnSendListener); //버튼리스터 설정
                 break;
             case "Search_Style.Search_Style-no": //카테고리만 입력
                 so=category;
@@ -984,6 +1015,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             case "Product_Style": //스타일
                 parameter=getParameter(result);
                 style = parameter.get("Style").toString().replaceAll("\"","");
+                chatMessage2 = new ChatMessage("버튼",true);
+                chatMessage2.setButton(BTN_TYPE_COLOR); //버튼으로 설정
+                adapter.setButton(btnSendListener); //버튼리스터 설정
                 Log.d("yoon style",style);
                 break;
             case "Search_Style.Search_Color.Search_Color-no": //카테고리, 스타일로 검색
@@ -1050,7 +1084,11 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         }
 
                     }
-
+                }
+                else if(parameter.containsKey("Search")){ //메뉴선택 검색 선택시 카테고리 버튼 보여주기
+                    chatMessage2 = new ChatMessage("버튼",true);
+                    chatMessage2.setButton(BTN_TYPE_CATEGORY); //버튼으로 설정
+                    adapter.setButton(btnSendListener); //버튼리스터 설정
                 }
                 break;
             case "Share_m":
@@ -1210,6 +1248,12 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                    result.getContexts().clear();
 //                }
 //                break;
+//            default:
+//                chatMessage2 = new ChatMessage("버튼",true);
+//                chatMessage2.setButton(BTN_TYPE_CATEGORY); //버튼으로 설정
+//                adapter.setButton(btnSendListener); //버튼리스터 설정
+//                break;
+
         }
 
         query=result.getResolvedQuery();
@@ -1241,6 +1285,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         Log.d("대답",speech);
         if(!speech.equals("")){
             chatMessages.add(chatMessage);
+            if(!(chatMessage2.getContent().equals(""))){
+                chatMessages.add(chatMessage2);
+            }
             adapter.notifyDataSetChanged();
             tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
         }
@@ -1542,9 +1589,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     JSONArray jArray = (JSONArray) jsonObj.get("getData");
 //                    items = new ArrayList<Product>();
                     if(jArray.length()==0){
-                        Log.d("검색"," 실패");
+                        Log.d("chatBotActivity검색"," 실패");
                     }else {
-                        Log.i("검색","성공"+result);
+                        Log.i("chatBotActivity검색","성공"+result);
                         Product product=new Product();
                         for (int i = 0; i < jArray.length(); i++) {
                             // json배열.getJSONObject(인덱스)
@@ -1586,6 +1633,33 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
 class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
 
+    //챗봇 메뉴 버튼
+    ArrayList<String> btnNamesMenu= new ArrayList<String>(
+            Arrays.asList("상품 검색하기","이전 검색 다시보기","관심 상품 보기","관심 상품 공유하기","사용자 정보 수정")
+    );
+    ArrayList<String> btnNamesCategory= new ArrayList<String>(
+            Arrays.asList("상의","바지","스커트","원피스","아우터")
+    );
+    ArrayList<String> btnNamesStyleTop= new ArrayList<String>(
+            Arrays.asList("상관 없음","반팔 티셔츠","긴팔 티셔츠","민소매 티셔츠","셔츠/블라우스","피케/카라 티셔츠","맨투맨/스웨트셔츠","후드 스웨트셔츠/후드집업","니트/스웨터/카디건","베스트")
+    );
+    ArrayList<String> btnNamesStylePants= new ArrayList<String>(
+            Arrays.asList("상관 없음","데님 팬츠","코튼 팬츠","수트 팬츠/슬랙스","트레이닝/조거 팬츠","숏 팬츠","레깅스")
+    );
+    ArrayList<String> btnNamesStyleSkirt= new ArrayList<String>(
+            Arrays.asList("상관 없음","미니 스커트","롱 스커트")
+    );
+    ArrayList<String> btnNamesStyleDress= new ArrayList<String>(
+            Arrays.asList("상관 없음","미니 원피스","맥시 원피스","점프수트","관심 상품 공유하기","사용자 정보 수정")
+    );
+    ArrayList<String> btnNamesStyleOuter= new ArrayList<String>(
+            Arrays.asList("상관 없음","항공 점퍼","레더/라이더스 재킷","트러커 재킷","수트/블레이저 재킷","나일론/코치/아노락 재킷",
+                    "스타디움 재킷","환절기 코트","겨울 싱글 코트","롱 패딩/롱 헤비 아우터","숏 패딩/숏 헤비 아우터")
+    );
+    ArrayList<String> btnNamesColor= new ArrayList<String>(
+            Arrays.asList("상관 없음","그레이","그린","네이비","레드","민트","베이지","브라운","블랙","블루","소라","아이보리","옐로우","오렌지","차콜","카키","퍼플","핑크")
+    );
+
     private Activity activity;
     private List<ChatMessage> messages;
     public ArrayList<String> btnNames = new ArrayList<String>(); //버튼 이름들
@@ -1598,8 +1672,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         this.activity = context;
         this.messages = objects;
     }
-    public void setButton(ArrayList<String> btnNames,View.OnClickListener Listener){
-        this.btnNames = btnNames;
+    public void setButton(View.OnClickListener Listener){
         this.Listener = Listener;
     }
     public ArrayList<Button> getButton(){ //만들어진 버튼 객체 리스트 반환
@@ -1615,15 +1688,16 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         // ChatMessage chatMessage = getItem(position);
 
         ChatMessage chatMessage = messages.get(position);
-        if (chatMessage.isMine() && !chatMessage.isButton()) {
+        int viewType = getItemViewType(position);
+        if(viewType==0){
             layoutResource = R.layout.item_chat_left;
             Log.d("챗",layoutResource+":"+position+chatMessage.getContent().toString()+"왼");
         }
-        else if(!chatMessage.isMine() && !chatMessage.isButton()) {
+        else if(viewType==1){
             layoutResource = R.layout.item_chat_right;
              Log.d("챗",layoutResource+":"+position+chatMessage.getContent().toString()+"오");
         }
-        else if(chatMessage.isButton()) {
+        else{
             layoutResource = R.layout.item_chat_button;
             Log.d("챗",layoutResource+":"+position+"버튼");
         }
@@ -1634,6 +1708,32 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         else if(layoutResource==R.layout.item_chat_button){
             convertView = inflater.inflate(layoutResource, parent, false);
             LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.scrollViewLayout);
+            switch (viewType){ //버튼 종류 정해주기
+                case 2:
+                    btnNames=btnNamesMenu;
+                    break;
+                case 3:
+                    btnNames=btnNamesCategory;
+                    break;
+                case 4:
+                    btnNames=btnNamesStyleTop;
+                    break;
+                case 5:
+                    btnNames=btnNamesStylePants;
+                    break;
+                case 6:
+                    btnNames=btnNamesStyleSkirt;
+                    break;
+                case 7:
+                    btnNames=btnNamesStyleDress;
+                    break;
+                case 8:
+                    btnNames=btnNamesStyleOuter;
+                    break;
+                case 9:
+                    btnNames=btnNamesColor;
+                    break;
+            }
             button = new chatButton(btnNames,linearLayout,activity,Listener);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
@@ -1665,15 +1765,23 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
     public int getViewTypeCount() {
         // return the total number of view types. this value should never change
         // at runtime
-        return 3;
+        return 10;
     }
     @Override
     public int getItemViewType(int position) {
         // return a value between 0 and (getViewTypeCount - 1)
         ChatMessage chatMessage = messages.get(position);
-        if(chatMessage.isMine() && !chatMessage.isButton()) return 0;
-        else if(!chatMessage.isMine() && !chatMessage.isButton()) return 1;
-        else return 2;
+        if(chatMessage.isMine() && !chatMessage.isButton()) return 0; //챗 왼쪽 타입
+        else if(!chatMessage.isMine() && !chatMessage.isButton()) return 1;  //챗 오른쪽 타입
+        else if(chatMessage.isButtonType()==1) return 2; //챗 버튼 메뉴 타입
+        else if(chatMessage.isButtonType()==2) return 3; //챗 버튼 카테고리 타입
+        else if(chatMessage.isButtonType()==3) return 4; //챗 버튼 상의스타일 타입
+        else if(chatMessage.isButtonType()==4) return 5; //챗 버튼 바지스타일 타입
+        else if(chatMessage.isButtonType()==5) return 6; //챗 버튼 치마스타일 타입
+        else if(chatMessage.isButtonType()==6) return 7; //챗 버튼 드레스스타일 타입
+        else if(chatMessage.isButtonType()==7) return 8; //챗 버튼 아우터스타일타입
+        else return 9; //챗 버튼 생상 타입
+
     }
     private class ViewHolder {
         private TextView msg;
