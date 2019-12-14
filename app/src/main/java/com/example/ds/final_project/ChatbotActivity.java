@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.sip.SipSession;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -114,7 +115,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     String remenu="";
 
     //챗봇 메뉴 버튼
-    ArrayList<String> btnNames= new ArrayList<String>(
+    ArrayList<String> btnNamesMenu= new ArrayList<String>(
             Arrays.asList("상품 검색하기","이전 검색 다시보기","관심 상품 보기","관심 상품 공유하기","사용자 정보 수정")
     );
 
@@ -712,7 +713,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         //메뉴 버튼
         ChatMessage chatMessage2 = new ChatMessage("a",true);
         chatMessage2.setButton(); //버튼으로 설정
-        adapter.setBtnNames(btnNames); //버튼이름 설정
+        adapter.setBtnNames(btnNamesMenu); //버튼이름 설정
         chatMessages.add(chatMessage2);
 
         //TTS 챗봇 읽어주기
@@ -734,7 +735,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
         ChatMessage chatMessage2 = new ChatMessage("a",true);
         chatMessage2.setButton(); //버튼으로 설정
-        adapter.setBtnNames(btnNames); //버튼이름 설정
+        adapter.setBtnNames(btnNamesMenu); //버튼이름 설정
         chatMessages.add(chatMessage2);
 
         //TTS 챗봇 읽어주기
