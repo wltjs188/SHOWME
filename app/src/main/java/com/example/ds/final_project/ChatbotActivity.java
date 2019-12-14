@@ -1090,6 +1090,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     result.getContexts().clear();
                 }
                 else if(parameter.containsKey("pre_search")) {
+                    
                     //이전 검색
                     if (remember == null) {
                         //이전 검색 못해
