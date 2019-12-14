@@ -123,6 +123,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     final int BTN_TYPE_STYLE_DRESS=6;
     final int BTN_TYPE_STYLE_OUTER=7;
     final int BTN_TYPE_COLOR=8;
+    final int BTN_TYPE_SHARE=9;
+    final int BTN_TYPE_USERINFO=10;
 
     //챗봇 전송 리스너
     View.OnClickListener btnSendListener;
@@ -1110,6 +1112,16 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     chatMessage2.setButton(BTN_TYPE_CATEGORY); //버튼으로 설정
                     adapter.setButton(btnSendListener); //버튼리스터 설정
                 }
+                else if(parameter.containsKey("Share")){
+                    chatMessage2 = new ChatMessage("버튼",true);
+                    chatMessage2.setButton(BTN_TYPE_SHARE); //버튼으로 설정
+                    adapter.setButton(btnSendListener); //버튼리스터 설정
+                }
+                else if(parameter.containsKey("User")){
+                    chatMessage2 = new ChatMessage("버튼",true);
+                    chatMessage2.setButton(BTN_TYPE_USERINFO); //버튼으로 설정
+                    adapter.setButton(btnSendListener); //버튼리스터 설정
+                }
                 break;
             case "Share_m":
                 shareType="msg";
@@ -1579,6 +1591,12 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
     ArrayList<String> btnNamesColor= new ArrayList<String>(
             Arrays.asList("상관 없음","그레이","그린","네이비","레드","민트","베이지","브라운","블랙","블루","소라","아이보리","옐로우","오렌지","차콜","카키","퍼플","핑크")
     );
+    ArrayList<String> btnNamesShare= new ArrayList<String>(
+            Arrays.asList("문자","카카오톡")
+    );
+    ArrayList<String> btnNamesUserInfo= new ArrayList<String>(
+            Arrays.asList("이름","핸드폰 번호","배송지 주소")
+    );
 
     private Activity activity;
     private List<ChatMessage> messages;
@@ -1653,6 +1671,12 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                 case 9:
                     btnNames=btnNamesColor;
                     break;
+                case 10:
+                    btnNames=btnNamesShare;
+                    break;
+                case 11:
+                    btnNames = btnNamesUserInfo;
+                    break;
             }
             button = new chatButton(btnNames,linearLayout,activity,Listener);
             holder = new ViewHolder(convertView);
@@ -1685,7 +1709,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
     public int getViewTypeCount() {
         // return the total number of view types. this value should never change
         // at runtime
-        return 10;
+        return 12;
     }
     @Override
     public int getItemViewType(int position) {
@@ -1700,7 +1724,9 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         else if(chatMessage.isButtonType()==5) return 6; //챗 버튼 치마스타일 타입
         else if(chatMessage.isButtonType()==6) return 7; //챗 버튼 드레스스타일 타입
         else if(chatMessage.isButtonType()==7) return 8; //챗 버튼 아우터스타일타입
-        else return 9; //챗 버튼 생상 타입
+        else if(chatMessage.isButtonType()==8) return 9; //챗 버튼 색상 타입
+        else if(chatMessage.isButtonType()==9) return 10; //챗 버튼 공유 타입
+        else return 11; //챗 버튼 사용자정보 수정 타입
 
     }
     private class ViewHolder {
