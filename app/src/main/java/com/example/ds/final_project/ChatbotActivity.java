@@ -353,7 +353,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         input = editText.getText().toString();
                     else {
                         input = ((Button) v).getText().toString(); //버튼으로 전송할때
-//                        Log.i("버튼누름","버튼누름"+input);
+                        Log.i("버튼누름","버튼누름"+input);
                     }
 //                    tts.speak(editText.getText().toString()+"라고 말했습니다.",TextToSpeech.QUEUE_FLUSH, params);
                     if(user==null){
@@ -363,7 +363,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         new AITask().execute(aiRequest2);
                     }else{
                         //등록된 사용자
-                        if (shareType != null) {
+                        if (shareType != null) { //공유
                             ChatMessage chatMessage;
                             chatMessage = new ChatMessage(input, false);
                             if (shareType.equals("msg")) {  //문자공유
@@ -403,8 +403,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                                 task.execute("CheckShareProduct",uuid,input);
                             }
                         }
-                    }
-                    else {
+                    } else {//공유아니
                             aiRequest.setQuery(input);
 
                             Log.e("입력", input);
@@ -1110,6 +1109,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
             case "ACTION_MENU" :
                 parameter=getParameter(result);
+                Log.d("check",parameter.toString());
                 if(parameter.containsKey("Wish_Item")){ //관심상품이동
                     startActivityForResult(wishIntent,WISHLIST_ACTIVITY);
 
