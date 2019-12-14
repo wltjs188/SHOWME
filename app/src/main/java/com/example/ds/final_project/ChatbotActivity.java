@@ -29,7 +29,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,6 +79,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -108,6 +113,11 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     String speech;
     String remenu="";
 
+    //챗봇 메뉴 버튼
+    ArrayList<String> btnNames= new ArrayList<String>(
+            Arrays.asList("상품 검색하기","이전 검색 다시보기","관심 상품 보기","관심 상품 공유하기","사용자 정보 수정")
+    );
+
     AIRequest aiRequest;
     AIDataService aiDataService;
     AIRequest aiRequest2;
@@ -121,7 +131,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     private EditText editText;
     //boolean isMine;
     static private List<ChatMessage> chatMessages = new ArrayList<>();
-    private ArrayAdapter<ChatMessage> adapter;//= new MessageAdapter(this, 0, chatMessages);
+    private MessageAdapter adapter;//= new MessageAdapter(this, 0, chatMessages);
     Gson gson = new GsonBuilder().create();
     //사용자 정보
     HashMap<String,JsonElement> parameter=new HashMap<String,JsonElement>();
@@ -259,6 +269,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
         listView.setAdapter(adapter);
         listView.setSelection(adapter.getCount() - 1);
+
 //        ChatMessage chatMessage;
 
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
@@ -309,7 +320,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
 
         //전송버튼
-        btnSend.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener btnSendListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (editText.getText().toString().trim().equals("")) {
@@ -323,19 +334,52 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                    tts.speak(editText.getText().toString()+"라고 말했습니다.",TextToSpeech.QUEUE_FLUSH, params);
                     if(user==null){
                         //등록되지 않은 사용자
-                        aiRequest2.setQuery(editText.getText().toString());
-                        Log.e("입력",editText.getText().toString());
-                        new AITask().execute(aiRequest2);
+                            aiRequest2.setQuery(editText.getText().toString());
+                            Log.e("자판입력",editText.getText().toString());
+                            new AITask().execute(aiRequest2);
                     }else{
                         //등록된 사용자
-                        aiRequest.setQuery(editText.getText().toString());
-                        Log.e("입력",editText.getText().toString());
-                        new AITask().execute(aiRequest);
+                            aiRequest.setQuery(editText.getText().toString());
+                            Log.e("입력",editText.getText().toString());
+                            new AITask().execute(aiRequest);
                     }
                 }
 //                editText.requestFocus();
             }
-        });
+        };
+        btnSend.setOnClickListener(btnSendListener);
+
+
+
+
+
+//        btnSend.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (editText.getText().toString().trim().equals("")) {
+//                    tts.speak("텍스트를 입력해주세요.",TextToSpeech.QUEUE_FLUSH, null);
+//                }
+////                else if(editText.getText().toString().length() !=8 && chatMessages.get(chatMessages.size()-1).toString().contains("번호")){
+////                    Toast.makeText(getApplicationContext(),"010을 제외한 8자리 번호를 입력해주세요.",Toast.LENGTH_LONG).show();
+////                }
+//                else {
+//
+////                    tts.speak(editText.getText().toString()+"라고 말했습니다.",TextToSpeech.QUEUE_FLUSH, params);
+//                    if(user==null){
+//                        //등록되지 않은 사용자
+//                        aiRequest2.setQuery(editText.getText().toString());
+//                        Log.e("입력",editText.getText().toString());
+//                        new AITask().execute(aiRequest2);
+//                    }else{
+//                        //등록된 사용자
+//                        aiRequest.setQuery(editText.getText().toString());
+//                        Log.e("입력",editText.getText().toString());
+//                        new AITask().execute(aiRequest);
+//                    }
+//                }
+////                editText.requestFocus();
+//            }
+//        });
         //STT 버튼
         btnSTT.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -661,13 +705,15 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     //메뉴 메세지
     protected void makeMenuMsg(){
 
-        ChatMessage chatMessage = new ChatMessage(user.getName()+"님 안녕하세요?\n메뉴를 선택해주세요\n" +
-                "1. 상품검색\n" +
-                "2. 이전 검색 다시보기\n" +
-                "3. 관심상품보기\n" +
-                "4. 관심상품 공유하기\n"+
-                "5. 사용자 정보 수정", true);
+        //멘트
+        ChatMessage chatMessage = new ChatMessage(user.getName()+"님 안녕하세요?\n아래 버튼 메뉴를 선택해주세요\n", true);
         chatMessages.add(chatMessage);
+
+        //메뉴 버튼
+        ChatMessage chatMessage2 = new ChatMessage("a",true);
+        chatMessage2.setButton(); //버튼으로 설정
+        adapter.setBtnNames(btnNames); //버튼이름 설정
+        chatMessages.add(chatMessage2);
 
         //TTS 챗봇 읽어주기
         adapter.notifyDataSetChanged();
@@ -683,13 +729,13 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     //문자공유완료
     protected void complateMShare(String name){
 
-        ChatMessage chatMessage = new ChatMessage(name+"님께 공유했습니다.\n메뉴를 선택해주세요\n" +
-                "1. 상품검색\n" +
-                "2. 이전 검색 다시보기\n" +
-                "3. 관심상품보기\n" +
-                "4. 관심상품 공유하기\n"+
-                "5. 사용자 정보 수정", true);
+        ChatMessage chatMessage = new ChatMessage(name+"님께 공유했습니다.\n메뉴를 선택해주세요\n", true);
         chatMessages.add(chatMessage);
+
+        ChatMessage chatMessage2 = new ChatMessage("a",true);
+        chatMessage2.setButton(); //버튼으로 설정
+        adapter.setBtnNames(btnNames); //버튼이름 설정
+        chatMessages.add(chatMessage2);
 
         //TTS 챗봇 읽어주기
 
@@ -1107,10 +1153,14 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
         ChatMessage chatMessage;
         chatMessage = new ChatMessage(query, false);
+
         Log.d("쿼리",query);
         if(!query.equals("문자다시")){
             if(!query.equals("카톡다시")) {
                 chatMessages.add(chatMessage);
+                for(int i=0;i<chatMessages.size();i++){
+                    Log.i("메세지순서",chatMessages.get(i).getContent());
+                }
                 adapter.notifyDataSetChanged();
                 editText.setText("");
             }
@@ -1466,13 +1516,21 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
 
     private Activity activity;
     private List<ChatMessage> messages;
+    public ArrayList<String> btnNames = new ArrayList<String>(); //버튼 이름들
+    public chatButton button; //생성된 버튼들
 
     public MessageAdapter(Activity context, int resource, List<ChatMessage> objects) {
         super(context, resource, objects);
         this.activity = context;
         this.messages = objects;
-
     }
+    public void setBtnNames(ArrayList<String> btnNames){
+        this.btnNames = btnNames;
+    }
+    public ArrayList<Button> getButton(){ //만들어진 버튼 객체 리스트 반환
+        return button.getList();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
@@ -1482,23 +1540,42 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         // ChatMessage chatMessage = getItem(position);
 
         ChatMessage chatMessage = messages.get(position);
-        if (chatMessage.isMine()) {
+        if (chatMessage.isMine() && !chatMessage.isButton()) {
             layoutResource = R.layout.item_chat_left;
-            // Log.d("챗",position+chatMessage.getContent().toString()+"왼");ㅇ
-        } else {
+            Log.d("챗",layoutResource+":"+position+chatMessage.getContent().toString()+"왼");
+        }
+        else if(!chatMessage.isMine() && !chatMessage.isButton()) {
             layoutResource = R.layout.item_chat_right;
-            // Log.d("챗",position+chatMessage.getContent().toString()+"오");
+             Log.d("챗",layoutResource+":"+position+chatMessage.getContent().toString()+"오");
+        }
+        else if(chatMessage.isButton()) {
+            layoutResource = R.layout.item_chat_button;
+            Log.d("챗",layoutResource+":"+position+"버튼");
         }
 
         if (convertView != null) {
             holder = (ViewHolder) convertView.getTag();
-        } else {
+        }
+        else if(layoutResource==R.layout.item_chat_button){
+            convertView = inflater.inflate(layoutResource, parent, false);
+            LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.scrollViewLayout);
+            button = new chatButton(btnNames,linearLayout,activity);
+            holder = new ViewHolder(convertView);
+            convertView.setTag(holder);
+        }
+        else {
             convertView = inflater.inflate(layoutResource, parent, false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         }
-        holder.msg.setText(chatMessage.getContent());
-        holder.msg.setContentDescription(messages.get(position)+"");
+
+        if(layoutResource==R.layout.item_chat_button){}
+        else {
+            holder.msg.setText(chatMessage.getContent());
+            holder.msg.setContentDescription(messages.get(position) + "");
+        }
+
+
 //        convertView.setOnClickListener(new View.OnClickListener() {
 //            public void onClick(View v) {
 //                // 여기서 이벤트를 막습니다.
@@ -1513,15 +1590,15 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
     public int getViewTypeCount() {
         // return the total number of view types. this value should never change
         // at runtime
-        return 2;
+        return 3;
     }
     @Override
     public int getItemViewType(int position) {
         // return a value between 0 and (getViewTypeCount - 1)
         ChatMessage chatMessage = messages.get(position);
-        chatMessage.isMine();
-        if(chatMessage.isMine()) return 0;
-        else return 1;
+        if(chatMessage.isMine() && !chatMessage.isButton()) return 0;
+        else if(!chatMessage.isMine() && !chatMessage.isButton()) return 1;
+        else return 2;
     }
     private class ViewHolder {
         private TextView msg;
@@ -1529,11 +1606,8 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             msg = (TextView) v.findViewById(R.id.txt_msg);
         }
     }
-
-
-
-
 }
+
 
 
 

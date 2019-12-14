@@ -7,7 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.ds.final_project.MainActivity;
@@ -46,6 +49,10 @@ public class ServertestActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_servertest);
+
+//        HorizontalScrollView scrollView = (HorizontalScrollView)findViewById(R.id.ScrollView);
+//        scrollView.addView(new Button(this));
+
 
         getList a = new getList();
         a.execute("DeleteWishProduct","aaaa");
