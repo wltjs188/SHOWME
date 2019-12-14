@@ -386,6 +386,23 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                                     Log.e("입력", input);
                                     new AITask().execute(aiRequest);
+                                }
+                                else if (findNum(input).equals("번호")){//번호
+                                    if(input.length()<8){
+                                        chatMessages.add(chatMessage);
+                                        adapter.notifyDataSetChanged();
+                                        editText.setText("");
+                                        input = "문자번호다시";
+                                        aiRequest.setQuery(input);
+
+                                        Log.e("입력2", input);
+                                        new AITask().execute(aiRequest);
+                                    }else {
+                                        aiRequest.setQuery(input);
+
+                                        Log.e("입력", input);
+                                        new AITask().execute(aiRequest);
+                                    }
                                 }else {
                                     aiRequest.setQuery(input);
 
@@ -540,6 +557,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         c.close();
         if(number!=null)
             return number;
+        else if(isStringDouble(fname))
+            return  "번호";
         else
             return null;
     }
@@ -1028,11 +1047,14 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             case "Share_m-person": //메세지 공유할 사람 또는 번호
                 parameter=getParameter(result);
                 String param=parameter.get("any").toString().replaceAll("\"","");
-//                if(이름이){ //이름이면
-//                    mPerson=param;
-//                }else{ //번호면
-//                    mNumber=param;
-//                }
+                if(!isStringDouble(param)){ //이름이면
+                    mPerson=param;
+                    mNumber=findNum(mPerson);
+                    Log.d("뭘까_이름",mPerson);
+                }else{ //번호면
+                    mNumber="010-"+param.substring(param.length()-8, param.length()-4)+"-"+param.substring(param.length()-4, param.length());
+                    Log.d("뭘까_번호",mNumber);
+                }
                 Log.d("share msg",param);
 
                 chatMessage2 = new ChatMessage("버튼",true);
@@ -1040,6 +1062,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 adapter.setButton(btnSendListener); //버튼리스터 설정
 
                 //문자 공유 시작
+                sendMSG(mNumber,smsg);
 
                 //공유 끝나면 변수 초기화
                 mPerson=null;
@@ -1058,8 +1081,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 adapter.setButton(btnSendListener); //버튼리스터 설정
 
                 //카톡 공유 시작
+                ShareKakao();
                 kProduct=null;
                 shareType=null;
+
 
                 break;
 
@@ -1160,6 +1185,15 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private static boolean isStringDouble(String s) {
+        try {
+            Double.parseDouble(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     private void ShareKakao(){
@@ -1452,6 +1486,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         }
                     }else {
                         Log.d("wishList","맞음");
+                        JSONObject item = jArray.getJSONObject(0);
+                        String productId = item.getString("ID");
+                        smsg="이 상품 구매 부탁드립니다!!\nhttps://store.musinsa.com/app/product/detail/"+productId;
 
 //                        ChatMessage chatMessage;
 //                        chatMessage = new ChatMessage(input, false);
