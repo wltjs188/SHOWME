@@ -69,6 +69,8 @@ public class WishListActivity extends AppCompatActivity {
     ArrayList<String> images=new ArrayList<String>(); //상품 옵션 대표 이미지
     ArrayList<String> aliases=new ArrayList<String>(); //네이밍
 
+    String alias;
+    String Name;
     int page = 0;
     private GestureDetector gDetector;
 
@@ -101,7 +103,7 @@ public class WishListActivity extends AppCompatActivity {
                 String productId=productIds.get(position);
                 String info=infos.get(position);
                 String image=images.get(position);
-                String alias=aliases.get(position);
+                alias=aliases.get(position);
                // productInfoIntent.putExtra("info", infos.get(position));
                 PopupMenu popup= new PopupMenu(getApplicationContext(), v);//v는 클릭된 뷰를 의미
 
@@ -127,7 +129,7 @@ public class WishListActivity extends AppCompatActivity {
 //
                                         UpdateWishProductAlias task1 = new UpdateWishProductAlias(); //사용자정보 수정
                                         task1.execute("UpdateWishProductAlias",uuid,alias,name);
-                                        Toast.makeText(getApplication(),"수정되었습니다.",Toast.LENGTH_LONG).show();
+                                        Name=name;
                                     }
 
                                     @Override
@@ -136,7 +138,7 @@ public class WishListActivity extends AppCompatActivity {
                                     }
                                 });
                                 dialog.show();
-                                Toast.makeText(getApplication(),"메뉴1",Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getApplication(),"메뉴1",Toast.LENGTH_SHORT).show();
                                 break;
 
                             default:
@@ -393,8 +395,11 @@ public class WishListActivity extends AppCompatActivity {
                         Log.d("별칭 수정"," 실패");
                         insertFail();
                     }else {
-                        if(count>0)
-                            Log.i("별칭 수정","성공"+result);
+                        if(count>0) {
+                            alias=Name;
+                            Toast.makeText(getApplicationContext(),"별칭을 "+Name+"으로 수정하였습니다.",Toast.LENGTH_LONG).show();;
+                            Log.i("별칭 수정", "성공" + result);
+                        }
                         else
                             insertFail();
                     }
