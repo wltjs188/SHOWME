@@ -83,7 +83,7 @@ public class ShopActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
         getSupportActionBar().setTitle(searchedProduct.getCategory() + "검색 결과");
 
-        SearchProduct task = new SearchProduct();
+        SearchProduct task ;
         if(searchedProduct.getStyle()==null){
             task = new SearchProduct();
             task.execute("SearchOne", searchedProduct.getCategory());
@@ -118,7 +118,7 @@ public class ShopActivity extends AppCompatActivity {
         return pref.getString(key, "");
     }
 
-class SearchProduct extends AsyncTask<String, Void,String> {
+private class SearchProduct extends AsyncTask<String, Void,String> {
     String LoadData;
     private ProgressDialog pDialog;
     @Override
@@ -169,11 +169,14 @@ class SearchProduct extends AsyncTask<String, Void,String> {
             ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
             //파라미터 추가하기
             if(project.equals("SearchOne")){
+                Log.d("검색",category);
                 postParameters.add(new BasicNameValuePair("category", category));
             }else if(project.equals("SearchTwo")){
+                Log.d("검색",category+","+style);
                 postParameters.add(new BasicNameValuePair("category", category));
                 postParameters.add(new BasicNameValuePair("style", style));
             }else if(project.equals("SearchThree")){
+                Log.d("검색",category+", "+style+", "+color);
                 postParameters.add(new BasicNameValuePair("category", category));
                 postParameters.add(new BasicNameValuePair("style", style));
                 postParameters.add(new BasicNameValuePair("color", color));
@@ -233,7 +236,7 @@ class SearchProduct extends AsyncTask<String, Void,String> {
                 if(jArray.length()==0){
                     Log.d("검색"," 실패");
                 }else {
-                    Log.i("검색","성공"+result);
+//                    Log.i("검색","성공"+result);
                     Product product=new Product();
                     for (int i = 0; i < jArray.length(); i++) {
                         // json배열.getJSONObject(인덱스)
@@ -260,9 +263,12 @@ class SearchProduct extends AsyncTask<String, Void,String> {
                         infos.add(product.toString());
                         images.add(product.getImage());
                         ids.add(product.getId()+"");
-                        Log.i("가져온 데이터", product.toString());
+                        Log.i("가져온 데이터><", product.toString());
 
                     }
+//                    adapter.notifyDataSetChanged();
+                    adapter = new ProductAdapter(ShopActivity.this, R.layout.list_product_item, images, infos);
+                    gv.setAdapter(adapter);
 
                 }
 

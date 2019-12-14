@@ -1000,11 +1000,13 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             case "Search_Style.Search_Style-no": //카테고리만 입력
                 so=category;
                 remember.setCategory(category);
+                remember.setStyle(null);
+                remember.setColor(null);
                 strContact = gson.toJson(remember, Product.class);
                 savePreferences("remember",strContact);
 
-                SearchProduct task = new SearchProduct();
-                task.execute("SearchOne", category);
+//                SearchProduct task = new SearchProduct();
+//                task.execute("SearchOne", category);
 
                 category = null; style=null; color = null;
                 Log.d("yoon search","카테고리로 검색: "+so);
@@ -1024,11 +1026,12 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 so=category+", "+style;
                 remember.setCategory(category);
                 remember.setStyle(style);
+                remember.setColor(null);
                 strContact = gson.toJson(remember, Product.class);
                 savePreferences("remember",strContact);
 
-                task = new SearchProduct();
-                task.execute("SearchTwo", category,style);
+//                task = new SearchProduct();
+//                task.execute("SearchTwo", category,style);
 
                 category = null; style=null; color = null;
                 Log.d("yoon search","카테고리, 스타일로 검색: "+so);
@@ -1050,8 +1053,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 strContact = gson.toJson(remember, Product.class);
                 savePreferences("remember",strContact);
 
-                task = new SearchProduct();
-                task.execute("SearchThree", category,style,color);
+//                task = new SearchProduct();
+//                task.execute("SearchThree", category,style,color);
 
 
 
@@ -1073,16 +1076,16 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         //이전 검색 못해
                     } else {
                         if(remember.getStyle()==null){
-                            task = new SearchProduct();
-                            task.execute("SearchOne", remember.getCategory());
+//                            task = new SearchProduct();
+//                            task.execute("SearchOne", remember.getCategory());
                         }else if(remember.getColor()==null){
-                            task = new SearchProduct();
-                            task.execute("SearchTwo", remember.getCategory(), remember.getStyle());
+//                            task = new SearchProduct();
+//                            task.execute("SearchTwo", remember.getCategory(), remember.getStyle());
                         }else{
-                            task = new SearchProduct();
-                            task.execute("SearchThree", remember.getCategory(),remember.getStyle(),remember.getColor());
+//                            task = new SearchProduct();
+//                            task.execute("SearchThree", remember.getCategory(),remember.getStyle(),remember.getColor());
                         }
-
+                        startActivity(shopIntent);
                     }
                 }
                 else if(parameter.containsKey("Search")){ //메뉴선택 검색 선택시 카테고리 버튼 보여주기
@@ -1310,110 +1313,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     @Override
     public void onListeningFinished() { }
 
-    private class GetWishProductName extends AsyncTask<String, Void, String> {
 
-//        ProgressDialog progressDialog;
-        String errorString = null;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-//            progressDialog = ProgressDialog.show(ChatbotActivity.this,
-//                    "잠시만 기다려주세요", null, true, true);
-        }
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-//            progressDialog.dismiss();
-
-            if (result == null){
-
-            }
-            else {
-                mJsonString = result;
-                showResult();
-            }
-        }
-        @Override
-        protected String doInBackground(String... params) {
-            String serverURL = params[0];
-            String postParameters = "uid=" + params[1];
-            try {
-
-                URL url = new URL(serverURL);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
-
-                httpURLConnection.setReadTimeout(5000);
-                httpURLConnection.setConnectTimeout(5000);
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.connect();
-
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                outputStream.write(postParameters.getBytes("UTF-8"));
-                outputStream.flush();
-                outputStream.close();
-
-                int responseStatusCode = httpURLConnection.getResponseCode();
-                InputStream inputStream;
-                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
-                    inputStream = httpURLConnection.getInputStream();
-                }
-                else{
-                    inputStream = httpURLConnection.getErrorStream();
-                }
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-                StringBuilder sb = new StringBuilder();
-                String line;
-
-                while((line = bufferedReader.readLine()) != null){
-                    sb.append(line);
-                }
-                bufferedReader.close();
-                return sb.toString().trim();
-            } catch (Exception e) {
-                errorString = e.toString();
-                return null;
-            }
-        }
-    }
-    private void showResult(){
-        Log.i("공유","showREsult()");
-        String TAG_JSON="WishProductName";
-        wishProductNames.clear();
-        try {
-            JSONObject jsonObject = new JSONObject(mJsonString);
-            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
-            Log.d("jsonArray",jsonArray.length()+"");
-            for(int i=0;i<jsonArray.length();i++){
-                JSONObject item = jsonArray.getJSONObject(i);
-                String wishProductName = item.getString("wishProductName");
-                wishProductNames.add(wishProductName);
-            }
-            if(wishProductNames.size()>0) {
-                String m="";
-                for (int i=0;i<wishProductNames.size();i++){
-                    if(i==wishProductNames.size()-1)
-                        m+=wishProductNames.get(i);
-                    else
-                        m+=wishProductNames.get(i)+", ";
-                }
-                Toast.makeText(ChatbotActivity.this, "관심상품에 "+m+"가 있습니다.", Toast.LENGTH_LONG).show();
-            }
-            else{
-                Toast.makeText(ChatbotActivity.this,"등록된 관심상품이 없습니다.",Toast.LENGTH_LONG).show();
-            }
-
-        } catch (JSONException e) {
-            Log.d("showResult : ", e.getMessage());
-            Log.d("phptest: ",mJsonString);
-            Toast.makeText(ChatbotActivity.this,"등록된 관심상품이 없습니다.",Toast.LENGTH_LONG).show();
-        }
-
-    }
     // 값 저장하기
     private void savePreferences(String key, String s){
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
@@ -1476,7 +1376,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             }
         });
     }
-    class SearchProduct extends AsyncTask<String, Void,String> {
+    private class SearchProduct extends AsyncTask<String, Void,String> {
         String LoadData;
         private ProgressDialog pDialog;
         @Override
