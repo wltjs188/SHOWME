@@ -105,7 +105,7 @@ public class ShopActivity extends AppCompatActivity {
 
 //                productInfoIntent.putExtra("product", strContact);
                 productInfoIntent.putExtra("image",images.get(position));
-                productInfoIntent.putExtra("id",ids.get(position));
+                productInfoIntent.putExtra("productId",ids.get(position));
                 productInfoIntent.putExtra("info",infos.get(position));
                 startActivity(productInfoIntent);
             }
