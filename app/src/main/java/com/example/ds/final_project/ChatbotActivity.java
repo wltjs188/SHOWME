@@ -117,6 +117,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             Arrays.asList("상품 검색하기","이전 검색 다시보기","관심 상품 보기","관심 상품 공유하기","사용자 정보 수정")
     );
 
+    //챗봇 전송 리스너
+    View.OnClickListener btnSendListener;
+
     AIRequest aiRequest;
     AIDataService aiDataService;
     AIRequest aiRequest2;
@@ -325,17 +328,24 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
 
         //전송버튼
-        View.OnClickListener btnSendListener = new View.OnClickListener() {
+        btnSendListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (editText.getText().toString().trim().equals("")) {
+                String input="";
+                Log.i("버튼누름","버튼누름"+input);
+                if (editText.getText().toString().trim().equals("") && v.getId()==R.id.btn_chat_send) {
                     tts.speak("텍스트를 입력해주세요.",TextToSpeech.QUEUE_FLUSH, null);
                 }
 //                else if(editText.getText().toString().length() !=8 && chatMessages.get(chatMessages.size()-1).toString().contains("번호")){
 //                    Toast.makeText(getApplicationContext(),"010을 제외한 8자리 번호를 입력해주세요.",Toast.LENGTH_LONG).show();
 //                }
                 else {
-                    String input=editText.getText().toString();
+                    if(v.getId()==R.id.btn_chat_send) //텍스트로 전송할때
+                        input = editText.getText().toString();
+                    else {
+                        input = ((Button) v).getText().toString(); //버튼으로 전송할때
+                        Log.i("버튼누름","버튼누름"+input);
+                    }
 //                    tts.speak(editText.getText().toString()+"라고 말했습니다.",TextToSpeech.QUEUE_FLUSH, params);
                     if(user==null){
                         //등록되지 않은 사용자
@@ -347,44 +357,34 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         if (shareType != null) {
                             ChatMessage chatMessage;
                             chatMessage = new ChatMessage(input, false);
-
-                            if (shareType.equals("msg")) {  //문자 공유
-
+                            if (shareType.equals("msg")) {  //문자공유
                                 if (mProduct == null) {
-                                    // 없는 상품
-
+                                // 없는 상품
 //                                    chatMessages.add(chatMessage);
 //                                    adapter.notifyDataSetChanged();
 //                                    editText.setText("");
-
 //                                input="문자상품다시";
-                                } else if (findNum(input) == null){//없는 사람
-
+                                }
+                                else if (findNum(input) == null){//없는 사람
                                     chatMessages.add(chatMessage);
                                     adapter.notifyDataSetChanged();
                                     editText.setText("");
-
                                     input = "문자사람다시";
                                 }
                             }
-                            if (shareType.equals("kakao")) { //카톡 공유
-                                if(mProduct==null){
-                                    // 없는 상품
-
+                        if (shareType.equals("kakao")) { //카톡 공유
+                            if(mProduct==null){
+                                // 없는 상품
 //                                    chatMessages.add(chatMessage);
 //                                    adapter.notifyDataSetChanged();
 //                                    editText.setText("");
-//
 //                                input="카톡상품다시";
-                                }
-
                             }
-
                         }
-                        aiRequest.setQuery(input);
-                        Log.e("입력", input);
-                        new AITask().execute(aiRequest);
-
+                    }
+                    aiRequest.setQuery(input);
+                    Log.e("입력", input);
+                    new AITask().execute(aiRequest);
                     }
                 }
 //                editText.requestFocus();
@@ -755,7 +755,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         //메뉴 버튼
         ChatMessage chatMessage2 = new ChatMessage("a",true);
         chatMessage2.setButton(); //버튼으로 설정
-        adapter.setBtnNames(btnNamesMenu); //버튼이름 설정
+        adapter.setButton(btnNamesMenu,btnSendListener); //버튼이름 설정
         chatMessages.add(chatMessage2);
 
         //TTS 챗봇 읽어주기
@@ -777,7 +777,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
         ChatMessage chatMessage2 = new ChatMessage("a",true);
         chatMessage2.setButton(); //버튼으로 설정
-        adapter.setBtnNames(btnNamesMenu); //버튼이름 설정
+        adapter.setButton(btnNamesMenu,btnSendListener); //버튼이름 설정
         chatMessages.add(chatMessage2);
 
         //TTS 챗봇 읽어주기
@@ -1590,14 +1590,17 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
     private List<ChatMessage> messages;
     public ArrayList<String> btnNames = new ArrayList<String>(); //버튼 이름들
     public chatButton button; //생성된 버튼들
+    public View.OnClickListener Listener;
+
 
     public MessageAdapter(Activity context, int resource, List<ChatMessage> objects) {
         super(context, resource, objects);
         this.activity = context;
         this.messages = objects;
     }
-    public void setBtnNames(ArrayList<String> btnNames){
+    public void setButton(ArrayList<String> btnNames,View.OnClickListener Listener){
         this.btnNames = btnNames;
+        this.Listener = Listener;
     }
     public ArrayList<Button> getButton(){ //만들어진 버튼 객체 리스트 반환
         return button.getList();
@@ -1631,7 +1634,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         else if(layoutResource==R.layout.item_chat_button){
             convertView = inflater.inflate(layoutResource, parent, false);
             LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.scrollViewLayout);
-            button = new chatButton(btnNames,linearLayout,activity);
+            button = new chatButton(btnNames,linearLayout,activity,Listener);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         }
