@@ -959,6 +959,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 savePreferences("USER",strContact);
                 UpdateUser task1 = new UpdateUser(); //사용자정보 수정
                 task1.execute("UpdateUser",user.getId(),"name",user.getName());
+                chatMessage2 = new ChatMessage("버튼",true);
+                chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
+                adapter.setButton(btnSendListener); //버튼리스터 설정
 //                remenu=getRemenu(result);
                 break;
             case "ACTION_M_PHONE"://사용자정보수정 : 핸드폰번호
@@ -974,6 +977,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 Log.d("check",phoneNum);
                 Log.d("check",user.getPhoneNum());
                 task1.execute("UpdateUser",user.getId(),"phoneNum",user.getPhoneNum());
+                chatMessage2 = new ChatMessage("버튼",true);
+                chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
+                adapter.setButton(btnSendListener); //버튼리스터 설정
 //                remenu=getRemenu(result);
                 break;
             case "ACTION_M_ADDRESS"://사용자정보수정 : 주소
@@ -1012,6 +1018,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 task1 = new UpdateUser(); //사용자정보 수정
                 task1.execute("UpdateUser",user.getId(),"address",user.getAddress());
 //                remenu=getRemenu(result);
+                chatMessage2 = new ChatMessage("버튼",true);
+                chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
+                adapter.setButton(btnSendListener); //버튼리스터 설정
                 result.getContexts().clear();
 
                 break;
@@ -1166,6 +1175,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 mPerson=parameter.get("any").toString().replaceAll("\"","");
                 Log.d("share mProduct",mPerson);
 
+                chatMessage2 = new ChatMessage("버튼",true);
+                chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
+                adapter.setButton(btnSendListener); //버튼리스터 설정
+
                 //문자 공유 시작
                 mPerson=null;
                 mProduct=null;
@@ -1177,9 +1190,14 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 kProduct=parameter.get("any").toString().replaceAll("\"","");
                 Log.d("share mProduct",kProduct);
 
+                chatMessage2 = new ChatMessage("버튼",true);
+                chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
+                adapter.setButton(btnSendListener); //버튼리스터 설정
+
                 //카톡 공유 시작
                 kProduct=null;
                 shareType=null;
+
                 break;
 
         }
