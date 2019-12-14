@@ -1,7 +1,26 @@
 package com.example.ds.final_project.db;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -9,71 +28,101 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
-public class DeleteWishProduct extends AsyncTask<String, Void, String> {
-    // ProgressDialog progressDialog;
-    String TAG = "phptest";
+public class DeleteWishProduct extends AsyncTask<String, Void,String> {
+    String LoadData;
     @Override
     protected void onPreExecute() {
+//        pDialog = new ProgressDialog(DeleteActivity.this);
+//        pDialog.setMessage("검색중입니다..");
+//        pDialog.setCancelable(false);
+//        pDialog.show();
         super.onPreExecute();
+    }
 
-        //        progressDialog = ProgressDialog.show(ProductInfo.this,
-        //        "Please Wait", null, true, true);
-    }
-    @Override
-    protected void onPostExecute(String result) {
-        super.onPostExecute(result);
-        //  progressDialog.dismiss();
-        Log.d(TAG, "POST response  - " + result);
-    }
     @Override
     protected String doInBackground(String... params) {
+        // TODO Auto-generated method stub
+        String project = (String)params[0];
         String uid = (String)params[1];
-        String productId = (String)params[2];
-        String optionNum = (String)params[3];
-
-        String serverURL = (String)params[0];
-        Log.d("삭제할 데이터",uid+productId);
-        String postParameters = "uid=" + uid + "&productId=" + productId+ "&optionNum=" + optionNum;
+        String alias = (String)params[2];
 
         try {
+            HttpParams httpParameters = new BasicHttpParams();
+            HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
 
-            URL url = new URL(serverURL);
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            HttpClient client = new DefaultHttpClient(httpParameters);
 
-            httpURLConnection.setReadTimeout(5000);
-            httpURLConnection.setConnectTimeout(5000);
-            httpURLConnection.setRequestMethod("POST");
-            httpURLConnection.connect();
+            HttpConnectionParams.setConnectionTimeout(httpParameters, 7000);
+            HttpConnectionParams.setSoTimeout(httpParameters, 7000);
+            HttpConnectionParams.setTcpNoDelay(httpParameters, true);
 
-            OutputStream outputStream = httpURLConnection.getOutputStream();
-            outputStream.write(postParameters.getBytes("UTF-8"));
-            outputStream.flush();
-            outputStream.close();
+            // 주소 : aws서버
+            String postURL = "http://52.78.143.125:8080/showme/";
 
-            int responseStatusCode = httpURLConnection.getResponseCode();
-            Log.d(TAG, "POST response code - " + responseStatusCode);
+            // 로컬서버
+//            String postURL = "http://10.0.2.2:8080/showme/InsertUser";
 
-            InputStream inputStream;
-            if(responseStatusCode == HttpURLConnection.HTTP_OK) {
-                inputStream = httpURLConnection.getInputStream();
+            HttpPost post = new HttpPost(postURL+project);
+            //서버에 보낼 파라미터
+            ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+            //파라미터 추가하기
+            postParameters.add(new BasicNameValuePair("uid", uid));
+            postParameters.add(new BasicNameValuePair("alias", alias));
+//            postParameters.add(new BasicNameValuePair("uid", uid));
+
+            //파라미터 보내기
+            UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);
+            post.setEntity(ent);
+
+            long startTime = System.currentTimeMillis();
+
+            HttpResponse responsePOST = client.execute(post);
+
+            long elapsedTime = System.currentTimeMillis() - startTime;
+            Log.v("debugging", elapsedTime + " ");
+
+
+            HttpEntity resEntity = responsePOST.getEntity();
+            if (resEntity != null) {
+                Log.d("delete","success");
+//                LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
+//                Log.i("가져온 데이터", LoadData);
+//                JSONObject jsonObj = new JSONObject(LoadData);
+//                // json객체.get("변수명")
+//                JSONArray jArray = (JSONArray) jsonObj.get("getData");
+//                    items = new ArrayList<Product>();
+//                    for (int i = 0; i < jArray.length(); i++) {
+                // json배열.getJSONObject(인덱스)
+//                        JSONObject row = jArray.getJSONObject(i);
+//                        Product dto = new Product();
+//                        dto.setId(row.getInt("ID"));
+//                        dto.setName(row.getString("NAME"));
+
+                // ArrayList에 add
+//                        items.add(dto);
+
+//                        Log.i("가져온 데이터", dto.getId() + "");
+//                        Log.i("가져온 데이터", dto.getName() + "");
+//                    }
+            }
+            if(responsePOST.getStatusLine().getStatusCode()==200){
+                Log.d("delete","success");
             }
             else{
-                inputStream = httpURLConnection.getErrorStream();
+                Log.d("delete","fail");
             }
 
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            StringBuilder sb = new StringBuilder();
-            String line = null;
-            while((line = bufferedReader.readLine()) != null){
-                sb.append(line);
-            }
-            bufferedReader.close();
-            return sb.toString();
         } catch (Exception e) {
-            Log.d(TAG, "InsertData: Error ", e);
-            return new String("Error: " + e.getMessage());
+            e.printStackTrace();
         }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+//        pDialog.dismiss();
+
     }
 }

@@ -65,14 +65,9 @@ public class MainActivity extends AppCompatActivity {
     public static Context CONTEXT;
     //메인화면
     Intent searchIntent,wishIntent,infoIntent,webIntent,shopIntent,dbTestIntent,reviewIntent; //쇼핑시작,나의관심상품,정보수정
-    //서버
-    String IP_ADDRESS = "52.78.143.125";
-    private String mJsonString;
+
     //사용자 정보
     private String uuid; //스마트폰 고유번호
-    private String name;
-    private String address;
-    private String phoneNum;
     private TextToSpeech tts;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,14 +151,8 @@ public class MainActivity extends AppCompatActivity {
 
     class SelectData extends AsyncTask<String, Void,String> {
         String LoadData;
-//        private ProgressDialog pDialog;
         @Override
         protected void onPreExecute() {
-//            Log.d("?","?");
-//            pDialog = new ProgressDialog(MainActivity.this);
-//            pDialog.setMessage("검색중입니다..");
-//            pDialog.setCancelable(false);
-//            pDialog.show();
             super.onPreExecute();
         }
 

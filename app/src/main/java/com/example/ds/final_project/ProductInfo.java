@@ -27,7 +27,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
-import com.example.ds.final_project.db.DAO.InsertWishProduct;
+import com.example.ds.final_project.db.DTO.WishProduct;
+import com.example.ds.final_project.db.DeleteWishProduct;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
@@ -37,6 +38,22 @@ import com.kakao.message.template.TextTemplate;
 import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
 import com.kakao.util.helper.log.Logger;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,6 +64,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,22 +104,7 @@ public class ProductInfo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         dialog=new WishProductDialog(this);
-        dialog.setDialogListener(new DialogListener() {
-            @Override
-            public void onPositiveClicked(String name) {
-                wishProductName=name;
-                Log.i("관심상품등록",uuid+wishProductName);
-                InsertWishProduct task = new InsertWishProduct();
-                task.execute("InsertWishProduct",uuid,wishProductName,productId,image,info);
-//                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
-                Log.i("관심2",wishProductName);
-            }
 
-            @Override
-            public void onNegativeClicked() {
-                Log.d("dialog","취소");
-            }
-        });
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_info);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
@@ -135,9 +138,26 @@ public class ProductInfo extends AppCompatActivity {
 
         //등록된 상품인지 확인
         CheckWishProduct task = new CheckWishProduct();
-//        task.execute( "http://" + IP_ADDRESS + "/getWishListItem.php",uuid,productId,optionNum);
-//        wishCheck.setChecked(infoBool);
+        task.execute( "CheckWishProduct",uuid,productId);
 
+        dialog.setDialogListener(new DialogListener() {
+            @Override
+            public void onPositiveClicked(String name) {
+                wishProductName=name;
+                infoBool=true;
+                Log.i("관심상품등록",uuid+wishProductName);
+                InsertWishProduct task = new InsertWishProduct();
+                task.execute("InsertWishProduct",uuid,wishProductName,productId,image,info);
+//                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                Log.i("관심2",wishProductName);
+                WishBtnChanged(infoBool);
+            }
+
+            @Override
+            public void onNegativeClicked() {
+                Log.d("dialog","취소");
+            }
+        });
     }
     // 관심상품버튼 클릭
     public void onWishBtnClicked(View view){
@@ -147,14 +167,19 @@ public class ProductInfo extends AppCompatActivity {
         }
         // 관심상품 취소
         else{
+            infoBool=false;
+            DeleteWishProduct task = new DeleteWishProduct();
+            Log.d("delete",uuid+", "+wishProductName);
+            task.execute( "DeleteWishProduct",uuid,wishProductName);
             Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_SHORT).show();
+            WishBtnChanged(infoBool);
         }
        WishBtnChanged(infoBool);
     }
     // 관심상품버튼 상태 변경
     private void WishBtnChanged(Boolean infoBool){
         // 관심상품일 경우 : 관심상품취소버튼
-        if(infoBool == true){
+        if(infoBool == false){
             wishCheck.setContentDescription("관심상품취소");
             wishCheck.setBackgroundResource(R.drawable.off);
         }
@@ -164,31 +189,7 @@ public class ProductInfo extends AppCompatActivity {
             wishCheck.setBackgroundResource(R.drawable.on);
         }
     }
-//    public class CheckBoxListener implements CompoundButton.OnCheckedChangeListener{
-//        @Override
-//        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//            // 체크박스를 클릭해서 상태가 바꾸었을 경우 호출되는 콜백 메서드
-//            if(wishCheck.isChecked()&&check!=0) {
-//                //check=1;
-////                wishProductName="";
-//
-//                dialog.show();
-//                //DB에 추가
-//                //InsertWishProduct task = new InsertWishProduct();
-////                Log.i("관심상품등록",uuid+wishProductName);
-////                task.execute("http://" + IP_ADDRESS + "/insertWishProduct.php",uuid,productId,optionNum,image,info,wishProductName);
-////                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
-//
-//            }
-//            else if(!wishCheck.isChecked()&&check!=0&&error==0){
-//                //check=1;ㅎ
-//                Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_SHORT).show();
-//                //DB에서 삭제
-////                DeleteWishProduct task = new DeleteWishProduct();
-////                task.execute("http://" + IP_ADDRESS + "/deleteWishProduct.php",uuid,productId,optionNum);
-//            }
-//        }
-//    }
+
     public void onReviewClicked(View view){
         reviewIntent.putExtra("product", productId);
         startActivity(reviewIntent);
@@ -447,200 +448,238 @@ public class ProductInfo extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class GetWishListItem extends AsyncTask<String, Void, String>{
-
-        ProgressDialog progressDialog;
-        String errorString = null;
-
+    //관심상품 등록 확인 클래스
+    private class CheckWishProduct extends AsyncTask<String, Void,String> {
+        String LoadData;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = ProgressDialog.show(ProductInfo.this,
-                    "잠시만 기다려주세요", null, true, true);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            progressDialog.dismiss();
-
-            if (result == null){
-            }
-            else {
-                mJsonString = result;
-                showResult();
-            }
         }
 
         @Override
         protected String doInBackground(String... params) {
-            String uid = params[1];
-            String productId = params[2];
-            String optionNum = params[3];
-            String serverURL = params[0];
-            String postParameters = "uid=" + uid+"&productId="+productId+"&optionNum="+optionNum;
-
+            // TODO Auto-generated method stub
+            String project = (String)params[0];
+            String uid = (String)params[1];
+            String id = (String)params[2];
+            for(String p:params){
+                Log.d("hi",p);
+            }
             try {
+                HttpParams httpParameters = new BasicHttpParams();
+                HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
 
-                URL url = new URL(serverURL);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                HttpClient client = new DefaultHttpClient(httpParameters);
+
+                HttpConnectionParams.setConnectionTimeout(httpParameters, 7000);
+                HttpConnectionParams.setSoTimeout(httpParameters, 7000);
+                HttpConnectionParams.setTcpNoDelay(httpParameters, true);
+
+                // 주소 : aws서버
+                String postURL = "http://52.78.143.125:8080/showme/";
+
+                HttpPost post = new HttpPost(postURL+project);
+                //서버에 보낼 파라미터
+                ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+                //파라미터 추가하기
+
+                postParameters.add(new BasicNameValuePair("uid", uid));
+                postParameters.add(new BasicNameValuePair("id", id));
+
+                //파라미터 보내기
+                UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);
+                post.setEntity(ent);
+
+                long startTime = System.currentTimeMillis();
+
+                HttpResponse responsePOST = client.execute(post);
+
+                long elapsedTime = System.currentTimeMillis() - startTime;
+                Log.v("debugging", elapsedTime + " ");
 
 
-                httpURLConnection.setReadTimeout(5000);
-                httpURLConnection.setConnectTimeout(5000);
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.connect();
+                HttpEntity resEntity = responsePOST.getEntity();
+                if (resEntity != null) {
+                    LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
 
-
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                outputStream.write(postParameters.getBytes("UTF-8"));
-                outputStream.flush();
-                outputStream.close();
-                int responseStatusCode = httpURLConnection.getResponseCode();
-
-                InputStream inputStream;
-                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
-                    inputStream = httpURLConnection.getInputStream();
+                    Log.d("가져온 데이터", LoadData);
+                    return LoadData;
+                }
+                if(responsePOST.getStatusLine().getStatusCode()==200){
+                    Log.d("오류없음","굳");
                 }
                 else{
-                    inputStream = httpURLConnection.getErrorStream();
+                    Log.d("error","오류");
+                    return null;
                 }
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                StringBuilder sb = new StringBuilder();
-                String line;
-
-                while((line = bufferedReader.readLine()) != null){
-                    sb.append(line);
-                }
-
-                bufferedReader.close();
-
-                return sb.toString().trim();
-
 
             } catch (Exception e) {
-                errorString = e.toString();
-                return null;
+                e.printStackTrace();
             }
+            return null;
         }
-    }
 
-    private class CheckWishProduct {
+        @Override
+        protected void onPostExecute(String result) {
 
-    }
-
-//    public class InsertWishProduct extends AsyncTask<String, Void, String> {
-//        //    ProgressDialog progressDialog;
-//        String TAG = "phptest";
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//        }
-//        @Override
-//        protected void onPostExecute(String result) {
-//            super.onPostExecute(result);
-//
-//            if (result == null||result.equals("")){
-//                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
-//            }
-//            else {
-//                mJsonString = result;
-//                showResult2();
-//            }
-//            Log.d(TAG, "관심상품 등록2" + result);
-//        }
-//        @Override
-//        protected String doInBackground(String... params) {
-//
-//            String uid = (String)params[1];
-//            String productId = (String)params[2];
-//            String optionNum = (String)params[3];
-//            String image = (String)params[4];
-//            String info = (String)params[5];
-//            String wishProductName = (String)params[6];
-//            String serverURL = (String)params[0];
-//            String postParameters = "uid=" + uid + "&productId=" + productId+"&optionNum=" + optionNum+"&image=" + image+"&info=" + info+"&wishProductName=" + wishProductName ;
-//
-//            try {
-//
-//                URL url = new URL(serverURL);
-//                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-//
-//                httpURLConnection.setReadTimeout(5000);
-//                httpURLConnection.setConnectTimeout(5000);
-//                httpURLConnection.setRequestMethod("POST");
-//                httpURLConnection.connect();
-//
-//                OutputStream outputStream = httpURLConnection.getOutputStream();
-//                outputStream.write(postParameters.getBytes("UTF-8"));
-//                outputStream.flush();
-//                outputStream.close();
-//
-//                int responseStatusCode = httpURLConnection.getResponseCode();
-//                Log.d(TAG, "POST response code - " + responseStatusCode);
-//
-//                InputStream inputStream;
-//                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
-//                    inputStream = httpURLConnection.getInputStream();
-//                }
-//                else{
-//                    inputStream = httpURLConnection.getErrorStream();
-//                }
-//
-//                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-//                StringBuilder sb = new StringBuilder();
-//                String line = null;
-//                while((line = bufferedReader.readLine()) != null){
-//                    sb.append(line);
-//                }
-//                bufferedReader.close();
-//
-//                return sb.toString().trim();
-//            } catch (Exception e) {
-//                error=1;
-//                Log.d(TAG, "UpdateData: Error ", e);
-//                Log.d("에러",e.getMessage());
-//                return "error";
-//            }
-//
-//        }
-//    }
-    private void showResult(){
-        // int count=0;
-        String TAG_JSON="getWishListItem";
-        try {
-            JSONObject jsonObject = new JSONObject(mJsonString);
-            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
-            Log.d("jsonArray 길이:",jsonArray.length()+"");
-            if(jsonArray.length()>0){
-                //관심상품임
-                infoBool=true;
-            }else {
-                //관심상품아님
+//            pDialog.dismiss();
+            if (result == null||result==""){
+                Log.d("wishList","아님 ");
                 infoBool=false;
-                Log.d("관심","ㄴ");}
-//            wishCheck.setChecked(infoBool);
-            check=1;
-        } catch (JSONException e) {
-            //관심상품아님
-            Log.d("showResult : ", e.getMessage());
-            Log.d("showResult : ", mJsonString);
-            infoBool=false;
-            Log.d("관심","s");
-//            wishCheck.setChecked(infoBool);
-            check=1;
+//                check=1;
+            }
+            else {
+                try {
+                    JSONObject jsonObj = new JSONObject(result);
+                    // json객체.get("변수명")
+                    JSONArray jArray = (JSONArray) jsonObj.get("getData");
+//                    items = new ArrayList<Product>();
+                    if(jArray.length()==0){
+                        Log.d("wishList","아님");
+                        infoBool=false;
+//                        check=1;
+//                        removePreferences("USER");
+                    }else {
+                        Log.d("wishList","맞음");
+                        WishProduct wishProduct=new WishProduct();
+                        for (int i = 0; i < jArray.length(); i++) {
+                            // json배열.getJSONObject(인덱스)
+                            JSONObject row = jArray.getJSONObject(i);
+                            String id=row.getString("ID");
+                            String alias=row.getString("ALIAS");
+
+                            wishProduct.setId(id);
+                            wishProduct.setAlias(alias);
+                            wishProductName=alias;
+                            Log.d("가져온 데이터",id+", "+alias);
+                        }
+                        infoBool=true;
+//                        check=1;
+                    }
+
+                } catch (JSONException e) {
+                    Log.d("error : ", e.getMessage());
+                }
+            }
+            WishBtnChanged(infoBool);
         }
-        WishBtnChanged(infoBool);
     }
-    private void showResult2(){
+
+    //관심상품 등록 클래스
+    public class InsertWishProduct extends AsyncTask<String, Void, String> {
+        String LoadData;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            // TODO Auto-generated method stub
+
+            String project = (String)params[0];
+            String uid = (String)params[1];
+            String alias = (String)params[2];
+            String id = (String)params[3];
+            String image = (String)params[4];
+            String info = (String)params[5];
+
+
+
+            try {
+                HttpParams httpParameters = new BasicHttpParams();
+                HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
+
+                HttpClient client = new DefaultHttpClient(httpParameters);
+
+                HttpConnectionParams.setConnectionTimeout(httpParameters, 7000);
+                HttpConnectionParams.setSoTimeout(httpParameters, 7000);
+                HttpConnectionParams.setTcpNoDelay(httpParameters, true);
+
+                // 주소 : aws서버
+                String postURL = "http://52.78.143.125:8080/showme/";
+
+                // 로컬서버
+//            String postURL = "http://10.0.2.2:8080/showme/InsertUser";
+
+                HttpPost post = new HttpPost(postURL+project);
+                //서버에 보낼 파라미터
+                ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+//            파라미터 추가하기
+                postParameters.add(new BasicNameValuePair("uid", uid));
+                postParameters.add(new BasicNameValuePair("alias", alias));
+                postParameters.add(new BasicNameValuePair("id", id));
+                postParameters.add(new BasicNameValuePair("image", image));
+                postParameters.add(new BasicNameValuePair("info", info));
+
+                //파라미터 보내기
+                UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);
+                post.setEntity(ent);
+
+                long startTime = System.currentTimeMillis();
+
+                HttpResponse responsePOST = client.execute(post);
+
+                long elapsedTime = System.currentTimeMillis() - startTime;
+                Log.v("debugging", elapsedTime + " ");
+
+
+                HttpEntity resEntity = responsePOST.getEntity();
+                if (resEntity != null) {
+                    LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
+                    Log.d("성공",LoadData);
+                }
+                if(responsePOST.getStatusLine().getStatusCode()==200){
+//                    Log.d("디비 ","성공 이지만 중복이라 실패 ");
+
+//                    return "fail";
+                }
+                else{
+
+                    Log.d("실패 ","떙 ");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (LoadData == null){
+                insertFail();
+//            Toast.makeText(getApplicationContext(),"실패",Toast.LENGTH_LONG).show();
+            }
+            else {
+                try {
+                    JSONObject jsonObj = new JSONObject(LoadData);
+                    // json객체.get("변수명")
+                    JSONArray jArray = (JSONArray) jsonObj.get("count");
+//                    items = new ArrayList<Product>();
+                    if(jArray.length()==0){
+                        Log.d("검색"," 실패");
+                        insertFail();
+                    }else {
+                        Log.i("검색","성공"+result);
+                        infoBool=true;
+
+                    }
+
+                } catch (JSONException e) {
+                    insertFail();
+                    Log.d("검색 오류 : ", e.getMessage());
+                }
+
+            }
+            WishBtnChanged(infoBool);
+        }
+    }
+    private void insertFail(){
         infoBool=false;
-//        wishCheck.setChecked(infoBool);
-        Toast.makeText(ProductInfo.this,"같은 이름으로 등록된 관심상품이 있습니다.",Toast.LENGTH_LONG).show();
-        error=0;
         WishBtnChanged(infoBool);
+        Toast.makeText(getApplicationContext(),"별칭이 중복되어 관심상품 등록에 실패했습니다.",Toast.LENGTH_LONG).show();
     }
+
 }
 

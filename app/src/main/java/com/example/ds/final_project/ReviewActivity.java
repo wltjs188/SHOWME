@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -159,7 +160,7 @@ public class ReviewActivity extends AppCompatActivity {
 
                     ReviewData reviewD = new ReviewData(num,rt,rank);
                     //System.out.println("번호:"+reviewD.getNum()+"제목:"+reviewD.getTitle()+"내용"+reviewD.getReview());
-
+                    Log.d("reviewData",reviewD+"");
                     //add가 안됨..!!
                     reviewDataList.add(reviewD);
                 }

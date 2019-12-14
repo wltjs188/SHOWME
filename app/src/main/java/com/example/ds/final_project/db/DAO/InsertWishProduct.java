@@ -87,7 +87,8 @@ public class InsertWishProduct extends AsyncTask<String, Void, String> {
                 Log.d("성공",LoadData);
             }
             if(responsePOST.getStatusLine().getStatusCode()==200){
-                Log.d("디비 ","성공 ");            }
+                Log.d("디비 ","성공 이지만 중복이라 실패 ");
+            }
             else{
 
                 Log.d("실패 ","떙 ");
