@@ -161,10 +161,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     String category = null;
     String style=null;
     String color = null;
-    private String mJsonString;
-    String ShareType = null; //공유타입(문자/카톡)
-    String fname= null; //공유할 사람 이름
-    String fnumber=null; //공유할 사람 번호
+//    private String mJsonString;
+//    String ShareType = null; //공유타입(문자/카톡)
+//    String fname= null; //공유할 사람 이름
+//    String fnumber=null; //공유할 사람 번호
     String smsg="";//공유할 메세지 내용
     String sproduct= null; //공유할 관심상품
     ArrayList<String> wishProductNames;
@@ -173,6 +173,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     String shareType;
     String mProduct;
     String mPerson;
+    String mNumber;
     String kProduct;
 
     Intent wishIntent,shopIntent;
@@ -571,153 +572,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             Log.d("메세지 오류",e.getMessage());
             e.printStackTrace();
         }
-    }
-    //관심상품 이름으로 검색하고 문자보냄
-    private class GetProductToShare extends AsyncTask<String, Void, String> {
-
-//        ProgressDialog progressDialog;
-        String errorString = null;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-//            progressDialog = ProgressDialog.show(ChatbotActivity.this,
-//                    "Please Wait", null, true, true);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-//            progressDialog.dismiss();
-
-            if (result == null){
-            }
-            else {
-                mJsonString = result;
-                showResultGetProductToShare();
-//                fname = null;
-//                sproduct = null;
-//                fnumber = null;
-            }
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            String uid = params[1];
-            String wishProductName = params[2];
-            String serverURL = params[0];
-            String postParameters = "uid=" + uid+"&wishProductName="+wishProductName;
-
-            try {
-
-                URL url = new URL(serverURL);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
-
-                httpURLConnection.setReadTimeout(5000);
-                httpURLConnection.setConnectTimeout(5000);
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.connect();
-
-
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                outputStream.write(postParameters.getBytes("UTF-8"));
-                outputStream.flush();
-                outputStream.close();
-                int responseStatusCode = httpURLConnection.getResponseCode();
-
-                InputStream inputStream;
-                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
-                    inputStream = httpURLConnection.getInputStream();
-                }
-                else{
-                    inputStream = httpURLConnection.getErrorStream();
-                }
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                StringBuilder sb = new StringBuilder();
-                String line;
-
-                while((line = bufferedReader.readLine()) != null){
-                    sb.append(line);
-                }
-
-                bufferedReader.close();
-
-                return sb.toString().trim();
-
-
-            } catch (Exception e) {
-                errorString = e.toString();
-                return null;
-            }
-        }
-    }
-    private void showResultGetProductToShare(){
-        // int count=0;
-        String TAG_JSON="getProductToShare";
-        try {
-            JSONObject jsonObject = new JSONObject(mJsonString);
-            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
-            Log.d("jsonArray 길이:",jsonArray.length()+"");
-            if(jsonArray.length()>0){
-                //관심상품 sproduct 존재
-                for(int i=0;i<jsonArray.length();i++){
-                    JSONObject item = jsonArray.getJSONObject(i);
-                    String productId = item.getString("productId");
-                    String optionNum = item.getString("optionNum");
-                    smsg="이 상품 구매 부탁드립니다!!\nhttp://www.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo="+productId+"\n옵션번호 : "+optionNum;
-                }
-                Log.d("메세지:",smsg+"\n번호:"+fnumber);
-                if(ShareType.equals("카톡")){
-                    ShareKakao();
-                    complateKShare((sproduct));
-                }
-                else{
-                    sendMSG(fnumber,smsg);
-                    //Toast.makeText(this,sproduct+" 있어용",Toast.LENGTH_LONG).show();
-                    complateMShare((fname));
-                }
-
-                fname=null;
-                fnumber=null;
-                sproduct=null;
-
-            }else {
-                //관심상품 sproduct 존재 안함
-
-                Toast.makeText(this,sproduct+" 없어용",Toast.LENGTH_LONG).show();
-//                Toast.makeText(getApplicationContext(), sproduct+"상품은 없습니다. 다시 입력해주세요.", Toast.LENGTH_LONG).show();
-//                aiRequest.setQuery("문자다시");
-//                Log.e("입력",editText.getText().toString());
-//                new AITask().execute(aiRequest);
-//                aiRequest.setQuery("문자다시");
-//                Log.e("입력",editText.getText().toString());
-//                new AITask().execute(aiRequest);
-            }
-
-        } catch (JSONException e) {
-            //관심상품 sproduct 존재 안함
-            Log.d("showResult : ", e.getMessage());
-            Log.d("showResult : ", mJsonString);
-            Toast.makeText(this,sproduct+"는 관심상품에 없습니다.",Toast.LENGTH_LONG).show();
-            fnumber = null; sproduct = null; fname = null;
-
-            if(ShareType.equals("카톡")){
-                aiRequest.setQuery("카톡다시");
-                Log.e("입력",editText.getText().toString());
-                new AITask().execute(aiRequest);
-            }
-            else{
-                aiRequest.setQuery("문자다시");
-                Log.e("입력",editText.getText().toString());
-                new AITask().execute(aiRequest);
-            }
-
-
-        }
-
     }
     //STT 음성 입력
     private void promptSpeechInput() {
@@ -1301,6 +1155,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             }
         });
     }
+    //상품 검색 class
     private class SearchProduct extends AsyncTask<String, Void,String> {
         String LoadData;
         private ProgressDialog pDialog;
@@ -1454,6 +1309,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             }
         }
     }
+
     //관심상품 등록 확인 클래스
     private class CheckShareProduct extends AsyncTask<String, Void,String> {
         String LoadData;

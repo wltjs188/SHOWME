@@ -191,6 +191,7 @@ public class ProductInfo extends AppCompatActivity {
     }
 
     public void onReviewClicked(View view){
+        // 리뷰 보기 버튼 
         reviewIntent.putExtra("product", productId);
         startActivity(reviewIntent);
     }
