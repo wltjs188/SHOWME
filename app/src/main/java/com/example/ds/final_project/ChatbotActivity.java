@@ -1062,8 +1062,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 adapter.setButton(btnSendListener); //버튼리스터 설정
 
                 //문자 공유 시작
-                sendMSG(mNumber,smsg);
 
+                sendMSG(mNumber,"이 상품 구매 부탁드립니다!!");
+                sendMSG(mNumber,smsg);
+                sendMSG(mNumber,"주소: "+user.getAddress());
                 //공유 끝나면 변수 초기화
                 mPerson=null;
                 mProduct=null;
@@ -1488,8 +1490,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         Log.d("wishList","맞음");
                         JSONObject item = jArray.getJSONObject(0);
                         String productId = item.getString("ID");
-                        smsg="이 상품 구매 부탁드립니다!!\nhttps://store.musinsa.com/app/product/detail/"+productId;
-
+                        smsg="https://store.musinsa.com/app/product/detail/"+productId;
+                        Log.d("smsg",smsg);
 //                        ChatMessage chatMessage;
 //                        chatMessage = new ChatMessage(input, false);
 //
