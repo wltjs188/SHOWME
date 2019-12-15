@@ -13,12 +13,12 @@
             android:id="@+id/list_msg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:choiceMode="none"
-            android:clickable="false"
             android:divider="@null"
             android:listSelector="@android:color/transparent"
             android:transcriptMode="alwaysScroll" />
     </LinearLayout>
+            <!--android:choiceMode="none"-->
+            <!--android:clickable="false"-->
 
     <ScrollView
         android:layout_width="match_parent"
