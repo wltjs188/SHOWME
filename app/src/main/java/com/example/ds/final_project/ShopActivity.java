@@ -87,12 +87,15 @@ public class ShopActivity extends AppCompatActivity {
         if(searchedProduct.getStyle()==null){
             task = new SearchProduct();
             task.execute("SearchOne", searchedProduct.getCategory());
+            Log.i("shop","shoptask1");
         }else if(searchedProduct.getColor()==null){
             task = new SearchProduct();
             task.execute("SearchTwo", searchedProduct.getCategory(), searchedProduct.getStyle());
+            Log.i("shop","shoptask2");
         }else{
             task = new SearchProduct();
             task.execute("SearchThree", searchedProduct.getCategory(),searchedProduct.getStyle(),searchedProduct.getColor());
+            Log.i("shop","shoptask3");
         }
         //클릭시, 상세정보 페이지로 이동
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -200,7 +203,7 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
 //                ToastMessage("로그인 성공");
 
                 LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
-                Log.i("가져온 데이터", LoadData);
+                Log.i("shop가져온 데이터", LoadData);
                 return LoadData;
 
             }
@@ -266,7 +269,7 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
                         infos.add(product.toString());
                         images.add(product.getImage());
                         ids.add(product.getId()+"");
-                        Log.i("가져온 데이터><", product.toString());
+                        Log.i("shop가져온 데이터><", product.toString());
 
                     }
 //                    adapter.notifyDataSetChanged();
