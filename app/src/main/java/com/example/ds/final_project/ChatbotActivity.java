@@ -833,6 +833,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     Log.i("액션USER",ACTION);
 
                 }
+                makeMenuMsg();
                 break;
             case "ACTION_M_NAME"://사용자정보수정 : 이름
                 parameter=getParameter(result);
@@ -963,7 +964,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 adapter.setButton(btnSendListener); //버튼이름 설정
 
 
-//                startActivity(shopIntent);
+                startActivity(shopIntent);
                 break;
 
             case "Product_Style": //스타일
@@ -992,7 +993,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 category = null; style=null; color = null;
                 Log.d("yoon search","카테고리, 스타일로 검색: "+so);
 
-//                startActivity(shopIntent);
+                startActivity(shopIntent);
 
 
                 makeMenuMsg();
@@ -1016,7 +1017,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                 category = null; style=null; color = null;
 
-//                startActivity(shopIntent);
+                startActivity(shopIntent);
 
 //                chatMessage = new ChatMessage(user.getName()+"님 안녕하세요?\n아래 버튼 메뉴를 선택해주세요\n", true);
 //                chatMessages.add(chatMessage);
@@ -1052,7 +1053,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                             searchtask = new SearchProduct();
                             searchtask.execute("SearchThree", remember.getCategory(),remember.getStyle(),remember.getColor());
                         }
-//                        startActivity(shopIntent);
+                        startActivity(shopIntent);
                     }
                     chatMessage2 = new ChatMessage("버튼",true);
                     chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
@@ -1401,9 +1402,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                    items = new ArrayList<Product>();
                     if(jArray.length()==0){
                         Log.d("chatBotActivity검색"," 실패");
-                        ChatMessage chatMessage3 = new ChatMessage("검색 결과가 없습니다.",true);
-                        chatMessages.add(chatMessage3);
-                        adapter.notifyDataSetChanged();
+//                        ChatMessage chatMessage3 = new ChatMessage("검색 결과가 없습니다.",true);
+//                        chatMessages.add(chatMessage3);
+//                        adapter.notifyDataSetChanged();
                     }
                     else {
                         Log.i("chatBotActivity검색","성공"+result);
@@ -1434,13 +1435,13 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                             Log.i("chat가져온 데이터ㄹㄹ", product.toString());
                         }
 
-                        ChatMessage chatMessage3 = new ChatMessage(true, true, searched_products);
-                        chatMessages.add(chatMessage3);
-                        chatMessage3.getImage().get(0);
-                        for(int i=0;i<chatMessage3.getImage().size();i++) {
-                            Log.i("김지선1", chatMessage3.getImage().get(i));
-                        }
-                        adapter.notifyDataSetChanged();
+//                        ChatMessage chatMessage3 = new ChatMessage(true, true, searched_products);
+//                        chatMessages.add(chatMessage3);
+//                        chatMessage3.getImage().get(0);
+//                        for(int i=0;i<chatMessage3.getImage().size();i++) {
+//                            Log.i("김지선1", chatMessage3.getImage().get(i));
+//                        }
+//                        adapter.notifyDataSetChanged();
                     }
 
                 } catch (JSONException e) {
@@ -1780,7 +1781,12 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             imageViews.add((ImageView) v.findViewById(R.id.product_img3));
             imageViews.add((ImageView) v.findViewById(R.id.product_img4));
             imageViews.add((ImageView) v.findViewById(R.id.product_img5));
+<<<<<<< HEAD
             product_more=(Button)v.findViewById(R.id.product_more);
+=======
+
+
+>>>>>>> 6c5e67871ec51faeaa892e72f579dc8d7354a9aa
         }
     }
 }
