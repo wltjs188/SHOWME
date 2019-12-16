@@ -1781,12 +1781,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             imageViews.add((ImageView) v.findViewById(R.id.product_img3));
             imageViews.add((ImageView) v.findViewById(R.id.product_img4));
             imageViews.add((ImageView) v.findViewById(R.id.product_img5));
-<<<<<<< HEAD
             product_more=(Button)v.findViewById(R.id.product_more);
-=======
-
-
->>>>>>> 6c5e67871ec51faeaa892e72f579dc8d7354a9aa
         }
     }
 }
