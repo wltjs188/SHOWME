@@ -956,8 +956,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 category = null; style=null; color = null;
                 Log.d("yoon search","카테고리로 검색: "+so);
 //                makeMenuMsg();
-                ChatMessage chatMessage = new ChatMessage(user.getName()+"님 안녕하세요?\n아래 버튼 메뉴를 선택해주세요\n", true);
-                chatMessages.add(chatMessage);
+
 
                 chatMessage2 = new ChatMessage("버튼",true);
                 chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
@@ -995,6 +994,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
 //                startActivity(shopIntent);
 
+
                 makeMenuMsg();
                 break;
             case "Product_Color": //색상 , (카테고리,스타일,색상 다 입력 됨)
@@ -1018,10 +1018,13 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
 //                startActivity(shopIntent);
 
-                
-                chatMessage2 = new ChatMessage("버튼",true);
-                chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
-                adapter.setButton(btnSendListener); //버튼이름 설정
+//                chatMessage = new ChatMessage(user.getName()+"님 안녕하세요?\n아래 버튼 메뉴를 선택해주세요\n", true);
+//                chatMessages.add(chatMessage);
+//
+//                chatMessage2 = new ChatMessage("버튼",true);
+//                chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
+//                adapter.setButton(btnSendListener); //버튼이름 설정
+                makeMenuMsg();
 
                 break;
 
