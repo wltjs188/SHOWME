@@ -832,6 +832,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     task.execute(user.getId(),user.getName(),user.getAddress(),user.getPhoneNum());
                     Log.i("액션USER",ACTION);
                 }
+                makeMenuMsg();
                 break;
             case "ACTION_M_NAME"://사용자정보수정 : 이름
                 parameter=getParameter(result);
