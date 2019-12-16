@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+import com.example.ds.final_project.db.DTO.User;
 import com.example.ds.final_project.db.DTO.WishProduct;
 import com.example.ds.final_project.db.DeleteWishProduct;
 import com.google.gson.Gson;
@@ -79,6 +80,7 @@ public class ProductInfo extends AppCompatActivity {
     private int check=0;
     //상품 정보
 //    private Product product;
+    private User user;
     private String productAlias="";
     private String uuid=" ";
     private String productId=" ";
@@ -99,7 +101,7 @@ public class ProductInfo extends AppCompatActivity {
 
 //    private String wishProductName=" ";
     WishProductDialog dialog;
-    private String Url="http://www.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=";
+    private String Url="https://store.musinsa.com/app/product/detail/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,12 +111,19 @@ public class ProductInfo extends AppCompatActivity {
         setContentView(R.layout.activity_product_info);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
 
+        Gson gson = new GsonBuilder().create();
+        if(!(getPreferences("USER")==null||getPreferences("USER")=="")){
+            String strContact=getPreferences("USER");
+            user=gson.fromJson(strContact,User.class);
+            Log.d("uuid 정보",user.getName()+user.getAddress()+user.getPhoneNum());
+        }
         uuid = getPreferences("uuid");
         product_info=(TextView)findViewById(R.id.product_info);
         product_info.setMovementMethod(new ScrollingMovementMethod());
         Intent intent = getIntent();
 
         productId=intent.getStringExtra("productId");
+        Url+=productId;
         info=intent.getStringExtra("info");
         image=intent.getStringExtra("image");
 
@@ -309,7 +318,10 @@ public class ProductInfo extends AppCompatActivity {
 
                 // Text 값 받아서 수신자로 지정
                 phoneNo = et.getText().toString();
-                sendMMS();
+                sendMMS(phoneNo, "이 상품 구매 부탁드립니다!!");
+                sendMMS(phoneNo, Url);
+                sendMMS(phoneNo, "주소: "+user.getAddress());
+
                 Toast.makeText(getApplicationContext(),"해당번호로 상품을 공유했습니다.",Toast.LENGTH_LONG).show();
                 dialog.dismiss();     //닫기
                 // Event
@@ -365,22 +377,24 @@ public class ProductInfo extends AppCompatActivity {
         }// end while
         c.close();
         if(number!=null) {
-            phoneNo = number;
-            sendMMS();
+//            phoneNo = number;
+
+            sendMMS(number, "이 상품 구매 부탁드립니다!!");
+            sendMMS(number, Url);
+            sendMMS(number, "주소: "+user.getAddress());
             Toast.makeText(getApplicationContext(),phoneName+"님께 해당 상품을 공유했습니다.",Toast.LENGTH_LONG).show();
         }
         else {
             Toast.makeText(getApplicationContext(),phoneName+"님의 연락처는 없습니다.",Toast.LENGTH_LONG).show();
         }
     }
-    private void sendMMS() {
+    private void sendMMS(String phoneNo,String msg) {
         //String sms = "http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1708920758&cls=3791&trTypeCd=102";
-        String sms = info;
 
         try {
             //전송
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(phoneNo, null, sms, null, null);
+            smsManager.sendTextMessage(phoneNo, null, msg, null, null);
             Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "SMS faild, please try again later!", Toast.LENGTH_LONG).show();
