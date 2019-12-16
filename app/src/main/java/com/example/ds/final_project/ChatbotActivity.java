@@ -832,7 +832,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     InsertUser2 task = new InsertUser2();
                     task.execute(user.getId(),user.getName(),user.getAddress(),user.getPhoneNum());
                     Log.i("액션USER",ACTION);
-//                    makeMenuMsg();
+                    
                     chatMessage2 = new ChatMessage("버튼",true);
                     chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
                     adapter.setButton(btnSendListener); //버튼이름 설정
@@ -1777,7 +1777,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
     private class ViewHolder {
         private TextView msg;
         private ArrayList<ImageView> imageViews = new ArrayList<ImageView>();
-
+        private Button product_more;
         public ViewHolder(View v) {
             msg = (TextView) v.findViewById(R.id.txt_msg);
             imageViews.add((ImageView) v.findViewById(R.id.product_img1));
@@ -1785,8 +1785,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             imageViews.add((ImageView) v.findViewById(R.id.product_img3));
             imageViews.add((ImageView) v.findViewById(R.id.product_img4));
             imageViews.add((ImageView) v.findViewById(R.id.product_img5));
-
-
+            product_more=(Button)v.findViewById(R.id.product_more);
         }
     }
 }
