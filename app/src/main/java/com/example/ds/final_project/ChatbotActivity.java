@@ -820,6 +820,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     address=address.replaceAll("\"","");
                 }
 
+
                 //사용자 정보 DB에 넣기
                 if( !name.equals("") && !address.equals("") && !phoneNum.equals("") ) {
                     user=new User(uuid,name,address,phoneNum);
@@ -831,8 +832,12 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     InsertUser2 task = new InsertUser2();
                     task.execute(user.getId(),user.getName(),user.getAddress(),user.getPhoneNum());
                     Log.i("액션USER",ACTION);
+//                    makeMenuMsg();
+                    chatMessage2 = new ChatMessage("버튼",true);
+                    chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
+                    adapter.setButton(btnSendListener); //버튼이름 설정
                 }
-                makeMenuMsg();
+
                 break;
             case "ACTION_M_NAME"://사용자정보수정 : 이름
                 parameter=getParameter(result);
