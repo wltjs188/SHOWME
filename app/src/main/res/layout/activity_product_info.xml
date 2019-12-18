@@ -53,6 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="20dp"/>
         <LinearLayout
+            android:gravity="center"
             android:id="@+id/sizesLayout"
             android:orientation="horizontal"
             android:layout_width="match_parent"

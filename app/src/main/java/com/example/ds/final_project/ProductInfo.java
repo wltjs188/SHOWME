@@ -176,7 +176,51 @@ public class ProductInfo extends AppCompatActivity {
     // 사이즈 상세보기 버튼 클릭
     public void onSizeDetailClicked(View view){
         TextView msgTextView=findViewById(R.id.msgTextView);
-        msgTextView.setText("ehl");
+        String msg="";
+
+        //사이즈 가져오기
+        String str_size="s,m,l";
+        String[] sizes=str_size.split(",");
+        if(sizes.length<=0){
+            msg="사이즈 정보가 존재하지 않습니다.";
+            msgTextView.setText(msg);
+        }else {
+            msg="사이즈를 선택해주세요.";
+            msgTextView.setText(msg);
+
+            LinearLayout layout=findViewById(R.id.sizesLayout);
+            int id=0;
+            for (String size : sizes) {
+                Button btn = new Button(this);
+
+            // setId 버튼에 대한 키값
+
+                btn.setId(id);
+
+                btn.setText(size);
+
+                btn.setLayoutParams(params);
+    ;
+
+
+                btn.setOnClickListener(new View.OnClickListener() {
+
+                    public void onClick(View v) {
+
+
+                    }
+
+                });
+
+
+
+                //버튼 add
+
+                layout.addView(btn);
+                id++;
+
+            }
+        }
 //        for (int j = 0; j <= 5; j++) {
 //
 //            // LinearLayout 생성
@@ -185,15 +229,6 @@ public class ProductInfo extends AppCompatActivity {
 //
 //            ll.setOrientation(LinearLayout.HORIZONTAL);
 //
-//
-//
-//            // TextView 생성
-//
-//            TextView tvProdc = new TextView(this);
-//
-//            tvProdc.setText("Name" + j + " ");
-//
-//            ll.addView(tvProdc);
 //
 //
 //
