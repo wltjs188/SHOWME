@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.ds.final_project.db.DTO.WishProduct;
-import com.example.ds.final_project.db.UpdateWishProductName;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
