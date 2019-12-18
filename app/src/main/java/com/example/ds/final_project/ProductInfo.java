@@ -1,6 +1,7 @@
 package com.example.ds.final_project;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.*;
 import com.bumptech.glide.Glide;
 import com.example.ds.final_project.db.DTO.User;
 import com.example.ds.final_project.db.DTO.WishProduct;
@@ -95,8 +97,14 @@ public class ProductInfo extends AppCompatActivity {
     WishProductDialog dialog;
     private String Url="https://store.musinsa.com/app/product/detail/";
 
+    //Layout 추가
+    Context context;
+    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+
+            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        context=getApplicationContext();
         dialog=new WishProductDialog(this);
 
         super.onCreate(savedInstanceState);
@@ -159,6 +167,87 @@ public class ProductInfo extends AppCompatActivity {
                 Log.d("dialog","취소");
             }
         });
+
+
+
+
+
+    }
+    // 사이즈 상세보기 버튼 클릭
+    public void onSizeDetailClicked(View view){
+        TextView msgTextView=findViewById(R.id.msgTextView);
+        msgTextView.setText("ehl");
+//        for (int j = 0; j <= 5; j++) {
+//
+//            // LinearLayout 생성
+//
+//            LinearLayout ll = new LinearLayout(context);
+//
+//            ll.setOrientation(LinearLayout.HORIZONTAL);
+//
+//
+//
+//            // TextView 생성
+//
+//            TextView tvProdc = new TextView(this);
+//
+//            tvProdc.setText("Name" + j + " ");
+//
+//            ll.addView(tvProdc);
+//
+//
+//
+//            // TextView 생성
+//
+//            TextView tvAge = new TextView(this);
+//
+//            tvAge.setText("   Age" + j + "  ");
+//
+//            ll.addView(tvAge);
+//
+//
+//
+//            // 버튼 생성
+//
+//            final Button btn = new Button(this);
+//
+//            // setId 버튼에 대한 키값
+//
+//            btn.setId(j + 1);
+//
+//            btn.setText("Apply");
+//
+//            btn.setLayoutParams(params);
+//
+//
+//
+//            final int position = j;
+//
+//
+//
+//            btn.setOnClickListener(new OnClickListener() {
+//
+//                public void onClick(View v) {
+//
+//                    Log.d("log", "position :" + position);
+//
+//                    Toast.makeText(getApplicationContext(), "클릭한 position:" + position, Toast.LENGTH_LONG).show();
+//
+//                }
+//
+//            });
+//
+//
+//
+//            //버튼 add
+//
+//            ll.addView(btn);
+//
+//            //LinearLayout 정의된거 add
+//
+//            lm.addView(ll);
+//
+//        }
     }
     // 관심상품버튼 클릭
     public void onWishBtnClicked(View view){
