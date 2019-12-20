@@ -243,7 +243,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //            aiDataService = new AIDataService(this,config);
 //            aiRequest = new AIRequest();
             Log.d("채?","?");
-            makeMenuMsg();
+//            makeMenuMsg();
         }
     }
 
@@ -277,20 +277,25 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         btnSTT=findViewById(R.id.btn_stt);
         editText = (EditText) findViewById(R.id.msg_type);
 
+        adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
+        listView.setAdapter(adapter);
+        listView.setSelection(adapter.getCount() - 1);
+
         //사용자 정보 받아오기
-        uuid=getPreferences("uuid");
-        if(!(getPreferences("USER")==null||getPreferences("USER")=="")){
-            String strContact=getPreferences("USER");
-            user=gson.fromJson(strContact,User.class);
-            Log.d("uuid 정보",user.getName()+user.getAddress()+user.getPhoneNum());
-        }
+//        uuid=getPreferences("uuid");
+//        if(!(getPreferences("USER")==null||getPreferences("USER")=="")){
+//            String strContact=getPreferences("USER");
+//            user=gson.fromJson(strContact,User.class);
+//            Log.d("uuid 정보",user.getName()+user.getAddress()+user.getPhoneNum());
+//            makeMenuMsg();
+//        }
 
 
 
         //set ListView adapter first
-        adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
-        listView.setAdapter(adapter);
-        listView.setSelection(adapter.getCount() - 1);
+//        adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
+//        listView.setAdapter(adapter);
+//        listView.setSelection(adapter.getCount() - 1);
 
 //        ChatMessage chatMessage;
 
@@ -439,6 +444,14 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             }
         };
         btnSend.setOnClickListener(btnSendListener);
+
+        uuid=getPreferences("uuid");
+        if(!(getPreferences("USER")==null||getPreferences("USER")=="")){
+            String strContact=getPreferences("USER");
+            user=gson.fromJson(strContact,User.class);
+            Log.d("uuid 정보",user.getName()+user.getAddress()+user.getPhoneNum());
+            makeMenuMsg();
+        }
 
 
 
@@ -633,7 +646,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 break;
             }
             case WISHLIST_ACTIVITY:{
-//                makeMenuMsg();
+                makeMenuMsg();
                 break;
             }
         }
@@ -1008,7 +1021,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                startActivity(shopIntent);
 
 
-                makeMenuMsg();
+                chatMessage2 = new ChatMessage("버튼",true);
+                chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
+                adapter.setButton(btnSendListener); //버튼이름 설정
                 break;
             case "Product_Color": //색상 , (카테고리,스타일,색상 다 입력 됨)
                 parameter=getParameter(result);
@@ -1037,7 +1052,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                chatMessage2 = new ChatMessage("버튼",true);
 //                chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
 //                adapter.setButton(btnSendListener); //버튼이름 설정
-                makeMenuMsg();
+                chatMessage2 = new ChatMessage("버튼",true);
+                chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
+                adapter.setButton(btnSendListener); //버튼이름 설정
 
                 break;
 
@@ -1420,7 +1437,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     else {
                         Log.i("chatBotActivity검색","성공"+result);
                         ArrayList<Product> searched_products=new ArrayList<Product>(); //검색된 상품들, 버튼으로 띄울 애덜
-                        for (int i = 0; i < 5; i++) {
+                        int pNum=0;
+                        if(jArray.length()>=5) pNum=5;
+                        else pNum=jArray.length();
+                        for (int i = 0; i < pNum; i++) {
                             // json배열.getJSONObject(인덱스)
                             JSONObject row = jArray.getJSONObject(i);
 
@@ -1449,6 +1469,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                         ChatMessage chatMessage3 = new ChatMessage(true, true, searched_products);
                         chatMessages.add(chatMessage3);
+                        Log.i("상품개수",""+pNum);
 //                        chatMessage3.getImage().get(0);
 //                        for(int i=0;i<chatMessage3.getImage().size();i++) {
 //                            Log.i("김지선1", chatMessage3.getImage().get(i));
@@ -1765,6 +1786,11 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                         activity.startActivity(shopIntent);
                     }
                 });
+            }
+            if(p.size()<5){
+                for(int i=p.size();i<5;i++){
+                    holder.imageViews.get(i).setVisibility(View.GONE);
+                }
             }
         }
 
