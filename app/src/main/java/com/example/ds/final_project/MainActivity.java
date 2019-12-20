@@ -1,7 +1,6 @@
 package com.example.ds.final_project;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,8 +21,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.example.ds.final_project.db.DTO.User;
-import com.example.ds.final_project.db.DAO.ServertestActivity;
-import com.example.ds.final_project.db.UpdateWishProductName;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -91,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
         CONTEXT=this;
         searchIntent=new Intent(getApplicationContext(),ChatbotActivity.class);//쇼핑시작
         wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
-        infoIntent=new Intent(getApplicationContext(),MyInfoActivity.class);//나의정보수정
         webIntent=new Intent(getApplicationContext(),WebActivity.class);//나의정보수정
         shopIntent=new Intent(getApplicationContext(),ShopActivity.class);//나의정보수정
         reviewIntent=new Intent(getApplicationContext(),ReviewActivity.class); //리뷰
@@ -337,14 +333,6 @@ public class MainActivity extends AppCompatActivity {
     public void onShopClicked(View view) { startActivity(shopIntent); }
 
     public void onDBTestClicked(View view){ //DB테스트
-//        String name="ㅂㅈ";
-////        String change="sbsb";
-////        UpdateWishProductName task1 = new UpdateWishProductName(); //사용자정보 수정
-////        task1.execute("http://" + IP_ADDRESS + "/updateWishProductName.php",uuid,name,change);
-////        Log.d("나",uuid);
-////        Toast.makeText(this,"업데이트",Toast.LENGTH_LONG).show();
-        Intent intent=new Intent(getApplicationContext(), ServertestActivity.class);
-        startActivity(intent);
     }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
