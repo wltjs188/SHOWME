@@ -940,10 +940,16 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 chatMessage2.setButton(btn_type); //버튼으로 설정
                 adapter.setButton(btnSendListener); //버튼리스터 설정
 
+                so=category;
+                remember.setCategory(category);
+                remember.setStyle(null);
+                remember.setColor(null);
+                strContact = gson.toJson(remember, Product.class);
+                savePreferences("remember",strContact);
+
                 //카테고리만 검색
                 searchtask = new SearchProduct();
                 searchtask.execute("SearchOne", category);
-
 
                 break;
             case "Search_Style.Search_Style-no": //카테고리만 입력
@@ -959,15 +965,12 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                 category = null; style=null; color = null;
                 Log.d("yoon search","카테고리로 검색: "+so);
-//                makeMenuMsg();
-
 
                 chatMessage2 = new ChatMessage("버튼",true);
                 chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
                 adapter.setButton(btnSendListener); //버튼이름 설정
 
 
-                startActivity(shopIntent);
                 break;
 
             case "Product_Style": //스타일
@@ -977,10 +980,16 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 chatMessage2.setButton(BTN_TYPE_COLOR); //버튼으로 설정
                 adapter.setButton(btnSendListener); //버튼리스터 설정
 
+                so=category+", "+style;
+                remember.setCategory(category);
+                remember.setStyle(style);
+                remember.setColor(null);
+                strContact = gson.toJson(remember, Product.class);
+                savePreferences("remember",strContact);
+
                 searchtask = new SearchProduct();
                 searchtask.execute("SearchTwo", category,style);
 
-                Log.d("yoon style",style);
                 break;
             case "Search_Style.Search_Color.Search_Color-no": //카테고리, 스타일로 검색
                 so=category+", "+style;
@@ -996,7 +1005,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 category = null; style=null; color = null;
                 Log.d("yoon search","카테고리, 스타일로 검색: "+so);
 
-                startActivity(shopIntent);
+//                startActivity(shopIntent);
 
 
                 makeMenuMsg();
@@ -1020,7 +1029,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                 category = null; style=null; color = null;
 
-                startActivity(shopIntent);
+//                startActivity(shopIntent);
 
 //                chatMessage = new ChatMessage(user.getName()+"님 안녕하세요?\n아래 버튼 메뉴를 선택해주세요\n", true);
 //                chatMessages.add(chatMessage);
@@ -1392,7 +1401,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         @Override
         protected void onPostExecute(String result) {
             pDialog.dismiss();
-            searched_products.clear();
             if (result == null){
                 Log.i("로긴","실패");
 //            Toast.makeText(getApplicationContext(),"실패",Toast.LENGTH_LONG).show();
@@ -1405,12 +1413,13 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                    items = new ArrayList<Product>();
                     if(jArray.length()==0){
                         Log.d("chatBotActivity검색"," 실패");
-//                        ChatMessage chatMessage3 = new ChatMessage("검색 결과가 없습니다.",true);
-//                        chatMessages.add(chatMessage3);
-//                        adapter.notifyDataSetChanged();
+                        ChatMessage chatMessage3 = new ChatMessage("검색 결과가 없습니다.",true);
+                        chatMessages.add(chatMessage3);
+                        adapter.notifyDataSetChanged();
                     }
                     else {
                         Log.i("chatBotActivity검색","성공"+result);
+                        ArrayList<Product> searched_products=new ArrayList<Product>(); //검색된 상품들, 버튼으로 띄울 애덜
                         for (int i = 0; i < 5; i++) {
                             // json배열.getJSONObject(인덱스)
                             JSONObject row = jArray.getJSONObject(i);
@@ -1438,13 +1447,13 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                             Log.i("chat가져온 데이터ㄹㄹ", product.toString());
                         }
 
-//                        ChatMessage chatMessage3 = new ChatMessage(true, true, searched_products);
-//                        chatMessages.add(chatMessage3);
+                        ChatMessage chatMessage3 = new ChatMessage(true, true, searched_products);
+                        chatMessages.add(chatMessage3);
 //                        chatMessage3.getImage().get(0);
 //                        for(int i=0;i<chatMessage3.getImage().size();i++) {
 //                            Log.i("김지선1", chatMessage3.getImage().get(i));
 //                        }
-//                        adapter.notifyDataSetChanged();
+                        adapter.notifyDataSetChanged();
                     }
 
                 } catch (JSONException e) {
@@ -1635,6 +1644,8 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
     public ArrayList<String> btnNames = new ArrayList<String>(); //버튼 이름들
     public chatButton button; //생성된 버튼들
     public View.OnClickListener Listener;
+    Intent productInfoIntent = new Intent(getContext(), ProductInfo.class); //상품 정보 인텐트
+    Intent shopIntent=new Intent(getContext(),ShopActivity.class); //상품 더보기 인텐트
 
 
     public MessageAdapter(Activity context, int resource, List<ChatMessage> objects) {
@@ -1729,12 +1740,31 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             holder.msg.setText(chatMessage.getContent());
             holder.msg.setContentDescription(messages.get(position) + "");
         }
-        else if (layoutResource==R.layout.item_chat_product && messages.get(position).getImage().size()!=0){
-            for(int i=0;i<holder.imageViews.size();i++){
-//                Log.i("김지선2",messages.get(position).getImage().size());
-                String image = messages.get(position).getImage().get(i);
+        else if (layoutResource==R.layout.item_chat_product){
+            ArrayList<Product> p = chatMessage.getProducts();
+            for(int i=0;i<p.size();i++){
+                Log.i("김지선이미지"+position,p.get(i).getImage());
+                String image = p.get(i).getImage();
+                String pName = p.get(i).getName();
+                String pId = ""+p.get(i).getId();
+                String pInofo = p.get(i).toString();
                 Glide.with(MessageAdapter.super.getContext()).load(image).into(holder.imageViews.get(i));
-//                holder.imageViews.get(i).setContentDescription(messages.get(i).getProdutinfo().get(i));
+                holder.imageViews.get(i).setContentDescription("상품명:"+p.get(i).getName()+"가격:"+p.get(i).getPrice());
+                holder.imageViews.get(i).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        productInfoIntent.putExtra("image",image);
+                        productInfoIntent.putExtra("productId",pId);
+                        productInfoIntent.putExtra("info",pInofo);
+                        activity.startActivity(productInfoIntent);
+                    }
+                });
+                holder.product_more.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        activity.startActivity(shopIntent);
+                    }
+                });
             }
         }
 
@@ -1785,6 +1815,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             imageViews.add((ImageView) v.findViewById(R.id.product_img4));
             imageViews.add((ImageView) v.findViewById(R.id.product_img5));
             product_more=(Button)v.findViewById(R.id.product_more);
+
         }
     }
 }

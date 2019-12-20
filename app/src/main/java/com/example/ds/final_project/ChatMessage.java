@@ -50,21 +50,9 @@ public class ChatMessage {
         Product p;
         for(int i=0;i<products.size();i++){
             p=products.get(i);
-            info="상품이름:"+p.getName()+"\n가격"+p.getPrice()+"원"+"\n스타일"+p.getStyle()+"\n색상"+p.getColor()+
-                    "\n사이즈"+p.getSize();
+            info="상품이름:"+p.getName()+"\n가격"+p.getPrice()+"원";
             infoList.add(info);
         }
         return infoList;
-    }
-    public ArrayList<String> getImage(){
-        ArrayList<String> imageList=new ArrayList<String>();
-        String image;
-        Product p;
-        for(int i=0;i<products.size();i++){
-            p=products.get(i);
-            image=p.getImage();
-            imageList.add(image);
-        }
-        return imageList;
     }
 }
