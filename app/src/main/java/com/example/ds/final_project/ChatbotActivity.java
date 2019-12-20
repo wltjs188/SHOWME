@@ -832,7 +832,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     InsertUser2 task = new InsertUser2();
                     task.execute(user.getId(),user.getName(),user.getAddress(),user.getPhoneNum());
                     Log.i("액션USER",ACTION);
-                    
                     chatMessage2 = new ChatMessage("버튼",true);
                     chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
                     adapter.setButton(btnSendListener); //버튼이름 설정
