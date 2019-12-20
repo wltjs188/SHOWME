@@ -1764,6 +1764,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         else if (layoutResource==R.layout.item_chat_product){
             ArrayList<Product> p = chatMessage.getProducts();
             for(int i=0;i<p.size();i++){
+                holder.imageViews.get(i).setVisibility(View.VISIBLE);
                 Log.i("김지선이미지"+position,p.get(i).getImage());
                 String image = p.get(i).getImage();
                 String pName = p.get(i).getName();
