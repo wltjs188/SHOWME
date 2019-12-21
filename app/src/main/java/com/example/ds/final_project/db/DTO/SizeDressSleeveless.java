@@ -28,4 +28,13 @@ public class SizeDressSleeveless extends Size {
     public void setTail(float tail) {
         this.tail = tail;
     }
+
+    public String toString() {
+        String str="";
+        String s1="총기장: "+total +"\n";
+        String s2="허리단면: "+waist+"\n";
+        String s3="밑단면: "+tail+"\n";
+        str=s1+s2+s3;
+        return str;
+    }
 }

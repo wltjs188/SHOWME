@@ -37,4 +37,14 @@ public class SizeDressOriginal extends Size {
     public void setSleeve(float sleeve) {
         this.sleeve = sleeve;
     }
+
+    public String toString() {
+        String str="";
+        String s1="총기장: "+total +"\n";
+        String s2="어깨너비: "+shoulder+"\n";
+        String s3="가슴단면: "+breast+"\n";
+        String s4="소매기장: "+sleeve+"\n";
+        str=s1+s2+s3+s4;
+        return str;
+    }
 }
