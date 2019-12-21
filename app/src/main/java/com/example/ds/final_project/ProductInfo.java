@@ -175,9 +175,15 @@ public class ProductInfo extends AppCompatActivity {
 
     }
     // 사이즈 상세보기 버튼 클릭
+<<<<<<< HEAD
     public void onSizeDetailClicked(View view) {
         TextView msgTextView = findViewById(R.id.msgTextView);
         String msg = "";
+=======
+    public void onSizeDetailClicked(View view){
+        TextView msgTextView = findViewById(R.id.msgTextView);
+        String msg="";
+>>>>>>> 8a1903dabb4bb48bd22dd394dcc9ae4a6ff4a48f
 
         //사이즈 가져오기
 //        String str_size=produ
