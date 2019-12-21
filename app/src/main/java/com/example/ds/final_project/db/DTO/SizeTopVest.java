@@ -2,7 +2,7 @@ package com.example.ds.final_project.db.DTO;
 
 public class SizeTopVest extends Size {
     String total;
-    String sholder;
+    String shoulder;
     String breast;
 
     public String getTotal() {
@@ -13,12 +13,12 @@ public class SizeTopVest extends Size {
         this.total = total;
     }
 
-    public String getSholder() {
-        return sholder;
+    public String getShoulder() {
+        return shoulder;
     }
 
-    public void setSholder(String sholder) {
-        this.sholder = sholder;
+    public void setShoulder(String shoulder) {
+        this.shoulder = shoulder;
     }
 
     public String getBreast() {
@@ -27,5 +27,14 @@ public class SizeTopVest extends Size {
 
     public void setBreast(String breast) {
         this.breast = breast;
+    }
+
+    @Override
+    public String toString() {
+        String str="";
+        str+="총장: "+getTotal();
+        str+="\n어깨너비: "+getShoulder();
+        str+="\n가슴단면: "+getBreast();
+        return str;
     }
 }

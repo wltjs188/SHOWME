@@ -19,4 +19,12 @@ public class SizeTopSleeveless extends Size {
     public void setBreast(int breast) {
         this.breast = breast;
     }
+
+    @Override
+    public String toString() {
+        String str="";
+        str+="총장: "+getTotal();
+        str+="\n가슴단면: "+getBreast();
+        return str;
+    }
 }
