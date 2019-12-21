@@ -82,7 +82,8 @@ public class ProductInfo extends AppCompatActivity {
 //    private String productURL=" ";
     private String info=" ";
     private String image=" ";
-
+    private String size=" ";
+    private String sizeTable=" ";
     //수신자 정보
     String phoneName = "";
     String phoneNo = "";
@@ -126,6 +127,9 @@ public class ProductInfo extends AppCompatActivity {
         Url+=productId;
         info=intent.getStringExtra("info");
         image=intent.getStringExtra("image");
+        size=intent.getStringExtra("size");
+        sizeTable=intent.getStringExtra("sizeTable");
+        Log.d("sizeTable",sizeTable);
 
         productAlias=intent.getStringExtra("alias");
         if(productAlias==""||productAlias==null)
@@ -156,7 +160,7 @@ public class ProductInfo extends AppCompatActivity {
                 infoBool=true;
                 Log.i("관심상품등록",uuid+productAlias);
                 InsertWishProduct task = new InsertWishProduct();
-                task.execute("InsertWishProduct",uuid,productAlias,productId,image,info);
+                task.execute("InsertWishProduct",uuid,productAlias,productId,image,info,size,sizeTable);
 //                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
                 Log.i("관심2",productAlias);
                 WishBtnChanged(infoBool);
@@ -174,53 +178,63 @@ public class ProductInfo extends AppCompatActivity {
 
     }
     // 사이즈 상세보기 버튼 클릭
-    public void onSizeDetailClicked(View view){
+
+    public void onSizeDetailClicked(View view) {
         TextView msgTextView = findViewById(R.id.msgTextView);
-        String msg="";
+        String msg = "";
 
         //사이즈 가져오기
-        String str_size="s,m,l";
-        String[] sizes=str_size.split(",");
-        if(sizes.length<=0){
-            msg="사이즈 정보가 존재하지 않습니다.";
+//        String str_size=produ
+        Log.d("사이즈1",size);
+        size.trim();
+        if(size == null || size == ""|| size.equals("null")){
+            Log.d("사이즈 ","업ㅅ");
+            msg = "사이즈 정보가 존재하지 않습니다.";
             msgTextView.setText(msg);
-        }else {
-            msg="사이즈를 선택해주세요.";
-            msgTextView.setText(msg);
-
-            LinearLayout layout=findViewById(R.id.sizesLayout);
-            int id=0;
-            for (String size : sizes) {
-                Button btn = new Button(this);
-
-            // setId 버튼에 대한 키값
-
-                btn.setId(id);
-
-                btn.setText(size);
-
-                btn.setLayoutParams(params);
-    ;
-
-
-                btn.setOnClickListener(new View.OnClickListener() {
-
-                    public void onClick(View v) {
-
-
-                    }
-
-                });
-
-
-
-                //버튼 add
-
-                layout.addView(btn);
-                id++;
-
-            }
         }
+        else {
+            Log.d("사이즈 ","있음 ");
+            String[] sizes = size.split(",");
+            if (sizes.length <= 0||sizes==null) {
+                msg = "사이즈 정보가 존재하지 않습니다.";
+                msgTextView.setText(msg);
+            } else {
+                Log.d("사이즈",sizes.toString());
+                msg = "사이즈를 선택해주세요.";
+                msgTextView.setText(msg);
+
+                LinearLayout layout = findViewById(R.id.sizesLayout);
+                int id = 0;
+                for (String size : sizes) {
+                    Button btn = new Button(this);
+
+                    // setId 버튼에 대한 키값
+
+                    btn.setId(id);
+
+                    btn.setText(size);
+
+                    btn.setLayoutParams(params);
+                    ;
+
+
+                    btn.setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+
+
+                        }
+
+                    });
+
+
+                    //버튼 add
+
+                    layout.addView(btn);
+                    id++;
+
+                }
+            }
 //        for (int j = 0; j <= 5; j++) {
 //
 //            // LinearLayout 생성
@@ -283,6 +297,8 @@ public class ProductInfo extends AppCompatActivity {
 //            lm.addView(ll);
 //
 //        }
+        }
+
     }
     // 관심상품버튼 클릭
     public void onWishBtnClicked(View view){
@@ -690,7 +706,7 @@ public class ProductInfo extends AppCompatActivity {
                     }
 
                 } catch (JSONException e) {
-                    Log.d("error : ", e.getMessage());
+                    Log.d("관심상품 등록 여부 확인 : ", e.getMessage());
                 }
             }
             WishBtnChanged(infoBool);
@@ -715,8 +731,8 @@ public class ProductInfo extends AppCompatActivity {
             String id = (String)params[3];
             String image = (String)params[4];
             String info = (String)params[5];
-
-
+            String size= (String)params[6];
+            String sizeTable= (String)params[7];
 
             try {
                 HttpParams httpParameters = new BasicHttpParams();
@@ -743,6 +759,8 @@ public class ProductInfo extends AppCompatActivity {
                 postParameters.add(new BasicNameValuePair("id", id));
                 postParameters.add(new BasicNameValuePair("image", image));
                 postParameters.add(new BasicNameValuePair("info", info));
+                postParameters.add(new BasicNameValuePair("size", size));
+                postParameters.add(new BasicNameValuePair("sizeTable", sizeTable));
 
                 //파라미터 보내기
                 UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);

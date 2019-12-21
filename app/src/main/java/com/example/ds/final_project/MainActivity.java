@@ -218,8 +218,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            Log.d("??","?");
-            Log.d("??",result);
+//            Log.d("??","?");
+//            Log.d("??",result);
 
 //            pDialog.dismiss();
             if (result == null||result==""){
@@ -335,6 +335,9 @@ public class MainActivity extends AppCompatActivity {
     public void onShopClicked(View view) { startActivity(shopIntent); }
 
     public void onDBTestClicked(View view){ //DB테스트
+        Intent i=new Intent(getApplicationContext(),TestActivity.class);
+        startActivity(i);
+
     }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,

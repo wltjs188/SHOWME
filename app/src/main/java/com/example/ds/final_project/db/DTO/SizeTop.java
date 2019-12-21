@@ -37,4 +37,14 @@ public class SizeTop extends Size {
     public void setSleeve(float sleeve) {
         this.sleeve = sleeve;
     }
+
+    @Override
+    public String toString() {
+        String str="";
+        str+="총장: "+getTotal();
+        str+="\n어깨너비: "+getShoulder();
+        str+="\n가슴단면: "+getBreast();
+        str+="\n소매길이: "+getSleeve();
+        return str;
+    }
 }

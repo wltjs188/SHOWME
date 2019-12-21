@@ -28,4 +28,13 @@ public class SizeSkirt extends Size {
     public void setTail(float tail) {
         this.tail = tail;
     }
+
+    @Override
+    public String toString() {
+        String str="";
+        str+="총장: "+getTotal();
+        str+="\n허리단면: "+getWaist();
+        str+="\n밑단단면: "+getTail();
+        return str;
+    }
 }

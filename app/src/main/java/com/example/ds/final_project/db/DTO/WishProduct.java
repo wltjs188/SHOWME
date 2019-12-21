@@ -6,6 +6,7 @@ public class WishProduct {
     String id;
     String image;
     String size;
+    String sizeTable;
 
     public String getSize() {
         return size;
@@ -55,5 +56,13 @@ public class WishProduct {
 
     public void setAlias(String alias) {
         this.alias = alias;
+    }
+
+    public String getSizeTable() {
+        return sizeTable;
+    }
+
+    public void setSizeTable(String sizeTable) {
+        this.sizeTable = sizeTable;
     }
 }

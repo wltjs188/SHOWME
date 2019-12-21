@@ -161,15 +161,13 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     private final int WISHLIST_ACTIVITY=300;
 
     ArrayList<Product> searched_products=new ArrayList<Product>(); //검색된 상품들, 버튼으로 띄울 애덜
+
+    //검색 정보
     Product remember;
-   //검색 정보
     String category = null;
     String style=null;
     String color = null;
-//    private String mJsonString;
-//    String ShareType = null; //공유타입(문자/카톡)
-//    String fname= null; //공유할 사람 이름
-//    String fnumber=null; //공유할 사람 번호
+
     String smsg="";//공유할 메세지 내용
     String sproduct= null; //공유할 관심상품
     ArrayList<String> wishProductNames;
@@ -343,9 +341,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
         aiDataService = new AIDataService(this,config);
         aiRequest = new AIRequest();
-//        aiDataService2 = new AIDataService(this,config2);
-//        aiRequest2 = new AIRequest();
-
 
         //전송버튼
         btnSendListener = new View.OnClickListener() {
@@ -356,7 +351,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 if (editText.getText().toString().trim().equals("") && v.getId()==R.id.btn_chat_send) {
                     tts.speak("텍스트를 입력해주세요.",TextToSpeech.QUEUE_FLUSH, null);
                 }
-//                else if(editText.getText().toString().length() !=8 && chatMessages.get(chatMessages.size()-1).toString().contains("번호")){
+//                else if(editText.getText().toString().length() !=8 && chatMessages.get(chatMessages.()-1).toString().contains("번호")){
 //                    Toast.makeText(getApplicationContext(),"010을 제외한 8자리 번호를 입력해주세요.",Toast.LENGTH_LONG).show();
 //                }
                 else {
@@ -652,15 +647,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         }
     }
 
-
-
-    //리메뉴
-//    protected String getRemenu(Result result){
-//        responseMessageSecond = (ResponseMessage.ResponseSpeech)result.getFulfillment().getMessages().get(1);
-//        remenu=responseMessageSecond.getSpeech().get(0);
-//        result.getContexts().clear();
-//        return remenu;
-//    }
     //메뉴 메세지
     protected void makeMenuMsg(){
 
@@ -1452,6 +1438,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                             String color=row.getString("COLOR");
                             String size=row.getString("SIZE");
                             int price=row.getInt("PRICE");
+                            String realcolor=row.getString("REALCOLOR");
+                            String sizeTable=row.getString("SIZE_TABLE");
 
                             Product product=new Product();
                             product.setName(name);
@@ -1462,6 +1450,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                             product.setImage(image);
                             product.setStyle(style);
                             product.setPrice(price);
+                            product.setReal_color(realcolor);
+                            product.setSize_table(sizeTable);
                             searched_products.add(product);
 
                             Log.i("chat가져온 데이터ㄹㄹ", product.toString());
@@ -1770,6 +1760,9 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                 String pName = p.get(i).getName();
                 String pId = ""+p.get(i).getId();
                 String pInofo = p.get(i).toString();
+                String pSize = p.get(i).getSize();
+                String pSizeTable=p.get(i).getSize_table();
+
                 Glide.with(MessageAdapter.super.getContext()).load(image).into(holder.imageViews.get(i));
                 holder.imageViews.get(i).setContentDescription("상품명:"+p.get(i).getName()+"가격:"+p.get(i).getPrice());
                 holder.imageViews.get(i).setOnClickListener(new View.OnClickListener() {
@@ -1778,6 +1771,8 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                         productInfoIntent.putExtra("image",image);
                         productInfoIntent.putExtra("productId",pId);
                         productInfoIntent.putExtra("info",pInofo);
+                        productInfoIntent.putExtra("size",pSize);
+                        productInfoIntent.putExtra("sizeTable",pSizeTable);
                         activity.startActivity(productInfoIntent);
                     }
                 });
