@@ -351,7 +351,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 if (editText.getText().toString().trim().equals("") && v.getId()==R.id.btn_chat_send) {
                     tts.speak("텍스트를 입력해주세요.",TextToSpeech.QUEUE_FLUSH, null);
                 }
-//                else if(editText.getText().toString().length() !=8 && chatMessages.get(chatMessages.size()-1).toString().contains("번호")){
+//                else if(editText.getText().toString().length() !=8 && chatMessages.get(chatMessages.()-1).toString().contains("번호")){
 //                    Toast.makeText(getApplicationContext(),"010을 제외한 8자리 번호를 입력해주세요.",Toast.LENGTH_LONG).show();
 //                }
                 else {
@@ -1439,6 +1439,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                             String size=row.getString("SIZE");
                             int price=row.getInt("PRICE");
                             String realcolor=row.getString("REALCOLOR");
+                            String sizeTable=row.getString("SIZE_TABLE");
 
                             Product product=new Product();
                             product.setName(name);
@@ -1450,6 +1451,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                             product.setStyle(style);
                             product.setPrice(price);
                             product.setReal_color(realcolor);
+                            product.setSize_table(sizeTable);
                             searched_products.add(product);
 
                             Log.i("chat가져온 데이터ㄹㄹ", product.toString());
@@ -1759,6 +1761,8 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                 String pId = ""+p.get(i).getId();
                 String pInofo = p.get(i).toString();
                 String pSize = p.get(i).getSize();
+                String pSizeTable=p.get(i).getSize_table();
+
                 Glide.with(MessageAdapter.super.getContext()).load(image).into(holder.imageViews.get(i));
                 holder.imageViews.get(i).setContentDescription("상품명:"+p.get(i).getName()+"가격:"+p.get(i).getPrice());
                 holder.imageViews.get(i).setOnClickListener(new View.OnClickListener() {
@@ -1768,6 +1772,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                         productInfoIntent.putExtra("productId",pId);
                         productInfoIntent.putExtra("info",pInofo);
                         productInfoIntent.putExtra("size",pSize);
+                        productInfoIntent.putExtra("sizeTable",pSizeTable);
                         activity.startActivity(productInfoIntent);
                     }
                 });

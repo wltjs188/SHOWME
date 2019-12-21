@@ -61,6 +61,7 @@ public class ShopActivity extends AppCompatActivity {
     ArrayList<String> images = new ArrayList<String>(); //상품 옵션 대표 이미지
     ArrayList<String> ids = new ArrayList<String>();
     ArrayList<String> sizes = new ArrayList<String>();
+    ArrayList<String> sizeTables = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +111,7 @@ public class ShopActivity extends AppCompatActivity {
                 productInfoIntent.putExtra("productId",ids.get(position));
                 productInfoIntent.putExtra("info",infos.get(position));
                 productInfoIntent.putExtra("size",sizes.get(position));
+                productInfoIntent.putExtra("sizeTable",sizeTables.get(position));
                 startActivity(productInfoIntent);
             }
         });
@@ -255,6 +257,7 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
                         String color=row.getString("COLOR");
                         String size=row.getString("SIZE");
                         int price=row.getInt("PRICE");
+                        String sizeTable=row.getString("SIZE_TABLE");
 
                         product.setName(name);
                         product.setId(id);
@@ -264,12 +267,13 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
                         product.setImage(image);
                         product.setStyle(style);
                         product.setPrice(price);
-
+                        product.setSize_table(sizeTable);
                         products.add(product);
                         infos.add(product.toString());
                         images.add(product.getImage());
                         ids.add(product.getId()+"");
                         sizes.add(product.getSize());
+                        sizeTables.add(product.getSize_table());
                         Log.i("shop가져온 데이터><", product.toString());
 
                     }

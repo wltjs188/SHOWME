@@ -83,6 +83,7 @@ public class ProductInfo extends AppCompatActivity {
     private String info=" ";
     private String image=" ";
     private String size=" ";
+    private String sizeTable=" ";
     //수신자 정보
     String phoneName = "";
     String phoneNo = "";
@@ -127,6 +128,8 @@ public class ProductInfo extends AppCompatActivity {
         info=intent.getStringExtra("info");
         image=intent.getStringExtra("image");
         size=intent.getStringExtra("size");
+        sizeTable=intent.getStringExtra("sizeTable");
+        Log.d("sizeTable",sizeTable);
 
         productAlias=intent.getStringExtra("alias");
         if(productAlias==""||productAlias==null)
@@ -157,7 +160,7 @@ public class ProductInfo extends AppCompatActivity {
                 infoBool=true;
                 Log.i("관심상품등록",uuid+productAlias);
                 InsertWishProduct task = new InsertWishProduct();
-                task.execute("InsertWishProduct",uuid,productAlias,productId,image,info,size);
+                task.execute("InsertWishProduct",uuid,productAlias,productId,image,info,size,sizeTable);
 //                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
                 Log.i("관심2",productAlias);
                 WishBtnChanged(infoBool);
@@ -729,7 +732,7 @@ public class ProductInfo extends AppCompatActivity {
             String image = (String)params[4];
             String info = (String)params[5];
             String size= (String)params[6];
-
+            String sizeTable= (String)params[7];
 
             try {
                 HttpParams httpParameters = new BasicHttpParams();
@@ -757,6 +760,7 @@ public class ProductInfo extends AppCompatActivity {
                 postParameters.add(new BasicNameValuePair("image", image));
                 postParameters.add(new BasicNameValuePair("info", info));
                 postParameters.add(new BasicNameValuePair("size", size));
+                postParameters.add(new BasicNameValuePair("sizeTable", sizeTable));
 
                 //파라미터 보내기
                 UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);
