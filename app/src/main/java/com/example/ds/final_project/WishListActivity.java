@@ -57,9 +57,11 @@ public class WishListActivity extends AppCompatActivity {
     ArrayList<String> infos=new ArrayList<String>(); //상품 상세 정보
     ArrayList<String> images=new ArrayList<String>(); //상품 옵션 대표 이미지
     ArrayList<String> aliases=new ArrayList<String>(); //네이밍
+    ArrayList<String> sizes=new ArrayList<String>(); //네이밍
 
     int pos;
     String alias;
+    String size;
     String Name;
     int page = 0;
     private GestureDetector gDetector;
@@ -94,6 +96,7 @@ public class WishListActivity extends AppCompatActivity {
                 String info=infos.get(position);
                 String image=images.get(position);
                 alias=aliases.get(position);
+                size=sizes.get(position);
                // productInfoIntent.putExtra("info", infos.get(position));
                 PopupMenu popup= new PopupMenu(getApplicationContext(), v);//v는 클릭된 뷰를 의미
 
@@ -108,6 +111,7 @@ public class WishListActivity extends AppCompatActivity {
                                 productInfoIntent.putExtra("info", info);
                                 productInfoIntent.putExtra("image", image);
                                 productInfoIntent.putExtra("alias",alias);
+                                productInfoIntent.putExtra("size",size);
                                 Log.d("챈",aliases.get(position));
                                 startActivity(productInfoIntent);
                                 break;
@@ -269,18 +273,21 @@ public class WishListActivity extends AppCompatActivity {
                             String id=row.getString("ID");
                             String image=row.getString("IMAGE");
                             String info=row.getString("INFO");
+                            String size =row.getString("SIZE");
 
                             wishProduct.setUid(uid);
                             wishProduct.setId(id);
                             wishProduct.setAlias(alias);
                             wishProduct.setImage(image);
                             wishProduct.setInfo(info);
+                            wishProduct.setSize(size);
                             Log.d("가져온 데이터",wishProduct.getInfo());
                             productIds.add(id);
                             images.add(image);
                             infos.add(info);
                             aliases.add(alias);
                             wishProducts.add(wishProduct);
+                            sizes.add(size);
                         }
                     }
                     adapter.notifyDataSetChanged();

@@ -60,8 +60,7 @@ public class ShopActivity extends AppCompatActivity {
     ArrayList<String> infos = new ArrayList<String>(); //상품 상세 정보
     ArrayList<String> images = new ArrayList<String>(); //상품 옵션 대표 이미지
     ArrayList<String> ids = new ArrayList<String>();
-    private GestureDetector gDetector;
-
+    ArrayList<String> sizes = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +109,7 @@ public class ShopActivity extends AppCompatActivity {
                 productInfoIntent.putExtra("image",images.get(position));
                 productInfoIntent.putExtra("productId",ids.get(position));
                 productInfoIntent.putExtra("info",infos.get(position));
+                productInfoIntent.putExtra("size",sizes.get(position));
                 startActivity(productInfoIntent);
             }
         });
@@ -269,6 +269,7 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
                         infos.add(product.toString());
                         images.add(product.getImage());
                         ids.add(product.getId()+"");
+                        sizes.add(product.getSize());
                         Log.i("shop가져온 데이터><", product.toString());
 
                     }
