@@ -55,7 +55,7 @@ public class ServertestActivity extends AppCompatActivity {
 
 
         getList a = new getList();
-        a.execute("DeleteWishProduct","aaaa");
+        a.execute("GetSizeDressOriginal","aaaa");
     }
 
 
@@ -90,14 +90,14 @@ public class ServertestActivity extends AppCompatActivity {
                 String postURL = "http://52.78.143.125:8080/showme/";
 
                 // 로컬서버
-//            String postURL = "http://10.0.2.2:8080/showme/InsertUser";
+//            String postURL = "http://10.0.2.2:8080/showme/";
 
                 HttpPost post = new HttpPost(postURL+project);
                 //서버에 보낼 파라미터
                 ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
                 //파라미터 추가하기
-                postParameters.add(new BasicNameValuePair("uid", uid));
-//            postParameters.add(new BasicNameValuePair("uid", uid));
+                postParameters.add(new BasicNameValuePair("id", "942363"));
+                postParameters.add(new BasicNameValuePair("size", "FREE"));
 //            postParameters.add(new BasicNameValuePair("infoName", infoName));
 //            postParameters.add(new BasicNameValuePair("infoValue", infoValue));
 //            for(int i=0;i<params.length;i++){
@@ -133,14 +133,29 @@ public class ServertestActivity extends AppCompatActivity {
                     for (int i = 0; i < jArray.length(); i++) {
                         // json배열.getJSONObject(인덱스)
                         JSONObject row = jArray.getJSONObject(i);
-                        Product dto = new Product();
-                        dto.setId(row.getInt("ID"));
-                        dto.setName(row.getString("NAME"));
+                        //float 으로 저장
+//                        float total=Float.valueOf(row.getString("TOTAL"));
+//                        float WAIST=Float.valueOf(row.getString("WAIST"));
+//                        float BREAST=Float.valueOf(row.getString("BREAST"));
+//                        float CROTCH=Float.valueOf(row.getString("CROTCH"));
+//                        float TAIL=Float.valueOf(row.getString("TAIL"));
+                        //string으로 저장
+//                        String total=row.getString("TOTAL");
+//                        String WAIST=row.getString("WAIST");
+//                        String BREAST=row.getString("BREAST");
+//                        String CROTCH=row.getString("CROTCH");
+//                        String TAIL=row.getString("TAIL");
 
-                        // ArrayList에 add
-                        items.add(dto);
-                        Log.i("가져온 데이터", dto.getId() + "");
-                        Log.i("가져온 데이터", dto.getName() + "");
+//                        Log.i("가져온정보",total+","+WAIST+","+TAIL);
+
+//                        Product dto = new Product();
+//                        dto.setId(row.getInt("ID"));
+//                        dto.setName(row.getString("NAME"));
+//
+//                        // ArrayList에 add
+//                        items.add(dto);
+//                        Log.i("가져온 데이터", dto.getId() + "");
+//                        Log.i("가져온 데이터", dto.getName() + "");
                     }
                 }
                 if(responsePOST.getStatusLine().getStatusCode()==200){
