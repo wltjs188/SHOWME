@@ -706,7 +706,7 @@ public class ProductInfo extends AppCompatActivity {
                     }
 
                 } catch (JSONException e) {
-                    Log.d("error : ", e.getMessage());
+                    Log.d("관심상품 등록 여부 확인 : ", e.getMessage());
                 }
             }
             WishBtnChanged(infoBool);
