@@ -20,6 +20,10 @@ public class Product {
     String ave_dilevery;
     String size_table;
 
+
+
+    String real_color;
+
     public Product(){
 
         size=null;
@@ -169,6 +173,14 @@ public class Product {
     public void setSize_table(String size_table) {
         this.size_table = size_table;
     }
+
+    public String getReal_color() {
+        return real_color;
+    }
+
+    public void setReal_color(String real_color) {
+        this.real_color = real_color;
+    }
     public String toString() {
         String str="";
         String s1="상품명: "+name +"\n";
@@ -176,7 +188,7 @@ public class Product {
         String s3="가격: "+price+"원\n";
         String s4=(size==null||size=="null"?"":"사이즈: "+ size+"\n");
         String s5=(brand==null||brand=="null"?"":"브랜드명: "+ brand+"\n");
-        String s6=color==null||color=="null"?"":"색상: "+ color+"\n";
+        String s6=real_color==null||real_color=="null"?"":"색상: "+ real_color+"\n";
         String s7=fabric==null||fabric=="null"?"":"소재: "+ fabric+"\n";
         String s8=texture==null||texture=="null"?"":"촉감: "+ texture+"\n";
         String s9=stretch==null||stretch=="null"?"":"신축성: "+ stretch+"\n";
