@@ -1,6 +1,7 @@
 package com.example.ds.final_project;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +28,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.*;
 import com.bumptech.glide.Glide;
+import com.example.ds.final_project.db.DTO.Size;
+import com.example.ds.final_project.db.DTO.SizeSkirt;
 import com.example.ds.final_project.db.DTO.User;
 import com.example.ds.final_project.db.DTO.WishProduct;
 import com.example.ds.final_project.db.DAO.DeleteWishProduct;
@@ -58,6 +61,8 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,6 +93,10 @@ public class ProductInfo extends AppCompatActivity {
     String phoneName = "";
     String phoneNo = "";
 
+    Button sizeTableDetail;
+    LinearLayout layout ;
+    LinearLayout btnLayout;
+
     //통신사 정보
     String ret_operator = null;
     String MMSCenterUrl = null;
@@ -111,6 +120,10 @@ public class ProductInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_info);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
+
+        sizeTableDetail=findViewById(R.id.sizeTableDetail);
+        layout = findViewById(R.id.sizesLayout);
+        btnLayout=findViewById(R.id.btnLayout);
 
         Gson gson = new GsonBuilder().create();
         if(!(getPreferences("USER")==null||getPreferences("USER")=="")){
@@ -149,6 +162,64 @@ public class ProductInfo extends AppCompatActivity {
         wishCheck=(Button) findViewById(R.id.wishCheck);
         wishCheck.setContentDescription("관심상품등록");
 
+
+        TextView msgTextView = findViewById(R.id.msgTextView);
+        String msg = "";
+
+        //사이즈 가져오기
+//        String str_size=produ
+        Log.d("사이즈1",size);
+        size.trim();
+        if(size == null || size == ""|| size.equals("null")){
+            Log.d("사이즈 ","업ㅅ");
+            msg = "사이즈 정보가 존재하지 않습니다.";
+            msgTextView.setText(msg);
+        }
+        else {
+            Log.d("사이즈 ","있음 ");
+            String[] sizes = size.split(",");
+            if (sizes.length <= 0||sizes==null) {
+                msg = "사이즈 정보가 존재하지 않습니다.";
+                msgTextView.setText(msg);
+            } else {
+                Log.d("사이즈",sizes.toString());
+                msg = "사이즈를 선택해주세요.";
+                msgTextView.setText(msg);
+
+                int id = 0;
+                for (String size : sizes) {
+                    Button btn = new Button(this);
+
+                    // setId 버튼에 대한 키값
+
+                    btn.setId(id);
+
+                    btn.setText(size);
+
+                    btn.setLayoutParams(params);
+
+                    btn.setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+                            GetSizeTable task=new GetSizeTable();
+                            Log.d("sizeTable: ",sizeTable+","+productId+", "+size);
+
+                            task.execute(sizeTable,productId,size);
+
+                        }
+
+                    });
+
+                    //버튼 add
+                    btnLayout.addView(btn);
+
+                    id++;
+
+                }
+            }
+
+        }
+//        layout.addView(btnLayout);
         //등록된 상품인지 확인
         CheckWishProduct task = new CheckWishProduct();
         task.execute( "CheckWishProduct",uuid,productId);
@@ -180,124 +251,17 @@ public class ProductInfo extends AppCompatActivity {
     // 사이즈 상세보기 버튼 클릭
 
     public void onSizeDetailClicked(View view) {
-        TextView msgTextView = findViewById(R.id.msgTextView);
-        String msg = "";
-
-        //사이즈 가져오기
-//        String str_size=produ
-        Log.d("사이즈1",size);
-        size.trim();
-        if(size == null || size == ""|| size.equals("null")){
-            Log.d("사이즈 ","업ㅅ");
-            msg = "사이즈 정보가 존재하지 않습니다.";
-            msgTextView.setText(msg);
+        String btnText = sizeTableDetail.getText().toString();
+        if(btnText.equals("사이즈표 상세보기")){
+            sizeTableDetail.setText("사이즈표 닫기");
+            layout.setVisibility(View.VISIBLE);
         }
-        else {
-            Log.d("사이즈 ","있음 ");
-            String[] sizes = size.split(",");
-            if (sizes.length <= 0||sizes==null) {
-                msg = "사이즈 정보가 존재하지 않습니다.";
-                msgTextView.setText(msg);
-            } else {
-                Log.d("사이즈",sizes.toString());
-                msg = "사이즈를 선택해주세요.";
-                msgTextView.setText(msg);
-
-                LinearLayout layout = findViewById(R.id.sizesLayout);
-                int id = 0;
-                for (String size : sizes) {
-                    Button btn = new Button(this);
-
-                    // setId 버튼에 대한 키값
-
-                    btn.setId(id);
-
-                    btn.setText(size);
-
-                    btn.setLayoutParams(params);
-                    ;
-
-
-                    btn.setOnClickListener(new View.OnClickListener() {
-
-                        public void onClick(View v) {
-
-
-                        }
-
-                    });
-
-
-                    //버튼 add
-
-                    layout.addView(btn);
-                    id++;
-
-                }
-            }
-//        for (int j = 0; j <= 5; j++) {
-//
-//            // LinearLayout 생성
-//
-//            LinearLayout ll = new LinearLayout(context);
-//
-//            ll.setOrientation(LinearLayout.HORIZONTAL);
-//
-//
-//
-//
-//            // TextView 생성
-//
-//            TextView tvAge = new TextView(this);
-//
-//            tvAge.setText("   Age" + j + "  ");
-//
-//            ll.addView(tvAge);
-//
-//
-//
-//            // 버튼 생성
-//
-//            final Button btn = new Button(this);
-//
-//            // setId 버튼에 대한 키값
-//
-//            btn.setId(j + 1);
-//
-//            btn.setText("Apply");
-//
-//            btn.setLayoutParams(params);
-//
-//
-//
-//            final int position = j;
-//
-//
-//
-//            btn.setOnClickListener(new OnClickListener() {
-//
-//                public void onClick(View v) {
-//
-//                    Log.d("log", "position :" + position);
-//
-//                    Toast.makeText(getApplicationContext(), "클릭한 position:" + position, Toast.LENGTH_LONG).show();
-//
-//                }
-//
-//            });
-//
-//
-//
-//            //버튼 add
-//
-//            ll.addView(btn);
-//
-//            //LinearLayout 정의된거 add
-//
-//            lm.addView(ll);
-//
-//        }
+        else{
+            sizeTableDetail.setText("사이즈표 상세보기");
+            layout.setVisibility(View.GONE);
         }
+
+
 
     }
     // 관심상품버튼 클릭
@@ -829,6 +793,134 @@ public class ProductInfo extends AppCompatActivity {
         infoBool=false;
         WishBtnChanged(infoBool);
         Toast.makeText(getApplicationContext(),"별칭이 중복되어 관심상품 등록에 실패했습니다.",Toast.LENGTH_LONG).show();
+    }
+
+    //사이즈표 가져오는 클래스
+    private class GetSizeTable extends AsyncTask<String, Void,String> {
+        String LoadData;
+        private ProgressDialog pDialog;
+        @Override
+        protected void onPreExecute() {
+            pDialog = new ProgressDialog(ProductInfo.this);
+            pDialog.setMessage("검색중입니다..");
+            pDialog.setCancelable(false);
+//            pDialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            // TODO Auto-generated method stub
+
+            String project = (String) params[0];
+            String id = (String) params[1];
+            String size = (String) params[2];
+            switch (project){
+                case "SIZE_TOP":
+                    project="GetSizeTop";
+                    break;
+                case "SIZE_SKIRT":
+                    project="GetSizeSkirt";
+                    break;
+            }
+            try {
+                HttpParams httpParameters = new BasicHttpParams();
+                HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
+
+                HttpClient client = new DefaultHttpClient(httpParameters);
+
+                HttpConnectionParams.setConnectionTimeout(httpParameters, 7000);
+                HttpConnectionParams.setSoTimeout(httpParameters, 7000);
+                HttpConnectionParams.setTcpNoDelay(httpParameters, true);
+
+                // 주소 : aws서버
+                String postURL = "http://52.78.143.125:8080/showme/";
+
+                // 로컬서버
+//            String postURL = "http://10.0.2.2:8080/showme/InsertUser";
+
+                HttpPost post = new HttpPost(postURL + project);
+                //서버에 보낼 파라미터
+                ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+                //파라미터 추가하기
+                postParameters.add(new BasicNameValuePair("id", id));
+                postParameters.add(new BasicNameValuePair("size", size));
+
+
+                //파라미터 보내기
+                UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);
+                post.setEntity(ent);
+
+                long startTime = System.currentTimeMillis();
+
+                HttpResponse responsePOST = client.execute(post);
+
+                long elapsedTime = System.currentTimeMillis() - startTime;
+                Log.v("debugging", elapsedTime + " ");
+
+
+                HttpEntity resEntity = responsePOST.getEntity();
+                if (resEntity != null) {
+//                ToastMessage("로그인 성공");
+
+                    LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
+                    Log.i("chat가져온 데이터", LoadData);
+                    return LoadData;
+
+                }
+                if (responsePOST.getStatusLine().getStatusCode() == 200) {
+                    Log.d("search","오류없음");
+
+                } else {
+                    Log.d("search","오류있음");
+                    return null;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            pDialog.dismiss();
+            if (result == null){
+                Log.i("로긴","실패");
+//            Toast.makeText(getApplicationContext(),"실패",Toast.LENGTH_LONG).show();
+            }
+            else {
+                try {
+                    JSONObject jsonObj = new JSONObject(LoadData);
+                    // json객체.get("변수명")
+                    JSONArray jArray = (JSONArray) jsonObj.get("getData");
+//                    items = new ArrayList<Product>();
+                    if(jArray.length()==0){
+                        Log.d("검색"," 실패");
+                        Toast.makeText(getApplicationContext(),"검색된 상품이 없습니다.",Toast.LENGTH_LONG).show();
+
+
+                    }else {
+                        for (int i = 0; i < jArray.length(); i++) {
+                            // json배열.getJSONObject(인덱스)
+                            JSONObject row = jArray.getJSONObject(i);
+
+                            String st=row.getString("Size");
+
+                            Log.i("sizeTable: ", st);
+
+                        }
+
+                    }
+
+                } catch (JSONException e) {
+                    Log.d("검색 오류 : ", e.getMessage());
+                }
+
+            }
+        }
+
     }
 
 }

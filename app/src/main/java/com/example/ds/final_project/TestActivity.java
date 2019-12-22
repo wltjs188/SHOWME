@@ -8,7 +8,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.ds.final_project.db.DTO.Product;
+import com.example.ds.final_project.db.DTO.Size;
 import com.example.ds.final_project.db.DTO.SizeSkirt;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -38,10 +41,11 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        GetSizeSkirt task=new GetSizeSkirt();
-        task.execute("GetSizeSkirt","710130","FREE");
+        GetSizeTable task=new GetSizeTable();
+        task.execute("GetSizeSkirt","1209885","FREE");
     }
-    private class GetSizeSkirt extends AsyncTask<String, Void,String> {
+
+    private class GetSizeTable extends AsyncTask<String, Void,String> {
         String LoadData;
         private ProgressDialog pDialog;
         @Override
@@ -60,8 +64,6 @@ public class TestActivity extends AppCompatActivity {
             String project = (String) params[0];
             String id = (String) params[1];
             String size = (String) params[2];
-
-
 
 
             try {
@@ -143,20 +145,15 @@ public class TestActivity extends AppCompatActivity {
 
 
                     }else {
-//                    Log.i("검색","성공"+result);
-                        SizeSkirt sizeSkirt=new SizeSkirt();
                         for (int i = 0; i < jArray.length(); i++) {
                             // json배열.getJSONObject(인덱스)
                             JSONObject row = jArray.getJSONObject(i);
 
-                            float total = BigDecimal.valueOf(row.getDouble("TOTAL")).floatValue();
-                            float tail = BigDecimal.valueOf(row.getDouble("TAIL")).floatValue();
-                            float waist = BigDecimal.valueOf(row.getDouble("WAIST")).floatValue();
+                            String sizeTable=row.getString("Size");
 
-                            sizeSkirt.setTotal(total);
-                            sizeSkirt.setTail(tail);
-                            sizeSkirt.setWaist(waist);
-                            Log.i("shop가져온 데이터><", sizeSkirt.toString());
+                            Log.i("shop가져온 데이터><", sizeTable);
+
+
 
                         }
 
