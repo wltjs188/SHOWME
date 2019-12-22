@@ -209,13 +209,14 @@ public class ProductInfo extends AppCompatActivity {
 
                     //버튼 add
                     btnLayout.addView(btn);
+
                     id++;
 
                 }
             }
 
         }
-
+//        layout.addView(btnLayout);
         //등록된 상품인지 확인
         CheckWishProduct task = new CheckWishProduct();
         task.execute( "CheckWishProduct",uuid,productId);
