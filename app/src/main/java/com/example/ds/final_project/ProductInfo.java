@@ -816,8 +816,29 @@ public class ProductInfo extends AppCompatActivity {
             String id = (String) params[1];
             String size = (String) params[2];
             switch (project){
+                case "SIZE_BOTTOM":
+                    project="GetSizeBottom";
+                    break;
+                case "SIZE_DRESS_JUMPSUIT":
+                    project="GetSizeDressJumpsuit";
+                    break;
+                case "SIZE_DRESS_ORIGINAL":
+                    project="GetSizeDressOriginal";
+                    break;
+                case "SIZE_DRESS_SLEEVELESS":
+                    project="GetSizeDressSleeveless";
+                    break;
+                case "SIZE_OUTER":
+                    project="GetSizeSkirt";
+                    break;
                 case "SIZE_TOP":
                     project="GetSizeTop";
+                    break;
+                case "SIZE_TOP_SLEEVELESS":
+                    project="GetSizeTopSleeveless";
+                    break;
+                case "SIZE_TOP_VEST":
+                    project="GetSizeTopVest";
                     break;
                 case "SIZE_SKIRT":
                     project="GetSizeSkirt";
