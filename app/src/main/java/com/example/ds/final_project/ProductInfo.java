@@ -201,7 +201,9 @@ public class ProductInfo extends AppCompatActivity {
                     btn.setOnClickListener(new View.OnClickListener() {
 
                         public void onClick(View v) {
-
+                            GetSizeTable task=new GetSizeTable();
+                            Log.d("sizeTable: ",sizeTable+","+productId+", "+size);
+                            task.execute(sizeTable,productId,size);
 
                         }
 
@@ -899,7 +901,6 @@ public class ProductInfo extends AppCompatActivity {
 
                             String st=row.getString("Size");
 
-                            sizeTable=st;
                             Log.i("sizeTable: ", st);
 
                         }
