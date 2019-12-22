@@ -145,21 +145,13 @@ public class TestActivity extends AppCompatActivity {
 
 
                     }else {
-//                    Log.i("검색","성공"+result);
-                        SizeSkirt sizeSkirt;
                         for (int i = 0; i < jArray.length(); i++) {
                             // json배열.getJSONObject(인덱스)
                             JSONObject row = jArray.getJSONObject(i);
-                            Gson gson = new GsonBuilder().create();
-                            Size size;
-                            String strContact=row.getString("Size");
-                            size=gson.fromJson(strContact,Size.class);
 
-//                            float total = BigDecimal.valueOf(row.getDouble("TOTAL")).floatValue();
-//                            float tail = BigDecimal.valueOf(row.getDouble("TAIL")).floatValue();
-//                            float waist = BigDecimal.valueOf(row.getDouble("WAIST")).floatValue();
-                            sizeSkirt=(SizeSkirt)size;
-                            Log.i("shop가져온 데이터><", sizeSkirt.toString());
+                            String sizeTable=row.getString("Size");
+
+                            Log.i("shop가져온 데이터><", sizeTable);
 
 
 
