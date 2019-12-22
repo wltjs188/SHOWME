@@ -203,6 +203,7 @@ public class ProductInfo extends AppCompatActivity {
                         public void onClick(View v) {
                             GetSizeTable task=new GetSizeTable();
                             Log.d("sizeTable: ",sizeTable+","+productId+", "+size);
+
                             task.execute(sizeTable,productId,size);
 
                         }
@@ -814,8 +815,14 @@ public class ProductInfo extends AppCompatActivity {
             String project = (String) params[0];
             String id = (String) params[1];
             String size = (String) params[2];
-
-
+            switch (project){
+                case "SIZE_TOP":
+                    project="GetSizeTop";
+                    break;
+                case "SIZE_SKIRT":
+                    project="GetSizeSkirt";
+                    break;
+            }
             try {
                 HttpParams httpParameters = new BasicHttpParams();
                 HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);

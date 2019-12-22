@@ -42,7 +42,7 @@ public class TestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_test);
 
         GetSizeTable task=new GetSizeTable();
-        task.execute("GetSizeSkirt","710130","FREE");
+        task.execute("GetSizeSkirt","1209885","FREE");
     }
 
     private class GetSizeTable extends AsyncTask<String, Void,String> {
