@@ -23,8 +23,8 @@ public class SizeTopSleeveless extends Size {
     @Override
     public String toString() {
         String str="";
-        str+="총장: "+getTotal();
-        str+="\n가슴단면: "+getBreast();
+        str+=getTotal()==0.0?"":"총장: "+getTotal();
+        str+=getBreast()==0.0?"":"\n가슴단면: "+getBreast();
         return str;
     }
 }

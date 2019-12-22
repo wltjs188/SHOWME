@@ -31,9 +31,11 @@ public class SizeDressSleeveless extends Size {
 
     public String toString() {
         String str="";
-        String s1="총기장: "+total +"\n";
-        String s2="허리단면: "+waist+"\n";
-        String s3="밑단면: "+tail+"\n";
+
+        String s1=( (total==0.0) ? "" : "총장:"+total +"\n");
+        String s2=( (waist==0.0) ? "" : "허리단면: "+waist+"\n");
+        String s3=( (tail==0.0) ? "" : "밑단단면: "+tail+"\n");
+
         str=s1+s2+s3;
         return str;
     }
