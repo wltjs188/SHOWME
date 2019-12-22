@@ -1764,7 +1764,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                 String pSizeTable=p.get(i).getSize_table();
 
                 Glide.with(MessageAdapter.super.getContext()).load(image).into(holder.imageViews.get(i));
-                holder.imageViews.get(i).setContentDescription("상품명:"+p.get(i).getName()+"가격:"+p.get(i).getPrice());
+                holder.imageViews.get(i).setContentDescription("상품명:"+p.get(i).getName()+"\n가격:"+p.get(i).getPrice()+"원");
                 holder.imageViews.get(i).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
