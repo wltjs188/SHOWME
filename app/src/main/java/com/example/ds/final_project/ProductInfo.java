@@ -829,7 +829,7 @@ public class ProductInfo extends AppCompatActivity {
                     project="GetSizeDressSleeveless";
                     break;
                 case "SIZE_OUTER":
-                    project="GetSizeSkirt";
+                    project="GetSizeOuter";
                     break;
                 case "SIZE_TOP":
                     project="GetSizeTop";

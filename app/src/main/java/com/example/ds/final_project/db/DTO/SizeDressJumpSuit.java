@@ -49,11 +49,11 @@ public class SizeDressJumpSuit extends Size {
 
     public String toString() {
         String str="";
-        String s1="총기장: "+total +"\n";
-        String s2="허리단면: "+waist+"\n";
-        String s3="가슴단면: "+breast+"\n";
-        String s4="밑위길이: "+crotch+"\n";
-        String s5="밑단면: "+tail+"\n";
+        String s1=( (total==0.0) ? "" : "총장:"+total +"\n");
+        String s2=( (waist==0.0) ? "" : "허리단면: "+waist+"\n");
+        String s3=( (breast==0.0) ? "" : "허벅지단면: "+breast+"\n");
+        String s4=( (crotch==0.0) ? "" : "밑위: "+crotch+"\n");
+        String s5=( (tail==0.0) ? "" : "밑단단면: "+tail+"\n");
         str=s1+s2+s3+s4+s5;
         return str;
     }

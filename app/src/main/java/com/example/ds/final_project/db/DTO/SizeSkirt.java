@@ -32,9 +32,9 @@ public class SizeSkirt extends Size {
     @Override
     public String toString() {
         String str="";
-        str+="총장: "+getTotal();
-        str+="\n허리단면: "+getWaist();
-        str+="\n밑단단면: "+getTail();
+        str+=getTotal()==0.0?"":"총장: "+getTotal();
+        str+=getWaist()==0.0?"":"\n허리단면: "+getWaist();
+        str+=getTail()==0.0?"":"\n밑단단면: "+getTail();
         return str;
     }
 }
