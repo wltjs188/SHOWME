@@ -93,6 +93,10 @@ public class ProductInfo extends AppCompatActivity {
     String phoneName = "";
     String phoneNo = "";
 
+    Button sizeTableDetail;
+    LinearLayout layout ;
+    LinearLayout btnLayout;
+
     //통신사 정보
     String ret_operator = null;
     String MMSCenterUrl = null;
@@ -116,6 +120,10 @@ public class ProductInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_info);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
+
+        sizeTableDetail=findViewById(R.id.sizeTableDetail);
+        layout = findViewById(R.id.sizesLayout);
+        btnLayout=findViewById(R.id.btnLayout);
 
         Gson gson = new GsonBuilder().create();
         if(!(getPreferences("USER")==null||getPreferences("USER")=="")){
@@ -154,6 +162,60 @@ public class ProductInfo extends AppCompatActivity {
         wishCheck=(Button) findViewById(R.id.wishCheck);
         wishCheck.setContentDescription("관심상품등록");
 
+
+        TextView msgTextView = findViewById(R.id.msgTextView);
+        String msg = "";
+
+        //사이즈 가져오기
+//        String str_size=produ
+        Log.d("사이즈1",size);
+        size.trim();
+        if(size == null || size == ""|| size.equals("null")){
+            Log.d("사이즈 ","업ㅅ");
+            msg = "사이즈 정보가 존재하지 않습니다.";
+            msgTextView.setText(msg);
+        }
+        else {
+            Log.d("사이즈 ","있음 ");
+            String[] sizes = size.split(",");
+            if (sizes.length <= 0||sizes==null) {
+                msg = "사이즈 정보가 존재하지 않습니다.";
+                msgTextView.setText(msg);
+            } else {
+                Log.d("사이즈",sizes.toString());
+                msg = "사이즈를 선택해주세요.";
+                msgTextView.setText(msg);
+
+                int id = 0;
+                for (String size : sizes) {
+                    Button btn = new Button(this);
+
+                    // setId 버튼에 대한 키값
+
+                    btn.setId(id);
+
+                    btn.setText(size);
+
+                    btn.setLayoutParams(params);
+
+                    btn.setOnClickListener(new View.OnClickListener() {
+
+                        public void onClick(View v) {
+
+
+                        }
+
+                    });
+
+                    //버튼 add
+                    btnLayout.addView(btn);
+                    id++;
+
+                }
+            }
+
+        }
+
         //등록된 상품인지 확인
         CheckWishProduct task = new CheckWishProduct();
         task.execute( "CheckWishProduct",uuid,productId);
@@ -185,124 +247,17 @@ public class ProductInfo extends AppCompatActivity {
     // 사이즈 상세보기 버튼 클릭
 
     public void onSizeDetailClicked(View view) {
-        TextView msgTextView = findViewById(R.id.msgTextView);
-        String msg = "";
-
-        //사이즈 가져오기
-//        String str_size=produ
-        Log.d("사이즈1",size);
-        size.trim();
-        if(size == null || size == ""|| size.equals("null")){
-            Log.d("사이즈 ","업ㅅ");
-            msg = "사이즈 정보가 존재하지 않습니다.";
-            msgTextView.setText(msg);
+        String btnText = sizeTableDetail.getText().toString();
+        if(btnText.equals("사이즈표 상세보기")){
+            sizeTableDetail.setText("사이즈표 닫기");
+            layout.setVisibility(View.VISIBLE);
         }
-        else {
-            Log.d("사이즈 ","있음 ");
-            String[] sizes = size.split(",");
-            if (sizes.length <= 0||sizes==null) {
-                msg = "사이즈 정보가 존재하지 않습니다.";
-                msgTextView.setText(msg);
-            } else {
-                Log.d("사이즈",sizes.toString());
-                msg = "사이즈를 선택해주세요.";
-                msgTextView.setText(msg);
-
-                LinearLayout layout = findViewById(R.id.sizesLayout);
-                int id = 0;
-                for (String size : sizes) {
-                    Button btn = new Button(this);
-
-                    // setId 버튼에 대한 키값
-
-                    btn.setId(id);
-
-                    btn.setText(size);
-
-                    btn.setLayoutParams(params);
-                    ;
-
-
-                    btn.setOnClickListener(new View.OnClickListener() {
-
-                        public void onClick(View v) {
-
-
-                        }
-
-                    });
-
-
-                    //버튼 add
-
-                    layout.addView(btn);
-                    id++;
-
-                }
-            }
-//        for (int j = 0; j <= 5; j++) {
-//
-//            // LinearLayout 생성
-//
-//            LinearLayout ll = new LinearLayout(context);
-//
-//            ll.setOrientation(LinearLayout.HORIZONTAL);
-//
-//
-//
-//
-//            // TextView 생성
-//
-//            TextView tvAge = new TextView(this);
-//
-//            tvAge.setText("   Age" + j + "  ");
-//
-//            ll.addView(tvAge);
-//
-//
-//
-//            // 버튼 생성
-//
-//            final Button btn = new Button(this);
-//
-//            // setId 버튼에 대한 키값
-//
-//            btn.setId(j + 1);
-//
-//            btn.setText("Apply");
-//
-//            btn.setLayoutParams(params);
-//
-//
-//
-//            final int position = j;
-//
-//
-//
-//            btn.setOnClickListener(new OnClickListener() {
-//
-//                public void onClick(View v) {
-//
-//                    Log.d("log", "position :" + position);
-//
-//                    Toast.makeText(getApplicationContext(), "클릭한 position:" + position, Toast.LENGTH_LONG).show();
-//
-//                }
-//
-//            });
-//
-//
-//
-//            //버튼 add
-//
-//            ll.addView(btn);
-//
-//            //LinearLayout 정의된거 add
-//
-//            lm.addView(ll);
-//
-//        }
+        else{
+            sizeTableDetail.setText("사이즈표 상세보기");
+            layout.setVisibility(View.GONE);
         }
+
+
 
     }
     // 관심상품버튼 클릭
