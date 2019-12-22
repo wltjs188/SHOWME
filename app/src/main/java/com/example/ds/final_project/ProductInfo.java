@@ -931,6 +931,18 @@ public class ProductInfo extends AppCompatActivity {
 
                             Log.i("sizeTable: ", st);
 
+                            AlertDialog.Builder oDialog = new AlertDialog.Builder(ProductInfo.this,
+                                    android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+
+
+
+                            oDialog.setTitle("사이즈표 상세 정보")
+                                    .setMessage(st)
+                                    .setPositiveButton("닫기", null)
+                                    .setCancelable(true)
+                                    .show();
+
+
                         }
 
                     }
