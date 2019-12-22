@@ -1,31 +1,31 @@
 package com.example.ds.final_project.db.DTO;
 
 public class SizeTopVest extends Size {
-    String total;
-    String shoulder;
-    String breast;
+    float total;
+    float shoulder;
+    float breast;
 
-    public String getTotal() {
+    public float getTotal() {
         return total;
     }
 
-    public void setTotal(String total) {
+    public void setTotal(float total) {
         this.total = total;
     }
 
-    public String getShoulder() {
+    public float getShoulder() {
         return shoulder;
     }
 
-    public void setShoulder(String shoulder) {
+    public void setShoulder(float shoulder) {
         this.shoulder = shoulder;
     }
 
-    public String getBreast() {
+    public float getBreast() {
         return breast;
     }
 
-    public void setBreast(String breast) {
+    public void setBreast(float breast) {
         this.breast = breast;
     }
 

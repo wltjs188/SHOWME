@@ -1,22 +1,22 @@
 package com.example.ds.final_project.db.DTO;
 
 public class SizeTopSleeveless extends Size {
-    int total;
-    int breast;
+    float total;
+    float breast;
 
-    public int getTotal() {
+    public float getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(float total) {
         this.total = total;
     }
 
-    public int getBreast() {
+    public float getBreast() {
         return breast;
     }
 
-    public void setBreast(int breast) {
+    public void setBreast(float breast) {
         this.breast = breast;
     }
 
