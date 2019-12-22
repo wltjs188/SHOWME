@@ -49,7 +49,7 @@
             />
 
         <LinearLayout
-            android:visibility="visible"
+            android:visibility="gone"
             android:gravity="center"
             android:id="@+id/sizesLayout"
             android:orientation="vertical"
