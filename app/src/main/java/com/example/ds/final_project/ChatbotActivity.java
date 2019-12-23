@@ -230,8 +230,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 @Override
                 public void run() {
                     tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
-                    }
-                }, 1000);
+                }
+            }, 1000);
         }else{
             //등록된 사용자
 //            final AIConfiguration config = new AIConfiguration("b8dda671eb584e3586aba41efdd554cf",
@@ -250,7 +250,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatbot);
         getSupportActionBar().setTitle("쇼우미");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기버튼
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기버튼
 
         int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
         if (permission != PackageManager.PERMISSION_GRANTED) { makeRequest(); }
@@ -1068,7 +1068,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                             searchtask = new SearchProduct();
                             searchtask.execute("SearchThree", remember.getCategory(),remember.getStyle(),remember.getColor());
                         }
-                        startActivity(shopIntent);
+//                        startActivity(shopIntent);
                     }
                     chatMessage2 = new ChatMessage("버튼",true);
                     chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
@@ -1183,7 +1183,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
 //        chatMessage = new ChatMessage(speech, true);
 //
-//        Log.d("대답",speech);
+        Log.d("대답",speech);
+//        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+//        tts.speak(speech,TextToSpeech.QUEUE_FLUSH, null);
+
 
         if(!speech.equals("")){
 //            chatMessages.add(chatMessage);
@@ -1205,15 +1208,15 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 chatMessages.add(chatMessage);
                 adapter.notifyDataSetChanged();
             }
-            tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+            tts.speak(speech,TextToSpeech.QUEUE_FLUSH, null);
         }
-        if(remenu!=""){
-            chatMessage = new ChatMessage(remenu, true);
-            chatMessages.add(chatMessage);
-            adapter.notifyDataSetChanged();
-            tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
-            remenu="";
-        }
+//        if(remenu!=""){
+//            chatMessage = new ChatMessage(remenu, true);
+//            chatMessages.add(chatMessage);
+//            adapter.notifyDataSetChanged();
+//            tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+//            remenu="";
+//        }
     }
     @Override
     public void onError(AIError error) { }
@@ -1255,15 +1258,16 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     }
 
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기 버튼 실행
+        Intent homeIntent=new Intent(this,ChatbotActivity.class);
         switch (item.getItemId()){
             case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
-                ((MainActivity)MainActivity.CONTEXT).onResume();
+                startActivity(homeIntent);
                 finish();
                 return true;
             }
             case R.id.showoomi:
-                Intent homeIntent=new Intent(this,MainActivity.class);
                 startActivity(homeIntent);
+                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -1764,7 +1768,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                 String pSizeTable=p.get(i).getSize_table();
 
                 Glide.with(MessageAdapter.super.getContext()).load(image).into(holder.imageViews.get(i));
-                holder.imageViews.get(i).setContentDescription("상품명:"+p.get(i).getName()+"가격:"+p.get(i).getPrice());
+                holder.imageViews.get(i).setContentDescription("상품명:"+p.get(i).getName()+"\n가격:"+p.get(i).getPrice()+"원");
                 holder.imageViews.get(i).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

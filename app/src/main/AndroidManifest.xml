@@ -19,16 +19,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:transcriptMode="normal">
-        <activity android:name=".TestActivity"></activity>
+        <activity android:name=".TestActivity" />
         <activity android:name=".db.DAO.ServertestActivity" />
         <activity android:name=".ReviewActivity" />
         <activity android:name=".AddressActivity" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity> <!-- <activity -->

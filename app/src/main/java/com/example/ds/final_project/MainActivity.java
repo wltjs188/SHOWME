@@ -1,6 +1,7 @@
 package com.example.ds.final_project;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -57,7 +58,7 @@ import java.util.Locale;
 import java.util.UUID;
 import static android.speech.tts.TextToSpeech.ERROR;
 import org.apache.http.message.BasicNameValuePair;
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
 
@@ -85,14 +86,14 @@ public class MainActivity extends AppCompatActivity {
 // Permission has already been granted
         }
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+//        setContentView(R.layout.activity_main);
 //        getSupportActionBar().setTitle("쇼우미");
         CONTEXT=this;
-        searchIntent=new Intent(getApplicationContext(),ChatbotActivity.class);//쇼핑시작
-        wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
-        webIntent=new Intent(getApplicationContext(),WebActivity.class);//나의정보수정
-        shopIntent=new Intent(getApplicationContext(),ShopActivity.class);//나의정보수정
-        reviewIntent=new Intent(getApplicationContext(),ReviewActivity.class); //리뷰
+//        searchIntent=new Intent(getApplicationContext(),ChatbotActivity.class);//쇼핑시작
+//        wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
+//        webIntent=new Intent(getApplicationContext(),WebActivity.class);//나의정보수정
+//        shopIntent=new Intent(getApplicationContext(),ShopActivity.class);//나의정보수정
+//        reviewIntent=new Intent(getApplicationContext(),ReviewActivity.class); //리뷰
 
         int permission2 = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
         if (permission2 != PackageManager.PERMISSION_GRANTED) { makeRequest(); }
@@ -115,13 +116,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 //
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                tts.speak("화면 아무 곳이나 터치하시면 쇼우미가 시작됩니다.",TextToSpeech.QUEUE_FLUSH, null);
-            }
-        }, 1000);
+//        final Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                tts.speak("쇼우미가 시작됩니다.",TextToSpeech.QUEUE_FLUSH, null);
+//            }
+//        }, 1000);
+
         //키해시 구하기
         try {
             PackageInfo info = getPackageManager().getPackageInfo("com.example.ds.final_project", PackageManager.GET_SIGNATURES);
@@ -135,6 +137,15 @@ public class MainActivity extends AppCompatActivity {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
+//        try{
+//            Thread.sleep(2000);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+
+        Intent intent = new Intent(this,ChatbotActivity.class);
+        startActivity(intent);
+        finish();
 
     }
 
@@ -313,32 +324,32 @@ public class MainActivity extends AppCompatActivity {
         catch(SecurityException e){ }
         return uuid;
     }
-    public void onSearchClicked(View view) { //쇼핑시작
-        startActivity(searchIntent);
-    } //쇼핑시작버튼
-    public void onWishClicked(View view) { //나의관심상품
-        startActivity(wishIntent);
-    } //관심상품버튼
-    public void onInfoClicked(View view) { //나의정보수정
-        startActivityForResult(infoIntent,1);
-    } //나의정보수정버튼
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_OK) {
-            Toast.makeText(getApplicationContext(), "정보 수정이 완료되었습니다.", Toast.LENGTH_LONG).show();
-        }
-    }
-    public void onReviewClicked(View view) { //쇼핑시작
-        startActivity(reviewIntent);
-    }
-    public void onWebClicked(View view) { startActivity(webIntent); }
-    public void onShopClicked(View view) { startActivity(shopIntent); }
-
-    public void onDBTestClicked(View view){ //DB테스트
-        Intent i=new Intent(getApplicationContext(),TestActivity.class);
-        startActivity(i);
-
-    }
+//    public void onSearchClicked(View view) { //쇼핑시작
+//        startActivity(searchIntent);
+//    } //쇼핑시작버튼
+//    public void onWishClicked(View view) { //나의관심상품
+//        startActivity(wishIntent);
+//    } //관심상품버튼
+//    public void onInfoClicked(View view) { //나의정보수정
+//        startActivityForResult(infoIntent,1);
+//    } //나의정보수정버튼
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if(resultCode==RESULT_OK) {
+//            Toast.makeText(getApplicationContext(), "정보 수정이 완료되었습니다.", Toast.LENGTH_LONG).show();
+//        }
+//    }
+//    public void onReviewClicked(View view) { //쇼핑시작
+//        startActivity(reviewIntent);
+//    }
+//    public void onWebClicked(View view) { startActivity(webIntent); }
+//    public void onShopClicked(View view) { startActivity(shopIntent); }
+//
+//    public void onDBTestClicked(View view){ //DB테스트
+//        Intent i=new Intent(getApplicationContext(),TestActivity.class);
+//        startActivity(i);
+//
+//    }
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_PHONE_STATE},
