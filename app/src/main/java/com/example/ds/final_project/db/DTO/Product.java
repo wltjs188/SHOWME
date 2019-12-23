@@ -181,6 +181,7 @@ public class Product {
     public void setReal_color(String real_color) {
         this.real_color = real_color;
     }
+
     public String toString() {
         String str="";
         String s1="상품명: "+name +"\n";
@@ -197,6 +198,16 @@ public class Product {
         String s12=season==null||season=="null"?"":"계절: "+ season+"\n";
         String s13=ave_dilevery==null||ave_dilevery=="null"?"":"평균 배송일: "+ ave_dilevery;
         str=s1+s2+s3+s4+s5+s6+s7+s8+s9+s10+s11+s12+s13;
+        return str;
+    }
+
+    public String getSummary(){
+        String str="";
+        String s1="상품명: "+name +"\n";
+        String s2="가격: "+price+"원\n";
+        String s3=(brand==null||brand=="null"?"":"브랜드명: "+ brand+"\n");
+        String s4=real_color==null||real_color=="null"?"":"색상: "+ real_color+"\n";
+        str = s1+s2+s3+s4;
         return str;
     }
 }

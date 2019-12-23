@@ -78,10 +78,7 @@ public class WishListActivity extends AppCompatActivity {
         productInfoIntent = new Intent(getApplicationContext(),ProductInfo.class);
         gv = (GridView)findViewById(R.id.gridView1);
 
-
-
         dialog=new WishProductDialog(this);
-
 
         uuid = getPreferences("uuid");
 
@@ -169,15 +166,16 @@ public class WishListActivity extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기 버튼 실행
+        Intent homeIntent=new Intent(this,ChatbotActivity.class);
         switch (item.getItemId()){
             case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
-                ((MainActivity)MainActivity.CONTEXT).onResume();
+                startActivity(homeIntent);
                 finish();
                 return true;
             }
             case R.id.showoomi:
-                Intent homeIntent=new Intent(this,MainActivity.class);
                 startActivity(homeIntent);
+                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);

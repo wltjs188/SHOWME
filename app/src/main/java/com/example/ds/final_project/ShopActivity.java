@@ -58,6 +58,7 @@ public class ShopActivity extends AppCompatActivity {
     Product searchedProduct=null;
     ArrayList<Product> products=new ArrayList<Product>();
     ArrayList<String> infos = new ArrayList<String>(); //상품 상세 정보
+    ArrayList<String> summary = new ArrayList<String>(); //상품 상세 정보
     ArrayList<String> images = new ArrayList<String>(); //상품 옵션 대표 이미지
     ArrayList<String> ids = new ArrayList<String>();
     ArrayList<String> sizes = new ArrayList<String>();
@@ -85,7 +86,7 @@ public class ShopActivity extends AppCompatActivity {
 
         SearchProduct task ;
         if(searchedProduct.getStyle()==null){
-            task = new SearchProduct();
+           task = new SearchProduct();
             task.execute("SearchOne", searchedProduct.getCategory());
             Log.i("shop","shoptask1");
         }else if(searchedProduct.getColor()==null){
@@ -270,6 +271,7 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
                         product.setSize_table(sizeTable);
                         products.add(product);
                         infos.add(product.toString());
+                        summary.add(product.getSummary());
                         images.add(product.getImage());
                         ids.add(product.getId()+"");
                         sizes.add(product.getSize());
@@ -278,7 +280,7 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
 
                     }
 //                    adapter.notifyDataSetChanged();
-                    adapter = new ProductAdapter(ShopActivity.this, R.layout.list_product_item, images, infos);
+                    adapter = new ProductAdapter(ShopActivity.this, R.layout.list_product_item, images, summary);
                     gv.setAdapter(adapter);
 
                 }
@@ -320,15 +322,15 @@ class ProductAdapter extends ArrayAdapter<String> {
     private int resource;
 
     ArrayList<String> images;
-    ArrayList<String> infos;
+    ArrayList<String> summarys;
 
-    public ProductAdapter(Context context, int resource, ArrayList<String> images,ArrayList<String> infos) {
+    public ProductAdapter(Context context, int resource, ArrayList<String> images,ArrayList<String> summarys) {
         super(context, resource,images);
         // TODO Auto-generated constructor stub
         this.context = context;
         this.resource = resource;
         this.images = images;
-        this.infos=infos;
+        this.summarys=summarys;
     }
 
     @Override
@@ -353,7 +355,7 @@ class ProductAdapter extends ArrayAdapter<String> {
     }
 
     public String getInfo(int i){
-        return infos.get(i).toString();
+        return summarys.get(i).toString();
     }
     class ProductViewHolder{
         public ImageView imageView;

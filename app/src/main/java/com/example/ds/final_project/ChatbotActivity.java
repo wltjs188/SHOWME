@@ -436,6 +436,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     }
                 }
 //                editText.requestFocus();
+
             }
         };
         btnSend.setOnClickListener(btnSendListener);
@@ -487,6 +488,14 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             }
         });
 
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
     }
     @Override
     public boolean onTouchEvent(MotionEvent event) {
