@@ -7,7 +7,5 @@
             android:icon="@drawable/ic_home"
             android:title="홈으로 가기"
             app:showAsAction="always"
-
             />
-
 </menu>
