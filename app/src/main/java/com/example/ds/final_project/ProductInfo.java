@@ -2,6 +2,7 @@ package com.example.ds.final_project;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.content.pm.Signature;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
+import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -66,9 +68,11 @@ import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class ProductInfo extends AppCompatActivity {
+    private final int REQ_CODE_SPEECH_INPUT = 100;
     Intent reviewIntent;
     private String mJsonString;
     int error=0;
@@ -104,7 +108,7 @@ public class ProductInfo extends AppCompatActivity {
     int MMSPort = 0;
 
 //    private String wishProductName=" ";
-    WishProductDialog dialog;
+    WishProductDialog wishProductDialog;
     private String Url="https://store.musinsa.com/app/product/detail/";
 
     //Layout 추가
@@ -115,7 +119,7 @@ public class ProductInfo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         context=getApplicationContext();
-        dialog=new WishProductDialog(this);
+        wishProductDialog=new WishProductDialog(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_info);
@@ -224,7 +228,7 @@ public class ProductInfo extends AppCompatActivity {
         CheckWishProduct task = new CheckWishProduct();
         task.execute( "CheckWishProduct",uuid,productId);
 
-        dialog.setDialogListener(new DialogListener() {
+        wishProductDialog.setDialogListener(new DialogListener() {
             @Override
             public void onPositiveClicked(String name) {
                 productAlias=name;
@@ -232,7 +236,7 @@ public class ProductInfo extends AppCompatActivity {
                 Log.i("관심상품등록",uuid+productAlias);
                 InsertWishProduct task = new InsertWishProduct();
                 task.execute("InsertWishProduct",uuid,productAlias,productId,image,info,size,sizeTable);
-//                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
                 Log.i("관심2",productAlias);
                 WishBtnChanged(infoBool);
             }
@@ -241,12 +245,45 @@ public class ProductInfo extends AppCompatActivity {
             public void onNegativeClicked() {
                 Log.d("dialog","취소");
             }
+
+
+            public void onSTTClicked(){
+                promptSpeechInput();
+            }
         });
 
+    }
 
+    private void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                context.getString(R.string.speech_prompt));
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(context,
+                    context.getString(R.string.speech_not_supported),
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
 
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+//                    editText.setText(result.get(0));
+//                    btn_chat_send.callOnClick();
+                }
+                break;
+            }
 
-
+        }
     }
     // 사이즈 상세보기 버튼 클릭
 
@@ -268,7 +305,7 @@ public class ProductInfo extends AppCompatActivity {
     public void onWishBtnClicked(View view){
         // 관심상품 등록
         if(infoBool == false){
-            dialog.show();
+            wishProductDialog.show();
         }
         // 관심상품 취소
         else{
