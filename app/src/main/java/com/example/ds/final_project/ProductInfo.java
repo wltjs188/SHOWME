@@ -584,14 +584,28 @@ public class ProductInfo extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기 버튼 실행
         Intent homeIntent=new Intent(this,ChatbotActivity.class);
         switch (item.getItemId()){
-            case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
+            case android.R.id.home: //toolbar의 back키 눌렀을 때 동작
+//                startActivity(homeIntent);
+                finish();
+                return true;
+
+            case R.id.showme:
                 startActivity(homeIntent);
                 finish();
                 return true;
-            }
-            case R.id.showoomi:
-                startActivity(homeIntent);
-                finish();
+            case R.id.help:
+                AlertDialog.Builder oDialog = new AlertDialog.Builder(ProductInfo.this,
+                        android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+
+
+
+                oDialog.setTitle("도움")
+                        .setMessage("도움도움도움")
+                        .setPositiveButton("닫기", null)
+                        .setCancelable(true)
+                        .show();
+
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -957,7 +971,7 @@ public class ProductInfo extends AppCompatActivity {
 //                    items = new ArrayList<Product>();
                     if(jArray.length()==0){
                         Log.d("검색"," 실패");
-                        Toast.makeText(getApplicationContext(),"검색된 상품이 없습니다.",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"사이즈표가 없습니다.",Toast.LENGTH_LONG).show();
 
 
                     }else {

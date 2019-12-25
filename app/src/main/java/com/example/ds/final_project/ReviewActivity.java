@@ -89,11 +89,11 @@ public class ReviewActivity extends AppCompatActivity {
         Intent homeIntent=new Intent(this,ChatbotActivity.class);
         switch (item.getItemId()){
             case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
-                startActivity(homeIntent);
+//                startActivity(homeIntent);
                 finish();
                 return true;
             }
-            case R.id.showoomi:
+            case R.id.showme:
                 startActivity(homeIntent);
                 finish();
                 return true;

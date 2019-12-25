@@ -59,9 +59,13 @@ public class WishProductDialog extends Dialog implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.dialog_btn_stt:
-                promptSpeechInput();
-                onSTTClicked();
-//                listener.onSTTClicked();
+                Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);            //intent 생성
+                i.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, context.getPackageName());    //호출한 패키지
+                i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR");                            //음성인식 언어 설정
+                i.putExtra(RecognizerIntent.EXTRA_PROMPT, "말을 하세요.");                     //사용자에게 보여 줄 글자
+
+                context.startActivity(i);
+                
                 break;
             case R.id.cancel:
                 cancel();

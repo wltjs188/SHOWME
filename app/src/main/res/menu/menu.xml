@@ -3,7 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
-        <item android:id="@+id/showoomi"
+        <item android:id="@+id/help"
+            android:icon="@drawable/ic_help"
+            android:title="도움말"
+            app:showAsAction="always"
+            />
+        <item android:id="@+id/showme"
             android:icon="@drawable/ic_home"
             android:title="홈으로 가기"
             app:showAsAction="always"

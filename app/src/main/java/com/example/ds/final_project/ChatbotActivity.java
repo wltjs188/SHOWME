@@ -1274,7 +1274,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 finish();
                 return true;
             }
-            case R.id.showoomi:
+            case R.id.showme:
                 startActivity(homeIntent);
                 finish();
                 return true;

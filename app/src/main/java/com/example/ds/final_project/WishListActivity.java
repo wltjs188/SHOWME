@@ -173,7 +173,7 @@ public class WishListActivity extends AppCompatActivity {
                 finish();
                 return true;
             }
-            case R.id.showoomi:
+            case R.id.showme:
                 startActivity(homeIntent);
                 finish();
                 return true;
