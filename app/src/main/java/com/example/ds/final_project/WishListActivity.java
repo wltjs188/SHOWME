@@ -1,5 +1,6 @@
 package com.example.ds.final_project;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -176,6 +177,17 @@ public class WishListActivity extends AppCompatActivity {
             case R.id.showme:
                 startActivity(homeIntent);
                 finish();
+                return true;
+            case R.id.help:
+                AlertDialog.Builder oDialog = new AlertDialog.Builder(this,
+                        android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+
+                oDialog.setTitle("도움말")
+                        .setMessage("")
+                        .setPositiveButton("닫기", null)
+                        .setCancelable(true)
+                        .show();
+
                 return true;
         }
         return super.onOptionsItemSelected(item);

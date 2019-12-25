@@ -3,6 +3,7 @@ import com.bumptech.glide.Glide;
 import com.example.ds.final_project.db.DTO.Product;
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -1277,6 +1278,17 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             case R.id.showme:
                 startActivity(homeIntent);
                 finish();
+                return true;
+            case R.id.help:
+                AlertDialog.Builder oDialog = new AlertDialog.Builder(this,
+                        android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+
+                oDialog.setTitle("도움말")
+                        .setMessage("")
+                        .setPositiveButton("닫기", null)
+                        .setCancelable(true)
+                        .show();
+
                 return true;
         }
         return super.onOptionsItemSelected(item);

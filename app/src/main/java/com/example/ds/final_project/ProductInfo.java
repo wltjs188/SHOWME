@@ -597,14 +597,11 @@ public class ProductInfo extends AppCompatActivity {
                 AlertDialog.Builder oDialog = new AlertDialog.Builder(ProductInfo.this,
                         android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
 
-
-
-                oDialog.setTitle("도움")
-                        .setMessage("도움도움도움")
+                oDialog.setTitle("도움말")
+                        .setMessage("")
                         .setPositiveButton("닫기", null)
                         .setCancelable(true)
                         .show();
-
 
                 return true;
         }
