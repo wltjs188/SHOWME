@@ -75,6 +75,7 @@ import java.util.Map;
 
 public class ProductInfo extends AppCompatActivity {
     private final int REQ_CODE_SPEECH_INPUT = 100;
+    private final int REQ_CODE_SHARE_MSG_SPEECH_INPUT = 101;
     Intent reviewIntent;
     private String mJsonString;
     int error=0;
@@ -113,6 +114,7 @@ public class ProductInfo extends AppCompatActivity {
 
 //    private String wishProductName=" ";
     WishProductDialog wishProductDialog;
+    SendMsgDialog sendMsgDialog;
     private String Url="https://store.musinsa.com/app/product/detail/";
 
     //Layout 추가
@@ -124,7 +126,7 @@ public class ProductInfo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         context=getApplicationContext();
         wishProductDialog=new WishProductDialog(this);
-
+        sendMsgDialog= new SendMsgDialog(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_info);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
@@ -255,28 +257,28 @@ public class ProductInfo extends AppCompatActivity {
             }
 
 
-            public void onSTTClicked(){
-                promptSpeechInput();
-            }
+//            public void onSTTClicked(){
+//                promptSpeechInput();
+//            }
         });
 
     }
 
-    private void promptSpeechInput() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-                context.getString(R.string.speech_prompt));
-        try {
-            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
-        } catch (ActivityNotFoundException a) {
-            Toast.makeText(context,
-                    context.getString(R.string.speech_not_supported),
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
+//    private void promptSpeechInput() {
+//        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+//                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+//        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+//                context.getString(R.string.speech_prompt));
+//        try {
+//            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+//        } catch (ActivityNotFoundException a) {
+//            Toast.makeText(context,
+//                    context.getString(R.string.speech_not_supported),
+//                    Toast.LENGTH_SHORT).show();
+//        }
+//    }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -289,7 +291,15 @@ public class ProductInfo extends AppCompatActivity {
                 }
                 break;
             }
+            case REQ_CODE_SHARE_MSG_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
 
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    sendMsgDialog.setEditText(result.get(0)); //다이얼로그 editText 수정
+                }
+                break;
+            }
         }
     }
 
@@ -386,7 +396,23 @@ public class ProductInfo extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(),items[pos],Toast.LENGTH_LONG).show();
                 // 주소록 검색
                 if(items[pos].equals("주소록 검색")){
-                    searchPhone();
+//                    searchPhone();
+
+                    sendMsgDialog.setDialogListener(new DialogListener() {
+                        @Override
+                        public void onPositiveClicked(String name) {
+                        }
+
+                        @Override
+                        public void onNegativeClicked() {
+                            Log.d("dialog","취소");
+                        }
+
+                    });
+
+                    sendMsgDialog.show();
+                    sendMsgDialog.setText_guide("주소록에서 검색하실 이름을 입력해주세요");
+                    sendMsgDialog.setEditTextHint("이름 입력");
                 }
                 // 직접 입력
                 else{
