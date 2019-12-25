@@ -142,6 +142,9 @@ public class ProductInfo extends AppCompatActivity {
         uuid = getPreferences("uuid");
         product_info=(TextView)findViewById(R.id.product_info);
         product_info.setMovementMethod(new ScrollingMovementMethod());
+        product_info.setFocusableInTouchMode(true);
+        product_info.requestFocus();
+        Log.d("TEST","현재 포커스=>"+getCurrentFocus());
         Intent intent = getIntent();
 
         productId=intent.getStringExtra("productId");
@@ -321,21 +324,20 @@ public class ProductInfo extends AppCompatActivity {
             Log.d("delete",uuid+", "+productAlias);
             task.execute( "DeleteWishProduct",uuid,productAlias);
             Toast.makeText(ProductInfo.this,"관심 상품 등록 취소되었습니다.",Toast.LENGTH_SHORT).show();
-            WishBtnChanged(infoBool);
         }
        WishBtnChanged(infoBool);
     }
     // 관심상품버튼 상태 변경
     private void WishBtnChanged(Boolean infoBool){
         // 관심상품일 경우 : 관심상품취소버튼
-        if(infoBool == false){
+        if(infoBool == true){
             wishCheck.setContentDescription("관심상품취소");
-            wishCheck.setBackgroundResource(R.drawable.off);
+            wishCheck.setBackgroundResource(R.drawable.on);
         }
         // 관심상품아닐 경우 : 관심상품등록버튼
         else{
             wishCheck.setContentDescription("관심상품등록");
-            wishCheck.setBackgroundResource(R.drawable.on);
+            wishCheck.setBackgroundResource(R.drawable.off);
         }
     }
 
