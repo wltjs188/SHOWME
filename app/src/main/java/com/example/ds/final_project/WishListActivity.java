@@ -119,6 +119,7 @@ public class WishListActivity extends AppCompatActivity {
                                 break;
                             case R.id.editWishProductName:
                                 //별칭 수정
+
                                 dialog.setDialogListener(new DialogListener() {
                                     @Override
                                     public void onPositiveClicked(String name) {
@@ -135,6 +136,8 @@ public class WishListActivity extends AppCompatActivity {
                                     }
                                 });
                                 dialog.show();
+//                                dialog.setEditTextHint("뀨");
+//                                dialog.setEditText(adapter.getName(position));
 //                                Toast.makeText(getApplication(),"메뉴1",Toast.LENGTH_SHORT).show();
                                 break;
 

@@ -38,7 +38,9 @@ public class WishProductDialog extends Dialog implements View.OnClickListener{
     public void setEditText(String wishName){
         wishProductName.setText(wishName);
     }
-
+    public void setEditTextHint(String wishName){
+        wishProductName.setHint(wishName);
+    }
     public WishProductDialog(Context context) {
         super(context);
         if(context instanceof Activity){
