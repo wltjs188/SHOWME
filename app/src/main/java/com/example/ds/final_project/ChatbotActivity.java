@@ -958,7 +958,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                 //카테고리만 검색
                 searchtask = new SearchProduct();
-                searchtask.execute("SearchOne", category);
+                searchtask.execute("SearchOne2", category);
 
                 break;
             case "Search_Style.Search_Style-no": //카테고리만 입력
@@ -969,7 +969,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 strContact = gson.toJson(remember, Product.class);
                 savePreferences("remember",strContact);
                 searchtask = new SearchProduct();
-                searchtask.execute("SearchOne", category);
+                searchtask.execute("SearchOne2", category);
 
 
                 category = null; style=null; color = null;
@@ -997,7 +997,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 savePreferences("remember",strContact);
 
                 searchtask = new SearchProduct();
-                searchtask.execute("SearchTwo", category,style);
+                searchtask.execute("SearchTwo2", category,style);
 
                 break;
             case "Search_Style.Search_Color.Search_Color-no": //카테고리, 스타일로 검색
@@ -1009,7 +1009,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 savePreferences("remember",strContact);
 
                 searchtask = new SearchProduct();
-                searchtask.execute("SearchTwo", category,style);
+                searchtask.execute("SearchTwo2", category,style);
 
                 category = null; style=null; color = null;
                 Log.d("yoon search","카테고리, 스타일로 검색: "+so);
@@ -1036,7 +1036,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 savePreferences("remember",strContact);
 
                 searchtask = new SearchProduct();
-                searchtask.execute("SearchThree", category,style,color);
+                searchtask.execute("SearchThree2", category,style,color);
 
                 category = null; style=null; color = null;
 
@@ -1068,17 +1068,17 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     if (remember == null) {
                         //이전 검색 못해
                     } else {
-                        if(remember.getStyle()==null){
-                            searchtask = new SearchProduct();
-                            searchtask.execute("SearchOne", remember.getCategory());
-                        }else if(remember.getColor()==null){
-                            searchtask = new SearchProduct();
-                            searchtask.execute("SearchTwo", remember.getCategory(), remember.getStyle());
-                        }else{
-                            searchtask = new SearchProduct();
-                            searchtask.execute("SearchThree", remember.getCategory(),remember.getStyle(),remember.getColor());
-                        }
-//                        startActivity(shopIntent);
+//                        if(remember.getStyle()==null){
+//                            searchtask = new SearchProduct();
+//                            searchtask.execute("SearchOne", remember.getCategory());
+//                        }else if(remember.getColor()==null){
+//                            searchtask = new SearchProduct();
+//                            searchtask.execute("SearchTwo", remember.getCategory(), remember.getStyle());
+//                        }else{
+//                            searchtask = new SearchProduct();
+//                            searchtask.execute("SearchThree", remember.getCategory(),remember.getStyle(),remember.getColor());
+//                        }
+                        startActivity(shopIntent);
                     }
                     chatMessage2 = new ChatMessage("버튼",true);
                     chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
@@ -1377,12 +1377,12 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 //서버에 보낼 파라미터
                 ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
                 //파라미터 추가하기
-                if(project.equals("SearchOne")){
+                if(project.equals("SearchOne2")){
                     postParameters.add(new BasicNameValuePair("category", category));
-                }else if(project.equals("SearchTwo")){
+                }else if(project.equals("SearchTwo2")){
                     postParameters.add(new BasicNameValuePair("category", category));
                     postParameters.add(new BasicNameValuePair("style", style));
-                }else if(project.equals("SearchThree")){
+                }else if(project.equals("SearchThree2")){
                     postParameters.add(new BasicNameValuePair("category", category));
                     postParameters.add(new BasicNameValuePair("style", style));
                     postParameters.add(new BasicNameValuePair("color", color));
