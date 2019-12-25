@@ -1,9 +1,11 @@
 package com.example.ds.final_project;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
@@ -26,12 +28,24 @@ public class WishProductDialog extends Dialog implements View.OnClickListener{
     private Button ok;
     private Button dialog_btn_stt;
 
+    //STT
+    private final int REQ_CODE_SPEECH_INPUT = 100;
+
 
     private String name;
 
+    //stt editText 설정
+    public void setEditText(String wishName){
+        wishProductName.setText(wishName);
+    }
+
     public WishProductDialog(Context context) {
         super(context);
-        this.context = context;
+        if(context instanceof Activity){
+            setOwnerActivity((Activity) context);
+        }
+//        this.context = context;
+
     }
 
     public WishProductDialog(Context context,String name){
@@ -59,12 +73,13 @@ public class WishProductDialog extends Dialog implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.dialog_btn_stt:
-                Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);            //intent 생성
-                i.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, context.getPackageName());    //호출한 패키지
-                i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR");                            //음성인식 언어 설정
-                i.putExtra(RecognizerIntent.EXTRA_PROMPT, "말을 하세요.");                     //사용자에게 보여 줄 글자
-
-                context.startActivity(i);
+//                Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);            //intent 생성
+//                i.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, context.getPackageName());    //호출한 패키지
+//                i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR");                            //음성인식 언어 설정
+//                i.putExtra(RecognizerIntent.EXTRA_PROMPT, "말을 하세요.");                     //사용자에게 보여 줄 글자
+//                context.startActivityForResult();
+//                context.startActivity(i);
+                promptSpeechInput();
                 
                 break;
             case R.id.cancel:
@@ -83,24 +98,25 @@ public class WishProductDialog extends Dialog implements View.OnClickListener{
         }
     }
 
+
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-                context.getString(R.string.speech_prompt));
-//        try {
-//            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
-//        } catch (ActivityNotFoundException a) {
-//            Toast.makeText(context,
-//                    context.getString(R.string.speech_not_supported),
-//                    Toast.LENGTH_SHORT).show();
-//        }
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "말씀해주세요");
+        try {
+            getOwnerActivity().startActivityForResult(intent,REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(context,
+                    context.getString(R.string.speech_not_supported),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
+////        getOwnerActivity().onActivityResult(requestCode, resultCode, data);
+//        Activity ChatbotActivity = (Activity)getOwnerActivity()
 //        switch (requestCode) {
 //            case REQ_CODE_SPEECH_INPUT: {
 //                if (resultCode == RESULT_OK && null != data) {
@@ -111,12 +127,11 @@ public class WishProductDialog extends Dialog implements View.OnClickListener{
 //                }
 //                break;
 //            }
-//
 //        }
 //    }
-    public void onSTTClicked(){
-        promptSpeechInput();
-    }
+//    public void onSTTClicked(){
+//        promptSpeechInput();
+//    }
 
     public void setDialogListener(DialogListener listener){
         this.listener=listener;

@@ -1,6 +1,7 @@
 package com.example.ds.final_project;
 
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -20,6 +21,7 @@ import android.telephony.SmsManager;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -76,6 +78,8 @@ public class ProductInfo extends AppCompatActivity {
     Intent reviewIntent;
     private String mJsonString;
     int error=0;
+
+
     private TextView product_info; //상세정보 표시
     ImageView productImg; //상품 이미지 표시
     private Button wishCheck; //관심상품 등록
@@ -147,6 +151,7 @@ public class ProductInfo extends AppCompatActivity {
         size=intent.getStringExtra("size");
         sizeTable=intent.getStringExtra("sizeTable");
         Log.d("sizeTable",sizeTable);
+
 
         productAlias=intent.getStringExtra("alias");
         if(productAlias==""||productAlias==null)
@@ -277,14 +282,15 @@ public class ProductInfo extends AppCompatActivity {
 
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-//                    editText.setText(result.get(0));
-//                    btn_chat_send.callOnClick();
+                    wishProductDialog.setEditText(result.get(0)); //다이얼로그 editText 수정
                 }
                 break;
             }
 
         }
     }
+
+
     // 사이즈 상세보기 버튼 클릭
 
     public void onSizeDetailClicked(View view) {
@@ -306,6 +312,7 @@ public class ProductInfo extends AppCompatActivity {
         // 관심상품 등록
         if(infoBool == false){
             wishProductDialog.show();
+
         }
         // 관심상품 취소
         else{
@@ -573,6 +580,13 @@ public class ProductInfo extends AppCompatActivity {
     private String  getPreferences(String key){
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
         return pref.getString(key, "");
+    }
+
+    private void savePreferences(String key, String s){
+        SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(key, s);
+        editor.commit();
     }
 
     @Override
