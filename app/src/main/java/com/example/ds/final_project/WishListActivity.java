@@ -418,6 +418,8 @@ public class WishListActivity extends AppCompatActivity {
                             aliases.set(pos,alias);
                             Toast.makeText(getApplicationContext(),"별칭을 "+Name+"으로 수정하였습니다.",Toast.LENGTH_LONG).show();;
                             Log.i("별칭 수정", "성공" + result);
+                            dialog.setEditText("");
+                            dialog.dismiss();
                         }
                         else
                             insertFail();
@@ -432,7 +434,8 @@ public class WishListActivity extends AppCompatActivity {
         }
     }
     private void insertFail(){
-        Toast.makeText(getApplicationContext(),"별칭이 중복되어 관심상품 등록에 실패했습니다.",Toast.LENGTH_LONG).show();
+        dialog.setEditText("");
+        Toast.makeText(getApplicationContext(),"별칭이 중복됩니다. 다시 입력해 주세요.",Toast.LENGTH_LONG).show();
     }
 
     // 값 불러오기

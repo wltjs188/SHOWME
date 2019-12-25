@@ -94,7 +94,6 @@ public class WishProductDialog extends Dialog implements View.OnClickListener{
                     listener.onPositiveClicked(wishProductName.getText().toString());
                     Log.i("관심1",wishProductName.getText().toString());
 
-                    dismiss();
                 }break;
 
         }

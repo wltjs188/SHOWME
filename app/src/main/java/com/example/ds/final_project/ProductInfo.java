@@ -167,7 +167,6 @@ public class ProductInfo extends AppCompatActivity {
         Glide.with(this).load(image).into(productImg);
 
         product_info.setText(info);
-        Url = Url + productId;
 //        info = info + "\n" + Url;
 
         wishCheck=(Button) findViewById(R.id.wishCheck);
@@ -243,9 +242,9 @@ public class ProductInfo extends AppCompatActivity {
                 Log.i("관심상품등록",uuid+productAlias);
                 InsertWishProduct task = new InsertWishProduct();
                 task.execute("InsertWishProduct",uuid,productAlias,productId,image,info,size,sizeTable);
-                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
                 Log.i("관심2",productAlias);
-                WishBtnChanged(infoBool);
+//                WishBtnChanged(infoBool);
             }
 
             @Override
@@ -399,6 +398,17 @@ public class ProductInfo extends AppCompatActivity {
                     sendMsgDialog.setDialogListener(new DialogListener() {
                         @Override
                         public void onPositiveClicked(String name) {
+                            //
+                            phoneName = name;
+                            boolean c=findNum(phoneName);
+                            if(c){//  있으면
+                                sendMsgDialog.setEditText("");
+                                sendMsgDialog.dismiss();
+                            }else{
+                                Toast.makeText(ProductInfo.this,"다시 입력해 주세요.",Toast.LENGTH_LONG).show();
+                                sendMsgDialog.setEditText("");
+                            }
+
                         }
 
                         @Override
@@ -414,8 +424,36 @@ public class ProductInfo extends AppCompatActivity {
                 }
                 // 직접 입력
                 else{
-                    inputPhonNo();
+//                    inputPhonNo();
+                    sendMsgDialog.setDialogListener(new DialogListener() {
+                        @Override
+                        public void onPositiveClicked(String no) {
+                            //
+                            phoneNo = no;
+
+                            sendMsgDialog.setEditText("");
+                            sendMsgDialog.dismiss();
+
+                            sendMMS(phoneNo, "이 상품 구매 부탁드립니다!!");
+                            sendMMS(phoneNo, Url);
+                            sendMMS(phoneNo, "주소: "+user.getAddress());
+
+                            Toast.makeText(getApplicationContext(),"상품을 공유했습니다.",Toast.LENGTH_LONG).show();
+
+                        }
+
+                        @Override
+                        public void onNegativeClicked() {
+                            Log.d("dialog","취소");
+                        }
+
+                    });
+
+                    sendMsgDialog.show();
+                    sendMsgDialog.setText_guide("공유할 번호를 입력해주세요");
+                    sendMsgDialog.setEditTextHint("번호 입력");
                 }
+
             }
         });
 
@@ -508,7 +546,7 @@ public class ProductInfo extends AppCompatActivity {
         ad.show();
     }
     //주소록에서 번호 가져오기
-    private void findNum(String fname){
+    private boolean findNum(String fname){
         String number=null;
         Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null,
@@ -549,9 +587,11 @@ public class ProductInfo extends AppCompatActivity {
             sendMMS(number, Url);
             sendMMS(number, "주소: "+user.getAddress());
             Toast.makeText(getApplicationContext(),phoneName+"님께 해당 상품을 공유했습니다.",Toast.LENGTH_LONG).show();
+            return true;
         }
         else {
             Toast.makeText(getApplicationContext(),phoneName+"님의 연락처는 없습니다.",Toast.LENGTH_LONG).show();
+            return false;
         }
     }
     private void sendMMS(String phoneNo,String msg) {
@@ -561,7 +601,7 @@ public class ProductInfo extends AppCompatActivity {
             //전송
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(phoneNo, null, msg, null, null);
-            Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "SMS faild, please try again later!", Toast.LENGTH_LONG).show();
             e.printStackTrace();
@@ -866,7 +906,9 @@ public class ProductInfo extends AppCompatActivity {
                     }else {
                         Log.i("검색","성공"+result);
                         infoBool=true;
-
+                        Toast.makeText(getApplicationContext(),"관심상품으로 등록되었습니다.",Toast.LENGTH_LONG).show();
+                        wishProductDialog.setEditText("");
+                        wishProductDialog.dismiss();
                     }
 
                 } catch (JSONException e) {
@@ -881,7 +923,8 @@ public class ProductInfo extends AppCompatActivity {
     private void insertFail(){
         infoBool=false;
         WishBtnChanged(infoBool);
-        Toast.makeText(getApplicationContext(),"별칭이 중복되어 관심상품 등록에 실패했습니다.",Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),"별칭이 중복됩니다. 다시 입력해 주세요.",Toast.LENGTH_LONG).show();
+        wishProductDialog.setEditText("");
     }
 
     //사이즈표 가져오는 클래스

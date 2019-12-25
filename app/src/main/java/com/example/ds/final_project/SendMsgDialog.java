@@ -64,7 +64,7 @@ public class SendMsgDialog  extends Dialog implements View.OnClickListener{
         cancel = (Button) findViewById(R.id.cancel);
         ok = (Button) findViewById(R.id.ok);
         dialog_btn_stt=(Button) findViewById(R.id.dialog_btn_stt);
-
+        text_guide=(TextView)findViewById(R.id.text_guide);
         cancel.setOnClickListener(this);
         ok.setOnClickListener(this);
         dialog_btn_stt.setOnClickListener(this);
@@ -89,7 +89,6 @@ public class SendMsgDialog  extends Dialog implements View.OnClickListener{
                     listener.onPositiveClicked(shareTo.getText().toString());
                     Log.i("문자 공유",shareTo.getText().toString());
 
-                    dismiss();
                 }break;
 
         }
