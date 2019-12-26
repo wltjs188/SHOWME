@@ -811,20 +811,20 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 //주소 시,구,동
                 if(parameter.containsKey("city")) {
                     if(parameter.containsKey("state")){ //도
-                        address = "" + parameter.get("state");
+                        address = " " + parameter.get("state");
                     }
                     address = address + parameter.get("city"); //시
                     if(parameter.containsKey("county")){ //구,군
-                        address=address+parameter.get("county");
+                        address=address+" " +parameter.get("county");
                     }
                     if(parameter.containsKey("county1")){ //면,읍,리
-                        address=address+parameter.get("county1");
+                        address=address+" " +parameter.get("county1");
                     }
                     if(parameter.containsKey("village")){//동
-                        address=address+parameter.get("village");
+                        address=address+" " +parameter.get("village");
                     }
                     if(parameter.containsKey("address")){ //상세주소,도로명주소
-                        address=address+parameter.get("address");
+                        address=address+" " +parameter.get("address");
                     }
                     address=address.replaceAll("\"","");
                 }
@@ -887,21 +887,21 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 parameter=getParameter(result);
                 String maddress="";
                 if(parameter.containsKey("state")){ //도
-                    maddress = "" + parameter.get("state");
+                    maddress = " " + parameter.get("state");
                 }
                 Log.d("city",parameter.get("city").toString());
-                maddress = maddress + parameter.get("city"); //시
+                maddress = maddress+" "  + parameter.get("city"); //시
                 if(parameter.containsKey("county")){ //구,군
-                    maddress=maddress+parameter.get("county");
+                    maddress=maddress+" " +parameter.get("county");
                 }
                 if(parameter.containsKey("county1")){ //면,읍,리
-                    maddress=maddress+parameter.get("county1");
+                    maddress=maddress+" " +parameter.get("county1");
                 }
                 if(parameter.containsKey("village")){//동
-                    maddress=maddress+parameter.get("village");
+                    maddress=maddress+" " +parameter.get("village");
                 }
                 if(parameter.containsKey("address")){ //상세주소,도로명주소
-                    maddress=maddress+parameter.get("address");
+                    maddress=maddress+" " +parameter.get("address");
                 }
                 maddress=maddress.replaceAll("\"","");
 //                maddress=maddress.replaceAll("\[","");
@@ -913,6 +913,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                address=address+parameter.get("village");
 //                address=address.replaceAll("\"","");
                 user.setAddress(maddress);
+                Log.d("배송지 수정",maddress);
                 strContact = gson.toJson(user, User.class);
                 savePreferences("USER",strContact);
                 task1 = new UpdateUser(); //사용자정보 수정
