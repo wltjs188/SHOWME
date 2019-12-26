@@ -88,6 +88,7 @@ public class ReviewActivity extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기 버튼 실행
         Intent homeIntent=new Intent(this,ChatbotActivity.class);
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         switch (item.getItemId()){
             case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
 //                startActivity(homeIntent);
