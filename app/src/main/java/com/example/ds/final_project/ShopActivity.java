@@ -43,7 +43,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import android.view.GestureDetector.OnGestureListener;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 
@@ -52,7 +55,9 @@ public class ShopActivity extends AppCompatActivity {
 
     private GridView gv;
     private ProductAdapter adapter;
-
+    private Spinner spin_categroy;
+    private Spinner spin_style;
+    private Spinner spin_color;
     Intent productInfoIntent;
 
     //상품정보 List
@@ -73,6 +78,52 @@ public class ShopActivity extends AppCompatActivity {
         gv=(GridView) findViewById(R.id.main_GridView);
         adapter = new ProductAdapter(this, R.layout.list_product_item, images, infos);
         gv.setAdapter(adapter);
+
+
+        //Spinner
+        spin_categroy=findViewById(R.id.spin_category);
+        spin_style=findViewById(R.id.spin_style);
+        spin_color=findViewById(R.id.spin_color);
+
+//        spin_color.setSelection(1);
+        ArrayList<String> categories= new ArrayList<String>(
+                Arrays.asList("상의","바지","스커트","원피스","아우터")
+        );
+        ArrayList<String> style_top= new ArrayList<String>(
+                Arrays.asList("상관 없음","반팔 티셔츠","긴팔 티셔츠","민소매 티셔츠","셔츠/블라우스","피케/카라 티셔츠","맨투맨/스웨트셔츠","후드 스웨트셔츠/후드집업","니트/스웨터/카디건","베스트")
+        );
+        ArrayList<String> style_pants= new ArrayList<String>(
+                Arrays.asList("상관 없음","데님 팬츠","코튼 팬츠","수트 팬츠/슬랙스","트레이닝/조거 팬츠","숏 팬츠","레깅스")
+        );
+        ArrayList<String> style_skirt= new ArrayList<String>(
+                Arrays.asList("상관 없음","미니 스커트","롱 스커트")
+        );
+        ArrayList<String> style_dress= new ArrayList<String>(
+                Arrays.asList("상관 없음","미니 원피스","맥시 원피스","점프수트","관심 상품 공유하기","사용자 정보 수정")
+        );
+        ArrayList<String> style_outer= new ArrayList<String>(
+                Arrays.asList("상관 없음","항공 점퍼","레더/라이더스 재킷","트러커 재킷","수트/블레이저 재킷","나일론/코치/아노락 재킷",
+                        "스타디움 재킷","환절기 코트","겨울 싱글 코트","롱 패딩/롱 헤비 아우터","숏 패딩/숏 헤비 아우터")
+        );
+        ArrayList<String> colors= new ArrayList<String>(
+                Arrays.asList("상관 없음","그레이","그린","네이비","레드","민트","베이지","브라운","블랙","블루","소라","아이보리","옐로우","오렌지","차콜","카키","퍼플","핑크")
+        );
+
+
+        ArrayAdapter<String> adapter_category = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        adapter_category.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spin_categroy.setAdapter(adapter_category);
+
+
+        ArrayList<String> styles=style_top;
+        ArrayAdapter<String> adapter_style = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, styles);
+        adapter_style.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spin_style.setAdapter(adapter_style);
+
+
+        ArrayAdapter<String> adapter_color = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, colors);
+        adapter_color.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spin_color.setAdapter(adapter_color);
 
 
         //검색정보 받아오기
