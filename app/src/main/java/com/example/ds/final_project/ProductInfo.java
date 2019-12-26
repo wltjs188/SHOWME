@@ -641,9 +641,7 @@ public class ProductInfo extends AppCompatActivity {
             String project = (String)params[0];
             String uid = (String)params[1];
             String id = (String)params[2];
-            for(String p:params){
-                Log.d("hi",p);
-            }
+
             try {
                 HttpParams httpParameters = new BasicHttpParams();
                 HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
