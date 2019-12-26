@@ -8,7 +8,21 @@
 ## 목차
 - 쇼우미 소개
 - 소우미 기능
+  - 챗봇을 통한 조작
   - 사용자 정보 등록/수정
   - 상품 검색
-  - 관심 상품 등록/보기
+  - 상품 상세 정보 제공
+  - 상품 리뷰 정보 제공
+  - 관심 상품 등록/보기, 별칭 등록/수정
+  - 관심 상품 공유 (문자, 카카오톡)
+- 사용한 기술
+  - Backend
+    - Google Cloude Platform / Amazon Web Service
+    - MySQL
+    - Spring Tool Suite 4
+  - Other
+    - Google DialogFlow (Chatbot)
+    - Beautiful Soup / Selenium (Web Scrapint)
+    - Tensorflow / Inception V3
+  
   
