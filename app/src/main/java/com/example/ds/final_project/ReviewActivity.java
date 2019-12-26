@@ -103,7 +103,7 @@ public class ReviewActivity extends AppCompatActivity {
                         android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
 
                 oDialog.setTitle("도움말")
-                        .setMessage("")
+                        .setMessage("상품의 실시간 리뷰 정보를 제공합니다.")
                         .setPositiveButton("닫기", null)
                         .setCancelable(true)
                         .show();

@@ -1284,7 +1284,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
 
                 oDialog.setTitle("도움말")
-                        .setMessage("")
+                        .setMessage("쇼우미에 음성 또는 자판을 이용해 입력하거나 메뉴 버튼 클릭을 통해 조작이 가능합니다.\n" +
+                                "상품 검색하기, 이전 검색 다시보기, 관심 상품 보기, 관심 상품 공유하기, 사용자 정보 수정이 가능합니다.")
                         .setPositiveButton("닫기", null)
                         .setCancelable(true)
                         .show();
