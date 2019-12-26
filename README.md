@@ -22,7 +22,7 @@
     - Spring Tool Suite 4
   - Other
     - Google DialogFlow (Chatbot)
-    - Beautiful Soup / Selenium (Web Scrapint)
+    - Beautiful Soup / Selenium (Web Scraping)
     - Tensorflow / Inception V3
   
 
