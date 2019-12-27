@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -15,11 +17,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
+            android:focusedByDefault="true"
             android:onClick="onSTTClicked"
             android:id="@+id/dialog_btn_stt"
             android:text="말하기"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+        <requestFocus />
+        </Button>
         <EditText
             android:gravity="center"
             android:id="@+id/shareTo"

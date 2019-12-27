@@ -127,6 +127,9 @@ public class ProductInfo extends AppCompatActivity {
         context=getApplicationContext();
         wishProductDialog=new WishProductDialog(this);
         sendMsgDialog= new SendMsgDialog(this);
+//        wishProductDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_info);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
@@ -252,6 +255,7 @@ public class ProductInfo extends AppCompatActivity {
 
             @Override
             public void onNegativeClicked() {
+
                 Log.d("dialog","취소");
             }
 
