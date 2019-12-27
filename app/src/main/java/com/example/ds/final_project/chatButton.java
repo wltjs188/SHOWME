@@ -22,26 +22,32 @@ public class chatButton {
         for(int i=0;i<btnNames.size();i++){
             Button btn = new Button(context);
             btn.setText(btnNames.get(i));
+            btn.setBackgroundResource(R.drawable.btn_chat);
+            btn.setTextSize(16);
+            Log.d("dd",getBtnNames().toString());
             if(btnNames.get(i).equals("상품 검색하기")){
                 btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                btn.setBackgroundResource(R.drawable.product_search);
             }
             else if(btnNames.get(i).equals("이전 검색 다시보기")){
                 btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                btn.setBackgroundResource(R.drawable.previous);
             }
             else if(btnNames.get(i).equals("관심 상품 보기")){
                 btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                btn.setBackgroundResource(R.drawable.interested_product);
             }
             else if(btnNames.get(i).equals("관심 상품 공유하기")){
                 btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                btn.setBackgroundResource(R.drawable.share);
             }
             else if(btnNames.get(i).equals("사용자 정보 수정")){
                 btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                btn.setBackgroundResource(R.drawable.user_modification);
             }
-            btn.setTextSize(18);
             btn.setWidth(400);
             btn.setHeight(400);
             btn.setOnClickListener(listener);
-            btn.setBackgroundResource(R.drawable.btn_chat);
             layout.addView(btn);
             list.add(btn);
         }
