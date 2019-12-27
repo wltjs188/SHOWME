@@ -1658,10 +1658,10 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             Arrays.asList("상관 없음","데님 팬츠","코튼 팬츠","수트 팬츠/슬랙스","트레이닝/조거 팬츠","숏 팬츠","레깅스")
     );
     ArrayList<String> btnNamesStyleSkirt= new ArrayList<String>(
-            Arrays.asList("상관 없음","미니 스커트","롱 스커트")
+            Arrays.asList("상관 없음","미니 스커트","미디 스커트","롱 스커트")
     );
     ArrayList<String> btnNamesStyleDress= new ArrayList<String>(
-            Arrays.asList("상관 없음","미니 원피스","맥시 원피스","점프수트","관심 상품 공유하기","사용자 정보 수정")
+            Arrays.asList("상관 없음","미니 원피스","맥시 원피스")
     );
     ArrayList<String> btnNamesStyleOuter= new ArrayList<String>(
             Arrays.asList("상관 없음","항공 점퍼","레더/라이더스 재킷","트러커 재킷","수트/블레이저 재킷","나일론/코치/아노락 재킷",
