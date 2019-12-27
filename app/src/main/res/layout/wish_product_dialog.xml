@@ -18,6 +18,7 @@
         android:layout_height="wrap_content">
         <Button
             android:onClick="onSTTClicked"
+            android:focusedByDefault="true"
             android:id="@+id/dialog_btn_stt"
             android:text="말하기"
             android:layout_width="wrap_content"
