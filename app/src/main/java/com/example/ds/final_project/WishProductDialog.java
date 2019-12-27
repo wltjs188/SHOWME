@@ -72,7 +72,7 @@ public class WishProductDialog extends Dialog implements View.OnClickListener{
         ok.setOnClickListener(this);
         dialog_btn_stt.setOnClickListener(this);
 
-
+        dialog_btn_stt.requestFocus();
     }
 
     @Override
