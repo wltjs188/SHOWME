@@ -255,6 +255,7 @@ public class ProductInfo extends AppCompatActivity {
 
             @Override
             public void onNegativeClicked() {
+
                 Log.d("dialog","취소");
             }
 

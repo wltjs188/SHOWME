@@ -85,6 +85,7 @@ public class WishProductDialog extends Dialog implements View.OnClickListener{
                 
                 break;
             case R.id.cancel:
+                setEditText("");
                 cancel();
                 break;
             case R.id.ok:
