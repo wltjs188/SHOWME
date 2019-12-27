@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,11 +47,16 @@ import java.util.ArrayList;
 
 public class WishListActivity extends AppCompatActivity {
 
-    WishProductDialog dialog;
+    WishProductDialog wishProductDialog;
     Intent productInfoIntent; //상세정보 intent
     GridView gv;
     private WishAdapter adapter;
     String uuid="";
+
+
+    //STT
+    private final int REQ_CODE_SPEECH_INPUT = 100;
+
     //상품정보 List
     ArrayList<WishProduct> wishProducts=new ArrayList<WishProduct>();
     ArrayList<String> productIds=new ArrayList<String>();
@@ -79,7 +85,7 @@ public class WishListActivity extends AppCompatActivity {
         productInfoIntent = new Intent(getApplicationContext(),ProductInfo.class);
         gv = (GridView)findViewById(R.id.gridView1);
 
-        dialog=new WishProductDialog(this);
+        wishProductDialog=new WishProductDialog(this);
 
         uuid = getPreferences("uuid");
 
@@ -120,7 +126,7 @@ public class WishListActivity extends AppCompatActivity {
                             case R.id.editWishProductName:
                                 //별칭 수정
 
-                                dialog.setDialogListener(new DialogListener() {
+                                wishProductDialog.setDialogListener(new DialogListener() {
                                     @Override
                                     public void onPositiveClicked(String name) {
 //
@@ -135,7 +141,7 @@ public class WishListActivity extends AppCompatActivity {
                                         Log.d("dialog","취소");
                                     }
                                 });
-                                dialog.show();
+                                wishProductDialog.show();
 //                                dialog.setEditTextHint("뀨");
 //                                dialog.setEditText(adapter.getName(position));
 //                                Toast.makeText(getApplication(),"메뉴1",Toast.LENGTH_SHORT).show();
@@ -423,8 +429,8 @@ public class WishListActivity extends AppCompatActivity {
                             aliases.set(pos,alias);
                             Toast.makeText(getApplicationContext(),"별칭을 "+Name+"으로 수정하였습니다.",Toast.LENGTH_LONG).show();;
                             Log.i("별칭 수정", "성공" + result);
-                            dialog.setEditText("");
-                            dialog.dismiss();
+                            wishProductDialog.setEditText("");
+                            wishProductDialog.dismiss();
                         }
                         else
                             insertFail();
@@ -439,7 +445,7 @@ public class WishListActivity extends AppCompatActivity {
         }
     }
     private void insertFail(){
-        dialog.setEditText("");
+        wishProductDialog.setEditText("");
         Toast.makeText(getApplicationContext(),"별칭이 중복됩니다. 다시 입력해 주세요.",Toast.LENGTH_LONG).show();
     }
 
@@ -447,6 +453,21 @@ public class WishListActivity extends AppCompatActivity {
     private String  getPreferences(String key){
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
         return pref.getString(key, "");
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    wishProductDialog.setEditText(result.get(0)); //다이얼로그 editText 수정
+                }
+                break;
+            }
+
+        }
     }
 }
 

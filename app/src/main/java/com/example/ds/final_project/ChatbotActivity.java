@@ -969,8 +969,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 remember.setColor(null);
                 strContact = gson.toJson(remember, Product.class);
                 savePreferences("remember",strContact);
-                searchtask = new SearchProduct();
-                searchtask.execute("SearchOne2", category);
+//                searchtask = new SearchProduct();
+//                searchtask.execute("SearchOne2", category);
 
 
                 category = null; style=null; color = null;
@@ -1009,8 +1009,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 strContact = gson.toJson(remember, Product.class);
                 savePreferences("remember",strContact);
 
-                searchtask = new SearchProduct();
-                searchtask.execute("SearchTwo2", category,style);
+//                searchtask = new SearchProduct();
+//                searchtask.execute("SearchTwo2", category,style);
 
                 category = null; style=null; color = null;
                 Log.d("yoon search","카테고리, 스타일로 검색: "+so);
