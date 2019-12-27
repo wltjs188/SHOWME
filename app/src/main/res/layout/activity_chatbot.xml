@@ -37,7 +37,7 @@
                 android:layout_weight="0.3"
                 android:background="@color/colorPrimary"
                 android:text="말하기"
-                android:textColor="@color/background_material_light" />
+                android:textColor="@color/colorBlack" />
 
             <EditText
                 android:id="@+id/msg_type"
@@ -63,7 +63,7 @@
                 android:layout_weight="0.3"
                 android:background="@color/colorPrimary"
                 android:text="전송"
-                android:textColor="@color/background_material_light"
+                android:textColor="@color/colorBlack"
 
                 />
         </LinearLayout>
