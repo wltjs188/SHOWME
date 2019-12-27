@@ -21,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
+            android:focusable="true"
             android:onClick="onSTTClicked"
             android:focusedByDefault="true"
             android:id="@+id/dialog_btn_stt"
