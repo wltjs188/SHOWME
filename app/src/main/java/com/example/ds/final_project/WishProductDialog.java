@@ -27,6 +27,7 @@ public class WishProductDialog extends Dialog implements View.OnClickListener{
     private Button cancel;
     private Button ok;
     private Button dialog_btn_stt;
+    private TextView dialog_tv;
 
     //STT
     private final int REQ_CODE_SPEECH_INPUT = 100;
@@ -49,7 +50,9 @@ public class WishProductDialog extends Dialog implements View.OnClickListener{
 //        this.context = context;
 
     }
-
+    public void setDialog_tv(String text){
+        dialog_tv.setText(text);
+    }
     public WishProductDialog(Context context,String name){
         super(context);
         this.context = context;
@@ -63,6 +66,7 @@ public class WishProductDialog extends Dialog implements View.OnClickListener{
         cancel = (Button) findViewById(R.id.cancel);
         ok = (Button) findViewById(R.id.ok);
         dialog_btn_stt=(Button) findViewById(R.id.dialog_btn_stt);
+        dialog_tv=(TextView)findViewById(R.id.dialog_tv);
 
         cancel.setOnClickListener(this);
         ok.setOnClickListener(this);

@@ -142,6 +142,7 @@ public class WishListActivity extends AppCompatActivity {
                                     }
                                 });
                                 wishProductDialog.show();
+                                wishProductDialog.setDialog_tv("수정할 이름을 입력해 주세요");
 //                                dialog.setEditTextHint("뀨");
 //                                dialog.setEditText(adapter.getName(position));
 //                                Toast.makeText(getApplication(),"메뉴1",Toast.LENGTH_SHORT).show();
