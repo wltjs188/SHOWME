@@ -26,6 +26,8 @@
         <requestFocus />
         </Button>
         <EditText
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:hint="별칭 입력"
             android:gravity="center"
             android:id="@+id/wishProductName"
