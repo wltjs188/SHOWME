@@ -9,10 +9,9 @@
     <TextView
         android:id="@+id/review_allRating"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:gravity="center"
+        android:layout_height="130dp"
+        android:gravity="center|center_vertical|center_horizontal"
         android:text="평점"
-
         android:textSize="50sp" />
 
     <TextView
