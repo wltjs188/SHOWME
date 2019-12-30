@@ -198,6 +198,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
     @Override
     protected void onResume() {
+        Log.d("onresume","codbs");
         super.onResume();
         if(getPreferences("remember")==null||getPreferences("remember")=="") //이전 상품 존재 안함
             remember=new Product();
@@ -211,6 +212,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
     @Override
     protected void onStart() {
+        Log.d("onStart","codbs");
         super.onStart();
         params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,"stringId"); //tts
         if(user==null){
@@ -247,7 +249,15 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     }
 
     @Override
+    protected void onDestroy() {
+        Log.d("ondestroy","codbs");
+        super.onDestroy();
+        aiRequest.setResetContexts(true);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("oncreate","codbs");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatbot);
         getSupportActionBar().setTitle("쇼우미");
@@ -371,6 +381,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     }else{
                         //등록된 사용자
                         if(input.contains("그만")){
+//                            aiRequest.setResetContexts(true);
                             aiRequest.setQuery(input);
 
                             Log.e("입력", input);
@@ -467,7 +478,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     }
     @Override
     protected void onStop() {
+        Log.d("onstop","codbs");
         super.onStop();
+//        aiRequest.setResetContexts(true);
+
         if (tts != null) {
             tts.stop();
             tts.shutdown();
