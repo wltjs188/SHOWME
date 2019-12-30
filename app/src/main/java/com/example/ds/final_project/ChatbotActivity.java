@@ -384,7 +384,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                            aiRequest.setResetContexts(true);
                             aiRequest.setQuery(input);
 
-                            Log.e("입력", input);
                             new AITask().execute(aiRequest);
                         }
                         else if (shareType != null) { //공유
@@ -791,6 +790,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
         switch (ACTION){
             case "stop":
+                aiRequest.setResetContexts(true);
                 makeMenuMsg();
                 break;
             case "ACTION_USER"://사용자등록 : 이름받아오기
@@ -1146,18 +1146,19 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
             case "Share_k-product": //카카오 공유할 상품
                 parameter=getParameter(result);
-                kProduct=parameter.get("any").toString().replaceAll("\"","");
-                Log.d("share mProduct",kProduct);
+                if(parameter.get("any")!=null) {
+                    kProduct = parameter.get("any").toString().replaceAll("\"", "");
+                    Log.d("share mProduct", kProduct);
 
-                chatMessage2 = new ChatMessage("버튼",true);
-                chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
-                adapter.setButton(btnSendListener); //버튼리스터 설정
+                    chatMessage2 = new ChatMessage("버튼", true);
+                    chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
+                    adapter.setButton(btnSendListener); //버튼리스터 설정
 
-                //카톡 공유 시작
-                ShareKakao();
-                kProduct=null;
-                shareType=null;
-
+                    //카톡 공유 시작
+                    ShareKakao();
+                    kProduct = null;
+                    shareType = null;
+                }
 
                 break;
 
