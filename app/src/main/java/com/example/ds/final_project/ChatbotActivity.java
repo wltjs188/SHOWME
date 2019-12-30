@@ -370,7 +370,13 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         new AITask().execute(aiRequest2);
                     }else{
                         //등록된 사용자
-                        if (shareType != null) { //공유
+                        if(input.contains("그만")){
+                            aiRequest.setQuery(input);
+
+                            Log.e("입력", input);
+                            new AITask().execute(aiRequest);
+                        }
+                        else if (shareType != null) { //공유
                             ChatMessage chatMessage;
                             chatMessage = new ChatMessage(input, false);
                             if (shareType.equals("msg")) {  //문자공유
@@ -450,37 +456,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             makeMenuMsg();
         }
 
-
-
-
-
-//        btnSend.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (editText.getText().toString().trim().equals("")) {
-//                    tts.speak("텍스트를 입력해주세요.",TextToSpeech.QUEUE_FLUSH, null);
-//                }
-////                else if(editText.getText().toString().length() !=8 && chatMessages.get(chatMessages.size()-1).toString().contains("번호")){
-////                    Toast.makeText(getApplicationContext(),"010을 제외한 8자리 번호를 입력해주세요.",Toast.LENGTH_LONG).show();
-////                }
-//                else {
-//
-////                    tts.speak(editText.getText().toString()+"라고 말했습니다.",TextToSpeech.QUEUE_FLUSH, params);
-//                    if(user==null){
-//                        //등록되지 않은 사용자
-//                        aiRequest2.setQuery(editText.getText().toString());
-//                        Log.e("입력",editText.getText().toString());
-//                        new AITask().execute(aiRequest2);
-//                    }else{
-//                        //등록된 사용자
-//                        aiRequest.setQuery(editText.getText().toString());
-//                        Log.e("입력",editText.getText().toString());
-//                        new AITask().execute(aiRequest);
-//                    }
-//                }
-////                editText.requestFocus();
-//            }
-//        });
         //STT 버튼
         btnSTT.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -647,7 +622,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 break;
             }
             case SHOP_ACTIVITY:{
-//                makeMenuMsg();
+//               makeMenuMsg();
                 break;
             }
             case WISHLIST_ACTIVITY:{
@@ -663,6 +638,17 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         //멘트
         ChatMessage chatMessage = new ChatMessage(user.getName()+"님 안녕하세요?\n아래 버튼 메뉴를 선택해주세요\n", true);
         chatMessages.add(chatMessage);
+        adapter.notifyDataSetChanged();
+        //TTS 챗봇 읽어주기
+        adapter.notifyDataSetChanged();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH,null);
+            }
+        }, 1000);
 
         //메뉴 버튼
         chatMessage2 = new ChatMessage("버튼",true);
@@ -672,7 +658,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
         //TTS 챗봇 읽어주기
         adapter.notifyDataSetChanged();
-        final Handler handler = new Handler();
+//        final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -790,7 +776,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         Log.i("액션",ACTION);
 
         switch (ACTION){
-
+            case "stop":
+                makeMenuMsg();
+                break;
             case "ACTION_USER"://사용자등록 : 이름받아오기
                 String name="";
                 String address="";
@@ -1484,14 +1472,18 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                             Log.i("chat가져온 데이터ㄹㄹ", product.toString());
                         }
 
-                        ChatMessage chatMessage3 = new ChatMessage(true, true, searched_products);
-                        chatMessages.add(chatMessage3);
-                        Log.i("상품개수",""+pNum);
+                        if(searched_products.size()==0){
+                            //검색 결과 없으면
+                        }else {
+                            ChatMessage chatMessage3 = new ChatMessage(true, true, searched_products);
+                            chatMessages.add(chatMessage3);
+                            Log.i("상품개수", "" + pNum);
 //                        chatMessage3.getImage().get(0);
 //                        for(int i=0;i<chatMessage3.getImage().size();i++) {
 //                            Log.i("김지선1", chatMessage3.getImage().get(i));
 //                        }
-                        adapter.notifyDataSetChanged();
+                            adapter.notifyDataSetChanged();
+                        }
                     }
 
                 } catch (JSONException e) {
@@ -1623,12 +1615,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         String productId = item.getString("ID");
                         smsg="https://store.musinsa.com/app/product/detail/"+productId;
                         Log.d("smsg",smsg);
-//                        ChatMessage chatMessage;
-//                        chatMessage = new ChatMessage(input, false);
-//
-//                        chatMessages.add(chatMessage);
-//                        adapter.notifyDataSetChanged();
-//                        editText.setText("");
 
                     }
                     aiRequest.setQuery(input);
