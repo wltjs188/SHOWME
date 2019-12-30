@@ -481,10 +481,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         super.onStop();
 //        aiRequest.setResetContexts(true);
 
-        if (tts != null) {
-            tts.stop();
-            tts.shutdown();
-        }
+//        if (tts != null) {
+//            tts.stop();
+//            tts.shutdown();
+//        }
     }
     @Override
     public boolean onTouchEvent(MotionEvent event) {
