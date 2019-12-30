@@ -791,6 +791,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         switch (ACTION){
             case "stop":
                 aiRequest.setResetContexts(true);
+                aiRequest = new AIRequest();
                 makeMenuMsg();
                 break;
             case "ACTION_USER"://사용자등록 : 이름받아오기
@@ -1158,6 +1159,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     ShareKakao();
                     kProduct = null;
                     shareType = null;
+                }else{
+
+                    aiRequest.setResetContexts(true);
                 }
 
                 break;
