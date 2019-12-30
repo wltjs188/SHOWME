@@ -3,16 +3,20 @@ package com.example.ds.final_project;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -60,7 +64,7 @@ import static android.speech.tts.TextToSpeech.ERROR;
 import org.apache.http.message.BasicNameValuePair;
 public class MainActivity extends Activity {
 
-    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
+    private static final int PERMISSIONS_REQUEST = 100;
 
     public static Context CONTEXT;
     //메인화면
@@ -72,31 +76,44 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+////            //접근권한 거부일때
+////            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+////        }
+////        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
+////                != PackageManager.PERMISSION_GRANTED) {
+////            //접근권한 거부일때
+////            // Permission is not granted
+////            // Ask for permision
+////            ActivityCompat.requestPermissions(this,new String[] { Manifest.permission.SEND_SMS}, 1);
+////        }
+////        else {
+////            // Permission has already been granted
+////        }
+////        int permission2 = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+////        if (permission2 != PackageManager.PERMISSION_GRANTED) {
+////            //접근권한 거부일때
+////            makeRequest();
+////        }
 
+
+        String permission[] = new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.RECORD_AUDIO,Manifest.permission.SEND_SMS,Manifest.permission.READ_CONTACTS}; //폰상태(로그인UUID),오디오, sms, 연락처
+        boolean check=false;
+        for(int i=0;i<permission.length;i++){
+            check = check || ContextCompat.checkSelfPermission(this,permission[i]) != PackageManager.PERMISSION_GRANTED;
         }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            // Ask for permision
-            ActivityCompat.requestPermissions(this,new String[] { Manifest.permission.SEND_SMS}, 1);
+        if(check == true){ //접근 권한 없을때
+            showPermission();
         }
-        else {
-// Permission has already been granted
+        else{ //접근 권한 있을때
+            Intent intent = new Intent(this,ChatbotActivity.class);
+            startActivity(intent);
+            finish();
         }
+
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//        getSupportActionBar().setTitle("쇼우미");
         CONTEXT=this;
-//        searchIntent=new Intent(getApplicationContext(),ChatbotActivity.class);//쇼핑시작
-//        wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
-//        webIntent=new Intent(getApplicationContext(),WebActivity.class);//나의정보수정
-//        shopIntent=new Intent(getApplicationContext(),ShopActivity.class);//나의정보수정
-//        reviewIntent=new Intent(getApplicationContext(),ReviewActivity.class); //리뷰
 
-        int permission2 = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
-        if (permission2 != PackageManager.PERMISSION_GRANTED) { makeRequest(); }
 
         uuid = GetDevicesUUID(getBaseContext());
         savePreferences("uuid",uuid);
@@ -115,14 +132,6 @@ public class MainActivity extends Activity {
                 }
             }
         });
-//
-//        final Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                tts.speak("쇼우미가 시작됩니다.",TextToSpeech.QUEUE_FLUSH, null);
-//            }
-//        }, 1000);
 
         //키해시 구하기
         try {
@@ -137,19 +146,78 @@ public class MainActivity extends Activity {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-//        try{
-//            Thread.sleep(2000);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-
-        Intent intent = new Intent(this,ChatbotActivity.class);
-        startActivity(intent);
-        finish();
 
     }
+    // 접근 권한 안내
+    public void showPermission(){
+        String msg =
+                "1. 전화 권한 (필수)\n" +
+                "-사용자 정보를 확인하기 위해 필요합니다.\n" +
+                "2. 마이크 권한 (필수)\n" +
+                "-음성 검색 기능 사용 시 필요합니다.\n" +
+                "3. SMS 권한 (필수)\n" +
+                "- 공유 서비스 사용 시 문자 발송을 위해 필요합니다.\n" +
+                "4. 연락처 권한 (필수)\n" +
+                "- 공유 서비스 사용 시 연락처 정보를 확인하기 위해 필요합니다.\n";
+        new android.support.v7.app.AlertDialog.Builder(this)
+                .setTitle("[쇼우미 사용을 위해 필요한 접근 권한 안내]")
+                .setMessage(msg)
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        checkPermission();
+                    }
+                })
+                .setCancelable(false)
+                .create()
+                .show();
+    }
 
-   public void onResume(){
+    //접근 권한 확인하기
+    public void checkPermission(){
+        String permission[] = new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.SEND_SMS,Manifest.permission.READ_CONTACTS}; //폰상태(로그인UUID),오디오, sms, 연락처
+        ActivityCompat.requestPermissions(this,permission, PERMISSIONS_REQUEST);
+    }
+
+    //접근 권한 승인 결과
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == PERMISSIONS_REQUEST){
+            if (grantResults[0] == 0 && grantResults[1] == 0 && grantResults[2] == 0 && grantResults[3] == 0){ //권한이 승낙된 경우
+                Intent intent = new Intent(this,ChatbotActivity.class);
+                startActivity(intent);
+                finish();
+            }
+            else{ //권한이 거절된 경우
+                String msg="";
+                if(grantResults[0] != 0)
+                    msg=msg+"사용자 정보 확인을 위해 전화 접근 권한이 필요합니다. \n전화 권한을 허가해주세요.\n";
+                if(grantResults[1] != 0)
+                    msg=msg+"음성 검색을 이용하기 위해 마이크 접근 권한이 필요합니다. \n마이크 권한을 허가해주세요.\n";
+                if (grantResults[2] !=0)
+                    msg=msg+"공유 서비스를 위해 문자 발송을 할 수 있습니다. \nSMS 권한을 허가해주세요.\n";
+                if (grantResults[3] !=0)
+                    msg=msg+"공유 서비스를 위해 연락처 정보를 확인할 수 있습니다. \n연락처 권한을 허가해주세요.\n";
+
+                new android.support.v7.app.AlertDialog.Builder(this)
+                        .setTitle("알림")
+                        .setMessage(msg)
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                checkPermission();
+                            }
+                        })
+                        .setCancelable(false)
+                        .create()
+                        .show();
+            }
+        }
+    }
+
+    public void onResume(){
         super.onResume();
 //       tts.speak("화면 아무 곳이나 터치하시면 쇼우미가 시작됩니다.",TextToSpeech.QUEUE_FLUSH, null);
         savePreferences("uuid",uuid);

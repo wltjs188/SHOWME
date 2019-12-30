@@ -263,8 +263,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         getSupportActionBar().setTitle("쇼우미");
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기버튼
 
-        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
-        if (permission != PackageManager.PERMISSION_GRANTED) { makeRequest(); }
+//        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+//        if (permission != PackageManager.PERMISSION_GRANTED) { makeRequest(); }
         btn_chat_send=(Button)findViewById(R.id.btn_chat_send);
         wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
         shopIntent=new Intent(getApplicationContext(),ShopActivity.class); //상품검색
@@ -718,27 +718,27 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             }
         }, 1000);
     }
-    protected void makeRequest() {
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.RECORD_AUDIO},
-                101);
-    }
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 101: {
-
-                if (grantResults.length == 0
-                        || grantResults[0] !=
-                        PackageManager.PERMISSION_GRANTED) {
-
-                } else {
-
-                }
-                return;
-            }
-        }
-    }
+//    protected void makeRequest() {
+//        ActivityCompat.requestPermissions(this,
+//                new String[]{Manifest.permission.RECORD_AUDIO},
+//                101);
+//    }
+//    public void onRequestPermissionsResult(int requestCode,
+//                                           String permissions[], int[] grantResults) {
+//        switch (requestCode) {
+//            case 101: {
+//
+//                if (grantResults.length == 0
+//                        || grantResults[0] !=
+//                        PackageManager.PERMISSION_GRANTED) {
+//
+//                } else {
+//
+//                }
+//                return;
+//            }
+//        }
+//    }
     //    public void ButtonClicked(View view){
 //        aiService.startListening();
 //    }
