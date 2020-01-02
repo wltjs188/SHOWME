@@ -24,6 +24,13 @@ public class chatButton {
             btn.setText(btnNames.get(i));
             btn.setBackgroundResource(R.drawable.btn_chat);
             btn.setTextSize(16);
+
+            //레이아웃파라미터 생성
+            LinearLayout.LayoutParams pm = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.FILL_PARENT);
+            pm.setMargins(1,0,1,0);
+
+            btn.setLayoutParams(pm);
+
             Log.d("dd",getBtnNames().toString());
             if(btnNames.get(i).equals("상품 검색하기")){
                 btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
