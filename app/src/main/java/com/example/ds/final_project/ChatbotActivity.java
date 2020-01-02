@@ -991,8 +991,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 remember.setColor(null);
                 strContact = gson.toJson(remember, Product.class);
                 savePreferences("remember",strContact);
-//                searchtask = new SearchProduct();
-//                searchtask.execute("SearchOne2", category);
+                searchtask = new SearchProduct();
+                searchtask.execute("SearchOne2", category);
 
 
                 category = null; style=null; color = null;
@@ -1033,8 +1033,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 strContact = gson.toJson(remember, Product.class);
                 savePreferences("remember",strContact);
 
-//                searchtask = new SearchProduct();
-//                searchtask.execute("SearchTwo2", category,style);
+                searchtask = new SearchProduct();
+                searchtask.execute("SearchTwo2", category,style);
 
                 category = null; style=null; color = null;
                 Log.d("yoon search","카테고리, 스타일로 검색: "+so);
@@ -1106,6 +1106,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                        }
                         startActivity(shopIntent);
                     }
+
                     chatMessage2 = new ChatMessage("버튼",true);
                     chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
                     adapter.setButton(btnSendListener); //버튼이름 설정
@@ -1556,14 +1557,16 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                                 str+="원하는 스타일도 선택해주세요.";
 
                                 int btn_type=0;
-                                chatMessage2 = new ChatMessage("버튼",true);
                                 chatMessage = new ChatMessage(str, true);
                                 chatMessages.add(chatMessage);
                                 adapter.notifyDataSetChanged();
                                 tts.speak(str, TextToSpeech.QUEUE_FLUSH, null);
 
+
+                                chatMessage2 = new ChatMessage("버튼",true);
                                 switch (category){
                                     case "상의":
+                                        Log.d("buttonyoon ","yoon");
                                         btn_type=BTN_TYPE_STYLE_TOP;
                                         break;
                                     case "바지":
@@ -1581,6 +1584,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                                 }
                                 chatMessage2.setButton(btn_type); //버튼으로 설정
                                 adapter.setButton(btnSendListener); //버튼리스터 설정
+                                chatMessages.add(chatMessage2);
                                 adapter.notifyDataSetChanged();
                             }else if(project.equals("SearchTwo2")){
                                 str+="원하는 색상이 있으시면 선택해주세요.";
@@ -1592,12 +1596,18 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                                 chatMessage2 = new ChatMessage("버튼",true);
                                 chatMessage2.setButton(BTN_TYPE_COLOR); //버튼으로 설정
                                 adapter.setButton(btnSendListener); //버튼리스터 설정
+                                chatMessages.add(chatMessage2);
                                 adapter.notifyDataSetChanged();
                             }else if(project.equals("SearchThree2")){
                                 chatMessage = new ChatMessage(str, true);
                                 chatMessages.add(chatMessage);
                                 adapter.notifyDataSetChanged();
                                 tts.speak(str, TextToSpeech.QUEUE_FLUSH, null);
+//                                chatMessage = new ChatMessage(str, true);
+//                                chatMessages.add(chatMessage);
+//                                adapter.notifyDataSetChanged();
+//                                tts.speak(str, TextToSpeech.QUEUE_FLUSH, null);
+                                makeMenuMsg();
                             }
                         }
                     }
