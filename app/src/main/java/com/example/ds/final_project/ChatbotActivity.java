@@ -244,6 +244,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //            aiDataService = new AIDataService(this,config);
 //            aiRequest = new AIRequest();
             Log.d("채?","?");
+//            makeWelcomeMsg();
 //            makeMenuMsg();
         }
     }
@@ -463,6 +464,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             String strContact=getPreferences("USER");
             user=gson.fromJson(strContact,User.class);
             Log.d("uuid 정보",user.getName()+user.getAddress()+user.getPhoneNum());
+            makeWelcomeMsg();
             makeMenuMsg();
         }
 
@@ -635,7 +637,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 break;
             }
             case SHOP_ACTIVITY:{
-//               makeMenuMsg();
+                makeMenuMsg();
                 break;
             }
             case WISHLIST_ACTIVITY:{
@@ -645,11 +647,26 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         }
     }
 
+    protected void makeWelcomeMsg(){
+        ChatMessage chatMessage = new ChatMessage(user.getName()+"님 안녕하세요?", true);
+        chatMessages.add(chatMessage);
+        adapter.notifyDataSetChanged();
+        //TTS 챗봇 읽어주기
+        adapter.notifyDataSetChanged();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH,null);
+            }
+        }, 1000);
+    }
     //메뉴 메세지
     protected void makeMenuMsg(){
 
         //멘트
-        ChatMessage chatMessage = new ChatMessage(user.getName()+"님 안녕하세요?\n아래 버튼 메뉴를 선택해주세요\n", true);
+        ChatMessage chatMessage = new ChatMessage("아래 버튼을 눌러 메뉴를 선택해주세요\n", true);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
         //TTS 챗봇 읽어주기
@@ -787,7 +804,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
         chatMessage2= new ChatMessage("",true);//버튼 메세지
         Log.i("액션",ACTION);
-
+        boolean search=false;
         switch (ACTION){
             case "stop":
                 aiRequest.setResetContexts(true);
@@ -929,6 +946,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                 break;
             case "Product_Category": //카테고리
+                search=true;
                 parameter=getParameter(result);
                 category = parameter.get("Category").toString().replaceAll("\"","");
                 int btn_type=0;
@@ -965,7 +983,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 searchtask.execute("SearchOne2", category);
 
                 break;
-            case "Search_Style.Search_Style-no": //카테고리만 입력
+            case "Search_Style.Search_Style-no": //카테고리만 입
+                search=true;
                 so=category;
                 remember.setCategory(category);
                 remember.setStyle(null);
@@ -987,6 +1006,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 break;
 
             case "Product_Style": //스타일
+                search=true;
                 parameter=getParameter(result);
                 style = parameter.get("Style").toString().replaceAll("\"","");
                 chatMessage2 = new ChatMessage("버튼",true);
@@ -1005,6 +1025,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                 break;
             case "Search_Style.Search_Color.Search_Color-no": //카테고리, 스타일로 검색
+                search=true;
                 so=category+", "+style;
                 remember.setCategory(category);
                 remember.setStyle(style);
@@ -1026,6 +1047,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 adapter.setButton(btnSendListener); //버튼이름 설정
                 break;
             case "Product_Color": //색상 , (카테고리,스타일,색상 다 입력 됨)
+                search=true;
                 parameter=getParameter(result);
                 Log.d("yoon color",parameter.toString());
                 color = parameter.get("Color").toString().replaceAll("\"","");
@@ -1177,22 +1199,23 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //        if(get)
 
         speech = result.getFulfillment().getSpeech();
+        if(!search) {
+
 //        }
 
 
+            ChatMessage chatMessage;
+            chatMessage = new ChatMessage(query, false);
 
-        ChatMessage chatMessage;
-        chatMessage = new ChatMessage(query, false);
-
-        Log.d("쿼리",query);
-        if(!query.contains("다시")) {
-            chatMessages.add(chatMessage);
-            for (int i = 0; i < chatMessages.size(); i++) {
-                Log.i("메세지순서", chatMessages.get(i).getContent());
+            Log.d("쿼리", query);
+            if (!query.contains("다시")) {
+                chatMessages.add(chatMessage);
+                for (int i = 0; i < chatMessages.size(); i++) {
+                    Log.i("메세지순서", chatMessages.get(i).getContent());
+                }
+                adapter.notifyDataSetChanged();
+                editText.setText("");
             }
-            adapter.notifyDataSetChanged();
-            editText.setText("");
-        }
 
 
 //            ChatMessage chatMessage3 = new ChatMessage(true, true, searched_products);
@@ -1201,33 +1224,32 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
 //        chatMessage = new ChatMessage(speech, true);
 //
-        Log.d("대답",speech);
+            Log.d("대답", speech);
 //        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
 //        tts.speak(speech,TextToSpeech.QUEUE_FLUSH, null);
 
 
-        if(!speech.equals("")){
+            if (!speech.equals("")) {
 //            chatMessages.add(chatMessage);
-            if(!(chatMessage2.getContent().equals(""))){
-                handler.postDelayed(new Runnable() {
-//                    pDialog.dismiss();
-                    @Override
-                    public void run() {
-                        ChatMessage chatMessage = new ChatMessage(speech, true);
-                        chatMessages.add(chatMessage);
-                        chatMessages.add(chatMessage2);
-                        adapter.notifyDataSetChanged();
-                    }
-                }, 500);
+                if (!(chatMessage2.getContent().equals(""))) {
+                    handler.postDelayed(new Runnable() {
+                        //                    pDialog.dismiss();
+                        @Override
+                        public void run() {
+                            ChatMessage chatMessage = new ChatMessage(speech, true);
+                            chatMessages.add(chatMessage);
+                            chatMessages.add(chatMessage2);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }, 500);
 //                chatMessages.add(chatMessage2);
+                } else {
+                    chatMessage = new ChatMessage(speech, true);
+                    chatMessages.add(chatMessage);
+                    adapter.notifyDataSetChanged();
+                }
+                tts.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
             }
-            else{
-                chatMessage = new ChatMessage(speech, true);
-                chatMessages.add(chatMessage);
-                adapter.notifyDataSetChanged();
-            }
-            tts.speak(speech,TextToSpeech.QUEUE_FLUSH, null);
-        }
 //        if(remenu!=""){
 //            chatMessage = new ChatMessage(remenu, true);
 //            chatMessages.add(chatMessage);
@@ -1235,6 +1257,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //            tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
 //            remenu="";
 //        }
+        }
     }
     @Override
     public void onError(AIError error) { }
@@ -1449,10 +1472,24 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     JSONArray jArray = (JSONArray) jsonObj.get("getData");
 //                    items = new ArrayList<Product>();
                     if(jArray.length()==0){
-                        Log.d("chatBotActivity검색"," 실패");
-                        ChatMessage chatMessage3 = new ChatMessage("검색 결과가 없습니다.",true);
-                        chatMessages.add(chatMessage3);
+//                        Log.d("chatBotActivity검색"," 실패");
+//                        ChatMessage chatMessage3 = new ChatMessage("검색 결과가 없습니다.",true);
+//                        chatMessages.add(chatMessage3);
+//                        adapter.notifyDataSetChanged();
+
+
+                        Log.d("대답", speech);
+//        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
+//        tts.speak(speech,TextToSpeech.QUEUE_FLUSH, null);
+                        ChatMessage chatMessage = new ChatMessage("검색 결과가 없습니다.", true);
+                        chatMessages.add(chatMessage);
                         adapter.notifyDataSetChanged();
+
+
+                        tts.speak("검색 결과가 없습니다.", TextToSpeech.QUEUE_FLUSH, null);
+
+                        makeMenuMsg();
+
                     }
                     else {
                         Log.i("chatBotActivity검색","성공"+result);
@@ -1494,6 +1531,27 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         if(searched_products.size()==0){
                             //검색 결과 없으면
                         }else {
+                            if (!speech.equals("")) {
+//            chatMessages.add(chatMessage);
+                                if (!(chatMessage2.getContent().equals(""))) {
+                                    handler.postDelayed(new Runnable() {
+                                        //                    pDialog.dismiss();
+                                        @Override
+                                        public void run() {
+                                            ChatMessage chatMessage = new ChatMessage(speech, true);
+                                            chatMessages.add(chatMessage);
+                                            chatMessages.add(chatMessage2);
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    }, 500);
+//                chatMessages.add(chatMessage2);
+                                } else {
+                                    ChatMessage chatMessage = new ChatMessage(speech, true);
+                                    chatMessages.add(chatMessage);
+                                    adapter.notifyDataSetChanged();
+                                }
+                                tts.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
+                            }
                             ChatMessage chatMessage3 = new ChatMessage(true, true, searched_products);
                             chatMessages.add(chatMessage3);
                             Log.i("상품개수", "" + pNum);
