@@ -253,7 +253,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     protected void onDestroy() {
         Log.d("ondestroy","codbs");
         super.onDestroy();
-        aiRequest.setResetContexts(true);
+//        aiRequest.setResetContexts(true);
     }
 
     @Override
@@ -807,7 +807,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         boolean search=false;
         switch (ACTION){
             case "stop":
-                aiRequest.setResetContexts(true);
+//                aiRequest.setResetContexts(true);
                 aiRequest = new AIRequest();
                 makeMenuMsg();
                 break;
@@ -1184,7 +1184,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     shareType = null;
                 }else{
 
-                    aiRequest.setResetContexts(true);
+//                    aiRequest.setResetContexts(true);
                 }
 
                 break;
