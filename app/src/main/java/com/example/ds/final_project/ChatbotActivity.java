@@ -253,7 +253,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     protected void onDestroy() {
         Log.d("ondestroy","codbs");
         super.onDestroy();
-//        aiRequest.setResetContexts(true);
+        aiRequest.setResetContexts(true);
     }
 
     @Override
