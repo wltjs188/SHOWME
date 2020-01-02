@@ -798,7 +798,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //        Log.d("yoon response",response.toString());
         ACTION=result.getAction();
         SearchProduct searchtask;
-        Log.i("액션",ACTION);
         String so=null;
         //챗봇 액션 처리
 
@@ -991,16 +990,16 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 remember.setColor(null);
                 strContact = gson.toJson(remember, Product.class);
                 savePreferences("remember",strContact);
-                searchtask = new SearchProduct();
-                searchtask.execute("SearchOne2", category);
+//                searchtask = new SearchProduct();
+//                searchtask.execute("SearchOne2", category);
 
 
                 category = null; style=null; color = null;
                 Log.d("yoon search","카테고리로 검색: "+so);
 
-//                chatMessage2 = new ChatMessage("버튼",true);
-//                chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
-//                adapter.setButton(btnSendListener); //버튼이름 설정
+                chatMessage2 = new ChatMessage("버튼",true);
+                chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
+                adapter.setButton(btnSendListener); //버튼이름 설정
 
 
                 break;
@@ -1033,8 +1032,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 strContact = gson.toJson(remember, Product.class);
                 savePreferences("remember",strContact);
 
-                searchtask = new SearchProduct();
-                searchtask.execute("SearchTwo2", category,style);
+//                searchtask = new SearchProduct();
+//                searchtask.execute("SearchTwo2", category,style);
 
                 category = null; style=null; color = null;
                 Log.d("yoon search","카테고리, 스타일로 검색: "+so);
@@ -1127,12 +1126,17 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     adapter.setButton(btnSendListener); //버튼리스터 설정
                 }
                 break;
+            case "Share-stop":
+                shareType=null;
+                makeMenuMsg();
+                break;
             case "Share_m":
                 shareType="msg";
                 break;
             case "Share_k":
                 shareType="kakao";
                 break;
+
             case "Share_m-product": //메세지로 공유할 상품
                 parameter=getParameter(result);
 
@@ -1188,6 +1192,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 }
 
                 break;
+
+
 
         }
 
@@ -1710,7 +1716,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 editText.setText("");
                 if(shareType.equals("msg")){
                     input="문자상품다시";
-                }else{
+                }else if(shareType.equals("kakao")){
                     input="카톡상품다시";
                 }
 
@@ -1732,7 +1738,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         editText.setText("");
                         if(shareType.equals("msg")){
                             input="문자상품다시";
-                        }else{
+                        }else if(shareType.equals("kakao")){
                             input="카톡상품다시";
                         }
                     }else {
