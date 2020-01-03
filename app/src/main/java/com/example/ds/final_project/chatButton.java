@@ -22,26 +22,43 @@ public class chatButton {
         for(int i=0;i<btnNames.size();i++){
             Button btn = new Button(context);
             btn.setText(btnNames.get(i));
+            btn.setBackgroundResource(R.drawable.btn_chat);
+            btn.setTextSize(16);
+
+            //레이아웃파라미터 생성
+            LinearLayout.LayoutParams pm = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.FILL_PARENT);
+            pm.setMargins(2,0,2,0);
+
+            Log.d("dd",getBtnNames().toString());
             if(btnNames.get(i).equals("상품 검색하기")){
                 btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                btn.setBackgroundResource(R.drawable.product_search);
+                pm.setMargins(1,0,1,0);
             }
             else if(btnNames.get(i).equals("이전 검색 다시보기")){
                 btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                btn.setBackgroundResource(R.drawable.previous);
+                pm.setMargins(1,0,1,0);
             }
             else if(btnNames.get(i).equals("관심 상품 보기")){
                 btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                btn.setBackgroundResource(R.drawable.interested_product);
+                pm.setMargins(1,0,1,0);
             }
             else if(btnNames.get(i).equals("관심 상품 공유하기")){
                 btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                btn.setBackgroundResource(R.drawable.share);
+                pm.setMargins(1,0,1,0);
             }
             else if(btnNames.get(i).equals("사용자 정보 수정")){
                 btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                btn.setBackgroundResource(R.drawable.user_modification);
+                pm.setMargins(1,0,1,0);
             }
-            btn.setTextSize(18);
+            btn.setLayoutParams(pm);
             btn.setWidth(400);
             btn.setHeight(400);
             btn.setOnClickListener(listener);
-            btn.setBackgroundResource(R.drawable.btn_chat);
             layout.addView(btn);
             list.add(btn);
         }

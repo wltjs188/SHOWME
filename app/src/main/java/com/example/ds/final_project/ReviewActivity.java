@@ -134,31 +134,45 @@ public class ReviewActivity extends AppCompatActivity {
                 System.out.println("주소"+productUrl);
                 // 키워드부분 접근
                 Elements contents = doc.select("div.wrap-estimate-avg");
-                System.out.println("전체 : " + contents.text() + "\n");
+                //System.out.println("전체 : " + contents.text() + "\n");
 
-                for (Element e : contents) {
-                    //평점 출력
-                    String rank = e.select("span.rate").text();
-                    txtAllRating += "평점 : " + rank + "\n";
-                    //System.out.println("평점"+txtAllRating);
+                if(contents.text().isEmpty()){
+                    txtAllRating = "등록된 평점이 없습니다.";
+                    txtKeyword = "등록된 평가가 없습니다.";
+                }
+                else{
+                    for (Element e : contents) {
+                        //평점 출력
+                        String rank = e.select("span.rate").text();
+                        if(rank.equals("")){
+                            txtAllRating = "등록된 평점이 없습니다.";
+                        }else {
+                            txtAllRating += "평점 : " + rank + "\n";
+                            //System.out.println("평점"+txtAllRating);
+                        }Log.d("평점여기",rank);
 
-                    // 평가항목 접근
-                    Elements cts = e.select("div.lv-contents");
+                        // 평가항목 접근
+                        Elements cts = e.select("div.lv-contents");
 
-                    for(Element j : cts){
-                        //평가항목 출력
-                        String ct = j.select("div.tit").text();
+                        for(Element j : cts){
+                            //평가항목 출력
+                            String ct = j.select("div.tit").text();
 
-                        // 세부항목 접근
-                        Elements stits = j.select("li.on");
-                        for(Element i : stits){
-                            //세부항목 출력
-                            stit = i.select("div.label").text();
-                            //System.out.println("세부항목"+stit);
-                            score = i.select("div.per").text();
-                        }txtKeyword += ct + ":" + stit + "("+ score + ") \n";
-
-                    }//System.out.println("평가"+txtKeyword);
+                            // 세부항목 접근
+                            Elements stits = j.select("li.on");
+                            for(Element i : stits){
+                                //세부항목 출력
+                                stit = i.select("div.label").text();
+                                //System.out.println("세부항목"+stit);
+                                score = i.select("div.per").text();
+                            }
+                            if(score.equals("")){
+                                txtKeyword = "등록된 평가가 없습니다.";
+                            }else {
+                                txtKeyword += ct + ":" + stit + "(" + score + ") \n";
+                            }
+                        }//System.out.println("평가"+txtKeyword);
+                    }
                 }
 
                 // 리뷰부분 접근

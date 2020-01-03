@@ -1,6 +1,7 @@
 package com.example.ds.final_project;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -116,6 +117,9 @@ public class ProductInfo extends AppCompatActivity {
     WishProductDialog wishProductDialog;
     SendMsgDialog sendMsgDialog;
     private String Url="https://store.musinsa.com/app/product/detail/";
+
+    int[] imagelist = {R.drawable.sms, R.drawable.kakao };
+
 
     //Layout 추가
     Context context;
@@ -361,30 +365,56 @@ public class ProductInfo extends AppCompatActivity {
     }
     //공유 다이얼로그
     public void onShareClicked(View view){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_share);
 
-        builder.setTitle("공유 방식을 선택해주세요.");
+        ImageView img_kakao = (ImageView) dialog.findViewById(R.id.img_kakao);
+        img_kakao.setOnClickListener(new View.OnClickListener(){
 
-        builder.setItems(R.array.Messenger, new DialogInterface.OnClickListener(){
             @Override
-            public void onClick(DialogInterface dialog, int pos)
-            {
-                String[] items = getResources().getStringArray(R.array.Messenger);
-                //Toast.makeText(getApplicationContext(),items[pos],Toast.LENGTH_LONG).show();
-                //문자공유
-                if(items[pos].equals("문자")){
-                    ShareMessage();
-                }
-                //카톡공유
-                else{
-                    ShareKakao();
-                    getAppKeyHash();
-                }
+            public void onClick(View view) {
+                ShareKakao();
+                getAppKeyHash();
+                dialog.dismiss();
             }
         });
 
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        ImageView img_sms = (ImageView) dialog.findViewById(R.id.img_sms);
+        img_sms.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                ShareMessage();
+                dialog.dismiss();
+            }
+        });
+
+
+        dialog.show();
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//
+//        builder.setTitle("공유 방식을 선택해주세요.");
+//
+//        builder.setItems(R.array.Messenger, new DialogInterface.OnClickListener(){
+//            @Override
+//            public void onClick(DialogInterface dialog, int pos)
+//            {
+//                String[] items = getResources().getStringArray(R.array.Messenger);
+//                //Toast.makeText(getApplicationContext(),items[pos],Toast.LENGTH_LONG).show();
+//                //문자공유
+//                if(items[pos].equals("문자")){
+//                    ShareMessage();
+//                }
+//                //카톡공유
+//                else{
+//                    ShareKakao();
+//                    getAppKeyHash();
+//                }
+//            }
+//        });
+//
+//        AlertDialog alertDialog = builder.create();
+//        alertDialog.show();
     }
     public void ShareMessage(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
