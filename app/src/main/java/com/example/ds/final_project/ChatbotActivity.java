@@ -666,7 +666,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     protected void makeMenuMsg(){
 
         //멘트
-        ChatMessage chatMessage = new ChatMessage("아래 버튼을 눌러 메뉴를 선택해주세요.\n말하기 버튼을 눌러 음성 입력도 가능합니다.", true);
+        ChatMessage chatMessage = new ChatMessage("아래 버튼을 눌러 메뉴를 선택해주세요\n", true);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
         //TTS 챗봇 읽어주기
@@ -1323,8 +1323,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                 oDialog.setTitle("도움말")
                         .setMessage("쇼우미에 음성 또는 자판을 이용해 입력하거나 메뉴 버튼 클릭을 통해 조작이 가능합니다.\n" +
-                                "상품 검색하기, 이전 검색 다시보기, 관심 상품 보기, 관심 상품 공유하기, 사용자 정보 수정이 가능합니다.\n" +
-                                "\"그만\"을 입력하면 진행하던 대화를 멈춥니다.")
+                                "상품 검색하기, 이전 검색 다시보기, 관심 상품 보기, 관심 상품 공유하기, 사용자 정보 수정이 가능합니다.")
                         .setPositiveButton("닫기", null)
                         .setCancelable(true)
                         .show();
