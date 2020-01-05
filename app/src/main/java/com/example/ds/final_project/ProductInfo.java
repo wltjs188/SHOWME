@@ -175,7 +175,7 @@ public class ProductInfo extends AppCompatActivity {
         productImg=(ImageView)findViewById(R.id.productImg);
 //        Log.i("이미지",""+image);
         Glide.with(this).load(image).into(productImg);
-
+        productImg.setContentDescription("상품 이미지. 두번 클릭하면 크게 볼 수 있습니다.");
         product_info.setText(info);
 //        info = info + "\n" + Url;
 
@@ -310,6 +310,12 @@ public class ProductInfo extends AppCompatActivity {
         }
     }
 
+
+    public void onProductImageClicked(View view){
+        Intent intent = new Intent(getApplicationContext(),ProductImageActivity.class);
+        intent.putExtra("image",image);
+        startActivity(intent);
+    }
 
     // 사이즈 상세보기 버튼 클릭
 
@@ -632,6 +638,8 @@ public class ProductInfo extends AppCompatActivity {
                 oDialog.setTitle("도움말")
                         .setMessage("상품의 이름, 종류, 가격, 사이즈 정보가 제공 됩니다.\n" +
                                 "\n" +
+                                "<상품 이미지 크게보기>\n" +
+                                "상품 이미지를 누르면 상품 이미지가 크게 보입니다.\n" +
                                 "<사이즈표 상세보기>\n" +
                                 "사이즈 표 상세보기 버튼을 누르면 상품의 사이즈가 보입니다. \n" +
                                 "사이즈를 누르면 사이즈의 상세 정보가 보입니다.\n" +

@@ -28,7 +28,6 @@
             android:text="말하기"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-        <requestFocus />
         </Button>
         <EditText
             android:hint="별칭 입력"
@@ -51,7 +50,8 @@
             android:id="@+id/cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="취소"/>
+            android:text="취소">
+        </Button>
     </LinearLayout>
 
 </LinearLayout>

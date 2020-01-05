@@ -19,6 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:transcriptMode="normal">
+        <activity android:name=".ProductImageActivity"></activity>
         <activity android:name=".TestActivity" />
         <activity android:name=".db.DAO.ServertestActivity" />
         <activity android:name=".ReviewActivity" />
@@ -28,6 +29,7 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity> <!-- <activity -->

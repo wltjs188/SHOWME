@@ -30,31 +30,84 @@ public class chatButton {
             pm.setMargins(2,0,2,0);
 
             Log.d("dd",getBtnNames().toString());
-            if(btnNames.get(i).equals("상품 검색하기")){
-                btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-                btn.setBackgroundResource(R.drawable.product_search);
-                pm.setMargins(1,0,1,0);
+            Log.d("dd",btnNames.get(i));
+            switch(btnNames.get(i)){
+                case "상품 검색하기":
+                    btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                    btn.setBackgroundResource(R.drawable.product_search);
+                    pm.setMargins(1,0,1,0);
+                    break;
+                case "이전 검색 다시보기":
+                    btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                    btn.setBackgroundResource(R.drawable.previous);
+                    pm.setMargins(1,0,1,0);
+                    break;
+                case "관심 상품 보기":
+                    btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                    btn.setBackgroundResource(R.drawable.interested_product);
+                    pm.setMargins(1,0,1,0);
+                    break;
+                case "관심 상품 공유하기":
+                    btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                    btn.setBackgroundResource(R.drawable.share);
+                    pm.setMargins(1,0,1,0);
+                    break;
+                case "사용자 정보 수정":
+                    btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                    btn.setBackgroundResource(R.drawable.user_modification);
+                    pm.setMargins(1,0,1,0);
+                    break;
+                case "상의":
+                    btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                    btn.setBackgroundResource(R.drawable.top);
+                    pm.setMargins(1,0,1,0);
+                    break;
+                case "바지":
+                    btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                    btn.setBackgroundResource(R.drawable.pants);
+                    pm.setMargins(1,0,1,0);
+                    break;
+                case "스커트":
+                    btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                    btn.setBackgroundResource(R.drawable.skirt);
+                    pm.setMargins(1,0,1,0);
+                    break;
+                case "원피스":
+                    btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                    btn.setBackgroundResource(R.drawable.dress);
+                    pm.setMargins(1,0,1,0);
+                    break;
+                case "아우터":
+                    btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                    btn.setBackgroundResource(R.drawable.outer);
+                    pm.setMargins(1,0,1,0);
+                    break;
             }
-            else if(btnNames.get(i).equals("이전 검색 다시보기")){
-                btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-                btn.setBackgroundResource(R.drawable.previous);
-                pm.setMargins(1,0,1,0);
-            }
-            else if(btnNames.get(i).equals("관심 상품 보기")){
-                btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-                btn.setBackgroundResource(R.drawable.interested_product);
-                pm.setMargins(1,0,1,0);
-            }
-            else if(btnNames.get(i).equals("관심 상품 공유하기")){
-                btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-                btn.setBackgroundResource(R.drawable.share);
-                pm.setMargins(1,0,1,0);
-            }
-            else if(btnNames.get(i).equals("사용자 정보 수정")){
-                btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-                btn.setBackgroundResource(R.drawable.user_modification);
-                pm.setMargins(1,0,1,0);
-            }
+//            if(btnNames.get(i).equals("상품 검색하기")){
+//                btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+//                btn.setBackgroundResource(R.drawable.product_search);
+//                pm.setMargins(1,0,1,0);
+//            }
+//            else if(btnNames.get(i).equals("이전 검색 다시보기")){
+//                btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+//                btn.setBackgroundResource(R.drawable.previous);
+//                pm.setMargins(1,0,1,0);
+//            }
+//            else if(btnNames.get(i).equals("관심 상품 보기")){
+//                btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+//                btn.setBackgroundResource(R.drawable.interested_product);
+//                pm.setMargins(1,0,1,0);
+//            }
+//            else if(btnNames.get(i).equals("관심 상품 공유하기")){
+//                btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+//                btn.setBackgroundResource(R.drawable.share);
+//                pm.setMargins(1,0,1,0);
+//            }
+//            else if(btnNames.get(i).equals("사용자 정보 수정")){
+//                btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+//                btn.setBackgroundResource(R.drawable.user_modification);
+//                pm.setMargins(1,0,1,0);
+//            }
             btn.setLayoutParams(pm);
             btn.setWidth(400);
             btn.setHeight(400);
