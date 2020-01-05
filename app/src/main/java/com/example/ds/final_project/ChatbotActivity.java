@@ -663,7 +663,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     protected void makeMenuMsg(String addStr){
 
         //멘트
-        ChatMessage chatMessage = new ChatMessage(addStr+"\n아래 버튼을 눌러 메뉴를 선택해주세요.\n말하기 버튼을 눌러 음성 입력도 가능합니다.", true);
+        ChatMessage chatMessage = new ChatMessage(addStr+"\n"+"아래 버튼을 눌러 메뉴를 선택해주세요.\n말하기 버튼을 눌러 음성 입력도 가능합니다.", true);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
         //TTS 챗봇 읽어주기
