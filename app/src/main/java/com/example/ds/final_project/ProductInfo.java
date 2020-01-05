@@ -175,7 +175,7 @@ public class ProductInfo extends AppCompatActivity {
         productImg=(ImageView)findViewById(R.id.productImg);
 //        Log.i("이미지",""+image);
         Glide.with(this).load(image).into(productImg);
-
+        productImg.setContentDescription("상품 이미지. 두번 클릭하면 크게 볼 수 있습니다.");
         product_info.setText(info);
 //        info = info + "\n" + Url;
 
