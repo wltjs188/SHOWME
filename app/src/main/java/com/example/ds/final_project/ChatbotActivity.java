@@ -1495,8 +1495,13 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         adapter.notifyDataSetChanged();
 
 
-                        tts.speak("죄송합니다. \n쇼움이가 상품을 찾지 못했습니다.", TextToSpeech.QUEUE_FLUSH, null);
 
+                        tts.speak("죄송합니다. \n쇼움이가 상품을 찾지 못했습니다.", TextToSpeech.QUEUE_FLUSH, null);
+                        try {
+                            Thread.sleep(1000);
+                        }catch(Exception e){
+                            Log.e("error",e.getMessage());
+                        }
                         makeMenuMsg("");
 
                     }
@@ -1547,6 +1552,11 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                             tts.speak("쇼우미가 상품 추천해드릴게요!", TextToSpeech.QUEUE_FLUSH, null);
 
+                            try {
+                                Thread.sleep(2000);
+                            }catch(Exception e){
+                                Log.e("error",e.getMessage());
+                            }
                             ChatMessage chatMessage3 = new ChatMessage(true, true, searched_products);
                             chatMessages.add(chatMessage3);
                             Log.i("상품개수", "" + pNum);
