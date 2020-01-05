@@ -15,7 +15,9 @@
             android:layout_height="match_parent"
             android:divider="@null"
             android:listSelector="@android:color/transparent"
-            android:transcriptMode="alwaysScroll" />
+            android:transcriptMode="alwaysScroll" >
+            <requestFocus/>
+        </ListView>
     </LinearLayout>
             <!--android:choiceMode="none"-->
             <!--android:clickable="false"-->
