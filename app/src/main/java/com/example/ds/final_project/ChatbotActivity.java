@@ -966,6 +966,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                 break;
             case "Product_Category": //카테고리
+                category=null;
+                style=null;
+                color=null;
                 search=true;
                 parameter=getParameter(result);
                 category = parameter.get("Category").toString().replaceAll("\"","");
@@ -1026,6 +1029,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 break;
 
             case "Product_Style": //스타일
+
+                style=null;
+                color=null;
                 search=true;
                 parameter=getParameter(result);
                 style = parameter.get("Style").toString().replaceAll("\"","");
@@ -1056,7 +1062,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                searchtask = new SearchProduct();
 //                searchtask.execute("SearchTwo2", category,style);
 
-                category = null; style=null; color = null;
+//                category = null; style=null; color = null;
                 Log.d("yoon search","카테고리, 스타일로 검색: "+so);
 
 //                startActivity(shopIntent);
@@ -1067,6 +1073,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 adapter.setButton(btnSendListener); //버튼이름 설정
                 break;
             case "Product_Color": //색상 , (카테고리,스타일,색상 다 입력 됨)
+
+                color=null;
                 search=true;
                 parameter=getParameter(result);
                 Log.d("yoon color",parameter.toString());
@@ -1084,7 +1092,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 searchtask = new SearchProduct();
                 searchtask.execute("SearchThree2", category,style,color);
 
-                category = null; style=null; color = null;
+//                category = null; style=null; color = null;
 
 //                startActivity(shopIntent);
 
@@ -1526,7 +1534,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                        }catch(Exception e){
 //                            Log.e("error",e.getMessage());
 //                        }
-//                        makeMenuMsg("");
+                        makeMenuMsg("");
 
                     }
                     else {
@@ -1569,6 +1577,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         if(searched_products.size()==0){
                             //검색 결과 없으면
                         }else {
+//                            category=null;
+//                            style=null;
+//                            color=null;
                             ChatMessage chatMessage = new ChatMessage("쇼우미가 상품 추천해드릴게요!", true);
                             chatMessages.add(chatMessage);
                             adapter.notifyDataSetChanged();
