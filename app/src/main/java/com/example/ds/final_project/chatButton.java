@@ -88,6 +88,7 @@ public class chatButton {
                     btn.setBackgroundResource(R.drawable.outer);
                     pm.setMargins(1,0,1,0);
                     break;
+                    //색상버튼
                 case "검은색":
                     roundDrawable = ContextCompat.getDrawable(context,R.drawable.btn_chat);
                     roundDrawable.setColorFilter(ContextCompat.getColor(context,R.color.colorBlack), PorterDuff.Mode.SRC_ATOP);

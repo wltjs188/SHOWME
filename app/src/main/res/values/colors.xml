@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#F7CA18</color>
     <color name="colorAccent">#FFC107</color>
     <color name="colorTransparent">#00000000</color>
+
+    <!--버튼색상-->
     <color name="colorBlack">#000000</color>
     <color name="colorGray">#696969</color>
     <color name="colorWhite">#FFFFFF</color>
