@@ -1060,7 +1060,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 searchtask = new SearchProduct();
                 searchtask.execute("SearchThree2", category,style,color);
 
-                category = null; style=null; color = null;
+//                category = null; style=null; color = null;
 
 //                startActivity(shopIntent);
 
@@ -1545,6 +1545,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         if(searched_products.size()==0){
                             //검색 결과 없으면
                         }else {
+                            category=null;
+                            style=null;
+                            color=null;
                             ChatMessage chatMessage = new ChatMessage("쇼우미가 상품 추천해드릴게요!", true);
                             chatMessages.add(chatMessage);
                             adapter.notifyDataSetChanged();
