@@ -1502,7 +1502,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                        }catch(Exception e){
 //                            Log.e("error",e.getMessage());
 //                        }
-//                        makeMenuMsg("");
+                        makeMenuMsg("");
 
                     }
                     else {
