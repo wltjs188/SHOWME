@@ -38,7 +38,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
                 android:background="@color/colorPrimary"
-                android:drawableLeft="@drawable/mic"
+                android:drawableBottom="@drawable/mic"
                 android:text="말하기"
                 android:textColor="@color/colorBlack" />
 

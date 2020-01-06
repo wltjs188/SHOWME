@@ -7,9 +7,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.database.Cursor;
 import android.net.sip.SipSession;
 import android.os.AsyncTask;
@@ -84,6 +87,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -103,6 +108,7 @@ import ai.api.model.ResponseMessage;
 import ai.api.model.Result;
 
 import static android.speech.tts.TextToSpeech.ERROR;
+import static com.kakao.util.helper.Utility.getPackageInfo;
 
 
 public class ChatbotActivity extends AppCompatActivity implements AIListener{
@@ -132,7 +138,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     final int BTN_TYPE_USERINFO=10;
 
 
-    //챗봇 전송 리스너
+    //챗봇 전송 리스너r
     View.OnClickListener btnSendListener;
 
     AIRequest aiRequest;
@@ -215,8 +221,11 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         Log.d("onStart","codbs");
         super.onStart();
         params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,"stringId"); //tts
-        if(user==null){
 
+        String hash = getKeyHash(this);
+        Log.d("해시키값",hash);
+
+        if(user==null){
             //사용자 정보 등록 안됨
             //등록되지 않은 사용자
             final AIConfiguration config2 = new AIConfiguration("9642984963944e239cd1381a0e174ff0",
@@ -572,6 +581,24 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         else
             return null;
     }
+    public static String getKeyHash(final Context context) {
+        PackageInfo packageInfo = getPackageInfo(context, PackageManager.GET_SIGNATURES);
+        if (packageInfo == null)
+            return null;
+
+        for (Signature signature : packageInfo.signatures) {
+            try {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                return android.util.Base64.encodeToString(md.digest(), android.util.Base64.NO_WRAP);
+            } catch (NoSuchAlgorithmException e) {
+                Log.w("해시키", "Unable to get MessageDigest. signature=" + signature, e);
+            }
+        }
+        return null;
+    }
+
+
     protected void makeChatNoPerson(String name){
         ChatMessage chatMessage = new ChatMessage(name + "으로 저장된 연락처는 없습니다. 정확한 이름을 다시한번 말씀해주세요.", true);
         chatMessages.add(chatMessage);
