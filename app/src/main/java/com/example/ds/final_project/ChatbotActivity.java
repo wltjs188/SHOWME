@@ -176,7 +176,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     String style=null;
     String color = null;
 
-    String smsg="";//공유할 메세지 내용
+    //공유할 메세지 내용
+    String productId="";
+    String productName="";
+    String smsg="";
     String sproduct= null; //공유할 관심상품
     ArrayList<String> wishProductNames;
 
@@ -1378,8 +1381,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     }
 
     private void ShareKakao(){
-        Log.d("공유","카카오");
-        TextTemplate params = TextTemplate.newBuilder(smsg, LinkObject.newBuilder().setWebUrl("https://developers.kakao.com").setMobileWebUrl("https://developers.kakao.com").build()).build();
+        //텍스트 형태
+        TextTemplate params = TextTemplate.newBuilder(" 이 상품 구매 부탁드립니다!\n"+productName+"\n주소:"+user.getAddress(),
+                LinkObject.newBuilder().setWebUrl("https://store.musinsa.com/app/product/detail/"+productId).setMobileWebUrl("https://store.musinsa.com/app/product/detail/"+productId).build()).setButtonTitle("구매하기").build();
 
         Map<String, String> serverCallbackArgs = new HashMap<String, String>();
         serverCallbackArgs.put("user_id", "${current_user_id}");
@@ -1824,10 +1828,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     }else {
                         Log.d("wishList","맞음");
                         JSONObject item = jArray.getJSONObject(0);
-                        String productId = item.getString("ID");
-                        smsg="https://store.musinsa.com/app/product/detail/"+productId;
-                        Log.d("smsg",smsg);
-
+                        productId = item.getString("ID");
+                        productName=item.getString("ALIAS");
+                        smsg = "https://store.musinsa.com/app/product/detail/"+productId;
                     }
                     aiRequest.setQuery(input);
                     Log.e("입력", input);

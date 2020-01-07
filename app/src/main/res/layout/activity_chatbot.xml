@@ -37,9 +37,11 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
+                android:padding="10dp"
                 android:background="@color/colorPrimary"
-                android:drawableBottom="@drawable/mic"
+                android:drawableTop="@drawable/mic"
                 android:text="말하기"
+                android:textSize="20sp"
                 android:textColor="@color/colorBlack" />
 
             <EditText
@@ -66,6 +68,7 @@
                 android:layout_weight="0.3"
                 android:background="@color/colorPrimary"
                 android:text="전송"
+                android:textSize="25sp"
                 android:textColor="@color/colorBlack"
 
                 />

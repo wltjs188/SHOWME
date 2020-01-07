@@ -35,6 +35,7 @@
             android:layout_height="100dp"
             android:contentDescription="문자"
             android:src="@drawable/sms"
+            android:layout_marginRight="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
