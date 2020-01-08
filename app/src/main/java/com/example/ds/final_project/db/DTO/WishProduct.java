@@ -1,12 +1,21 @@
 package com.example.ds.final_project.db.DTO;
 
 public class WishProduct {
+    String name;
     String uid;
     String alias;
     String id;
     String image;
     String size;
     String sizeTable;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getSize() {
         return size;
