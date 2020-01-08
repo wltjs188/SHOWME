@@ -42,6 +42,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
 import com.kakao.kakaolink.v2.KakaoLinkService;
+import com.kakao.message.template.ButtonObject;
+import com.kakao.message.template.CommerceDetailObject;
+import com.kakao.message.template.CommerceTemplate;
+import com.kakao.message.template.ContentObject;
 import com.kakao.message.template.LinkObject;
 import com.kakao.message.template.TextTemplate;
 import com.kakao.network.ErrorResult;
@@ -99,6 +103,8 @@ public class ProductInfo extends AppCompatActivity {
     private String image=" ";
     private String size=" ";
     private String sizeTable=" ";
+    private String productname="";
+
     //수신자 정보
     String phoneName = "";
     String phoneNo = "";
@@ -162,7 +168,8 @@ public class ProductInfo extends AppCompatActivity {
         image=intent.getStringExtra("image");
         size=intent.getStringExtra("size");
         sizeTable=intent.getStringExtra("sizeTable");
-        Log.d("sizeTable",sizeTable);
+        productname=intent.getStringExtra("name");
+        //Log.d("sizeTable",sizeTable);
 
 
         productAlias=intent.getStringExtra("alias");
@@ -251,10 +258,11 @@ public class ProductInfo extends AppCompatActivity {
                 infoBool=true;
                 Log.i("관심상품등록",uuid+productAlias);
                 InsertWishProduct task = new InsertWishProduct();
-                task.execute("InsertWishProduct",uuid,productAlias,productId,image,info,size,sizeTable);
+                task.execute("InsertWishProduct",uuid,productAlias,productId,image,info,size,sizeTable,productname);
 //                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
-                Log.i("관심2",productAlias);
-//                WishBtnChanged(infoBool);
+                Log.i(this.getClass().toString()+"별:",productAlias);
+//                WishBtnChanged(infoBool);관
+
             }
 
             @Override
@@ -581,7 +589,9 @@ public class ProductInfo extends AppCompatActivity {
         }
     }
     private void ShareKakao(){
-        TextTemplate params = TextTemplate.newBuilder(info, LinkObject.newBuilder().setWebUrl("https://developers.kakao.com").setMobileWebUrl("https://developers.kakao.com").build()).build();
+        //텍스트 형태
+        TextTemplate params = TextTemplate.newBuilder(" 이 상품 구매 부탁드립니다!\n상품명"+productname+"\n주소:"+user.getAddress(),
+                LinkObject.newBuilder().setWebUrl("https://store.musinsa.com/app/product/detail/"+productId).setMobileWebUrl("https://store.musinsa.com/app/product/detail/"+productId).build()).setButtonTitle("구매하기").build();
 
         Map<String, String> serverCallbackArgs = new HashMap<String, String>();
         serverCallbackArgs.put("user_id", "${current_user_id}");
@@ -598,6 +608,28 @@ public class ProductInfo extends AppCompatActivity {
                 // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
             }
         });
+
+//        //커스텀 형태
+//        String imageUrl = image;
+//        String title =  phoneName;
+//        String price = phoneName;
+//
+//        Map<String, String> templateArgs = new HashMap<>();
+//        templateArgs.put("${imgUrl}", imageUrl);
+//        templateArgs.put("${title}", title);
+//        templateArgs.put("${description}", price);
+//        templateArgs.put("${${A_E}}", "https://store.musinsa.com/app/"+"/product/detail/"+productId);
+//        KakaoLinkService.getInstance().sendCustom(this, "20070", templateArgs, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
+//            @Override
+//            public void onFailure(ErrorResult errorResult) {
+//                Logger.e(errorResult.toString());
+//            }
+//
+//            @Override
+//            public void onSuccess(KakaoLinkResponse result) {
+//                // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
+//            }
+//        });
     }
     // 값 불러오기
     private String  getPreferences(String key){
@@ -764,11 +796,13 @@ public class ProductInfo extends AppCompatActivity {
                         for (int i = 0; i < jArray.length(); i++) {
                             // json배열.getJSONObject(인덱스)
                             JSONObject row = jArray.getJSONObject(i);
+                            String name = row.getString("NAME");
                             String id=row.getString("ID");
                             String alias=row.getString("ALIAS");
 
                             wishProduct.setId(id);
                             wishProduct.setAlias(alias);
+                            wishProduct.setName(name);
 
                             productAlias=alias;
                             Log.d("가져온 데이터",id+", "+alias);
@@ -805,7 +839,7 @@ public class ProductInfo extends AppCompatActivity {
             String info = (String)params[5];
             String size= (String)params[6];
             String sizeTable= (String)params[7];
-
+            String name= (String)params[8];
             try {
                 HttpParams httpParameters = new BasicHttpParams();
                 HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
@@ -833,7 +867,7 @@ public class ProductInfo extends AppCompatActivity {
                 postParameters.add(new BasicNameValuePair("info", info));
                 postParameters.add(new BasicNameValuePair("size", size));
                 postParameters.add(new BasicNameValuePair("sizeTable", sizeTable));
-
+                postParameters.add(new BasicNameValuePair("name", name));
                 //파라미터 보내기
                 UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);
                 post.setEntity(ent);
@@ -849,6 +883,7 @@ public class ProductInfo extends AppCompatActivity {
                 HttpEntity resEntity = responsePOST.getEntity();
                 if (resEntity != null) {
                     LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
+
                     Log.d("성공",LoadData);
                 }
                 if(responsePOST.getStatusLine().getStatusCode()==200){
@@ -869,18 +904,19 @@ public class ProductInfo extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if (LoadData == null){
+            if (LoadData == null){;
                 insertFail();
 //            Toast.makeText(getApplicationContext(),"실패",Toast.LENGTH_LONG).show();
             }
             else {
+                Log.i("관심상품등록 LoadData",LoadData);
                 try {
                     JSONObject jsonObj = new JSONObject(LoadData);
                     // json객체.get("변수명")
                     JSONArray jArray = (JSONArray) jsonObj.get("count");
 //                    items = new ArrayList<Product>();
                     if(jArray.length()==0){
-                        Log.d("검색"," 실패");
+                        Log.e("검색"," 실패");
                         insertFail();
                     }else {
                         Log.i("검색","성공"+result);
@@ -892,7 +928,12 @@ public class ProductInfo extends AppCompatActivity {
 
                 } catch (JSONException e) {
                     insertFail();
-                    Log.d("검색 오류 : ", e.getMessage());
+<<<<<<< HEAD
+                    Log.e("검색 오류 : ", e.getMessage());
+=======
+                    Log.i("관심상품등록 LoadData",LoadData);
+                    Log.d("관심 등록 : ", e.getMessage());
+>>>>>>> 0a1089331a17bc3e04ac9b9f00826254c6883cb0
                 }
 
             }

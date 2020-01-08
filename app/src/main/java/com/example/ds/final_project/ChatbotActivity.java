@@ -7,9 +7,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.database.Cursor;
 import android.net.sip.SipSession;
 import android.os.AsyncTask;
@@ -85,6 +88,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -104,6 +109,7 @@ import ai.api.model.ResponseMessage;
 import ai.api.model.Result;
 
 import static android.speech.tts.TextToSpeech.ERROR;
+import static com.kakao.util.helper.Utility.getPackageInfo;
 
 
 public class ChatbotActivity extends AppCompatActivity implements AIListener{
@@ -170,7 +176,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     String style=null;
     String color = null;
 
-    String smsg="";//공유할 메세지 내용
+    //공유할 메세지 내용
+    String productId="";
+    String productName="";
+    String smsg="";
     String sproduct= null; //공유할 관심상품
     ArrayList<String> wishProductNames;
 
@@ -258,6 +267,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         super.onDestroy();
         aiRequest.setResetContexts(true);
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -729,7 +739,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         chatMessages.add(chatMessage2);
 
         //TTS 챗봇 읽어주기
-
 
         adapter.notifyDataSetChanged();
         final Handler handler = new Handler();
@@ -1373,8 +1382,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     }
 
     private void ShareKakao(){
-        Log.d("공유","카카오");
-        TextTemplate params = TextTemplate.newBuilder(smsg, LinkObject.newBuilder().setWebUrl("https://developers.kakao.com").setMobileWebUrl("https://developers.kakao.com").build()).build();
+        //텍스트 형태
+        TextTemplate params = TextTemplate.newBuilder(" 이 상품 구매 부탁드립니다!\n"+productName+"\n주소:"+user.getAddress(),
+                LinkObject.newBuilder().setWebUrl("https://store.musinsa.com/app/product/detail/"+productId).setMobileWebUrl("https://store.musinsa.com/app/product/detail/"+productId).build()).setButtonTitle("구매하기").build();
 
         Map<String, String> serverCallbackArgs = new HashMap<String, String>();
         serverCallbackArgs.put("user_id", "${current_user_id}");
@@ -1819,10 +1829,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     }else {
                         Log.d("wishList","맞음");
                         JSONObject item = jArray.getJSONObject(0);
-                        String productId = item.getString("ID");
-                        smsg="https://store.musinsa.com/app/product/detail/"+productId;
-                        Log.d("smsg",smsg);
-
+                        productId = item.getString("ID");
+                        productName=item.getString("ALIAS");
+                        smsg = "https://store.musinsa.com/app/product/detail/"+productId;
                     }
                     aiRequest.setQuery(input);
                     Log.e("입력", input);
@@ -1861,7 +1870,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                     "스타디움 재킷","환절기 코트","겨울 싱글 코트","롱 패딩/롱 헤비 아우터","숏 패딩/숏 헤비 아우터")
     );
     ArrayList<String> btnNamesColor= new ArrayList<String>(
-            Arrays.asList("상관 없음","검은색","회색","흰색","빨간색","주황색","노란색","초록색","파란색","남색","보라색","분홍색","민트색","하늘색","베이지색","갈색")
+            Arrays.asList("상관 없음","검은색","회색","흰색","빨간색","주황색","노란색","초록색","파란색","남색","보라색","분홍색","민트색","하늘색","베이지색","갈색","버건디색")
     );
     ArrayList<String> btnNamesShare= new ArrayList<String>(
             Arrays.asList("문자","카카오톡")

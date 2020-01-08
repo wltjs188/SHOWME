@@ -24,6 +24,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
+                                                <entry key="opacityPercent" value="80" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -74,11 +75,20 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
+                                                <entry key="scalingPercent" value="56" />
                                               </map>
                                             </option>
                                           </PersistentState>
                                         </value>
                                       </entry>
+                                    </map>
+                                  </option>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="backgroundAssetType" value="COLOR" />
+                                      <entry key="backgroundColor" value="ffd319" />
+                                      <entry key="foregroundImage" value="C:\Users\user\Desktop\그림1.png" />
+                                      <entry key="outputName" value="ic_showme" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -126,11 +136,6 @@
                                 </PersistentState>
                               </value>
                             </entry>
-                          </map>
-                        </option>
-                        <option name="values">
-                          <map>
-                            <entry key="outputIconType" value="ACTIONBAR" />
                           </map>
                         </option>
                       </PersistentState>

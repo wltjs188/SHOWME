@@ -25,7 +25,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center|center_vertical"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -35,6 +37,7 @@
             android:layout_height="100dp"
             android:contentDescription="문자"
             android:src="@drawable/sms"
+            android:layout_marginRight="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
