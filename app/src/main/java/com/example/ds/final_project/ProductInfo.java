@@ -805,13 +805,11 @@ public class ProductInfo extends AppCompatActivity {
                         for (int i = 0; i < jArray.length(); i++) {
                             // json배열.getJSONObject(인덱스)
                             JSONObject row = jArray.getJSONObject(i);
-                            String name = row.getString("NAME");
                             String id=row.getString("ID");
                             String alias=row.getString("ALIAS");
 
                             wishProduct.setId(id);
                             wishProduct.setAlias(alias);
-                            wishProduct.setName(name);
 
                             productAlias=alias;
                             Log.d("가져온 데이터",id+", "+alias);
