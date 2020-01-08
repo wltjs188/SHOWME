@@ -45,6 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="더보기"
+            android:background="@drawable/btn_chat"
             android:id="@+id/product_more"
             android:layout_gravity="center_vertical"
             />

@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:gravity="center"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
 
     <TextView
@@ -26,6 +27,7 @@
             android:focusedByDefault="true"
             android:id="@+id/dialog_btn_stt"
             android:text="말하기"
+            android:background="@drawable/btn_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         </Button>
@@ -43,13 +45,17 @@
         android:orientation="horizontal">
         <Button
             android:id="@+id/ok"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:background="@color/colorWhite"
             android:text="확인"/>
         <Button
             android:id="@+id/cancel"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:background="@color/colorWhite"
             android:text="취소">
         </Button>
     </LinearLayout>
