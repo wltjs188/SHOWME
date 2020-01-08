@@ -255,6 +255,7 @@ public class chatButton {
             btn.setLayoutParams(pm);
             btn.setWidth(400);
             btn.setHeight(400);
+            btn.setPadding(100,100,100,100);
             btn.setOnClickListener(listener);
             layout.addView(btn);
             list.add(btn);
