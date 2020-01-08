@@ -115,7 +115,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_review"
                 android:layout_gravity="center"
-                android:text="리뷰보기"
+                android:padding="10dp"
+                android:text="평점 보기"
                 android:background="@drawable/btn_chat"
                 android:onClick="onReviewClicked"
                 />
