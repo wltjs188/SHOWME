@@ -75,7 +75,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="scalingPercent" value="56" />
+                                                <entry key="scalingPercent" value="61" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -87,8 +87,8 @@
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="ffd319" />
-                                      <entry key="foregroundImage" value="C:\Users\user\Desktop\그림1.png" />
-                                      <entry key="outputName" value="ic_showme" />
+                                      <entry key="foregroundImage" value="C:\Users\user\Desktop\logo.png" />
+                                      <entry key="outputName" value="ic_logo" />
                                     </map>
                                   </option>
                                 </PersistentState>
