@@ -41,7 +41,7 @@
                 android:background="@color/colorPrimary"
                 android:drawableTop="@drawable/mic"
                 android:text="말하기"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textColor="@color/colorBlack" />
 
             <EditText
