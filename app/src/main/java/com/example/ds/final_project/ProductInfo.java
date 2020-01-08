@@ -936,12 +936,9 @@ public class ProductInfo extends AppCompatActivity {
 
                 } catch (JSONException e) {
                     insertFail();
-<<<<<<< HEAD
                     Log.e("검색 오류 : ", e.getMessage());
-=======
                     Log.i("관심상품등록 LoadData",LoadData);
                     Log.d("관심 등록 : ", e.getMessage());
->>>>>>> 0a1089331a17bc3e04ac9b9f00826254c6883cb0
                 }
 
             }
