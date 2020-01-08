@@ -103,6 +103,8 @@ public class ProductInfo extends AppCompatActivity {
     private String image=" ";
     private String size=" ";
     private String sizeTable=" ";
+    private String productname="";
+
     //수신자 정보
     String phoneName = "";
     String phoneNo = "";
@@ -166,6 +168,7 @@ public class ProductInfo extends AppCompatActivity {
         image=intent.getStringExtra("image");
         size=intent.getStringExtra("size");
         sizeTable=intent.getStringExtra("sizeTable");
+        productname=intent.getStringExtra("name");
         //Log.d("sizeTable",sizeTable);
 
 
@@ -586,7 +589,7 @@ public class ProductInfo extends AppCompatActivity {
     }
     private void ShareKakao(){
         //텍스트 형태
-        TextTemplate params = TextTemplate.newBuilder(" 이 상품 구매 부탁드립니다!\n"+productAlias+"\n주소:"+user.getAddress(),
+        TextTemplate params = TextTemplate.newBuilder(" 이 상품 구매 부탁드립니다!\n상품명"+productname+"\n주소:"+user.getAddress(),
                 LinkObject.newBuilder().setWebUrl("https://store.musinsa.com/app/product/detail/"+productId).setMobileWebUrl("https://store.musinsa.com/app/product/detail/"+productId).build()).setButtonTitle("구매하기").build();
 
         Map<String, String> serverCallbackArgs = new HashMap<String, String>();

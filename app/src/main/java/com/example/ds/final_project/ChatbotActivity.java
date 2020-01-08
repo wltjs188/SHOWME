@@ -268,6 +268,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         aiRequest.setResetContexts(true);
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("oncreate","codbs");

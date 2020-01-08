@@ -63,6 +63,7 @@ public class ShopActivity extends AppCompatActivity {
     //상품정보 List
     Product searchedProduct=null;
     ArrayList<Product> products=new ArrayList<Product>();
+    ArrayList<String> productsName = new ArrayList<String>();
     ArrayList<String> infos = new ArrayList<String>(); //상품 상세 정보
     ArrayList<String> summary = new ArrayList<String>(); //상품 상세 정보
     ArrayList<String> images = new ArrayList<String>(); //상품 옵션 대표 이미지
@@ -160,6 +161,7 @@ public class ShopActivity extends AppCompatActivity {
 //                String strContact = gson.toJson(products.get(position), Product.class);
 
 //                productInfoIntent.putExtra("product", strContact);
+                productInfoIntent.putExtra("name",productsName.get(position));
                 productInfoIntent.putExtra("image",images.get(position));
                 productInfoIntent.putExtra("productId",ids.get(position));
                 productInfoIntent.putExtra("info",infos.get(position));
@@ -321,6 +323,7 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
                         product.setStyle(style);
                         product.setPrice(price);
                         product.setSize_table(sizeTable);
+                        productsName.add(product.getName());
                         products.add(product);
                         infos.add(product.toString());
                         summary.add(product.getSummary());
