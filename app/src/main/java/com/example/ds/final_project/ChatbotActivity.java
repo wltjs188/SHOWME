@@ -1914,19 +1914,19 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
         int viewType = getItemViewType(position);
         if(viewType==0){
             layoutResource = R.layout.item_chat_left;
-            Log.d("챗",layoutResource+":"+position+chatMessage.getContent().toString()+"왼");
+//            Log.d("챗",layoutResource+":"+position+chatMessage.getContent().toString()+"왼");
         }
         else if(viewType==1){
             layoutResource = R.layout.item_chat_right;
-             Log.d("챗",layoutResource+":"+position+chatMessage.getContent().toString()+"오");
+//             Log.d("챗",layoutResource+":"+position+chatMessage.getContent().toString()+"오");
         }
         else if(viewType==12){
             layoutResource = R.layout.item_chat_product;
-            Log.d("챗",layoutResource+":"+position+chatMessage.getContent().toString()+"상품");
+//            Log.d("챗",layoutResource+":"+position+chatMessage.getContent().toString()+"상품");
         }
         else{
             layoutResource = R.layout.item_chat_button;
-            Log.d("챗",layoutResource+":"+position+"버튼");
+//            Log.d("챗",layoutResource+":"+position+"버튼");
         }
 
         if (convertView != null) {
@@ -1986,7 +1986,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             ArrayList<Product> p = chatMessage.getProducts();
             for(int i=0;i<p.size();i++){
                 holder.imageViews.get(i).setVisibility(View.VISIBLE);
-                Log.i("김지선이미지"+position,p.get(i).getImage());
+//                Log.i("김지선이미지"+position,p.get(i).getImage());
                 String image = p.get(i).getImage();
                 String pName = p.get(i).getName();
                 String pId = ""+p.get(i).getId();
