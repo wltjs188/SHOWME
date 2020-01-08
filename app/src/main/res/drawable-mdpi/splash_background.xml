@@ -4,7 +4,7 @@
     <item android:drawable="@color/colorPrimary"/>
 
     <item android:drawable="@drawable/splash_logo"
-        android:height="600dp" android:width="300dp"
+        android:height="500dp" android:width="300dp"
         android:gravity="center">
     </item>
 

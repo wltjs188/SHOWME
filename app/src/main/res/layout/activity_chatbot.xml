@@ -25,7 +25,9 @@
             <!--android:clickable="false"-->
 
 
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="10dp"
@@ -37,7 +39,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:background="@color/colorPrimary"
                 android:drawableTop="@drawable/mic"
                 android:text="말하기"
@@ -73,4 +75,6 @@
 
                 />
         </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>
