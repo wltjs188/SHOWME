@@ -23,6 +23,7 @@
             android:onClick="onSTTClicked"
             android:id="@+id/dialog_btn_stt"
             android:text="말하기"
+            android:background="@drawable/btn_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         </Button>
@@ -41,11 +42,13 @@
             android:id="@+id/ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/btn_chat"
             android:text="확인"/>
         <Button
             android:id="@+id/cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/btn_chat"
             android:text="취소">
         </Button>
     </LinearLayout>
