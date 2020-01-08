@@ -1870,7 +1870,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                     "스타디움 재킷","환절기 코트","겨울 싱글 코트","롱 패딩/롱 헤비 아우터","숏 패딩/숏 헤비 아우터")
     );
     ArrayList<String> btnNamesColor= new ArrayList<String>(
-            Arrays.asList("상관 없음","검은색","회색","흰색","빨간색","주황색","노란색","초록색","파란색","남색","보라색","분홍색","민트색","하늘색","베이지색","갈색")
+            Arrays.asList("상관 없음","검은색","회색","흰색","빨간색","주황색","노란색","초록색","파란색","남색","보라색","분홍색","민트색","하늘색","베이지색","갈색","버건디색")
     );
     ArrayList<String> btnNamesShare= new ArrayList<String>(
             Arrays.asList("문자","카카오톡")

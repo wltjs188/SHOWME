@@ -880,6 +880,7 @@ public class ProductInfo extends AppCompatActivity {
                 HttpEntity resEntity = responsePOST.getEntity();
                 if (resEntity != null) {
                     LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
+
                     Log.d("성공",LoadData);
                 }
                 if(responsePOST.getStatusLine().getStatusCode()==200){
@@ -900,11 +901,12 @@ public class ProductInfo extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if (LoadData == null){
+            if (LoadData == null){;
                 insertFail();
 //            Toast.makeText(getApplicationContext(),"실패",Toast.LENGTH_LONG).show();
             }
             else {
+                Log.i("관심상품등록 LoadData",LoadData);
                 try {
                     JSONObject jsonObj = new JSONObject(LoadData);
                     // json객체.get("변수명")
@@ -923,7 +925,8 @@ public class ProductInfo extends AppCompatActivity {
 
                 } catch (JSONException e) {
                     insertFail();
-                    Log.d("검색 오류 : ", e.getMessage());
+                    Log.i("관심상품등록 LoadData",LoadData);
+                    Log.d("관심 등록 : ", e.getMessage());
                 }
 
             }

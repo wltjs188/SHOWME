@@ -225,33 +225,16 @@ public class chatButton {
                         btn.setBackground(roundDrawable);
                     }
                     break;
+                case "버건디색":
+                    roundDrawable = ContextCompat.getDrawable(context,R.drawable.btn_chat);
+                    roundDrawable.setColorFilter(ContextCompat.getColor(context,R.color.colorBurgundy), PorterDuff.Mode.SRC_ATOP);
+                    if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        btn.setBackgroundDrawable(roundDrawable);
+                    } else {
+                        btn.setBackground(roundDrawable);
+                    }
+                    break;
             }
-
-//            if(btnNames.get(i).equals("상품 검색하기")){
-//                btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-//                btn.setBackgroundResource(R.drawable.product_search);
-//                pm.setMargins(1,0,1,0);
-//            }
-//            else if(btnNames.get(i).equals("이전 검색 다시보기")){
-//                btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-//                btn.setBackgroundResource(R.drawable.previous);
-//                pm.setMargins(1,0,1,0);
-//            }
-//            else if(btnNames.get(i).equals("관심 상품 보기")){
-//                btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-//                btn.setBackgroundResource(R.drawable.interested_product);
-//                pm.setMargins(1,0,1,0);
-//            }
-//            else if(btnNames.get(i).equals("관심 상품 공유하기")){
-//                btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-//                btn.setBackgroundResource(R.drawable.share);
-//                pm.setMargins(1,0,1,0);
-//            }
-//            else if(btnNames.get(i).equals("사용자 정보 수정")){
-//                btn.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-//                btn.setBackgroundResource(R.drawable.user_modification);
-//                pm.setMargins(1,0,1,0);
-//            }
             btn.setLayoutParams(pm);
             btn.setWidth(400);
             btn.setHeight(400);
