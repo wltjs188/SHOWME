@@ -126,7 +126,6 @@ public class ProductInfo extends AppCompatActivity {
 
     int[] imagelist = {R.drawable.sms, R.drawable.kakao };
 
-
     //Layout 추가
     Context context;
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -213,6 +212,10 @@ public class ProductInfo extends AppCompatActivity {
                 msg = "사이즈를 선택해주세요.";
                 msgTextView.setText(msg);
 
+                //레이아웃파라미터 생성
+                LinearLayout.LayoutParams pm = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.FILL_PARENT);
+                pm.setMargins(2,0,2,0);
+
                 int id = 0;
                 for (String size : sizes) {
                     Button btn = new Button(this);
@@ -222,6 +225,11 @@ public class ProductInfo extends AppCompatActivity {
                     btn.setId(id);
 
                     btn.setText(size);
+
+                    btn.setBackgroundResource(R.drawable.btn_yellow);
+
+                    pm.setMargins(1,0,1,0);
+                    btn.setLayoutParams(pm);
 
                     btn.setLayoutParams(params);
 
