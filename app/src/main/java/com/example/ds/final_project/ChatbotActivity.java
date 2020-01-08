@@ -333,7 +333,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             public void handleMessage(Message msg)
             {
                 Log.i("tts","핸들러");
-                makeMenuMsg("");
+                makeMenuMsg(null);
             }
         };
         //tts 완료 시점 이후 실행함
@@ -667,11 +667,11 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 break;
             }
             case SHOP_ACTIVITY:{
-                makeMenuMsg("");
+                makeMenuMsg(null);
                 break;
             }
             case WISHLIST_ACTIVITY:{
-                makeMenuMsg("");
+                makeMenuMsg(null);
                 break;
             }
         }
@@ -694,9 +694,13 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     }
     //메뉴 메세지
     protected void makeMenuMsg(String addStr){
-
+        String str ="아래 버튼을 눌러 메뉴를 선택해주세요.\n말하기 버튼을 눌러 음성 입력도 가능합니다.";
         //멘트
-        ChatMessage chatMessage = new ChatMessage(addStr+"\n"+"아래 버튼을 눌러 메뉴를 선택해주세요.\n말하기 버튼을 눌러 음성 입력도 가능합니다.", true);
+        if(addStr!=null){
+            str = addStr+"\n"+str;
+        }
+
+        ChatMessage chatMessage = new ChatMessage(str, true);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
         //TTS 챗봇 읽어주기
@@ -838,7 +842,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             case "stop":
 //                aiRequest.setResetContexts(true);
                 aiRequest = new AIRequest();
-                makeMenuMsg("");
+                makeMenuMsg(null);
                 break;
             case "ACTION_USER"://사용자등록 : 이름받아오기
                 String name="";
@@ -1166,7 +1170,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 break;
             case "Share-stop":
                 shareType=null;
-                makeMenuMsg("");
+                makeMenuMsg(null);
                 break;
             case "Share_m":
                 shareType="msg";
@@ -1535,16 +1539,14 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         ChatMessage chatMessage = new ChatMessage("죄송합니다. \n쇼움이가 상품을 찾지 못했습니다.", true);
                         chatMessages.add(chatMessage);
                         adapter.notifyDataSetChanged();
-
-
-
-                        tts.speak("죄송합니다. \n쇼움이가 상품을 찾지 못했습니다.", TextToSpeech.QUEUE_FLUSH, null);
+                        params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,"End_Search"); //tts
+                        tts.speak("죄송합니다. \n쇼움이가 상품을 찾지 못했습니다.", TextToSpeech.QUEUE_FLUSH, params);
 //                        try {
 //                            Thread.sleep(1000);
 //                        }catch(Exception e){
 //                            Log.e("error",e.getMessage());
 //                        }
-                        makeMenuMsg("");
+//                        makeMenuMsg("");
 
                     }
                     else {
@@ -2002,6 +2004,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                         productInfoIntent.putExtra("info",pInofo);
                         productInfoIntent.putExtra("size",pSize);
                         productInfoIntent.putExtra("sizeTable",pSizeTable);
+                        productInfoIntent.putExtra("name",pName);
                         activity.startActivity(productInfoIntent);
                     }
                 });
