@@ -66,14 +66,13 @@ public class WishListActivity extends AppCompatActivity {
     ArrayList<String> aliases=new ArrayList<String>(); //네이밍
     ArrayList<String> sizes=new ArrayList<String>();
     ArrayList<String> sizeTables=new ArrayList<String>();
-
+    ArrayList<String> product_names=new ArrayList<String>();
     int pos;
     String alias;
     String size;
     String sizeTable;
+    String product_name;
     String Name;
-    int page = 0;
-    private GestureDetector gDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +119,7 @@ public class WishListActivity extends AppCompatActivity {
                                 productInfoIntent.putExtra("alias",alias);
                                 productInfoIntent.putExtra("size",size);
                                 productInfoIntent.putExtra("sizeTable",sizeTable);
+                                productInfoIntent.putExtra("name",product_name);
                                 Log.d("챈",aliases.get(position));
                                 startActivity(productInfoIntent);
                                 break;
@@ -304,6 +304,7 @@ public class WishListActivity extends AppCompatActivity {
                             String info=row.getString("INFO");
                             String size =row.getString("SIZE");
                             String sizeTable=row.getString("SIZE_TABLE");
+                            String name=row.getString("NAME");
 
                             wishProduct.setUid(uid);
                             wishProduct.setId(id);
@@ -312,6 +313,8 @@ public class WishListActivity extends AppCompatActivity {
                             wishProduct.setInfo(info);
                             wishProduct.setSize(size);
                             wishProduct.setSizeTable(sizeTable);
+                            wishProduct.setName(name);
+
                             Log.d("가져온 데이터",wishProduct.getInfo());
                             productIds.add(id);
                             images.add(image);
@@ -320,6 +323,7 @@ public class WishListActivity extends AppCompatActivity {
                             wishProducts.add(wishProduct);
                             sizes.add(size);
                             sizeTables.add(sizeTable);
+                            product_names.add(name);
                         }
                     }
                     adapter.notifyDataSetChanged();

@@ -266,10 +266,11 @@ public class ProductInfo extends AppCompatActivity {
                 infoBool=true;
                 Log.i("관심상품등록",uuid+productAlias);
                 InsertWishProduct task = new InsertWishProduct();
-                task.execute("InsertWishProduct",uuid,productAlias,productId,image,info,size,sizeTable);
+                task.execute("InsertWishProduct",uuid,productAlias,productId,image,info,size,sizeTable,productname);
 //                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
-                Log.i("관심2",productAlias);
-//                WishBtnChanged(infoBool);
+                Log.i(this.getClass().toString()+"별:",productAlias);
+//                WishBtnChanged(infoBool);관
+
             }
 
             @Override
@@ -803,11 +804,13 @@ public class ProductInfo extends AppCompatActivity {
                         for (int i = 0; i < jArray.length(); i++) {
                             // json배열.getJSONObject(인덱스)
                             JSONObject row = jArray.getJSONObject(i);
+                            String name = row.getString("NAME");
                             String id=row.getString("ID");
                             String alias=row.getString("ALIAS");
 
                             wishProduct.setId(id);
                             wishProduct.setAlias(alias);
+                            wishProduct.setName(name);
 
                             productAlias=alias;
                             Log.d("가져온 데이터",id+", "+alias);
@@ -844,7 +847,7 @@ public class ProductInfo extends AppCompatActivity {
             String info = (String)params[5];
             String size= (String)params[6];
             String sizeTable= (String)params[7];
-
+            String name= (String)params[8];
             try {
                 HttpParams httpParameters = new BasicHttpParams();
                 HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
@@ -872,7 +875,7 @@ public class ProductInfo extends AppCompatActivity {
                 postParameters.add(new BasicNameValuePair("info", info));
                 postParameters.add(new BasicNameValuePair("size", size));
                 postParameters.add(new BasicNameValuePair("sizeTable", sizeTable));
-
+                postParameters.add(new BasicNameValuePair("name", name));
                 //파라미터 보내기
                 UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);
                 post.setEntity(ent);
@@ -921,7 +924,7 @@ public class ProductInfo extends AppCompatActivity {
                     JSONArray jArray = (JSONArray) jsonObj.get("count");
 //                    items = new ArrayList<Product>();
                     if(jArray.length()==0){
-                        Log.d("검색"," 실패");
+                        Log.e("검색"," 실패");
                         insertFail();
                     }else {
                         Log.i("검색","성공"+result);
@@ -933,8 +936,12 @@ public class ProductInfo extends AppCompatActivity {
 
                 } catch (JSONException e) {
                     insertFail();
+<<<<<<< HEAD
+                    Log.e("검색 오류 : ", e.getMessage());
+=======
                     Log.i("관심상품등록 LoadData",LoadData);
                     Log.d("관심 등록 : ", e.getMessage());
+>>>>>>> 0a1089331a17bc3e04ac9b9f00826254c6883cb0
                 }
 
             }
