@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.ds.final_project.WebActivity">
+    tools:context="com.kimcheon.showme.final_project.WebActivity">
 
     <ImageView
         android:id="@+id/imageView"
