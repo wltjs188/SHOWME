@@ -267,6 +267,7 @@ public class ProductInfo extends AppCompatActivity {
                 Log.i("관심상품등록",uuid+productAlias);
                 InsertWishProduct task = new InsertWishProduct();
                 task.execute("InsertWishProduct",uuid,productAlias,productId,image,info,size,sizeTable,productname);
+                Log.i("aa",productname);
 //                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
                 Log.i(this.getClass().toString()+"별:",productAlias);
 //                WishBtnChanged(infoBool);관
@@ -862,9 +863,11 @@ public class ProductInfo extends AppCompatActivity {
                 String postURL = "http://52.78.143.125:8080/showme/";
 
                 // 로컬서버
-//            String postURL = "http://10.0.2.2:8080/showme/InsertUser";
+//            String postURL = "http://10.0.2.2:8080/showme/InsertWishProduct";
 
                 HttpPost post = new HttpPost(postURL+project);
+//                HttpPost post = new HttpPost(postURL);
+
                 //서버에 보낼 파라미터
                 ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
 //            파라미터 추가하기

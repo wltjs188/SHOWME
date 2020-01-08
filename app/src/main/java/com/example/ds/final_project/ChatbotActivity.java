@@ -2002,6 +2002,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                         productInfoIntent.putExtra("info",pInofo);
                         productInfoIntent.putExtra("size",pSize);
                         productInfoIntent.putExtra("sizeTable",pSizeTable);
+                        productInfoIntent.putExtra("name",pName);
                         activity.startActivity(productInfoIntent);
                     }
                 });
