@@ -10,29 +10,9 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    signingConfigs {
-
-
-
-        release {
-
-
-
-            storeFile file('showme.jks') // 기준은 App 폴더 기준이다.
-
-            storePassword "8341"
-
-            keyAlias "Alias"
-
-            keyPassword "8341"
-
-        }
-
-    }
     buildTypes {
         release {
             minifyEnabled false
-            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         buildTypes.each {
