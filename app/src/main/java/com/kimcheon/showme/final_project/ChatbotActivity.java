@@ -276,7 +276,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         btnSend = findViewById(R.id.btn_chat_send);
         btnSTT=findViewById(R.id.btn_stt);
         editText = (EditText) findViewById(R.id.msg_type);
-
+        editText.requestFocus();
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
         listView.setAdapter(adapter);
         listView.setSelection(adapter.getCount() - 1);
@@ -463,7 +463,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         }
                     }
                 }
-//                editText.requestFocus();
+                //editText.requestFocus();
 
             }
         };
@@ -1598,9 +1598,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                                Log.e("error",e.getMessage());
 //                            }
 
-                            str="더보기를 누르면 더 많은 상품을 보실 수 있습니다.\n";
+                            str="더보기를 누르면 더 많은 상품을 보실 수 있습니다.";
                             if(project.equals("SearchOne2")){
-                                str+="원하는 스타일도 선택해주세요.";
+                                str+="\n원하는 스타일도 선택해주세요.";
 
                                 int btn_type=0;
                                 chatMessage = new ChatMessage(str, true);
@@ -1640,7 +1640,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                                 chatMessages.add(chatMessage2);
                                 adapter.notifyDataSetChanged();
                             }else if(project.equals("SearchTwo2")){
-                                str+="원하는 색상이 있으시면 선택해주세요.";
+                                str+="\n원하는 색상이 있으시면 선택해주세요.";
                                 chatMessage = new ChatMessage(str, true);
                                 chatMessages.add(chatMessage);
                                 adapter.notifyDataSetChanged();
@@ -1868,6 +1868,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
     public View.OnClickListener Listener;
     Intent productInfoIntent = new Intent(getContext(), ProductInfo.class); //상품 정보 인텐트
     Intent shopIntent=new Intent(getContext(),ShopActivity.class); //상품 더보기 인텐트
+    //private View editText= findViewById(R.id.msg_type);
 
 
     public MessageAdapter(Activity context, int resource, List<ChatMessage> objects) {
@@ -1877,6 +1878,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
     }
     public void setButton(View.OnClickListener Listener){
         this.Listener = Listener;
+        //editText.requestFocus();
     }
     public ArrayList<Button> getButton(){ //만들어진 버튼 객체 리스트 반환
         return button.getList();
@@ -1949,6 +1951,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             }
             button = new chatButton(btnNames,linearLayout,activity,Listener);
             holder = new ViewHolder(convertView);
+
             convertView.setTag(holder);
         }
         else {
