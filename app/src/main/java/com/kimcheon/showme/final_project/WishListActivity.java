@@ -102,6 +102,7 @@ public class WishListActivity extends AppCompatActivity {
                 alias=aliases.get(position);
                 size=sizes.get(position);
                 sizeTable=sizeTables.get(position);
+                product_name=product_names.get(position);
                // productInfoIntent.putExtra("info", infos.get(position));
                 PopupMenu popup= new PopupMenu(getApplicationContext(), v);//v는 클릭된 뷰를 의미
 
@@ -119,6 +120,7 @@ public class WishListActivity extends AppCompatActivity {
                                 productInfoIntent.putExtra("size",size);
                                 productInfoIntent.putExtra("sizeTable",sizeTable);
                                 productInfoIntent.putExtra("name",product_name);
+                                Log.d("product_name",product_name);
                                 Log.d("챈",aliases.get(position));
                                 startActivity(productInfoIntent);
                                 break;
