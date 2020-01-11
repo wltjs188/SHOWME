@@ -463,7 +463,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         }
                     }
                 }
-//                editText.requestFocus();
+                //editText.requestFocus();
 
             }
         };
@@ -1868,6 +1868,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
     public View.OnClickListener Listener;
     Intent productInfoIntent = new Intent(getContext(), ProductInfo.class); //상품 정보 인텐트
     Intent shopIntent=new Intent(getContext(),ShopActivity.class); //상품 더보기 인텐트
+    //private View editText= findViewById(R.id.msg_type);
 
 
     public MessageAdapter(Activity context, int resource, List<ChatMessage> objects) {
@@ -1877,6 +1878,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
     }
     public void setButton(View.OnClickListener Listener){
         this.Listener = Listener;
+        //editText.requestFocus();
     }
     public ArrayList<Button> getButton(){ //만들어진 버튼 객체 리스트 반환
         return button.getList();
