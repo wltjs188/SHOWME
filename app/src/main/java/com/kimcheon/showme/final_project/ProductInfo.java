@@ -156,7 +156,7 @@ public class ProductInfo extends AppCompatActivity {
         size=intent.getStringExtra("size");
         sizeTable=intent.getStringExtra("sizeTable");
         productname=intent.getStringExtra("name");
-        //Log.d("sizeTable",sizeTable);
+        Log.d("productname",productname);
 
 
         productAlias=intent.getStringExtra("alias");
