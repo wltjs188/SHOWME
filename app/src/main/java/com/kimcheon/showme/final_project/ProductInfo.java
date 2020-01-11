@@ -1134,8 +1134,8 @@ public class ProductInfo extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             try {
                 //파싱페이지 넣어주기
-                Document doc = Jsoup.connect(productUrl).get();
-                System.out.println("주소"+productUrl);
+                Document doc = Jsoup.connect(Url).get();
+                System.out.println("주소"+Url);
                 // 키워드부분 접근
                 Elements contents = doc.select("div.wrap-estimate-avg");
                 //System.out.println("전체 : " + contents.text() + "\n");
