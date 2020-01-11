@@ -158,6 +158,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     String style=null;
     String color = null;
 
+    //이전검색 체크
+    boolean preSearchResult=true;
+
     //공유할 메세지 내용
     String productId="";
     String productName="";
@@ -300,7 +303,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //        listView.setSelection(adapter.getCount() - 1);
 
 //        ChatMessage chatMessage;
-
+        //엔터 전송
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -1126,10 +1129,15 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                 }
                 else if(parameter.containsKey("pre_search")) {
-                    
                     //이전 검색
-                    if (remember == null) {
+                    if (remember.getCategory() == null) {
                         //이전 검색 못해
+                        String str = "이전 검색 기록이 없습니다.\n" +
+                                "아래 버튼을 눌러 메뉴를 선택해주세요.\n말하기 버튼을 눌러 음성 입력도 가능합니다.";
+                        ChatMessage chatMessage = new ChatMessage(str, true);
+                        chatMessages.add(chatMessage);
+                        tts.speak(str, TextToSpeech.QUEUE_FLUSH, null);
+                        preSearchResult = false;
                     } else {
 //                        if(remember.getStyle()==null){
 //                            searchtask = new SearchProduct();
@@ -1273,7 +1281,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
 //        tts.speak(speech,TextToSpeech.QUEUE_FLUSH, null);
 
-
             if (!speech.equals("")) {
 //            chatMessages.add(chatMessage);
                 if (!(chatMessage2.getContent().equals(""))) {
@@ -1281,19 +1288,29 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         //                    pDialog.dismiss();
                         @Override
                         public void run() {
-                            ChatMessage chatMessage = new ChatMessage(speech, true);
-                            chatMessages.add(chatMessage);
+                            if(preSearchResult == true){ //이전 검색 있을때
+                                ChatMessage chatMessage = new ChatMessage(speech, true);
+                                chatMessages.add(chatMessage);
+                                tts.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
+                            }
+                            else{
+                                preSearchResult=true;
+                            }
+                            //이전 검색 없을때
                             chatMessages.add(chatMessage2);
                             adapter.notifyDataSetChanged();
+
                         }
                     }, 500);
 //                chatMessages.add(chatMessage2);
-                } else {
+                }
+                else {
                     chatMessage = new ChatMessage(speech, true);
                     chatMessages.add(chatMessage);
                     adapter.notifyDataSetChanged();
+                    tts.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
                 }
-                tts.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
+
             }
 //        if(remenu!=""){
 //            chatMessage = new ChatMessage(remenu, true);
