@@ -159,6 +159,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     //공유할 메세지 내용
     String productId="";
     String productName="";
+    int price=0;
+    String imgUrl="";
     String smsg="";
     String sproduct= null; //공유할 관심상품
     ArrayList<String> wishProductNames;
@@ -186,7 +188,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     //tts 지연 메세지
     String str;
 
-
+    String focus = "";
 
     @Override
     protected void onResume() {
@@ -1366,20 +1368,24 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     }
 
     private void ShareKakao(){
-        //텍스트 형태
-        TextTemplate params = TextTemplate.newBuilder(" 이 상품 구매 부탁드립니다!\n"+productName+"\n주소:"+user.getAddress(),
-                LinkObject.newBuilder().setWebUrl("https://store.musinsa.com/app/product/detail/"+productId).setMobileWebUrl("https://store.musinsa.com/app/product/detail/"+productId).build()).setButtonTitle("구매하기").build();
+        String templateId = "20070";
+
+        Map<String, String> templateArgs = new HashMap<String, String>();
+        templateArgs.put("imageUrl", imgUrl);
+        //templateArgs.put("price", String.valueOf(price));
+        templateArgs.put("discription", "이 상품 구매 부탁드립니다!\n상품명:"+productName);
+        templateArgs.put("productId", "/app/product/detail/"+productId);
 
         Map<String, String> serverCallbackArgs = new HashMap<String, String>();
         serverCallbackArgs.put("user_id", "${current_user_id}");
         serverCallbackArgs.put("product_id", "${shared_product_id}");
 
-        KakaoLinkService.getInstance().sendDefault(this, params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
+        KakaoLinkService.getInstance().sendCustom(this, templateId, templateArgs, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
             @Override
             public void onFailure(ErrorResult errorResult) {
                 Logger.e(errorResult.toString());
-                Log.d("kakao",errorResult.toString());
             }
+
             @Override
             public void onSuccess(KakaoLinkResponse result) {
                 // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
@@ -1812,7 +1818,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         Log.d("wishList","맞음");
                         JSONObject item = jArray.getJSONObject(0);
                         productId = item.getString("ID");
-                        productName=item.getString("ALIAS");
+                        productName=item.getString("Name");
+                        // 이미지url, 가격 추가해주세요
+                        //imgUrl=item.getString("IMAGE");
+                        //price=item.getString("PRICE");
                         smsg = "https://store.musinsa.com/app/product/detail/"+productId;
                     }
                     aiRequest.setQuery(input);
@@ -1868,7 +1877,6 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
     public View.OnClickListener Listener;
     Intent productInfoIntent = new Intent(getContext(), ProductInfo.class); //상품 정보 인텐트
     Intent shopIntent=new Intent(getContext(),ShopActivity.class); //상품 더보기 인텐트
-    //private View editText= findViewById(R.id.msg_type);
 
 
     public MessageAdapter(Activity context, int resource, List<ChatMessage> objects) {
@@ -1878,7 +1886,6 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
     }
     public void setButton(View.OnClickListener Listener){
         this.Listener = Listener;
-        //editText.requestFocus();
     }
     public ArrayList<Button> getButton(){ //만들어진 버튼 객체 리스트 반환
         return button.getList();
@@ -1971,6 +1978,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                 holder.imageViews.get(i).setVisibility(View.VISIBLE);
 //                Log.i("김지선이미지"+position,p.get(i).getImage());
                 String image = p.get(i).getImage();
+                int price = p.get(i).getPrice();
                 String pName = p.get(i).getName();
                 String pId = ""+p.get(i).getId();
                 String pInofo = p.get(i).toString();
@@ -1983,6 +1991,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                     @Override
                     public void onClick(View v) {
                         productInfoIntent.putExtra("image",image);
+                        productInfoIntent.putExtra("price",price);
                         productInfoIntent.putExtra("productId",pId);
                         productInfoIntent.putExtra("info",pInofo);
                         productInfoIntent.putExtra("size",pSize);

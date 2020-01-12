@@ -87,6 +87,7 @@ public class ProductInfo extends AppCompatActivity {
     private String productId=" ";
 //    private String optionNum="";
 //    private String productURL=" ";
+    private int price=0;
     private String info=" ";
     private String image=" ";
     private String size=" ";
@@ -151,12 +152,13 @@ public class ProductInfo extends AppCompatActivity {
 
         productId=intent.getStringExtra("productId");
         Url+=productId;
+        price=intent.getIntExtra("price",0);
         info=intent.getStringExtra("info");
         image=intent.getStringExtra("image");
         size=intent.getStringExtra("size");
         sizeTable=intent.getStringExtra("sizeTable");
         productname=intent.getStringExtra("name");
-        Log.d("productname",productname);
+        //Log.d("productname",productname);
 
 
         productAlias=intent.getStringExtra("alias");
@@ -587,46 +589,47 @@ public class ProductInfo extends AppCompatActivity {
     }
     private void ShareKakao(){
         //텍스트 형태
-        TextTemplate params = TextTemplate.newBuilder(" 이 상품 구매 부탁드립니다!\n상품명"+productname+"\n주소:"+user.getAddress(),
-                LinkObject.newBuilder().setWebUrl("https://store.musinsa.com/app/product/detail/"+productId).setMobileWebUrl("https://store.musinsa.com/app/product/detail/"+productId).build()).setButtonTitle("구매하기").build();
-
-        Map<String, String> serverCallbackArgs = new HashMap<String, String>();
-        serverCallbackArgs.put("user_id", "${current_user_id}");
-        serverCallbackArgs.put("product_id", "${shared_product_id}");
-
-        KakaoLinkService.getInstance().sendDefault(this, params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
-            @Override
-            public void onFailure(ErrorResult errorResult) {
-                Logger.e(errorResult.toString());
-                Log.d("kakao",errorResult.toString());
-            }
-            @Override
-            public void onSuccess(KakaoLinkResponse result) {
-                // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
-            }
-        });
-
-//        //커스텀 형태
-//        String imageUrl = image;
-//        String title =  phoneName;
-//        String price = phoneName;
+//        TextTemplate params = TextTemplate.newBuilder(" 이 상품 구매 부탁드립니다!\n상품명:"+productname+"\n주소:"+user.getAddress(),
+//                LinkObject.newBuilder().setWebUrl("https://store.musinsa.com/app/product/detail/"+productId).setMobileWebUrl("https://store.musinsa.com/app/product/detail/"+productId).build()).setButtonTitle("구매하기").build();
 //
-//        Map<String, String> templateArgs = new HashMap<>();
-//        templateArgs.put("${imgUrl}", imageUrl);
-//        templateArgs.put("${title}", title);
-//        templateArgs.put("${description}", price);
-//        templateArgs.put("${${A_E}}", "https://store.musinsa.com/app/"+"/product/detail/"+productId);
-//        KakaoLinkService.getInstance().sendCustom(this, "20070", templateArgs, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
+//        Map<String, String> serverCallbackArgs = new HashMap<String, String>();
+//        serverCallbackArgs.put("user_id", "${current_user_id}");
+//        serverCallbackArgs.put("product_id", "${shared_product_id}");
+//
+//        KakaoLinkService.getInstance().sendDefault(this, params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
 //            @Override
 //            public void onFailure(ErrorResult errorResult) {
 //                Logger.e(errorResult.toString());
+//                Log.d("kakao",errorResult.toString());
 //            }
-//
 //            @Override
 //            public void onSuccess(KakaoLinkResponse result) {
 //                // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
 //            }
 //        });
+        String templateId = "20070";
+
+        Map<String, String> templateArgs = new HashMap<String, String>();
+        templateArgs.put("imageUrl", image);
+        templateArgs.put("price", String.valueOf(price));
+        templateArgs.put("discription", "이 상품 구매 부탁드립니다!\n상품명 : "+productname);
+        templateArgs.put("productId", "/app/product/detail/"+productId);
+
+        Map<String, String> serverCallbackArgs = new HashMap<String, String>();
+        serverCallbackArgs.put("user_id", "${current_user_id}");
+        serverCallbackArgs.put("product_id", "${shared_product_id}");
+
+        KakaoLinkService.getInstance().sendCustom(this, templateId, templateArgs, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
+            @Override
+            public void onFailure(ErrorResult errorResult) {
+                Logger.e(errorResult.toString());
+            }
+
+            @Override
+            public void onSuccess(KakaoLinkResponse result) {
+                // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
+            }
+        });
     }
     // 값 불러오기
     private String  getPreferences(String key){
