@@ -60,7 +60,12 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -166,7 +171,7 @@ public class ProductInfo extends AppCompatActivity {
             getSupportActionBar().setTitle("상품 상세 정보");
         else
             getSupportActionBar().setTitle(productAlias+" 상세 정보");
-        reviewIntent=new Intent(getApplicationContext(),ReviewActivity.class); //리뷰
+//        reviewIntent=new Intent(getApplicationContext(),ReviewActivity.class); //리뷰
 
         productImg=(ImageView)findViewById(R.id.productImg);
 //        Log.i("이미지",""+image);
@@ -373,8 +378,10 @@ public class ProductInfo extends AppCompatActivity {
 
     public void onReviewClicked(View view){
         // 리뷰 보기 버튼 
-        reviewIntent.putExtra("product", productId);
-        startActivity(reviewIntent);
+//        reviewIntent.putExtra("product", productId);
+//        startActivity(reviewIntent);
+        JsoupAsyncTask jsoupAsyncTask = new JsoupAsyncTask();
+        jsoupAsyncTask.execute();
     }
     //공유 다이얼로그
     public void onShareClicked(View view){
@@ -1105,5 +1112,115 @@ public class ProductInfo extends AppCompatActivity {
 
     }
 
+    private String productUrl = "https://store.musinsa.com/app/product/detail/"+productId;
+    private String txtAllRating ="";
+    private String txtKeyword ="";
+    String stit = "";
+    String score = "";
+//    ArrayList<ReviewData> reviewDataList;
+
+    //리뷰 클롤링 쓰레드
+    private class JsoupAsyncTask extends AsyncTask<Void, Void, Void> {
+        int num =0;
+        ProgressDialog progressDialog = new ProgressDialog(ProductInfo.this);
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage("잠시만 기다려주세요");
+
+            progressDialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                //파싱페이지 넣어주기
+                Document doc = Jsoup.connect(Url).get();
+                System.out.println("주소"+Url);
+                // 키워드부분 접근
+                Elements contents = doc.select("div.wrap-estimate-avg");
+                //System.out.println("전체 : " + contents.text() + "\n");
+
+                if(contents.text().isEmpty()){
+                    txtAllRating = "등록된 평점이 없습니다.";
+                    txtKeyword = "등록된 평가가 없습니다.";
+                }
+                else{
+                    for (Element e : contents) {
+                        //평점 출력
+                        String rank = e.select("span.rate").text();
+                        if(rank.equals("")){
+                            txtAllRating = "등록된 평점이 없습니다.";
+                        }else {
+                            txtAllRating += "평점 : " + rank + "\n";
+                            //System.out.println("평점"+txtAllRating);
+                        }
+
+                        // 평가항목 접근
+                        Elements cts = e.select("div.lv-contents");
+
+                        for(Element j : cts){
+                            //평가항목 출력
+                            String ct = j.select("div.tit").text();
+
+                            // 세부항목 접근
+                            Elements stits = j.select("li.on");
+                            for(Element i : stits){
+                                //세부항목 출력
+                                stit = i.select("div.label").text();
+                                //System.out.println("세부항목"+stit);
+                                score = i.select("div.per").text();
+                            }
+                            if(score.equals("")){
+                                txtKeyword = "등록된 평가가 없습니다.";
+                            }else {
+                                txtKeyword += ct + ":" + stit + "(" + score + ") \n";
+                            }
+                        }//System.out.println("평가"+txtKeyword);
+                    }
+                }
+//
+//                // 리뷰부분 접근
+//                Elements reviewbox = doc.select("div#style_estimate_list");
+//                Elements reviewContent = reviewbox.select("div.nslist_post");
+//
+//                for (Element r : reviewContent) {
+//                    num++;
+//                    //리뷰 제목
+//                    String rt = r.select("div.tit").text();
+//                    //리뷰 내용
+//                    String rank = r.select("span.content-review").text();
+//
+//                    ReviewData reviewD = new ReviewData(num,rt,rank);
+//                    //System.out.println("번호:"+reviewD.getNum()+"제목:"+reviewD.getTitle()+"내용"+reviewD.getReview());
+//                    Log.d("reviewData",reviewD.toString());
+//                    //add가 안됨..!!
+////                    reviewDataList.add(reviewD);
+//                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            progressDialog.dismiss();
+            // 리뷰 다이얼로그 띄우기
+            AlertDialog.Builder reviewDialog = new AlertDialog.Builder(ProductInfo.this,
+                    android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+
+
+
+            reviewDialog.setTitle(txtAllRating)
+                    .setMessage(txtKeyword)
+                    .setPositiveButton("닫기", null)
+                    .setCancelable(true)
+                    .show();
+        }
+    }
 }
 

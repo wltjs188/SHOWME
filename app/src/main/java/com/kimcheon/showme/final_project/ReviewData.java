@@ -33,4 +33,13 @@ public class ReviewData {
     public void setReview(String review) {
         this.review = review;
     }
+
+    @Override
+    public String toString() {
+        return "ReviewData{" +
+                "num=" + num +
+                ", title='" + title + '\'' +
+                ", review='" + review + '\'' +
+                '}';
+    }
 }

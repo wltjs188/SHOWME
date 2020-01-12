@@ -70,13 +70,6 @@ public class ReviewActivity extends AppCompatActivity {
         //keyword.setText(txtKeyword); //키워드 넣으면됨
 
         reviewDataList = new ArrayList<ReviewData>();
-//        reviewDataList.add(new ReviewData(1,"4.5","신축성이 너무 좋아요")); //순서,평점,리뷰 순으로 넣으면됨
-//        reviewDataList.add(new ReviewData(2,"3.0","핏이 예뻐요"));
-//        reviewDataList.add(new ReviewData(3,"4.2","색상이 맘에 들어요."));
-//        reviewDataList.add(new ReviewData(4,"4.2","색상이 맘에 들어요."));
-//        reviewDataList.add(new ReviewData(5,"4.2","색상이 맘에 들어요."));
-//        reviewDataList.add(new ReviewData(6,"4.2","색상이 맘에 들어요."));
-//        reviewDataList.add(new ReviewData(6,"4.2","색상이 맘에 들어요."));
 
     }
     @Override
@@ -187,7 +180,7 @@ public class ReviewActivity extends AppCompatActivity {
 
                     ReviewData reviewD = new ReviewData(num,rt,rank);
                     //System.out.println("번호:"+reviewD.getNum()+"제목:"+reviewD.getTitle()+"내용"+reviewD.getReview());
-                    Log.d("reviewData",reviewD+"");
+                    Log.d("reviewData",reviewD.toString());
                     //add가 안됨..!!
                     reviewDataList.add(reviewD);
                 }

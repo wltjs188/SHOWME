@@ -130,7 +130,7 @@ public class ShopActivity extends AppCompatActivity {
         Gson gson = new GsonBuilder().create();
         String strContact=getPreferences("remember");
         searchedProduct=gson.fromJson(strContact,Product.class);
-        Log.d("검색한 상품 옵션:",searchedProduct.toString());
+//        Log.d("검색한 상품 옵션:",searchedProduct.toString());
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼

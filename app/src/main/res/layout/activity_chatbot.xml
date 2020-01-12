@@ -46,6 +46,8 @@
                 android:textColor="@color/colorBlack" />
 
             <EditText
+                android:imeOptions="actionSend"
+                android:inputType="text"
                 android:id="@+id/msg_type"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
