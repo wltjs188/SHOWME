@@ -90,15 +90,12 @@ public class ProductInfo extends AppCompatActivity {
     private String productAlias="";
     private String uuid=" ";
     private String productId=" ";
-//    private String optionNum="";
-//    private String productURL=" ";
     private int price=0;
     private String info=" ";
     private String image=" ";
     private String size=" ";
     private String sizeTable=" ";
     private String productname="";
-
     //수신자 정보
     String phoneName = "";
     String phoneNo = "";
@@ -163,7 +160,7 @@ public class ProductInfo extends AppCompatActivity {
         size=intent.getStringExtra("size");
         sizeTable=intent.getStringExtra("sizeTable");
         productname=intent.getStringExtra("name");
-        //Log.d("productname",productname);
+        Log.d("price",price+","+image);
 
 
         productAlias=intent.getStringExtra("alias");

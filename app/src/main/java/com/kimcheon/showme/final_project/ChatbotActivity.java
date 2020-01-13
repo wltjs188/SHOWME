@@ -1851,10 +1851,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         Log.d("wishList","맞음");
                         JSONObject item = jArray.getJSONObject(0);
                         productId = item.getString("ID");
-                        productName=item.getString("Name");
+                        productName=item.getString("NAME");
                         // 이미지url, 가격 추가해주세요
-                        //imgUrl=item.getString("IMAGE");
-                        //price=item.getString("PRICE");
+                        imgUrl=item.getString("IMAGE");
+                        price=item.getInt("PRICE");
                         smsg = "https://store.musinsa.com/app/product/detail/"+productId;
                     }
                     aiRequest.setQuery(input);
