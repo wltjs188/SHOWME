@@ -258,7 +258,7 @@ public class ProductInfo extends AppCompatActivity {
                 infoBool=true;
                 Log.i("관심상품등록",uuid+productAlias);
                 InsertWishProduct task = new InsertWishProduct();
-                task.execute("InsertWishProduct",uuid,productAlias,productId,image,info,size,sizeTable,productname);
+                task.execute("InsertWishProduct",uuid,productAlias,productId,image,info,size,sizeTable,productname,price+"");
                 Log.i("aa",productname);
 //                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
                 Log.i(this.getClass().toString()+"별:",productAlias);
@@ -842,6 +842,7 @@ public class ProductInfo extends AppCompatActivity {
             String size= (String)params[6];
             String sizeTable= (String)params[7];
             String name= (String)params[8];
+            String price= (String)params[9];
             try {
                 HttpParams httpParameters = new BasicHttpParams();
                 HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
@@ -872,6 +873,7 @@ public class ProductInfo extends AppCompatActivity {
                 postParameters.add(new BasicNameValuePair("size", size));
                 postParameters.add(new BasicNameValuePair("sizeTable", sizeTable));
                 postParameters.add(new BasicNameValuePair("name", name));
+                postParameters.add(new BasicNameValuePair("price", price+""));
                 //파라미터 보내기
                 UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);
                 post.setEntity(ent);
