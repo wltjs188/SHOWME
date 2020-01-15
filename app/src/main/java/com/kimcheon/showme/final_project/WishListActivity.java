@@ -235,7 +235,7 @@ public class WishListActivity extends AppCompatActivity {
                 HttpConnectionParams.setTcpNoDelay(httpParameters, true);
 
                 // 주소 : aws서버
-                String postURL = "http://52.78.143.125:8080/showme/";
+                String postURL = "http://13.209.138.178:8080/showme/";
 
                 HttpPost post = new HttpPost(postURL+project);
                 //서버에 보낼 파라미터
@@ -367,7 +367,7 @@ public class WishListActivity extends AppCompatActivity {
                 HttpConnectionParams.setTcpNoDelay(httpParameters, true);
 
                 // 주소 : aws서버
-                String postURL = "http://52.78.143.125:8080/showme/";
+                String postURL = "http://13.209.138.178:8080/showme/";
 
                 // 로컬서버
 //            String postURL = "http://10.0.2.2:8080/showme/InsertUser";
