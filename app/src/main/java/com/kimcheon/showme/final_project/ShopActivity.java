@@ -62,6 +62,7 @@ public class ShopActivity extends AppCompatActivity {
     Product searchedProduct=null;
     ArrayList<Product> products=new ArrayList<Product>();
     ArrayList<String> productsName = new ArrayList<String>();
+    ArrayList<Integer> prices = new ArrayList<Integer>();
     ArrayList<String> infos = new ArrayList<String>(); //상품 상세 정보
     ArrayList<String> summary = new ArrayList<String>(); //상품 상세 정보
     ArrayList<String> images = new ArrayList<String>(); //상품 옵션 대표 이미지
@@ -160,6 +161,7 @@ public class ShopActivity extends AppCompatActivity {
 
 //                productInfoIntent.putExtra("product", strContact);
                 productInfoIntent.putExtra("name",productsName.get(position));
+                productInfoIntent.putExtra("price",prices.get(position));
                 productInfoIntent.putExtra("image",images.get(position));
                 productInfoIntent.putExtra("productId",ids.get(position));
                 productInfoIntent.putExtra("info",infos.get(position));
@@ -322,6 +324,7 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
                         product.setPrice(price);
                         product.setSize_table(sizeTable);
                         productsName.add(product.getName());
+                        prices.add(product.getPrice());
                         products.add(product);
                         infos.add(product.toString());
                         summary.add(product.getSummary());

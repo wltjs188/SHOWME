@@ -51,7 +51,7 @@ public class WishListActivity extends AppCompatActivity {
     GridView gv;
     private WishAdapter adapter;
     String uuid="";
-
+//price=intent.getIntExtra("price",0);
 
     //STT
     private final int REQ_CODE_SPEECH_INPUT = 100;
@@ -66,13 +66,14 @@ public class WishListActivity extends AppCompatActivity {
     ArrayList<String> sizes=new ArrayList<String>();
     ArrayList<String> sizeTables=new ArrayList<String>();
     ArrayList<String> product_names=new ArrayList<String>();
+    ArrayList<Integer> prices=new ArrayList<Integer>();
     int pos;
     String alias;
     String size;
     String sizeTable;
     String product_name;
     String Name;
-
+    int price;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +104,8 @@ public class WishListActivity extends AppCompatActivity {
                 size=sizes.get(position);
                 sizeTable=sizeTables.get(position);
                 product_name=product_names.get(position);
-               // productInfoIntent.putExtra("info", infos.get(position));
+                price = prices.get(position);
+
                 PopupMenu popup= new PopupMenu(getApplicationContext(), v);//v는 클릭된 뷰를 의미
 
                 getMenuInflater().inflate(R.menu.option_menu, popup.getMenu());
@@ -120,6 +122,7 @@ public class WishListActivity extends AppCompatActivity {
                                 productInfoIntent.putExtra("size",size);
                                 productInfoIntent.putExtra("sizeTable",sizeTable);
                                 productInfoIntent.putExtra("name",product_name);
+                                productInfoIntent.putExtra("price",price);
                                 Log.d("product_name",product_name);
                                 Log.d("챈",aliases.get(position));
                                 startActivity(productInfoIntent);
@@ -306,7 +309,7 @@ public class WishListActivity extends AppCompatActivity {
                             String size =row.getString("SIZE");
                             String sizeTable=row.getString("SIZE_TABLE");
                             String name=row.getString("NAME");
-
+                            int price = row.getInt("PRICE");
                             wishProduct.setUid(uid);
                             wishProduct.setId(id);
                             wishProduct.setAlias(alias);
@@ -315,6 +318,7 @@ public class WishListActivity extends AppCompatActivity {
                             wishProduct.setSize(size);
                             wishProduct.setSizeTable(sizeTable);
                             wishProduct.setName(name);
+                            wishProduct.setPrice(price);
 
                             Log.d("가져온 데이터",wishProduct.getInfo());
                             productIds.add(id);
@@ -325,6 +329,7 @@ public class WishListActivity extends AppCompatActivity {
                             sizes.add(size);
                             sizeTables.add(sizeTable);
                             product_names.add(name);
+                            prices.add(price);
                         }
                     }
                     adapter.notifyDataSetChanged();

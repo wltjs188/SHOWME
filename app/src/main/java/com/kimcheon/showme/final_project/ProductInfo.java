@@ -90,14 +90,12 @@ public class ProductInfo extends AppCompatActivity {
     private String productAlias="";
     private String uuid=" ";
     private String productId=" ";
-//    private String optionNum="";
-//    private String productURL=" ";
+    private int price=0;
     private String info=" ";
     private String image=" ";
     private String size=" ";
     private String sizeTable=" ";
     private String productname="";
-
     //수신자 정보
     String phoneName = "";
     String phoneNo = "";
@@ -156,12 +154,13 @@ public class ProductInfo extends AppCompatActivity {
 
         productId=intent.getStringExtra("productId");
         Url+=productId;
+        price=intent.getIntExtra("price",0);
         info=intent.getStringExtra("info");
         image=intent.getStringExtra("image");
         size=intent.getStringExtra("size");
         sizeTable=intent.getStringExtra("sizeTable");
         productname=intent.getStringExtra("name");
-        Log.d("productname",productname);
+        Log.d("price",price+","+image);
 
 
         productAlias=intent.getStringExtra("alias");
@@ -259,7 +258,7 @@ public class ProductInfo extends AppCompatActivity {
                 infoBool=true;
                 Log.i("관심상품등록",uuid+productAlias);
                 InsertWishProduct task = new InsertWishProduct();
-                task.execute("InsertWishProduct",uuid,productAlias,productId,image,info,size,sizeTable,productname);
+                task.execute("InsertWishProduct",uuid,productAlias,productId,image,info,size,sizeTable,productname,price+"");
                 Log.i("aa",productname);
 //                Toast.makeText(ProductInfo.this, "관심 상품으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
                 Log.i(this.getClass().toString()+"별:",productAlias);
@@ -594,46 +593,47 @@ public class ProductInfo extends AppCompatActivity {
     }
     private void ShareKakao(){
         //텍스트 형태
-        TextTemplate params = TextTemplate.newBuilder(" 이 상품 구매 부탁드립니다!\n상품명"+productname+"\n주소:"+user.getAddress(),
-                LinkObject.newBuilder().setWebUrl("https://store.musinsa.com/app/product/detail/"+productId).setMobileWebUrl("https://store.musinsa.com/app/product/detail/"+productId).build()).setButtonTitle("구매하기").build();
-
-        Map<String, String> serverCallbackArgs = new HashMap<String, String>();
-        serverCallbackArgs.put("user_id", "${current_user_id}");
-        serverCallbackArgs.put("product_id", "${shared_product_id}");
-
-        KakaoLinkService.getInstance().sendDefault(this, params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
-            @Override
-            public void onFailure(ErrorResult errorResult) {
-                Logger.e(errorResult.toString());
-                Log.d("kakao",errorResult.toString());
-            }
-            @Override
-            public void onSuccess(KakaoLinkResponse result) {
-                // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
-            }
-        });
-
-//        //커스텀 형태
-//        String imageUrl = image;
-//        String title =  phoneName;
-//        String price = phoneName;
+//        TextTemplate params = TextTemplate.newBuilder(" 이 상품 구매 부탁드립니다!\n상품명:"+productname+"\n주소:"+user.getAddress(),
+//                LinkObject.newBuilder().setWebUrl("https://store.musinsa.com/app/product/detail/"+productId).setMobileWebUrl("https://store.musinsa.com/app/product/detail/"+productId).build()).setButtonTitle("구매하기").build();
 //
-//        Map<String, String> templateArgs = new HashMap<>();
-//        templateArgs.put("${imgUrl}", imageUrl);
-//        templateArgs.put("${title}", title);
-//        templateArgs.put("${description}", price);
-//        templateArgs.put("${${A_E}}", "https://store.musinsa.com/app/"+"/product/detail/"+productId);
-//        KakaoLinkService.getInstance().sendCustom(this, "20070", templateArgs, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
+//        Map<String, String> serverCallbackArgs = new HashMap<String, String>();
+//        serverCallbackArgs.put("user_id", "${current_user_id}");
+//        serverCallbackArgs.put("product_id", "${shared_product_id}");
+//
+//        KakaoLinkService.getInstance().sendDefault(this, params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
 //            @Override
 //            public void onFailure(ErrorResult errorResult) {
 //                Logger.e(errorResult.toString());
+//                Log.d("kakao",errorResult.toString());
 //            }
-//
 //            @Override
 //            public void onSuccess(KakaoLinkResponse result) {
 //                // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
 //            }
 //        });
+        String templateId = "20070";
+
+        Map<String, String> templateArgs = new HashMap<String, String>();
+        templateArgs.put("imageUrl", image);
+        templateArgs.put("price", String.valueOf(price));
+        templateArgs.put("discription", "이 상품 구매 부탁드립니다!\n상품명 : "+productname);
+        templateArgs.put("productId", "/app/product/detail/"+productId);
+
+        Map<String, String> serverCallbackArgs = new HashMap<String, String>();
+        serverCallbackArgs.put("user_id", "${current_user_id}");
+        serverCallbackArgs.put("product_id", "${shared_product_id}");
+
+        KakaoLinkService.getInstance().sendCustom(this, templateId, templateArgs, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
+            @Override
+            public void onFailure(ErrorResult errorResult) {
+                Logger.e(errorResult.toString());
+            }
+
+            @Override
+            public void onSuccess(KakaoLinkResponse result) {
+                // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
+            }
+        });
     }
     // 값 불러오기
     private String  getPreferences(String key){
@@ -842,6 +842,7 @@ public class ProductInfo extends AppCompatActivity {
             String size= (String)params[6];
             String sizeTable= (String)params[7];
             String name= (String)params[8];
+            String price= (String)params[9];
             try {
                 HttpParams httpParameters = new BasicHttpParams();
                 HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
@@ -872,6 +873,7 @@ public class ProductInfo extends AppCompatActivity {
                 postParameters.add(new BasicNameValuePair("size", size));
                 postParameters.add(new BasicNameValuePair("sizeTable", sizeTable));
                 postParameters.add(new BasicNameValuePair("name", name));
+                postParameters.add(new BasicNameValuePair("price", price+""));
                 //파라미터 보내기
                 UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);
                 post.setEntity(ent);
