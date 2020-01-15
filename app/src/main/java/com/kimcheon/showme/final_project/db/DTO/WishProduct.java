@@ -8,6 +8,8 @@ public class WishProduct {
     String image;
     String size;
     String sizeTable;
+    int price;
+
 
     public String getName() {
         return name;
@@ -73,5 +75,13 @@ public class WishProduct {
 
     public void setSizeTable(String sizeTable) {
         this.sizeTable = sizeTable;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 }
