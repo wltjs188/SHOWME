@@ -5,7 +5,7 @@ import pymysql.cursors
 
 
             
-conn = pymysql.connect(host='52.78.143.125',
+conn = pymysql.connect(host='13.209.138.178',
         user='kimcheon',
         password='kim2cheon1',
         db='SHOWME',

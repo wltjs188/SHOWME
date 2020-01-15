@@ -54,7 +54,7 @@ public class InsertUser2 extends AsyncTask<String, Void, String> {
             HttpConnectionParams.setTcpNoDelay(httpParameters, true);
 
             // 주소 : aws서버
-            String postURL = "http://52.78.143.125:8080/showme/InsertUser";
+            String postURL = "http://13.209.138.178:8080/showme/InsertUser";
 
             // 로컬서버
 //            String postURL = "http://10.0.2.2:8080/showme/InsertUser";
