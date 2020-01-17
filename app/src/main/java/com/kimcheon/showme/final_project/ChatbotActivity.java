@@ -1797,7 +1797,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     Log.d("오류없음","굳");
                 }
                 else{
-                    Log.d("error","오류");
+                    Log.e("관심상품 등록 확인","오류");
                     return null;
                 }
 
@@ -1861,7 +1861,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     Log.e("입력", input);
                     new AITask().execute(aiRequest);
                 } catch (JSONException e) {
-                    Log.d("error : ", e.getMessage());
+                    Log.e("관심상품 등록확인: ", e.getMessage());
                 }
             }
         }
