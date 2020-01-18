@@ -172,7 +172,7 @@ public class MainActivity extends Activity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == PERMISSIONS_REQUEST){
-            if (grantResults[0] == 0 && grantResults[1] == 0 && grantResults[2] == 0 && grantResults[3] == 0){ //권한이 승낙된 경우
+            if (grantResults[0] == 0 && grantResults[1] == 0 && grantResults[2] == 0 ){ //권한이 승낙된 경우
                 Intent intent = new Intent(this,ChatbotActivity.class);
                 startActivity(intent);
                 finish();
@@ -183,9 +183,9 @@ public class MainActivity extends Activity {
                     msg=msg+"사용자 정보 확인을 위해 전화 접근 권한이 필요합니다. \n전화 권한을 허가해주세요.\n";
                 if(grantResults[1] != 0)
                     msg=msg+"음성 검색을 이용하기 위해 마이크 접근 권한이 필요합니다. \n마이크 권한을 허가해주세요.\n";
+//                if (grantResults[2] !=0)
+//                    msg=msg+"공유 서비스를 위해 문자 발송을 할 수 있습니다. \nSMS 권한을 허가해주세요.\n";
                 if (grantResults[2] !=0)
-                    msg=msg+"공유 서비스를 위해 문자 발송을 할 수 있습니다. \nSMS 권한을 허가해주세요.\n";
-                if (grantResults[3] !=0)
                     msg=msg+"공유 서비스를 위해 연락처 정보를 확인할 수 있습니다. \n연락처 권한을 허가해주세요.\n";
 
                 new android.support.v7.app.AlertDialog.Builder(this)
