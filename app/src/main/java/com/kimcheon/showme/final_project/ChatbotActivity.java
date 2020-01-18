@@ -1182,10 +1182,11 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     chatMessage2 = new ChatMessage("버튼",true);
                     chatMessage2.setButton(BTN_TYPE_USERINFO); //버튼으로 설정
                     adapter.setButton(btnSendListener); //버튼리스터 설정
-                }else if(parameter.containsKey("test")){
-                    Intent intent = new Intent(getApplicationContext(),TestActivity.class);
-                    startActivity(intent);
                 }
+//                else if(parameter.containsKey("test")){
+//                    Intent intent = new Intent(getApplicationContext(),TestActivity.class);
+//                    startActivity(intent);
+//                }
                 break;
             case "Share-stop":
                 shareType=null;
