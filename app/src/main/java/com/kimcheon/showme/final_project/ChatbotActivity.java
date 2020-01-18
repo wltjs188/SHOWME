@@ -9,6 +9,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -621,21 +622,30 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         }, 1000);
     }
     //공유 메세지 보내기 - 문자
-    void sendMSG(String number,String msg){
-        try {
-            //String mm ="http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1708920758&cls=3791&trTypeCd=102";
-            //전송
-            SmsManager smsManager = SmsManager.getDefault();
+//    void sendMSG(String number,String msg){
+//        try {
+//            //String mm ="http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1708920758&cls=3791&trTypeCd=102";
+//            //전송
+//            SmsManager smsManager = SmsManager.getDefault();
+////            smsManager.sendTextMessage(number, null, msg, null, null);
 //            smsManager.sendTextMessage(number, null, msg, null, null);
-            smsManager.sendTextMessage(number, null, msg, null, null);
-            Log.d("문자확인","보냈다.");
-            //Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            //메시지 실패 여기 바꿔라
-            //Toast.makeText(getApplicationContext(), fname+"님께 전송 완료!", Toast.LENGTH_LONG).show();
-            Log.d("메세지 오류",e.getMessage());
-            e.printStackTrace();
-        }
+//            Log.d("문자확인","보냈다.");
+//            //Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
+//        } catch (Exception e) {
+//            //메시지 실패 여기 바꿔라
+//            //Toast.makeText(getApplicationContext(), fname+"님께 전송 완료!", Toast.LENGTH_LONG).show();
+//            Log.d("메세지 오류",e.getMessage());
+//            e.printStackTrace();
+//        }
+//    }
+    public void sendSMS(String num,String productUrl,String address){
+        String text="이 상품 구매 부탁드립니다. \n";
+        text+="주소: "+address+"\n";
+        text+=productUrl;
+        Uri smsUri = Uri.parse("sms:"+num);
+        Intent intent = new Intent(Intent.ACTION_SENDTO, smsUri);
+        intent.putExtra("sms_body", text);
+        startActivity(intent);
     }
     //STT 음성 입력
     private void promptSpeechInput() {
@@ -1173,6 +1183,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     chatMessage2.setButton(BTN_TYPE_USERINFO); //버튼으로 설정
                     adapter.setButton(btnSendListener); //버튼리스터 설정
                 }
+//                else if(parameter.containsKey("test")){
+//                    Intent intent = new Intent(getApplicationContext(),TestActivity.class);
+//                    startActivity(intent);
+//                }
                 break;
             case "Share-stop":
                 shareType=null;
@@ -1210,9 +1224,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                 //문자 공유 시작
 
-                sendMSG(mNumber,"이 상품 구매 부탁드립니다!!");
-                sendMSG(mNumber,smsg);
-                sendMSG(mNumber,"주소: "+user.getAddress());
+//                sendMSG(mNumber,"이 상품 구매 부탁드립니다!!");
+//                sendMSG(mNumber,smsg);
+//                sendMSG(mNumber,"주소: "+user.getAddress());
+                sendSMS(mNumber,smsg,user.getAddress());
                 //공유 끝나면 변수 초기화
                 mPerson=null;
                 mProduct=null;
@@ -1797,7 +1812,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     Log.d("오류없음","굳");
                 }
                 else{
-                    Log.d("error","오류");
+                    Log.e("관심상품 등록 확인","오류");
                     return null;
                 }
 
@@ -1861,7 +1876,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     Log.e("입력", input);
                     new AITask().execute(aiRequest);
                 } catch (JSONException e) {
-                    Log.d("error : ", e.getMessage());
+                    Log.e("관심상품 등록확인: ", e.getMessage());
                 }
             }
         }
