@@ -84,7 +84,7 @@ public class MainActivity extends Activity {
 ////        }
 
 
-        String permission[] = new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.RECORD_AUDIO,Manifest.permission.SEND_SMS,Manifest.permission.READ_CONTACTS}; //폰상태(로그인UUID),오디오, sms, 연락처
+        String permission[] = new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_CONTACTS}; //폰상태(로그인UUID),오디오, sms, 연락처
         boolean check=false;
         for(int i=0;i<permission.length;i++){
             check = check || ContextCompat.checkSelfPermission(this,permission[i]) != PackageManager.PERMISSION_GRANTED;
@@ -142,9 +142,9 @@ public class MainActivity extends Activity {
                 "-사용자 정보를 확인하기 위해 필요합니다.\n" +
                 "2. 마이크 권한 (필수)\n" +
                 "-음성 검색 기능 사용 시 필요합니다.\n" +
-                "3. SMS 권한 (필수)\n" +
-                "- 공유 서비스 사용 시 문자 발송을 위해 필요합니다.\n" +
-                "4. 연락처 권한 (필수)\n" +
+//                "3. SMS 권한 (필수)\n" +
+//                "- 공유 서비스 사용 시 문자 발송을 위해 필요합니다.\n" +
+                "3. 연락처 권한 (필수)\n" +
                 "- 공유 서비스 사용 시 연락처 정보를 확인하기 위해 필요합니다.\n";
         new android.support.v7.app.AlertDialog.Builder(this)
                 .setTitle("[쇼우미 사용을 위해 필요한 접근 권한 안내]")
@@ -163,7 +163,7 @@ public class MainActivity extends Activity {
     //접근 권한 확인하기
     public void checkPermission(){
         String permission[] = new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.SEND_SMS,Manifest.permission.READ_CONTACTS}; //폰상태(로그인UUID),오디오, sms, 연락처
+                Manifest.permission.READ_CONTACTS}; //폰상태(로그인UUID),오디오, sms, 연락처
         ActivityCompat.requestPermissions(this,permission, PERMISSIONS_REQUEST);
     }
 
