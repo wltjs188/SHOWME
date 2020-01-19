@@ -66,6 +66,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1212,8 +1213,13 @@ public class ProductInfo extends AppCompatActivity {
             AlertDialog.Builder reviewDialog = new AlertDialog.Builder(ProductInfo.this,
                     android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
 
+            try {
+                txtKeyword =new String(txtKeyword.getBytes(), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
 
-
+            Log.d("dddd",txtKeyword);
             reviewDialog.setTitle(txtAllRating)
                     .setMessage(txtKeyword)
                     .setPositiveButton("닫기", null)
