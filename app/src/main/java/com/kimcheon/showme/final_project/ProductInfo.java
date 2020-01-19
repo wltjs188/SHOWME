@@ -11,6 +11,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.speech.RecognizerIntent;
@@ -66,7 +67,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -487,10 +488,10 @@ public class ProductInfo extends AppCompatActivity {
 
                             sendMsgDialog.setEditText("");
                             sendMsgDialog.dismiss();
-
-                            sendMMS(phoneNo, "이 상품 구매 부탁드립니다!!");
-                            sendMMS(phoneNo, Url);
-                            sendMMS(phoneNo, "주소: "+user.getAddress());
+                            sendSMS(phoneNo,Url,user.getAddress());
+//                            sendMMS(phoneNo, "이 상품 구매 부탁드립니다!!");
+//                            sendMMS(phoneNo, Url);
+//                            sendMMS(phoneNo, "주소: "+user.getAddress());
 
                             Toast.makeText(getApplicationContext(),"상품을 공유했습니다.",Toast.LENGTH_LONG).show();
 
@@ -551,11 +552,11 @@ public class ProductInfo extends AppCompatActivity {
         c.close();
         if(number!=null) {
 //            phoneNo = number;
-
-            sendMMS(number, "이 상품 구매 부탁드립니다!!");
-            sendMMS(number, Url);
-            sendMMS(number, "주소: "+user.getAddress());
-            Toast.makeText(getApplicationContext(),phoneName+"님께 해당 상품을 공유했습니다.",Toast.LENGTH_LONG).show();
+            sendSMS(number, Url,user.getAddress());
+//            sendMMS(number, "이 상품 구매 부탁드립니다!!");
+//            sendMMS(number, Url);
+//            sendMMS(number, "주소: "+user.getAddress());
+//            Toast.makeText(getApplicationContext(),phoneName+"님께 해당 상품을 공유했습니다.",Toast.LENGTH_LONG).show();
             return true;
         }
         else {
@@ -563,18 +564,27 @@ public class ProductInfo extends AppCompatActivity {
             return false;
         }
     }
-    private void sendMMS(String phoneNo,String msg) {
-        //String sms = "http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1708920758&cls=3791&trTypeCd=102";
-
-        try {
-            //전송
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(phoneNo, null, msg, null, null);
-//            Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "SMS faild, please try again later!", Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
+//    private void sendMMS(String phoneNo,String msg) {
+//        //String sms = "http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1708920758&cls=3791&trTypeCd=102";
+//
+//        try {
+//            //전송
+//            SmsManager smsManager = SmsManager.getDefault();
+//            smsManager.sendTextMessage(phoneNo, null, msg, null, null);
+////            Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
+//        } catch (Exception e) {
+//            Toast.makeText(getApplicationContext(), "SMS faild, please try again later!", Toast.LENGTH_LONG).show();
+//            e.printStackTrace();
+//        }
+//    }
+    public void sendSMS(String num,String productUrl,String address){
+        String text="이 상품 구매 부탁드립니다. \n";
+        text+="주소: "+address+"\n";
+        text+=productUrl;
+        Uri smsUri = Uri.parse("sms:"+num);
+        Intent intent = new Intent(Intent.ACTION_SENDTO, smsUri);
+        intent.putExtra("sms_body", text);
+        startActivity(intent);
     }
 
     private void getAppKeyHash() {
@@ -1149,6 +1159,8 @@ public class ProductInfo extends AppCompatActivity {
                 }
                 else{
                     for (Element e : contents) {
+                        txtAllRating ="";
+                        txtKeyword ="";
                         //평점 출력
                         String rank = e.select("span.rate").text();
                         if(rank.equals("")){
@@ -1213,13 +1225,6 @@ public class ProductInfo extends AppCompatActivity {
             AlertDialog.Builder reviewDialog = new AlertDialog.Builder(ProductInfo.this,
                     android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
 
-            try {
-                txtKeyword =new String(txtKeyword.getBytes(), "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-            Log.d("dddd",txtKeyword);
             reviewDialog.setTitle(txtAllRating)
                     .setMessage(txtKeyword)
                     .setPositiveButton("닫기", null)

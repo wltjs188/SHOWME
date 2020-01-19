@@ -84,7 +84,7 @@ public class MainActivity extends Activity {
 ////        }
 
 
-        String permission[] = new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.RECORD_AUDIO,Manifest.permission.SEND_SMS,Manifest.permission.READ_CONTACTS}; //폰상태(로그인UUID),오디오, sms, 연락처
+        String permission[] = new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_CONTACTS}; //폰상태(로그인UUID),오디오, sms, 연락처
         boolean check=false;
         for(int i=0;i<permission.length;i++){
             check = check || ContextCompat.checkSelfPermission(this,permission[i]) != PackageManager.PERMISSION_GRANTED;
@@ -142,9 +142,9 @@ public class MainActivity extends Activity {
                 "-사용자 정보를 확인하기 위해 필요합니다.\n" +
                 "2. 마이크 권한 (필수)\n" +
                 "-음성 검색 기능 사용 시 필요합니다.\n" +
-                "3. SMS 권한 (필수)\n" +
-                "- 공유 서비스 사용 시 문자 발송을 위해 필요합니다.\n" +
-                "4. 연락처 권한 (필수)\n" +
+//                "3. SMS 권한 (필수)\n" +
+//                "- 공유 서비스 사용 시 문자 발송을 위해 필요합니다.\n" +
+                "3. 연락처 권한 (필수)\n" +
                 "- 공유 서비스 사용 시 연락처 정보를 확인하기 위해 필요합니다.\n";
         new android.support.v7.app.AlertDialog.Builder(this)
                 .setTitle("[쇼우미 사용을 위해 필요한 접근 권한 안내]")
@@ -163,7 +163,7 @@ public class MainActivity extends Activity {
     //접근 권한 확인하기
     public void checkPermission(){
         String permission[] = new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.SEND_SMS,Manifest.permission.READ_CONTACTS}; //폰상태(로그인UUID),오디오, sms, 연락처
+                Manifest.permission.READ_CONTACTS}; //폰상태(로그인UUID),오디오, sms, 연락처
         ActivityCompat.requestPermissions(this,permission, PERMISSIONS_REQUEST);
     }
 
@@ -172,7 +172,7 @@ public class MainActivity extends Activity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == PERMISSIONS_REQUEST){
-            if (grantResults[0] == 0 && grantResults[1] == 0 && grantResults[2] == 0 && grantResults[3] == 0){ //권한이 승낙된 경우
+            if (grantResults[0] == 0 && grantResults[1] == 0 && grantResults[2] == 0 ){ //권한이 승낙된 경우
                 Intent intent = new Intent(this,ChatbotActivity.class);
                 startActivity(intent);
                 finish();
@@ -183,9 +183,9 @@ public class MainActivity extends Activity {
                     msg=msg+"사용자 정보 확인을 위해 전화 접근 권한이 필요합니다. \n전화 권한을 허가해주세요.\n";
                 if(grantResults[1] != 0)
                     msg=msg+"음성 검색을 이용하기 위해 마이크 접근 권한이 필요합니다. \n마이크 권한을 허가해주세요.\n";
+//                if (grantResults[2] !=0)
+//                    msg=msg+"공유 서비스를 위해 문자 발송을 할 수 있습니다. \nSMS 권한을 허가해주세요.\n";
                 if (grantResults[2] !=0)
-                    msg=msg+"공유 서비스를 위해 문자 발송을 할 수 있습니다. \nSMS 권한을 허가해주세요.\n";
-                if (grantResults[3] !=0)
                     msg=msg+"공유 서비스를 위해 연락처 정보를 확인할 수 있습니다. \n연락처 권한을 허가해주세요.\n";
 
                 new android.support.v7.app.AlertDialog.Builder(this)
