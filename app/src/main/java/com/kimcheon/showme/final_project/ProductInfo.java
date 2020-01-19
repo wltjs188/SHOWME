@@ -586,6 +586,7 @@ public class ProductInfo extends AppCompatActivity {
         intent.putExtra("sms_body", text);
         startActivity(intent);
     }
+
     private void getAppKeyHash() {
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
@@ -1158,6 +1159,8 @@ public class ProductInfo extends AppCompatActivity {
                 }
                 else{
                     for (Element e : contents) {
+                        txtAllRating ="";
+                        txtKeyword ="";
                         //평점 출력
                         String rank = e.select("span.rate").text();
                         if(rank.equals("")){
@@ -1221,8 +1224,6 @@ public class ProductInfo extends AppCompatActivity {
             // 리뷰 다이얼로그 띄우기
             AlertDialog.Builder reviewDialog = new AlertDialog.Builder(ProductInfo.this,
                     android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
-
-
 
             reviewDialog.setTitle(txtAllRating)
                     .setMessage(txtKeyword)
