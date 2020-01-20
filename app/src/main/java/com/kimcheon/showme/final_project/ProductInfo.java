@@ -1096,18 +1096,21 @@ public class ProductInfo extends AppCompatActivity {
                             String st=row.getString("Size");
 
                             Log.i("sizeTable: ", st);
+                            try {
+                                String changString = new String(st.getBytes("8859_1"), "utf-8");
 
-                            AlertDialog.Builder oDialog = new AlertDialog.Builder(ProductInfo.this,
-                                    android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+                                AlertDialog.Builder oDialog = new AlertDialog.Builder(ProductInfo.this,
+                                        android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
 
 
-
-                            oDialog.setTitle("사이즈표 상세 정보")
-                                    .setMessage(st)
-                                    .setPositiveButton("닫기", null)
-                                    .setCancelable(true)
-                                    .show();
-
+                                oDialog.setTitle("사이즈표 상세 정보")
+                                        .setMessage(changString)
+                                        .setPositiveButton("닫기", null)
+                                        .setCancelable(true)
+                                        .show();
+                            }catch (Exception e){
+                                Log.e(this.getClass().toString(),"한글 encoding error");
+                            }
 
                         }
 
