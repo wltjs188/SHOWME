@@ -53,36 +53,15 @@ public class MainActivity extends Activity {
 
     private static final int PERMISSIONS_REQUEST = 100;
 
+    private Gson gson = new GsonBuilder().create();
     public static Context CONTEXT;
-    //메인화면
-    Intent searchIntent,wishIntent,infoIntent,webIntent,shopIntent,dbTestIntent,reviewIntent; //쇼핑시작,나의관심상품,정보수정
 
     //사용자 정보
+    private User user;
     private String uuid; //스마트폰 고유번호
     private TextToSpeech tts;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-////            //접근권한 거부일때
-////            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
-////        }
-////        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
-////                != PackageManager.PERMISSION_GRANTED) {
-////            //접근권한 거부일때
-////            // Permission is not granted
-////            // Ask for permision
-////            ActivityCompat.requestPermissions(this,new String[] { Manifest.permission.SEND_SMS}, 1);
-////        }
-////        else {
-////            // Permission has already been granted
-////        }
-////        int permission2 = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
-////        if (permission2 != PackageManager.PERMISSION_GRANTED) {
-////            //접근권한 거부일때
-////            makeRequest();
-////        }
-
 
         String permission[] = new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_CONTACTS}; //폰상태(로그인UUID),오디오, sms, 연락처
         boolean check=false;
@@ -101,13 +80,17 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         CONTEXT=this;
 
+        if(!(getPreferences("USER")==null||getPreferences("USER")=="")){
+            String strContact=getPreferences("USER");
+            user=gson.fromJson(strContact,User.class);
+            Log.d("uuid 정보",user.getName()+user.getAddress()+user.getPhoneNum());
+        }else{
+            uuid = GetDevicesUUID(getBaseContext());
 
-        uuid = GetDevicesUUID(getBaseContext());
-        savePreferences("uuid",uuid);
-        Log.d("연결 uuid",uuid);
-        //서버연결
-        SelectData task = new SelectData();
-        task.execute( "SelectUser",uuid);
+            savePreferences("uuid",uuid);
+        }
+
+
 
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -204,15 +187,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void onResume(){
-        super.onResume();
-//       tts.speak("화면 아무 곳이나 터치하시면 쇼우미가 시작됩니다.",TextToSpeech.QUEUE_FLUSH, null);
-        savePreferences("uuid",uuid);
-        //서버연결
-       SelectData task = new SelectData();
-        task.execute( "SelectUser",uuid);
-    }
-
+/*
     class SelectData extends AsyncTask<String, Void,String> {
         String LoadData;
         @Override
@@ -346,13 +321,18 @@ public class MainActivity extends Activity {
             }
         }
     }
-
+*/
     // 값 저장하기
     private void savePreferences(String key, String s){
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(key, s);
         editor.commit();
+    }
+    // 값 불러오기
+    public String  getPreferences(String key){
+        SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
+        return pref.getString(key, "");
     }
 
     // 값 삭제하기
@@ -379,36 +359,6 @@ public class MainActivity extends Activity {
         catch(SecurityException e){ }
         return uuid;
     }
-//    public void onSearchClicked(View view) { //쇼핑시작
-//        startActivity(searchIntent);
-//    } //쇼핑시작버튼
-//    public void onWishClicked(View view) { //나의관심상품
-//        startActivity(wishIntent);
-//    } //관심상품버튼
-//    public void onInfoClicked(View view) { //나의정보수정
-//        startActivityForResult(infoIntent,1);
-//    } //나의정보수정버튼
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if(resultCode==RESULT_OK) {
-//            Toast.makeText(getApplicationContext(), "정보 수정이 완료되었습니다.", Toast.LENGTH_LONG).show();
-//        }
-//    }
-//    public void onReviewClicked(View view) { //쇼핑시작
-//        startActivity(reviewIntent);
-//    }
-//    public void onWebClicked(View view) { startActivity(webIntent); }
-//    public void onShopClicked(View view) { startActivity(shopIntent); }
-//
-//    public void onDBTestClicked(View view){ //DB테스트
-//        Intent i=new Intent(getApplicationContext(),TestActivity.class);
-//        startActivity(i);
-//
-//    }
-    protected void makeRequest() {
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.READ_PHONE_STATE},
-                101);
-    }
+
 
 }
