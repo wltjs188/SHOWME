@@ -95,7 +95,6 @@ import static com.kakao.util.helper.Utility.getPackageInfo;
 public class ChatbotActivity extends AppCompatActivity implements AIListener{
     Button btn_chat_send;
 
-
     //상품검색
     String query;
     String action;
@@ -126,7 +125,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     private View btnSend;
     private View btnSTT;
     private EditText editText;
-    //boolean isMine;
     static private List<ChatMessage> chatMessages = new ArrayList<>();
     private MessageAdapter adapter;//= new MessageAdapter(this, 0, chatMessages);
     Gson gson = new GsonBuilder().create();
@@ -255,7 +253,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         }
         wishProductNames=new ArrayList<>();
         listView = (ListView) findViewById(R.id.list_msg);
-//        listView.setEnabled(false);
         btnSend = findViewById(R.id.btn_chat_send);
         btnSTT=findViewById(R.id.btn_stt);
         editText = (EditText) findViewById(R.id.msg_type);
@@ -435,8 +432,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         if(!(getPreferences("USER")==null||getPreferences("USER")=="")){
             String strContact=getPreferences("USER");
             user=gson.fromJson(strContact,User.class);
-            Log.d("uuid 정보",user.getName()+user.getAddress()+user.getPhoneNum());
-//            makeWelcomeMsg();
+//            Log.d("uuid 정보",user.getName()+user.getAddress()+user.getPhoneNum());
+            Log.d("uuid 정보",user.getName()+user.getAddress());
             makeMenuMsg(user.getName()+"님 안녕하세요?");
         }
 
@@ -498,7 +495,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //
 //        return super.onTouchEvent(event);
 //    }
-    //stt
     //주소록에서 번호 가져오기
     String findNum(String fname){
         Log.d("채윤 이름:",fname);
@@ -680,7 +676,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             case "ACTION_USER"://사용자등록 : 이름받아오기
                 String name="";
                 String address="";
-                String phoneNum="";
+//                String phoneNum="";
                 parameter=getParameter(result);
                 //이름
                 if(parameter.containsKey("user_name")){
@@ -689,11 +685,11 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     name=name.substring(0,name.length()-2);
                 }
                 //핸드폰 번호
-                if(parameter.containsKey("user_phone")){
-                    phoneNum=""+parameter.get("user_phone");
-                    phoneNum=(phoneNum.replaceAll("\"","")).replaceAll("-","");
-
-                }
+//                if(parameter.containsKey("user_phone")){
+//                    phoneNum=""+parameter.get("user_phone");
+//                    phoneNum=(phoneNum.replaceAll("\"","")).replaceAll("-","");
+//
+//                }
                 //주소 시,구,동
                 if(parameter.containsKey("city")) {
                     if(parameter.containsKey("state")){ //도
@@ -715,14 +711,15 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     address=address.replaceAll("\"","");
                 }
 
-                //사용자 정보 DB에 넣기
-                if( !name.equals("") && !address.equals("") && !phoneNum.equals("") ) {
-                    user=new User(uuid,name,address,phoneNum);
-
+                //사용자 정보 sharedPreferences에 저장
+//                if( !name.equals("") && !address.equals("") && !phoneNum.equals("") ) {
+                if( !name.equals("") && !address.equals("")) {
+//                    user=new User(uuid,name,address,phoneNum);
+                    user=new User(uuid,name,address);
                     String strContact = gson.toJson(user, User.class);
                     savePreferences("USER",strContact);
-                    Log.d("사용자 정보 DB등록",user.getName()+", "+user.getAddress()+","+user.getPhoneNum());
-
+//                    Log.d("사용자 정보 DB등록",user.getName()+", "+user.getAddress()+","+user.getPhoneNum());
+                    Log.d("사용자 정보 DB등록",user.getName()+", "+user.getAddress());
                     Log.i("액션USER",ACTION);
                     chatMessage2 = new ChatMessage("버튼",true);
                     chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
@@ -745,23 +742,23 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 adapter.setButton(btnSendListener); //버튼리스터 설정
 
                 break;
-            case "ACTION_M_PHONE"://사용자정보수정 : 핸드폰번호
-                parameter=getParameter(result);
-                phoneNum=""+parameter.get("user_phone");
-                phoneNum=(phoneNum.replaceAll("\"","")).replaceAll("-","");
-                user.setPhoneNum(phoneNum);
-
-                strContact = gson.toJson(user, User.class);
-                savePreferences("USER",strContact);
-
-                Log.d("check",parameter.toString());
-                Log.d("check",phoneNum);
-                Log.d("check",user.getPhoneNum());
-
-                chatMessage2 = new ChatMessage("버튼",true);
-                chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
-                adapter.setButton(btnSendListener); //버튼리스터 설정
-                break;
+//            case "ACTION_M_PHONE"://사용자정보수정 : 핸드폰번호
+//                parameter=getParameter(result);
+//                phoneNum=""+parameter.get("user_phone");
+//                phoneNum=(phoneNum.replaceAll("\"","")).replaceAll("-","");
+//                user.setPhoneNum(phoneNum);
+//
+//                strContact = gson.toJson(user, User.class);
+//                savePreferences("USER",strContact);
+//
+//                Log.d("check",parameter.toString());
+//                Log.d("check",phoneNum);
+//                Log.d("check",user.getPhoneNum());
+//
+//                chatMessage2 = new ChatMessage("버튼",true);
+//                chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
+//                adapter.setButton(btnSendListener); //버튼리스터 설정
+//                break;
             case "ACTION_M_ADDRESS"://사용자정보수정 : 주소
 
                 parameter=getParameter(result);

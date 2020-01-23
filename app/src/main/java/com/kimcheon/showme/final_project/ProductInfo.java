@@ -127,7 +127,7 @@ public class ProductInfo extends AppCompatActivity {
         if(!(getPreferences("USER")==null||getPreferences("USER")=="")){
             String strContact=getPreferences("USER");
             user=gson.fromJson(strContact,User.class);
-            Log.d("uuid 정보",user.getName()+user.getAddress()+user.getPhoneNum());
+//            Log.d("uuid 정보",user.getName()+user.getAddress()+user.getPhoneNum());
         }
         uuid = getPreferences("uuid");
         product_info=(TextView)findViewById(R.id.product_info);

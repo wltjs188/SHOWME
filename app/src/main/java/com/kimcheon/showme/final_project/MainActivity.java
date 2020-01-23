@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
         if(!(getPreferences("USER")==null||getPreferences("USER")=="")){
             String strContact=getPreferences("USER");
             user=gson.fromJson(strContact,User.class);
-            Log.d("uuid 정보",user.getName()+user.getAddress()+user.getPhoneNum());
+//            Log.d("uuid 정보",user.getName()+user.getAddress()+user.getPhoneNum());
         }else{
             uuid = GetDevicesUUID(getBaseContext());
 
