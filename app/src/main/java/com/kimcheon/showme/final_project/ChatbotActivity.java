@@ -95,17 +95,12 @@ import static com.kakao.util.helper.Utility.getPackageInfo;
 public class ChatbotActivity extends AppCompatActivity implements AIListener{
     Button btn_chat_send;
 
-    //구글 SST 음성인식
-    Intent sstIntent;
-    SpeechRecognizer mRecognizer;
 
     //상품검색
     String query;
     String action;
     String speech;
     ChatMessage chatMessage2;
-    String remenu="";
-
     //버튼 타입 정의
     final int BTN_TYPE_MENU=1;
     final int BTN_TYPE_CATEGORY=2;
@@ -126,8 +121,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     AIDataService aiDataService;
     AIRequest aiRequest2;
     AIDataService aiDataService2;
-    ResponseMessage.ResponseSpeech responseMessageFirst;
-    ResponseMessage.ResponseSpeech responseMessageSecond;
 
     private ListView listView;
     private View btnSend;
@@ -148,8 +141,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     private final int SHOP_ACTIVITY=200;
     private final int WISHLIST_ACTIVITY=300;
 
-    ArrayList<Product> searched_products=new ArrayList<Product>(); //검색된 상품들, 버튼으로 띄울 애덜
-
     //검색 정보
     Product remember;
     String category = null;
@@ -165,7 +156,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     int price=0;
     String imgUrl="";
     String smsg="";
-    String sproduct= null; //공유할 관심상품
     ArrayList<String> wishProductNames;
 
     //share
@@ -180,18 +170,16 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     String ACTION="";
 
     // 5개까지의 멀티터치를 다루기 위한 배열
-    int id[] = new int[5];
-    int x[] = new int[5];
-    int y[] = new int[5];
-    String result;
+//    int id[] = new int[5];
+//    int x[] = new int[5];
+//    int y[] = new int[5];
+
     //tts 지연 핸들러
     final Handler handler=new Handler();
     //tts
     HashMap<String, String> params = new HashMap<String, String>();
     //tts 지연 메세지
     String str;
-
-    String focus = "";
 
     @Override
     protected void onResume() {
@@ -211,7 +199,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     protected void onStart() {
         Log.d("onStart","codbs");
         super.onStart();
-//        params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,"stringId"); //tts
         if(user==null){
 
             //사용자 정보 등록 안됨
@@ -233,16 +220,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 }
             }, 1000);
         }else{
-            //등록된 사용자
-//            final AIConfiguration config = new AIConfiguration("b8dda671eb584e3586aba41efdd554cf",
-//                    AIConfiguration.SupportedLanguages.Korean,
-//                    AIConfiguration.RecognitionEngine.System);
-
-//            aiDataService = new AIDataService(this,config);
-//            aiRequest = new AIRequest();
-            Log.d("채?","?");
-//            makeWelcomeMsg();
-//            makeMenuMsg();
+            Log.d("채","등록된 사용자");
         }
     }
 
@@ -286,23 +264,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         listView.setAdapter(adapter);
         listView.setSelection(adapter.getCount() - 1);
 
-        //사용자 정보 받아오기
-//        uuid=getPreferences("uuid");
-//        if(!(getPreferences("USER")==null||getPreferences("USER")=="")){
-//            String strContact=getPreferences("USER");
-//            user=gson.fromJson(strContact,User.class);
-//            Log.d("uuid 정보",user.getName()+user.getAddress()+user.getPhoneNum());
-//            makeMenuMsg();
-//        }
-
-
-
-        //set ListView adapter first
-//        adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
-//        listView.setAdapter(adapter);
-//        listView.setSelection(adapter.getCount() - 1);
-
-//        ChatMessage chatMessage;
         //엔터 전송
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -369,16 +330,10 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             }
         });
 
-
-
-
         //dialogflow
         final AIConfiguration config = new AIConfiguration("b8dda671eb584e3586aba41efdd554cf",
                 AIConfiguration.SupportedLanguages.Korean,
                 AIConfiguration.RecognitionEngine.System);
-//        final AIConfiguration config2 = new AIConfiguration("9642984963944e239cd1381a0e174ff0",
-//                AIConfiguration.SupportedLanguages.Korean,
-//                AIConfiguration.RecognitionEngine.System);
 
         aiDataService = new AIDataService(this,config);
         aiRequest = new AIRequest();
@@ -392,9 +347,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 if (editText.getText().toString().trim().equals("") && v.getId()==R.id.btn_chat_send) {
                     tts.speak("텍스트를 입력해주세요.",TextToSpeech.QUEUE_FLUSH, null);
                 }
-//                else if(editText.getText().toString().length() !=8 && chatMessages.get(chatMessages.()-1).toString().contains("번호")){
-//                    Toast.makeText(getApplicationContext(),"010을 제외한 8자리 번호를 입력해주세요.",Toast.LENGTH_LONG).show();
-//                }
                 else {
                     if(v.getId()==R.id.btn_chat_send) //텍스트로 전송할때
                         input = editText.getText().toString();
@@ -411,7 +363,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     }else{
                         //등록된 사용자
                         if(input.contains("그만")){
-//                            aiRequest.setResetContexts(true);
                             aiRequest.setQuery(input);
 
                             new AITask().execute(aiRequest);
@@ -422,10 +373,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                             if (shareType.equals("msg")) {  //문자공유
                                 if (mProduct == null) {
                                 // 없는 상품
-//                                    chatMessages.add(chatMessage);
-//                                    adapter.notifyDataSetChanged();
-//                                    editText.setText("");
-//                                input="문자상품다시";
                                     CheckShareProduct task=new CheckShareProduct();
                                     task.execute("CheckShareProduct",uuid,input);
                                 }
@@ -466,10 +413,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         if (shareType.equals("kakao")) { //카톡 공유
                             if(mProduct==null){
                                 // 없는 상품
-//                                    chatMessages.add(chatMessage);
-//                                    adapter.notifyDataSetChanged();
-//                                    editText.setText("");
-//                                input="카톡상품다시";
                                 CheckShareProduct task=new CheckShareProduct();
                                 task.execute("CheckShareProduct",uuid,input);
                             }
@@ -510,56 +453,51 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     protected void onStop() {
         Log.d("onstop","codbs");
         super.onStop();
-//        aiRequest.setResetContexts(true);
 
-//        if (tts != null) {
-//            tts.stop();
-//            tts.shutdown();
+    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        int pointer_count = event.getPointerCount(); //현재 터치 발생한 포인트 수를 얻는다.
+//        if(pointer_count > 5) pointer_count = 5; //4개 이상의 포인트를 터치했더라도 3개까지만 처리를 한다.
+//
+//        switch(event.getAction() & MotionEvent.ACTION_MASK) {
+//            case MotionEvent.ACTION_DOWN: //한 개 포인트에 대한 DOWN을 얻을 때.
+//                result = "싱글터치 : \n";
+//                id[0] = event.getPointerId(0); //터치한 순간부터 부여되는 포인트 고유번호.
+//                x[0] = (int) (event.getX());
+//                y[0] = (int) (event.getY());
+//                result = "싱글터치 : \n";
+//                result += "("+x[0]+","+y[0]+")";
+//                break;
+//
+//            case MotionEvent.ACTION_POINTER_DOWN: //두 개 이상의 포인트에 대한 DOWN을 얻을 때.
+//                result = "멀티터치 :\n";
+//                for(int i = 0; i < pointer_count; i++) {
+//                    id[i] = event.getPointerId(i); //터치한 순간부터 부여되는 포인트 고유번호.
+//                    x[i] = (int) (event.getX(i));
+//                    y[i] = (int) (event.getY(i));
+//                    result += "id[" + id[i] + "] ("+x[i]+","+y[i]+")\n";
+//                }
+//                break;
+//
+//            case MotionEvent.ACTION_MOVE:
+//                result = "멀티터치 MOVE:\n";
+//                for(int i = 0; i < pointer_count; i++) {
+//                    id[i] = event.getPointerId(i);
+//                    x[i] = (int) (event.getX(i));
+//                    y[i] = (int) (event.getY(i));
+//                    result += "id[" + id[i] + "] ("+x[i]+","+y[i]+")\n";
+//                }
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                result = "";
+//                break;
 //        }
-    }
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        int pointer_count = event.getPointerCount(); //현재 터치 발생한 포인트 수를 얻는다.
-        if(pointer_count > 5) pointer_count = 5; //4개 이상의 포인트를 터치했더라도 3개까지만 처리를 한다.
-
-        switch(event.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN: //한 개 포인트에 대한 DOWN을 얻을 때.
-                result = "싱글터치 : \n";
-                id[0] = event.getPointerId(0); //터치한 순간부터 부여되는 포인트 고유번호.
-                x[0] = (int) (event.getX());
-                y[0] = (int) (event.getY());
-                result = "싱글터치 : \n";
-                result += "("+x[0]+","+y[0]+")";
-                break;
-
-            case MotionEvent.ACTION_POINTER_DOWN: //두 개 이상의 포인트에 대한 DOWN을 얻을 때.
-                result = "멀티터치 :\n";
-                for(int i = 0; i < pointer_count; i++) {
-                    id[i] = event.getPointerId(i); //터치한 순간부터 부여되는 포인트 고유번호.
-                    x[i] = (int) (event.getX(i));
-                    y[i] = (int) (event.getY(i));
-                    result += "id[" + id[i] + "] ("+x[i]+","+y[i]+")\n";
-                }
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                result = "멀티터치 MOVE:\n";
-                for(int i = 0; i < pointer_count; i++) {
-                    id[i] = event.getPointerId(i);
-                    x[i] = (int) (event.getX(i));
-                    y[i] = (int) (event.getY(i));
-                    result += "id[" + id[i] + "] ("+x[i]+","+y[i]+")\n";
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-                result = "";
-                break;
-        }
-
-        Log.d("좌표",result);
-
-        return super.onTouchEvent(event);
-    }
+//
+//        Log.d("좌표",result);
+//
+//        return super.onTouchEvent(event);
+//    }
     //stt
     //주소록에서 번호 가져오기
     String findNum(String fname){
@@ -604,37 +542,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         else
             return null;
     }
-    protected void makeChatNoPerson(String name){
-        ChatMessage chatMessage = new ChatMessage(name + "으로 저장된 연락처는 없습니다. 정확한 이름을 다시한번 말씀해주세요.", true);
-        chatMessages.add(chatMessage);
-
-        //TTS 챗봇 읽어주기
-        adapter.notifyDataSetChanged();
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
-            }
-        }, 1000);
-    }
     //공유 메세지 보내기 - 문자
-//    void sendMSG(String number,String msg){
-//        try {
-//            //String mm ="http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1708920758&cls=3791&trTypeCd=102";
-//            //전송
-//            SmsManager smsManager = SmsManager.getDefault();
-////            smsManager.sendTextMessage(number, null, msg, null, null);
-//            smsManager.sendTextMessage(number, null, msg, null, null);
-//            Log.d("문자확인","보냈다.");
-//            //Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
-//        } catch (Exception e) {
-//            //메시지 실패 여기 바꿔라
-//            //Toast.makeText(getApplicationContext(), fname+"님께 전송 완료!", Toast.LENGTH_LONG).show();
-//            Log.d("메세지 오류",e.getMessage());
-//            e.printStackTrace();
-//        }
-//    }
     public void sendSMS(String num,String productUrl,String address){
         String text="이 상품 구매 부탁드립니다. \n";
         text+="주소: "+address+"\n";
@@ -684,22 +592,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             }
         }
     }
-
-    protected void makeWelcomeMsg(){
-        ChatMessage chatMessage = new ChatMessage(user.getName()+"님 안녕하세요?", true);
-        chatMessages.add(chatMessage);
-        adapter.notifyDataSetChanged();
-        //TTS 챗봇 읽어주기
-        adapter.notifyDataSetChanged();
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH,null);
-            }
-        }, 1000);
-    }
     //메뉴 메세지
     protected void makeMenuMsg(String addStr){
         String str ="아래 버튼을 눌러 메뉴를 선택해주세요.\n말하기 버튼을 눌러 음성 입력도 가능합니다.";
@@ -730,7 +622,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
         //TTS 챗봇 읽어주기
         adapter.notifyDataSetChanged();
-//        final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -739,68 +630,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             }
         }, 1000);
     }
-    //문자공유완료
-    protected void complateMShare(String name){
 
-        ChatMessage chatMessage = new ChatMessage(name+"님께 공유했습니다.\n메뉴를 선택해주세요\n", true);
-        chatMessages.add(chatMessage);
-
-        chatMessage2 = new ChatMessage("버튼",true);
-        chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
-        adapter.setButton(btnSendListener); //버튼이름 설정
-        chatMessages.add(chatMessage2);
-
-        //TTS 챗봇 읽어주기
-
-        adapter.notifyDataSetChanged();
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
-            }
-        }, 1000);
-    }
-    //문자공유완료
-    protected void complateKShare(String sproduct){
-
-        ChatMessage chatMessage = new ChatMessage(sproduct+"공유를 위해 카톡으로 연결합니다", true);
-        chatMessages.add(chatMessage);
-
-        //TTS 챗봇 읽어주기
-        adapter.notifyDataSetChanged();
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
-            }
-        }, 1000);
-    }
-//    protected void makeRequest() {
-//        ActivityCompat.requestPermissions(this,
-//                new String[]{Manifest.permission.RECORD_AUDIO},
-//                101);
-//    }
-//    public void onRequestPermissionsResult(int requestCode,
-//                                           String permissions[], int[] grantResults) {
-//        switch (requestCode) {
-//            case 101: {
-//
-//                if (grantResults.length == 0
-//                        || grantResults[0] !=
-//                        PackageManager.PERMISSION_GRANTED) {
-//
-//                } else {
-//
-//                }
-//                return;
-//            }
-//        }
-//    }
-    //    public void ButtonClicked(View view){
-//        aiService.startListening();
-//    }
     private class AITask extends AsyncTask<AIRequest, Void, AIResponse>{
         @Override
         protected void onPreExecute() {
@@ -833,21 +663,17 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         }
     }
 
-
-
     public void onResult(AIResponse response) {
         final Result result = response.getResult();
 //        Log.d("yoon response",response.toString());
         ACTION=result.getAction();
         SearchProduct searchtask;
-        String so=null;
         //챗봇 액션 처리
 
         chatMessage2= new ChatMessage("",true);//버튼 메세지
         Log.i("액션",ACTION);
         switch (ACTION){
             case "stop":
-//                aiRequest.setResetContexts(true);
                 aiRequest = new AIRequest();
                 makeMenuMsg(null);
                 break;
@@ -889,7 +715,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     address=address.replaceAll("\"","");
                 }
 
-
                 //사용자 정보 DB에 넣기
                 if( !name.equals("") && !address.equals("") && !phoneNum.equals("") ) {
                     user=new User(uuid,name,address,phoneNum);
@@ -918,7 +743,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 chatMessage2 = new ChatMessage("버튼",true);
                 chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
                 adapter.setButton(btnSendListener); //버튼리스터 설정
-//                remenu=getRemenu(result);
+
                 break;
             case "ACTION_M_PHONE"://사용자정보수정 : 핸드폰번호
                 parameter=getParameter(result);
@@ -936,7 +761,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 chatMessage2 = new ChatMessage("버튼",true);
                 chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
                 adapter.setButton(btnSendListener); //버튼리스터 설정
-//                remenu=getRemenu(result);
                 break;
             case "ACTION_M_ADDRESS"://사용자정보수정 : 주소
 
@@ -960,19 +784,11 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     maddress=maddress+" " +parameter.get("address");
                 }
                 maddress=maddress.replaceAll("\"","");
-//                maddress=maddress.replaceAll("\[","");
-//                //주소 시,구,동 받아오기
-//                address = "" + parameter.get("city")+parameter.get("county");
-//                if(parameter.containsKey("county1")){
-//                    maddress=address+parameter.get("county1");
-//                }
-//                address=address+parameter.get("village");
-//                address=address.replaceAll("\"","");
                 user.setAddress(maddress);
                 Log.d("배송지 수정",maddress);
                 strContact = gson.toJson(user, User.class);
                 savePreferences("USER",strContact);
-//                remenu=getRemenu(result);
+
                 chatMessage2 = new ChatMessage("버튼",true);
                 chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
                 adapter.setButton(btnSendListener); //버튼리스터 설정
@@ -986,7 +802,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 parameter=getParameter(result);
                 category = parameter.get("Category").toString().replaceAll("\"","");
 
-                so=category;
                 remember.setCategory(category);
                 remember.setStyle(null);
                 remember.setColor(null);
@@ -999,23 +814,18 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                 break;
             case "Search_Style.Search_Style-no": //카테고리만 입력
-                so=category;
+
                 remember.setCategory(category);
                 remember.setStyle(null);
                 remember.setColor(null);
                 strContact = gson.toJson(remember, Product.class);
                 savePreferences("remember",strContact);
-//                searchtask = new SearchProduct();
-//                searchtask.execute("SearchOne2", category);
-
 
                 category = null; style=null; color = null;
-                Log.d("yoon search","카테고리로 검색: "+so);
 
                 chatMessage2 = new ChatMessage("버튼",true);
                 chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
                 adapter.setButton(btnSendListener); //버튼이름 설정
-
 
                 break;
 
@@ -1025,11 +835,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 color=null;
                 parameter=getParameter(result);
                 style = parameter.get("Style").toString().replaceAll("\"","");
-//                chatMessage2 = new ChatMessage("버튼",true);
-//                chatMessage2.setButton(BTN_TYPE_COLOR); //버튼으로 설정
-//                adapter.setButton(btnSendListener); //버튼리스터 설정
 
-                so=category+", "+style;
                 remember.setCategory(category);
                 remember.setStyle(style);
                 remember.setColor(null);
@@ -1041,21 +847,11 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 
                 break;
             case "Search_Style.Search_Color.Search_Color-no": //카테고리, 스타일로 검색
-                so=category+", "+style;
                 remember.setCategory(category);
                 remember.setStyle(style);
                 remember.setColor(null);
                 strContact = gson.toJson(remember, Product.class);
                 savePreferences("remember",strContact);
-
-//                searchtask = new SearchProduct();
-//                searchtask.execute("SearchTwo2", category,style);
-
-//                category = null; style=null; color = null;
-                Log.d("yoon search","카테고리, 스타일로 검색: "+so);
-
-//                startActivity(shopIntent);
-
 
                 chatMessage2 = new ChatMessage("버튼",true);
                 chatMessage2.setButton(BTN_TYPE_MENU); //버튼으로 설정
@@ -1068,9 +864,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 Log.d("yoon color",parameter.toString());
                 color = parameter.get("Color").toString().replaceAll("\"","");
 
-                so="카테고리: "+category+" 스타일:"+style+" 색상 : "+color;
-                Log.d("yoon search","카테고리, 스타일, 색상 으로 검색: "+so);
-
                 remember.setCategory(category);
                 remember.setStyle(style);
                 remember.setColor(color);
@@ -1080,7 +873,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 searchtask = new SearchProduct();
                 searchtask.execute("SearchThree2", category,style,color);
                 break;
-
 
             case "ACTION_MENU" :
                 parameter=getParameter(result);
@@ -1182,12 +974,9 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     shareType = null;
                 }else{
 
-//                    aiRequest.setResetContexts(true);
                 }
 
                 break;
-
-
 
         }
 
@@ -1355,7 +1144,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             pDialog = new ProgressDialog(ChatbotActivity.this);
             pDialog.setMessage("검색중입니다..");
             pDialog.setCancelable(false);
-//            pDialog.show();
             super.onPreExecute();
         }
 
@@ -1376,9 +1164,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 Log.i("검색스타일",style);
                 Log.i("검색색상",color);
             }
-
-
-
 
             try {
                 HttpParams httpParameters = new BasicHttpParams();
@@ -1461,28 +1246,14 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                     JSONObject jsonObj = new JSONObject(LoadData);
                     // json객체.get("변수명")
                     JSONArray jArray = (JSONArray) jsonObj.get("getData");
-//                    items = new ArrayList<Product>();
                     if(jArray.length()==0){
-//                        Log.d("chatBotActivity검색"," 실패");
-//                        ChatMessage chatMessage3 = new ChatMessage("검색 결과가 없습니다.",true);
-//                        chatMessages.add(chatMessage3);
-//                        adapter.notifyDataSetChanged();
-
-
                         Log.d("대답", speech);
-//        tts.speak(chatMessage.toString(),TextToSpeech.QUEUE_FLUSH, null);
-//        tts.speak(speech,TextToSpeech.QUEUE_FLUSH, null);
+
                         ChatMessage chatMessage = new ChatMessage("죄송합니다. \n쇼움이가 상품을 찾지 못했습니다.", true);
                         chatMessages.add(chatMessage);
                         adapter.notifyDataSetChanged();
                         params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,"End_Search"); //tts
                         tts.speak("죄송합니다. \n쇼움이가 상품을 찾지 못했습니다.", TextToSpeech.QUEUE_FLUSH, params);
-//                        try {
-//                            Thread.sleep(1000);
-//                        }catch(Exception e){
-//                            Log.e("error",e.getMessage());
-//                        }
-//                        makeMenuMsg("");
 
                     }
                     else {
@@ -1525,9 +1296,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                         if(searched_products.size()==0){
                             //검색 결과 없으면
                         }else {
-//                            category=null;
-//                            style=null;
-//                            color=null;
                             ChatMessage chatMessage = new ChatMessage("쇼우미가 상품 추천해드릴게요!", true);
                             chatMessages.add(chatMessage);
                             adapter.notifyDataSetChanged();
@@ -1535,24 +1303,11 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                             params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,"After_Search"); //tts
                             tts.speak("쇼우미가 상품 추천해드릴게요!", TextToSpeech.QUEUE_FLUSH, params);
 
-//                            try {
-//                                Thread.sleep(2000);
-//                            }catch(Exception e){
-//                                Log.e("error",e.getMessage());
-//                            }
                             ChatMessage chatMessage3 = new ChatMessage(true, true, searched_products);
                             chatMessages.add(chatMessage3);
                             Log.i("상품개수", "" + pNum);
-//                        chatMessage3.getImage().get(0);
-//                        for(int i=0;i<chatMessage3.getImage().size();i++) {
-//                            Log.i("김지선1", chatMessage3.getImage().get(i));
-//                        }
+
                             adapter.notifyDataSetChanged();
-//                            try {
-//                                Thread.sleep(2000);
-//                            }catch(Exception e){
-//                                Log.e("error",e.getMessage());
-//                            }
 
                             str="더보기를 누르면 더 많은 상품을 보실 수 있습니다.";
                             if(project.equals("SearchOne2")){
@@ -1562,16 +1317,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                                 chatMessage = new ChatMessage(str, true);
                                 chatMessages.add(chatMessage);
                                 adapter.notifyDataSetChanged();
-//                                tts.speak(str,TextToSpeech.QUEUE_FLUSH, null);
-//                                tts.speak(str, TextToSpeech.QUEUE_FLUSH, null);
-//                                handler.postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        tts.speak(str,TextToSpeech.QUEUE_FLUSH, null);
-//                                    }
-//                                }, 2500);
-
-
                                 chatMessage2 = new ChatMessage("버튼",true);
                                 switch (category){
                                     case "상의":
@@ -1600,13 +1345,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                                 chatMessage = new ChatMessage(str, true);
                                 chatMessages.add(chatMessage);
                                 adapter.notifyDataSetChanged();
-//                                tts.speak(str,TextToSpeech.QUEUE_FLUSH, null);
-//                                handler.postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        tts.speak(str,TextToSpeech.QUEUE_FLUSH, null);
-//                                    }
-//                                }, 2500);
 
                                 chatMessage2 = new ChatMessage("버튼",true);
                                 chatMessage2.setButton(BTN_TYPE_COLOR); //버튼으로 설정
@@ -1617,25 +1355,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                                 chatMessage = new ChatMessage(str, true);
                                 chatMessages.add(chatMessage);
                                 adapter.notifyDataSetChanged();
-//                                tts.speak(str, TextToSpeech.QUEUE_FLUSH, null);
-//                                handler.postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        tts.speak(str,TextToSpeech.QUEUE_FLUSH, null);
-//                                    }
-//                                }, 2500);
-//                                chatMessage = new ChatMessage(str, true);
-//                                chatMessages.add(chatMessage);
-//                                adapter.notifyDataSetChanged();
-//                                tts.speak(str, TextToSpeech.QUEUE_FLUSH, null);
-//                                makeMenuMsg("");
-//                                handler.postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        makeMenuMsg("");
-//                                    }
-//                                }, 5000);
-//                                makeMenuMsg("");
 
                             }
                         }
@@ -1964,13 +1683,6 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             }
         }
 
-
-//        convertView.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                // 여기서 이벤트를 막습니다.
-//                return ;
-//            }
-//        });
 
         return convertView;
     }

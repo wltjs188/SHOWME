@@ -17,7 +17,6 @@ import android.provider.ContactsContract;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.telephony.SmsManager;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
@@ -37,8 +36,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
 import com.kakao.kakaolink.v2.KakaoLinkService;
-import com.kakao.message.template.LinkObject;
-import com.kakao.message.template.TextTemplate;
 import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
 import com.kakao.util.helper.log.Logger;
@@ -67,7 +64,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,18 +72,12 @@ import java.util.Map;
 public class ProductInfo extends AppCompatActivity {
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private final int REQ_CODE_SHARE_MSG_SPEECH_INPUT = 101;
-    Intent reviewIntent;
-    private String mJsonString;
-    int error=0;
-
 
     private TextView product_info; //상세정보 표시
     ImageView productImg; //상품 이미지 표시
     private Button wishCheck; //관심상품 등록
     private boolean infoBool=false; //관심상품 등록 여부
-    private int check=0;
     //상품 정보
-//    private Product product;
     private User user;
     private String productAlias="";
     private String uuid=" ";
@@ -106,13 +96,6 @@ public class ProductInfo extends AppCompatActivity {
     LinearLayout layout ;
     LinearLayout btnLayout;
 
-    //통신사 정보
-    String ret_operator = null;
-    String MMSCenterUrl = null;
-    String MMSProxy = null;
-    int MMSPort = 0;
-
-//    private String wishProductName=" ";
     WishProductDialog wishProductDialog;
     SendMsgDialog sendMsgDialog;
     private String Url="https://store.musinsa.com/app/product/detail/";
@@ -281,22 +264,6 @@ public class ProductInfo extends AppCompatActivity {
         });
 
     }
-
-//    private void promptSpeechInput() {
-//        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-//                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-//        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-//                context.getString(R.string.speech_prompt));
-//        try {
-//            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
-//        } catch (ActivityNotFoundException a) {
-//            Toast.makeText(context,
-//                    context.getString(R.string.speech_not_supported),
-//                    Toast.LENGTH_SHORT).show();
-//        }
-//    }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -320,7 +287,6 @@ public class ProductInfo extends AppCompatActivity {
             }
         }
     }
-
 
     public void onProductImageClicked(View view){
         Intent intent = new Intent(getApplicationContext(),ProductImageActivity.class);
@@ -410,30 +376,6 @@ public class ProductInfo extends AppCompatActivity {
 
 
         dialog.show();
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//
-//        builder.setTitle("공유 방식을 선택해주세요.");
-//
-//        builder.setItems(R.array.Messenger, new DialogInterface.OnClickListener(){
-//            @Override
-//            public void onClick(DialogInterface dialog, int pos)
-//            {
-//                String[] items = getResources().getStringArray(R.array.Messenger);
-//                //Toast.makeText(getApplicationContext(),items[pos],Toast.LENGTH_LONG).show();
-//                //문자공유
-//                if(items[pos].equals("문자")){
-//                    ShareMessage();
-//                }
-//                //카톡공유
-//                else{
-//                    ShareKakao();
-//                    getAppKeyHash();
-//                }
-//            }
-//        });
-//
-//        AlertDialog alertDialog = builder.create();
-//        alertDialog.show();
     }
     public void ShareMessage(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -553,10 +495,6 @@ public class ProductInfo extends AppCompatActivity {
         if(number!=null) {
 //            phoneNo = number;
             sendSMS(number, Url,user.getAddress());
-//            sendMMS(number, "이 상품 구매 부탁드립니다!!");
-//            sendMMS(number, Url);
-//            sendMMS(number, "주소: "+user.getAddress());
-//            Toast.makeText(getApplicationContext(),phoneName+"님께 해당 상품을 공유했습니다.",Toast.LENGTH_LONG).show();
             return true;
         }
         else {
@@ -564,19 +502,6 @@ public class ProductInfo extends AppCompatActivity {
             return false;
         }
     }
-//    private void sendMMS(String phoneNo,String msg) {
-//        //String sms = "http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1708920758&cls=3791&trTypeCd=102";
-//
-//        try {
-//            //전송
-//            SmsManager smsManager = SmsManager.getDefault();
-//            smsManager.sendTextMessage(phoneNo, null, msg, null, null);
-////            Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
-//        } catch (Exception e) {
-//            Toast.makeText(getApplicationContext(), "SMS faild, please try again later!", Toast.LENGTH_LONG).show();
-//            e.printStackTrace();
-//        }
-//    }
     public void sendSMS(String num,String productUrl,String address){
         String text="이 상품 구매 부탁드립니다. \n";
         text+="주소: "+address+"\n";
@@ -1196,24 +1121,6 @@ public class ProductInfo extends AppCompatActivity {
                         }//System.out.println("평가"+txtKeyword);
                     }
                 }
-//
-//                // 리뷰부분 접근
-//                Elements reviewbox = doc.select("div#style_estimate_list");
-//                Elements reviewContent = reviewbox.select("div.nslist_post");
-//
-//                for (Element r : reviewContent) {
-//                    num++;
-//                    //리뷰 제목
-//                    String rt = r.select("div.tit").text();
-//                    //리뷰 내용
-//                    String rank = r.select("span.content-review").text();
-//
-//                    ReviewData reviewD = new ReviewData(num,rt,rank);
-//                    //System.out.println("번호:"+reviewD.getNum()+"제목:"+reviewD.getTitle()+"내용"+reviewD.getReview());
-//                    Log.d("reviewData",reviewD.toString());
-//                    //add가 안됨..!!
-////                    reviewDataList.add(reviewD);
-//                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

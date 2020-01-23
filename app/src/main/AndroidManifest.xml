@@ -22,8 +22,6 @@
         android:transcriptMode="normal">
         <activity android:name="com.kimcheon.showme.final_project.ProductImageActivity"></activity>
         <activity android:name="com.kimcheon.showme.final_project.TestActivity" />
-        <activity android:name="com.kimcheon.showme.final_project.ReviewActivity" />
-        <activity android:name="com.kimcheon.showme.final_project.AddressActivity" />
         <activity
             android:name="com.kimcheon.showme.final_project.MainActivity"
             android:theme="@style/SplashTheme">

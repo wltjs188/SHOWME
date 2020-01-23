@@ -24,31 +24,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.UUID;
 import static android.speech.tts.TextToSpeech.ERROR;
-import org.apache.http.message.BasicNameValuePair;
 public class MainActivity extends Activity {
 
     private static final int PERMISSIONS_REQUEST = 100;
@@ -89,8 +69,6 @@ public class MainActivity extends Activity {
 
             savePreferences("uuid",uuid);
         }
-
-
 
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -187,141 +165,6 @@ public class MainActivity extends Activity {
         }
     }
 
-/*
-    class SelectData extends AsyncTask<String, Void,String> {
-        String LoadData;
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            // TODO Auto-generated method stub
-            String project = (String)params[0];
-            String uid = (String)params[1];
-            try {
-                HttpParams httpParameters = new BasicHttpParams();
-                HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
-
-                HttpClient client = new DefaultHttpClient(httpParameters);
-
-                HttpConnectionParams.setConnectionTimeout(httpParameters, 7000);
-                HttpConnectionParams.setSoTimeout(httpParameters, 7000);
-                HttpConnectionParams.setTcpNoDelay(httpParameters, true);
-
-                // 주소 : aws서버
-                String postURL = "http://13.209.138.178:8080/showme/";
-
-                // 로컬서버
-//            String postURL = "http://10.0.2.2:8080/showme/InsertUser";
-
-                HttpPost post = new HttpPost(postURL+project);
-                //서버에 보낼 파라미터
-                ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
-                //파라미터 추가하기
-
-            postParameters.add(new BasicNameValuePair("uid", uid));
-
-
-                //파라미터 보내기
-                UrlEncodedFormEntity ent = new UrlEncodedFormEntity(postParameters, HTTP.UTF_8);
-                post.setEntity(ent);
-
-                long startTime = System.currentTimeMillis();
-
-                HttpResponse responsePOST = client.execute(post);
-
-                long elapsedTime = System.currentTimeMillis() - startTime;
-                Log.v("debugging", elapsedTime + " ");
-
-
-                HttpEntity resEntity = responsePOST.getEntity();
-                if (resEntity != null) {
-                    LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
-
-                    Log.d("가져온 데이터", LoadData);
-                    return LoadData;
-                }
-                if(responsePOST.getStatusLine().getStatusCode()==200){
-                    Log.d("오류없음","굳");
-                }
-                else{
-                    Log.d("error","오류");
-                    return null;
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-//            Log.d("??","?");
-//            Log.d("??",result);
-
-//            pDialog.dismiss();
-            if (result == null||result==""){
-                Log.d("로긴","실패");
-//                User user=new User();
-//                Gson gson = new GsonBuilder().create();
-//
-//                String strContact = gson.toJson(user, User.class);
-//                savePreferences("USER",strContact);
-                removePreferences("USER");
-//                Toast.makeText(getApplicationContext(),"실패",Toast.LENGTH_LONG).show();
-            }
-            else {
-                try {
-                    JSONObject jsonObj = new JSONObject(result);
-                    // json객체.get("변수명")
-                    JSONArray jArray = (JSONArray) jsonObj.get("userData");
-//                    items = new ArrayList<Product>();
-                    if(jArray.length()==0){
-//                        User user=new User();
-//                        Gson gson = new GsonBuilder().create();
-//
-//                        String strContact = gson.toJson(user, User.class);
-                        Log.d("로긴","로그인 실패");
-                        removePreferences("USER");
-                    }else {
-                        Log.i("로긴","성공"+result);
-                        User user=new User();
-                        for (int i = 0; i < jArray.length(); i++) {
-                            // json배열.getJSONObject(인덱스)
-                            JSONObject row = jArray.getJSONObject(i);
-                            String id=row.getString("id");
-                            String name=row.getString("name");
-                            String address=row.getString("address");
-                            String phoneNum=row.getString("phoneNum");
-
-                            user.setId(id);
-                            user.setName(name);
-                            user.setAddress(address);
-                            user.setPhoneNum(phoneNum);
-
-                            Gson gson = new GsonBuilder().create();
-
-                            String strContact = gson.toJson(user, User.class);
-                            savePreferences("USER",strContact);
-
-                            Log.d("가져온 데이터",id);
-                            Log.d("가져온 데이터", address);
-                            Log.d("가져온 데이터", name);
-                            Log.d("가져온 데이터", phoneNum);
-                        }
-
-                    }
-
-                } catch (JSONException e) {
-                    Log.d("error : ", e.getMessage());
-                }
-            }
-        }
-    }
-*/
     // 값 저장하기
     private void savePreferences(String key, String s){
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
