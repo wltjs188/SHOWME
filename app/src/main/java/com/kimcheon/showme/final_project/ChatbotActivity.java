@@ -1533,7 +1533,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
             Arrays.asList("문자","카카오톡")
     );
     ArrayList<String> btnNamesUserInfo= new ArrayList<String>(
-            Arrays.asList("이름","핸드폰 번호","배송지 주소")
+            Arrays.asList("이름","배송지 주소")
     );
 
     private Activity activity;
