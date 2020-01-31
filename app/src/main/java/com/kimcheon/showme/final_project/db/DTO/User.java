@@ -4,13 +4,14 @@ public class User {
     String id="";
     String name="";
     String address="";
-    String phoneNum="";
+//    String phoneNum="";
     public User(){}
-    public User(String id,String name, String address, String phoneNum){
+//    public User(String id,String name, String address, String phoneNum){
+    public User(String id,String name, String address){
         this.id=id;
         this.name=name;
         this.address=address;
-        this.phoneNum=phoneNum;
+//        this.phoneNum=phoneNum;
     }
     public User(String id){
         this.id=id;
@@ -40,11 +41,11 @@ public class User {
         this.address = address;
     }
 
-    public String getPhoneNum() {
-        return phoneNum;
-    }
-
-    public void setPhoneNum(String phoneNum) {
-        this.phoneNum = phoneNum;
-    }
+//    public String getPhoneNum() {
+//        return phoneNum;
+//    }
+//
+//    public void setPhoneNum(String phoneNum) {
+//        this.phoneNum = phoneNum;
+//    }
 }

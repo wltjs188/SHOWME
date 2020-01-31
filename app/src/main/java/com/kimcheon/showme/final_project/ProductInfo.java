@@ -17,7 +17,6 @@ import android.provider.ContactsContract;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.telephony.SmsManager;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
@@ -37,8 +36,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
 import com.kakao.kakaolink.v2.KakaoLinkService;
-import com.kakao.message.template.LinkObject;
-import com.kakao.message.template.TextTemplate;
 import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
 import com.kakao.util.helper.log.Logger;
@@ -67,27 +64,23 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ProductInfo extends AppCompatActivity {
+    // 도움말
+    HelpDialog helpDialog;
+
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private final int REQ_CODE_SHARE_MSG_SPEECH_INPUT = 101;
-    Intent reviewIntent;
-    private String mJsonString;
-    int error=0;
-
 
     private TextView product_info; //상세정보 표시
     ImageView productImg; //상품 이미지 표시
     private Button wishCheck; //관심상품 등록
     private boolean infoBool=false; //관심상품 등록 여부
-    private int check=0;
     //상품 정보
-//    private Product product;
     private User user;
     private String productAlias="";
     private String uuid=" ";
@@ -106,13 +99,6 @@ public class ProductInfo extends AppCompatActivity {
     LinearLayout layout ;
     LinearLayout btnLayout;
 
-    //통신사 정보
-    String ret_operator = null;
-    String MMSCenterUrl = null;
-    String MMSProxy = null;
-    int MMSPort = 0;
-
-//    private String wishProductName=" ";
     WishProductDialog wishProductDialog;
     SendMsgDialog sendMsgDialog;
     private String Url="https://store.musinsa.com/app/product/detail/";
@@ -132,6 +118,8 @@ public class ProductInfo extends AppCompatActivity {
 //        wishProductDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
 
 
+        helpDialog=new HelpDialog(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_info);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
@@ -144,7 +132,7 @@ public class ProductInfo extends AppCompatActivity {
         if(!(getPreferences("USER")==null||getPreferences("USER")=="")){
             String strContact=getPreferences("USER");
             user=gson.fromJson(strContact,User.class);
-            Log.d("uuid 정보",user.getName()+user.getAddress()+user.getPhoneNum());
+//            Log.d("uuid 정보",user.getName()+user.getAddress()+user.getPhoneNum());
         }
         uuid = getPreferences("uuid");
         product_info=(TextView)findViewById(R.id.product_info);
@@ -281,22 +269,6 @@ public class ProductInfo extends AppCompatActivity {
         });
 
     }
-
-//    private void promptSpeechInput() {
-//        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-//                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-//        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-//                context.getString(R.string.speech_prompt));
-//        try {
-//            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
-//        } catch (ActivityNotFoundException a) {
-//            Toast.makeText(context,
-//                    context.getString(R.string.speech_not_supported),
-//                    Toast.LENGTH_SHORT).show();
-//        }
-//    }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -320,7 +292,6 @@ public class ProductInfo extends AppCompatActivity {
             }
         }
     }
-
 
     public void onProductImageClicked(View view){
         Intent intent = new Intent(getApplicationContext(),ProductImageActivity.class);
@@ -410,30 +381,6 @@ public class ProductInfo extends AppCompatActivity {
 
 
         dialog.show();
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//
-//        builder.setTitle("공유 방식을 선택해주세요.");
-//
-//        builder.setItems(R.array.Messenger, new DialogInterface.OnClickListener(){
-//            @Override
-//            public void onClick(DialogInterface dialog, int pos)
-//            {
-//                String[] items = getResources().getStringArray(R.array.Messenger);
-//                //Toast.makeText(getApplicationContext(),items[pos],Toast.LENGTH_LONG).show();
-//                //문자공유
-//                if(items[pos].equals("문자")){
-//                    ShareMessage();
-//                }
-//                //카톡공유
-//                else{
-//                    ShareKakao();
-//                    getAppKeyHash();
-//                }
-//            }
-//        });
-//
-//        AlertDialog alertDialog = builder.create();
-//        alertDialog.show();
     }
     public void ShareMessage(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -553,10 +500,6 @@ public class ProductInfo extends AppCompatActivity {
         if(number!=null) {
 //            phoneNo = number;
             sendSMS(number, Url,user.getAddress());
-//            sendMMS(number, "이 상품 구매 부탁드립니다!!");
-//            sendMMS(number, Url);
-//            sendMMS(number, "주소: "+user.getAddress());
-//            Toast.makeText(getApplicationContext(),phoneName+"님께 해당 상품을 공유했습니다.",Toast.LENGTH_LONG).show();
             return true;
         }
         else {
@@ -564,19 +507,6 @@ public class ProductInfo extends AppCompatActivity {
             return false;
         }
     }
-//    private void sendMMS(String phoneNo,String msg) {
-//        //String sms = "http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1708920758&cls=3791&trTypeCd=102";
-//
-//        try {
-//            //전송
-//            SmsManager smsManager = SmsManager.getDefault();
-//            smsManager.sendTextMessage(phoneNo, null, msg, null, null);
-////            Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
-//        } catch (Exception e) {
-//            Toast.makeText(getApplicationContext(), "SMS faild, please try again later!", Toast.LENGTH_LONG).show();
-//            e.printStackTrace();
-//        }
-//    }
     public void sendSMS(String num,String productUrl,String address){
         String text="이 상품 구매 부탁드립니다. \n";
         text+="주소: "+address+"\n";
@@ -679,37 +609,57 @@ public class ProductInfo extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.help:
-                AlertDialog.Builder oDialog = new AlertDialog.Builder(ProductInfo.this,
-                        android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+//                AlertDialog.Builder oDialog = new AlertDialog.Builder(ProductInfo.this,
+//                        android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+//
+//                oDialog.setTitle("도움말")
+//                        .setMessage("상품의 이름, 종류, 가격, 사이즈 정보가 제공 됩니다.\n" +
+//                                "\n" +
+////                                "<상품 이미지 크게보기>\n" +
+////                                "상품 이미지를 누르면 상품 이미지가 크게 보입니다.\n" +
+////                                "<사이즈표 상세보기>\n" +
+////                                "사이즈 표 상세보기 버튼을 누르면 상품의 사이즈가 보입니다. \n" +
+////                                "사이즈를 누르면 사이즈의 상세 정보가 보입니다.\n" +
+////                                "닫기 버튼을 누르면 상세정보 창이 닫힙니다.\n" +
+//                                "\n" +
+////                                "<공유하기>\n" +
+////                                "공유하기 버튼을 클릭하면 공유 방식을 선택할 수 있습니다.\n" +
+////                                "[문자 공유]\n" +
+////                                "주소록 검색 또는 번호 입력을 통해 공유 상대를 지정할 수 있습니다.\n" +
+////                                "[카카오톡 공유]\n" +
+////                                "카카오톡 앱이 실행됩니다.\n" +
+//                                "\n" +
+////                                "<관심상품 등록>\n" +
+////                                "관심상품 등록 버튼(하트)을 누르면 음성 또는 자판을 이용해 상품을 별칭을 입력할 수 있습니다. \n" +
+////                                "별칭을 입력하고 확인을 누르면 관심상품으로 등록됩니다.\n" +
+////                                "등록한 상품은 관심상품 보기 메뉴에서 다시 볼 수 있습니다.\n" +
+////                                "이미 관심상품으로 등록되어 있는 상품인 경우 관심상품에서 삭제 됩니다.\n" +
+//                                "\n" +
+//                                "<리뷰보기>\n" +
+//                                "리뷰보기 버튼을 누르면 상품의 리뷰를 보여주는 화면으로 이동합니다.")
+//                        .setPositiveButton("닫기", null)
+//                        .setCancelable(true)
+//                        .show();
 
-                oDialog.setTitle("도움말")
-                        .setMessage("상품의 이름, 종류, 가격, 사이즈 정보가 제공 됩니다.\n" +
-                                "\n" +
-                                "<상품 이미지 크게보기>\n" +
-                                "상품 이미지를 누르면 상품 이미지가 크게 보입니다.\n" +
-                                "<사이즈표 상세보기>\n" +
-                                "사이즈 표 상세보기 버튼을 누르면 상품의 사이즈가 보입니다. \n" +
-                                "사이즈를 누르면 사이즈의 상세 정보가 보입니다.\n" +
-                                "닫기 버튼을 누르면 상세정보 창이 닫힙니다.\n" +
-                                "\n" +
-                                "<공유하기>\n" +
-                                "공유하기 버튼을 클릭하면 공유 방식을 선택할 수 있습니다.\n" +
-                                "[문자 공유]\n" +
+                String[] contents = {
+                        "상품의 이름, 종류, 가격, 사이즈 정보가 제공 됩니다.",
+                        "<상품 이미지 크게보기>\n상품 이미지를 누르면 상품 이미지가 크게 보입니다.",
+                        "<사이즈표 상세보기>\n사이즈 표 상세보기 버튼을 누르면 상품의 사이즈가 보입니다.\n사이즈를 누르면 사이즈의 상세 정보가 보입니다.닫기 버튼을 누르면 상세정보 창이 닫힙니다.",
+                        "<공유하기>\n공유하기 버튼을 클릭하면 공유 방식을 선택할 수 있습니다.\n[문자 공유]\n" +
                                 "주소록 검색 또는 번호 입력을 통해 공유 상대를 지정할 수 있습니다.\n" +
                                 "[카카오톡 공유]\n" +
-                                "카카오톡 앱이 실행됩니다.\n" +
-                                "\n" +
-                                "<관심상품 등록>\n" +
+                                "카카오톡 앱이 실행됩니다.",
+                        "<관심상품 등록>\n" +
                                 "관심상품 등록 버튼(하트)을 누르면 음성 또는 자판을 이용해 상품을 별칭을 입력할 수 있습니다. \n" +
                                 "별칭을 입력하고 확인을 누르면 관심상품으로 등록됩니다.\n" +
                                 "등록한 상품은 관심상품 보기 메뉴에서 다시 볼 수 있습니다.\n" +
-                                "이미 관심상품으로 등록되어 있는 상품인 경우 관심상품에서 삭제 됩니다.\n" +
-                                "\n" +
-                                "<리뷰보기>\n" +
-                                "리뷰보기 버튼을 누르면 상품의 리뷰를 보여주는 화면으로 이동합니다.")
-                        .setPositiveButton("닫기", null)
-                        .setCancelable(true)
-                        .show();
+                                "이미 관심상품으로 등록되어 있는 상품인 경우 관심상품에서 삭제 됩니다.",
+                        "<리뷰보기>\n" +
+                                "리뷰보기 버튼을 누르면 상품의 리뷰를 보여주는 화면으로 이동합니다."
+                };
+                helpDialog.show();
+                helpDialog.addHelpContents(contents);
+
 
                 return true;
         }
@@ -1096,18 +1046,21 @@ public class ProductInfo extends AppCompatActivity {
                             String st=row.getString("Size");
 
                             Log.i("sizeTable: ", st);
+                            try {
+                                String changString = new String(st.getBytes("8859_1"), "utf-8");
 
-                            AlertDialog.Builder oDialog = new AlertDialog.Builder(ProductInfo.this,
-                                    android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+                                AlertDialog.Builder oDialog = new AlertDialog.Builder(ProductInfo.this,
+                                        android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
 
 
-
-                            oDialog.setTitle("사이즈표 상세 정보")
-                                    .setMessage(st)
-                                    .setPositiveButton("닫기", null)
-                                    .setCancelable(true)
-                                    .show();
-
+                                oDialog.setTitle("사이즈표 상세 정보")
+                                        .setMessage(changString)
+                                        .setPositiveButton("닫기", null)
+                                        .setCancelable(true)
+                                        .show();
+                            }catch (Exception e){
+                                Log.e(this.getClass().toString(),"한글 encoding error");
+                            }
 
                         }
 
@@ -1193,24 +1146,6 @@ public class ProductInfo extends AppCompatActivity {
                         }//System.out.println("평가"+txtKeyword);
                     }
                 }
-//
-//                // 리뷰부분 접근
-//                Elements reviewbox = doc.select("div#style_estimate_list");
-//                Elements reviewContent = reviewbox.select("div.nslist_post");
-//
-//                for (Element r : reviewContent) {
-//                    num++;
-//                    //리뷰 제목
-//                    String rt = r.select("div.tit").text();
-//                    //리뷰 내용
-//                    String rank = r.select("span.content-review").text();
-//
-//                    ReviewData reviewD = new ReviewData(num,rt,rank);
-//                    //System.out.println("번호:"+reviewD.getNum()+"제목:"+reviewD.getTitle()+"내용"+reviewD.getReview());
-//                    Log.d("reviewData",reviewD.toString());
-//                    //add가 안됨..!!
-////                    reviewDataList.add(reviewD);
-//                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

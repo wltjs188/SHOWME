@@ -46,6 +46,8 @@ import java.util.ArrayList;
 
 public class WishListActivity extends AppCompatActivity {
 
+    // 도움말
+    HelpDialog helpDialog;
     WishProductDialog wishProductDialog;
     Intent productInfoIntent; //상세정보 intent
     GridView gv;
@@ -80,6 +82,8 @@ public class WishListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wish_list);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//뒤로가기 버튼
         getSupportActionBar().setTitle("관심상품");
+
+        helpDialog=new HelpDialog(this);
 
         productInfoIntent = new Intent(getApplicationContext(),ProductInfo.class);
         gv = (GridView)findViewById(R.id.gridView1);
@@ -194,18 +198,27 @@ public class WishListActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.help:
-                AlertDialog.Builder oDialog = new AlertDialog.Builder(this,
-                        android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+//                AlertDialog.Builder oDialog = new AlertDialog.Builder(this,
+//                        android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+//
+//                oDialog.setTitle("도움말")
+//                        .setMessage("관심상품으로 등록된 상품 목록을 보여줍니다.\n" +
+//                                "상품을 누르면 자세한 상품 상세 정보 보기와 별칭 수정 두가지 메뉴를 선택할 수 있습니다.\n" +
+//                                "상품 상세정보 보기를 선택하면 자세한 상품의 정보가 보이는 화면으로 이동합니다.\n" +
+//                                "별칭 수정을 선택하면 새로운 음성 또는 자판을 이용해 상품을 별칭을 입력할 수 있습니다. \n" +
+//                                "별칭을 입력하고 확인을 누르면 별칭이 수정됩니다.")
+//                        .setPositiveButton("닫기", null)
+//                        .setCancelable(true)
+//                        .show();
 
-                oDialog.setTitle("도움말")
-                        .setMessage("관심상품으로 등록된 상품 목록을 보여줍니다.\n" +
-                                "상품을 누르면 자세한 상품 상세 정보 보기와 별칭 수정 두가지 메뉴를 선택할 수 있습니다.\n" +
-                                "상품 상세정보 보기를 선택하면 자세한 상품의 정보가 보이는 화면으로 이동합니다.\n" +
-                                "별칭 수정을 선택하면 새로운 음성 또는 자판을 이용해 상품을 별칭을 입력할 수 있습니다. \n" +
-                                "별칭을 입력하고 확인을 누르면 별칭이 수정됩니다.")
-                        .setPositiveButton("닫기", null)
-                        .setCancelable(true)
-                        .show();
+                String[] contents = {"관심상품으로 등록된 상품 목록을 보여줍니다.\n" +
+                        "상품을 누르면 자세한 상품 상세 정보 보기와 별칭 수정 두가지 메뉴를 선택할 수 있습니다.\n" +
+                        "상품 상세정보 보기를 선택하면 자세한 상품의 정보가 보이는 화면으로 이동합니다.\n" +
+                        "별칭 수정을 선택하면 새로운 음성 또는 자판을 이용해 상품을 별칭을 입력할 수 있습니다. \n" +
+                        "별칭을 입력하고 확인을 누르면 별칭이 수정됩니다."};
+                helpDialog.show();
+                helpDialog.addHelpContents(contents);
+
 
                 return true;
         }
