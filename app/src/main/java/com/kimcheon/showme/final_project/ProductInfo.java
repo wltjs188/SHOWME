@@ -1002,6 +1002,7 @@ public class ProductInfo extends AppCompatActivity {
 
                     LoadData = EntityUtils.toString(resEntity, HTTP.UTF_8);
                     Log.i("chat가져온 데이터", LoadData);
+
                     return LoadData;
 
                 }
@@ -1029,6 +1030,7 @@ public class ProductInfo extends AppCompatActivity {
             }
             else {
                 try {
+
                     JSONObject jsonObj = new JSONObject(LoadData);
                     // json객체.get("변수명")
                     JSONArray jArray = (JSONArray) jsonObj.get("getData");
@@ -1047,14 +1049,11 @@ public class ProductInfo extends AppCompatActivity {
 
                             Log.i("sizeTable: ", st);
                             try {
-                                String changString = new String(st.getBytes("8859_1"), "utf-8");
-
                                 AlertDialog.Builder oDialog = new AlertDialog.Builder(ProductInfo.this,
                                         android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
 
-
                                 oDialog.setTitle("사이즈표 상세 정보")
-                                        .setMessage(changString)
+                                        .setMessage(st)
                                         .setPositiveButton("닫기", null)
                                         .setCancelable(true)
                                         .show();
