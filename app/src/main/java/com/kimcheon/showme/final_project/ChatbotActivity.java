@@ -95,6 +95,9 @@ import static com.kakao.util.helper.Utility.getPackageInfo;
 public class ChatbotActivity extends AppCompatActivity implements AIListener{
     Button btn_chat_send;
 
+    // 도움말
+    HelpDialog helpDialog;
+
     //상품검색
     String query;
     String action;
@@ -167,11 +170,6 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     //챗봇 액션
     String ACTION="";
 
-    // 5개까지의 멀티터치를 다루기 위한 배열
-//    int id[] = new int[5];
-//    int x[] = new int[5];
-//    int y[] = new int[5];
-
     //tts 지연 핸들러
     final Handler handler=new Handler();
     //tts
@@ -237,6 +235,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         setContentView(R.layout.activity_chatbot);
         getSupportActionBar().setTitle("쇼우미");
 
+        helpDialog=new HelpDialog(this);
+
         btn_chat_send=(Button)findViewById(R.id.btn_chat_send);
         wishIntent=new Intent(getApplicationContext(),WishListActivity.class);//나의관심상품
         shopIntent=new Intent(getApplicationContext(),ShopActivity.class); //상품검색
@@ -260,6 +260,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
         listView.setAdapter(adapter);
         listView.setSelection(adapter.getCount() - 1);
+
 
         //엔터 전송
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -290,6 +291,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             public void handleMessage(Message msg)
             {
                 Log.i("tts","핸들러");
+                chatMessages.clear();
+                adapter.notifyDataSetChanged();
                 makeMenuMsg(null);
             }
         };
@@ -434,6 +437,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
             user=gson.fromJson(strContact,User.class);
 //            Log.d("uuid 정보",user.getName()+user.getAddress()+user.getPhoneNum());
             Log.d("uuid 정보",user.getName()+user.getAddress());
+            chatMessages.clear();
+            adapter.notifyDataSetChanged();
             makeMenuMsg(user.getName()+"님 안녕하세요?");
         }
 
@@ -579,10 +584,14 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 break;
             }
             case SHOP_ACTIVITY:{
+                chatMessages.clear();
+                adapter.notifyDataSetChanged();
                 makeMenuMsg(null);
                 break;
             }
             case WISHLIST_ACTIVITY:{
+                chatMessages.clear();
+                adapter.notifyDataSetChanged();
                 makeMenuMsg(null);
                 break;
             }
@@ -671,6 +680,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         switch (ACTION){
             case "stop":
                 aiRequest = new AIRequest();
+                chatMessages.clear();
+                adapter.notifyDataSetChanged();
                 makeMenuMsg(null);
                 break;
             case "ACTION_USER"://사용자등록 : 이름받아오기
@@ -914,6 +925,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                 break;
             case "Share-stop":
                 shareType=null;
+                chatMessages.clear();
+                adapter.notifyDataSetChanged();
                 makeMenuMsg(null);
                 break;
             case "Share_m":
@@ -1061,35 +1074,28 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
+        getMenuInflater().inflate(R.menu.menu_chatbot, menu);
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) { //뒤로가기 버튼 실행
-        Intent homeIntent=new Intent(this,ChatbotActivity.class);
+    public boolean onOptionsItemSelected(MenuItem item) { // 상단바 메뉴
         switch (item.getItemId()){
-            case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
-                startActivity(homeIntent);
-                finish();
-                return true;
-            }
-            case R.id.showme:
-                startActivity(homeIntent);
-                finish();
-                return true;
-            case R.id.help:
-                AlertDialog.Builder oDialog = new AlertDialog.Builder(this,
-                        android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
-
-                oDialog.setTitle("도움말")
-                        .setMessage("쇼우미에 음성 또는 자판을 이용해 입력하거나 메뉴 버튼 클릭을 통해 조작이 가능합니다.\n" +
-                                "상품 검색하기, 이전 검색 다시보기, 관심 상품 보기, 관심 상품 공유하기, 사용자 정보 수정이 가능합니다.\n" +
-                                "\"그만\"을 입력하면 진행하던 대화를 멈춥니다.")
-                        .setPositiveButton("닫기", null)
-                        .setCancelable(true)
-                        .show();
-
-                return true;
+            case R.id.help: // 도움말 버튼 리스너
+//                AlertDialog.Builder oDialog = new AlertDialog.Builder(this,
+//                        android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+//
+//                oDialog.setTitle("도움말")
+//                        .setMessage("쇼우미에 음성 또는 자판을 이용해 입력하거나 메뉴 버튼 클릭을 통해 조작이 가능합니다.\n" +
+//                                "상품 검색하기, 이전 검색 다시보기, 관심 상품 보기, 관심 상품 공유하기, 사용자 정보 수정이 가능합니다.\n" +
+//                                "\"그만\"을 입력하면 진행하던 대화를 멈춥니다.")
+//                        .setPositiveButton("닫기", null)
+//                        .setCancelable(true)
+//                        .show();
+                String[] contents = {"쇼우미에 음성 또는 자판을 이용해 입력하거나 메뉴 버튼 클릭을 통해 조작이 가능합니다.\n"+
+                        "상품 검색하기, 이전 검색 다시보기, 관심 상품 보기, 관심 상품 공유하기, 사용자 정보 수정이 가능합니다.\n"+
+                        "\"그만\"을 입력하면 진행하던 대화를 멈춥니다."};
+                helpDialog.show();
+                helpDialog.addHelpContents(contents);
         }
         return super.onOptionsItemSelected(item);
     }

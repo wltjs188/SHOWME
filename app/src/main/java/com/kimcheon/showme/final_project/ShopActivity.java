@@ -50,6 +50,8 @@ import android.widget.Toast;
 
 public class ShopActivity extends AppCompatActivity {
 
+    // 도움말
+    HelpDialog helpDialog;
 
     private GridView gv;
     private ProductAdapter adapter;
@@ -79,6 +81,7 @@ public class ShopActivity extends AppCompatActivity {
         adapter = new ProductAdapter(this, R.layout.list_product_item, images, infos);
         gv.setAdapter(adapter);
 
+        helpDialog=new HelpDialog(this);
 
         //Spinner
         spin_categroy=findViewById(R.id.spin_category);
@@ -369,16 +372,22 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
                 finish();
                 return true;
             case R.id.help:
-                AlertDialog.Builder oDialog = new AlertDialog.Builder(this,
-                        android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+//                AlertDialog.Builder oDialog = new AlertDialog.Builder(this,
+//                        android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+//
+//                oDialog.setTitle("도움말")
+//                        .setMessage("검색된 상품 목록을 보여줍니다.\n" +
+//                                "스크롤을 통해 더 많은 상품을 볼 수 있습니다.\n" +
+//                                "상품을 누르면 자세한 상품의 정보를 보여주는 화면으로 이동합니다.")
+//                        .setPositiveButton("닫기", null)
+//                        .setCancelable(true)
+//                        .show();
 
-                oDialog.setTitle("도움말")
-                        .setMessage("검색된 상품 목록을 보여줍니다.\n" +
-                                "스크롤을 통해 더 많은 상품을 볼 수 있습니다.\n" +
-                                "상품을 누르면 자세한 상품의 정보를 보여주는 화면으로 이동합니다.")
-                        .setPositiveButton("닫기", null)
-                        .setCancelable(true)
-                        .show();
+                String[] contents = {"검색된 상품 목록을 보여줍니다.\n" +
+                        "스크롤을 통해 더 많은 상품을 볼 수 있습니다.\n" +
+                        "상품을 누르면 자세한 상품의 정보를 보여주는 화면으로 이동합니다."};
+                helpDialog.show();
+                helpDialog.addHelpContents(contents);
 
                 return true;
         }
