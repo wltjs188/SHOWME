@@ -11,6 +11,8 @@
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="true"
+        android:fullBackupOnly="true"
         android:icon="@mipmap/ic_showme"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_showme_round"
@@ -20,9 +22,6 @@
         android:transcriptMode="normal">
         <activity android:name="com.kimcheon.showme.final_project.ProductImageActivity"></activity>
         <activity android:name="com.kimcheon.showme.final_project.TestActivity" />
-        <activity android:name="com.kimcheon.showme.final_project.db.DAO.ServertestActivity" />
-        <activity android:name="com.kimcheon.showme.final_project.ReviewActivity" />
-        <activity android:name="com.kimcheon.showme.final_project.AddressActivity" />
         <activity
             android:name="com.kimcheon.showme.final_project.MainActivity"
             android:theme="@style/SplashTheme">
@@ -31,10 +30,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- <activity -->
-        <!-- android:name=".searchActivity" -->
-        <!-- android:label="@string/title_activity_search" -->
-        <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
+        </activity>
         <activity
             android:name="com.kimcheon.showme.final_project.ChatbotActivity"
             android:windowSoftInputMode="adjustResize" />

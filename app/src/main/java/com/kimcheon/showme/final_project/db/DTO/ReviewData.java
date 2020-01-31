@@ -1,4 +1,4 @@
-package com.kimcheon.showme.final_project;
+package com.kimcheon.showme.final_project.db.DTO;
 
 public class ReviewData {
     private int num; //리뷰번호
