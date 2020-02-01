@@ -1143,7 +1143,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
         Map<String, String> templateArgs = new HashMap<String, String>();
         templateArgs.put("imageUrl", imgUrl);
         //templateArgs.put("price", String.valueOf(price));
-        templateArgs.put("discription", "이 상품 구매 부탁드립니다!\n상품명:"+productName);
+        templateArgs.put("discription", "이 상품 구매 부탁드립니다!\n상품명:"+productName+"\n주소 : "+user.getAddress());
         templateArgs.put("productId", "/app/product/detail/"+productId);
 
         Map<String, String> serverCallbackArgs = new HashMap<String, String>();

@@ -22,7 +22,7 @@
 
     <string-array name="Input">
         <item>"주소록 검색"</item>
-        <item>"직접 입력"</item>
+        <item>"번호 직접 입력"</item>
     </string-array>
 
 </resources>
