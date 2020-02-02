@@ -91,6 +91,9 @@ public class ProductInfo extends AppCompatActivity {
     private String size=" ";
     private String sizeTable=" ";
     private String productname="";
+    private String brand="";
+    private String ave_dilevery="";
+
     //수신자 정보
     String phoneName = "";
     String phoneNo = "";
@@ -150,6 +153,9 @@ public class ProductInfo extends AppCompatActivity {
         size=intent.getStringExtra("size");
         sizeTable=intent.getStringExtra("sizeTable");
         productname=intent.getStringExtra("name");
+        brand = intent.getStringExtra("brand");
+        ave_dilevery = intent.getStringExtra("ave_dilevery");
+
         Log.d("price",price+","+image);
 
 

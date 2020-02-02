@@ -71,6 +71,8 @@ public class ShopActivity extends AppCompatActivity {
     ArrayList<String> ids = new ArrayList<String>();
     ArrayList<String> sizes = new ArrayList<String>();
     ArrayList<String> sizeTables = new ArrayList<String>();
+    ArrayList<String> barnds = new ArrayList<String>();
+    ArrayList<String> ave_dileverys = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +172,9 @@ public class ShopActivity extends AppCompatActivity {
                 productInfoIntent.putExtra("info",infos.get(position));
                 productInfoIntent.putExtra("size",sizes.get(position));
                 productInfoIntent.putExtra("sizeTable",sizeTables.get(position));
+                productInfoIntent.putExtra("brand",barnds.get(position));
+                productInfoIntent.putExtra("ave_dilevery",ave_dileverys.get(position));
+
                 startActivity(productInfoIntent);
             }
         });
@@ -316,6 +321,9 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
                         String size=row.getString("SIZE");
                         int price=row.getInt("PRICE");
                         String sizeTable=row.getString("SIZE_TABLE");
+                        String brand=row.getString("BRAND");
+                        String ave_dilevery=row.getString("AVE_DILEVERY");
+
 
                         product.setName(name);
                         product.setId(id);
@@ -326,6 +334,8 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
                         product.setStyle(style);
                         product.setPrice(price);
                         product.setSize_table(sizeTable);
+                        product.setBrand(brand);
+                        product.setAve_dilevery(ave_dilevery);
                         productsName.add(product.getName());
                         prices.add(product.getPrice());
                         products.add(product);
@@ -335,6 +345,8 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
                         ids.add(product.getId()+"");
                         sizes.add(product.getSize());
                         sizeTables.add(product.getSize_table());
+                        barnds.add(product.getBrand());
+                        ave_dileverys.add(product.getAve_dilevery());
                         Log.i("shop가져온 데이터><", product.toString());
 
                     }

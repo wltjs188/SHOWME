@@ -103,7 +103,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
     String action;
     String speech;
     ChatMessage chatMessage2;
-    //버튼 타입 정의
+    //버튼 타입 정의brand
     final int BTN_TYPE_MENU=1;
     final int BTN_TYPE_CATEGORY=2;
     final int BTN_TYPE_STYLE_TOP=3;
@@ -1309,6 +1309,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                             int price=row.getInt("PRICE");
                             String realcolor=row.getString("REALCOLOR");
                             String sizeTable=row.getString("SIZE_TABLE");
+                            String brand=row.getString("BRAND");
+                            String ave_dilevery=row.getString("AVE_DILEVERY");
 
                             Product product=new Product();
                             product.setName(name);
@@ -1321,6 +1323,8 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                             product.setPrice(price);
                             product.setReal_color(realcolor);
                             product.setSize_table(sizeTable);
+                            product.setBrand(brand);
+                            product.setAve_dilevery(ave_dilevery);
                             searched_products.add(product);
 
                             Log.i("chat가져온 데이터ㄹㄹ", product.toString());
@@ -1686,6 +1690,8 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                 String pInofo = p.get(i).toString();
                 String pSize = p.get(i).getSize();
                 String pSizeTable=p.get(i).getSize_table();
+                String pBarnd=p.get(i).getBrand();
+                String pAve_dilevery=p.get(i).getAve_dilevery();
 
                 Glide.with(MessageAdapter.super.getContext()).load(image).into(holder.imageViews.get(i));
                 holder.imageViews.get(i).setContentDescription("상품명:"+p.get(i).getName()+"\n가격:"+p.get(i).getPrice()+"원");
@@ -1699,6 +1705,9 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                         productInfoIntent.putExtra("size",pSize);
                         productInfoIntent.putExtra("sizeTable",pSizeTable);
                         productInfoIntent.putExtra("name",pName);
+                        productInfoIntent.putExtra("brand",pBarnd);
+                        productInfoIntent.putExtra("ave_dilevery",pAve_dilevery);
+
                         activity.startActivity(productInfoIntent);
                     }
                 });
