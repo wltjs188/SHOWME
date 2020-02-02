@@ -557,7 +557,7 @@ public class ProductInfo extends AppCompatActivity {
         Map<String, String> templateArgs = new HashMap<String, String>();
         templateArgs.put("imageUrl", image);
         templateArgs.put("price", String.valueOf(price));
-        templateArgs.put("discription", "이 상품 구매 부탁드립니다!\n상품명 : "+productname);
+        templateArgs.put("discription", "이 상품 구매 부탁드립니다!\n상품명 : "+productname+"\n주소 : "+user.getAddress());
         templateArgs.put("productId", "/app/product/detail/"+productId);
 
         Map<String, String> serverCallbackArgs = new HashMap<String, String>();
