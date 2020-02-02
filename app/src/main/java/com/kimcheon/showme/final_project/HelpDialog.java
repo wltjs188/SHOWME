@@ -43,6 +43,7 @@ public class HelpDialog extends Dialog implements View.OnClickListener{
 
             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
     public void addHelpContents(String[] contents){
+        layout_contents.removeAllViews();
         if (contents.length <= 0||contents==null) {
             //
         } else {
