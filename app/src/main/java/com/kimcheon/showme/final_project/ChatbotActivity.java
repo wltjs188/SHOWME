@@ -1119,10 +1119,12 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
 //                        .setPositiveButton("닫기", null)
 //                        .setCancelable(true)
 //                        .show();
+
                 String[] contents = {"쇼우미에 음성 또는 자판을 이용해 입력하거나 메뉴 버튼 클릭을 통해 조작이 가능합니다.\n"+
                         "상품 검색하기, 이전 검색 다시보기, 관심 상품 보기, 관심 상품 공유하기, 사용자 정보 수정이 가능합니다.\n"+
                         "\"그만\"을 입력하면 진행하던 대화를 멈춥니다."};
                 helpDialog.show();
+
                 helpDialog.addHelpContents(contents);
         }
         return super.onOptionsItemSelected(item);
