@@ -73,6 +73,7 @@ public class ShopActivity extends AppCompatActivity {
     ArrayList<String> sizeTables = new ArrayList<String>();
     ArrayList<String> barnds = new ArrayList<String>();
     ArrayList<String> ave_dileverys = new ArrayList<String>();
+    ArrayList<String> patterns = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +175,7 @@ public class ShopActivity extends AppCompatActivity {
                 productInfoIntent.putExtra("sizeTable",sizeTables.get(position));
                 productInfoIntent.putExtra("brand",barnds.get(position));
                 productInfoIntent.putExtra("ave_dilevery",ave_dileverys.get(position));
-
+                productInfoIntent.putExtra("pattern",patterns.get(position));
                 startActivity(productInfoIntent);
             }
         });
@@ -323,7 +324,7 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
                         String sizeTable=row.getString("SIZE_TABLE");
                         String brand=row.getString("BRAND");
                         String ave_dilevery=row.getString("AVE_DILEVERY");
-
+                        String pattern=row.getString("PATTERN");
 
                         product.setName(name);
                         product.setId(id);
@@ -336,6 +337,7 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
                         product.setSize_table(sizeTable);
                         product.setBrand(brand);
                         product.setAve_dilevery(ave_dilevery);
+                        product.setPattern(pattern);
                         productsName.add(product.getName());
                         prices.add(product.getPrice());
                         products.add(product);
@@ -347,6 +349,7 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
                         sizeTables.add(product.getSize_table());
                         barnds.add(product.getBrand());
                         ave_dileverys.add(product.getAve_dilevery());
+                        patterns.add((product.getPattern()));
                         Log.i("shop가져온 데이터><", product.toString());
 
                     }

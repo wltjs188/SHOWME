@@ -93,6 +93,7 @@ public class ProductInfo extends AppCompatActivity {
     private String productname="";
     private String brand="";
     private String ave_dilevery="";
+    private String pattern="";
 
     //수신자 정보
     String phoneName = "";
@@ -155,6 +156,7 @@ public class ProductInfo extends AppCompatActivity {
         productname=intent.getStringExtra("name");
         brand = intent.getStringExtra("brand");
         ave_dilevery = intent.getStringExtra("ave_dilevery");
+        pattern = intent.getStringExtra("pattern");
 
         Log.d("price",price+","+image);
 
