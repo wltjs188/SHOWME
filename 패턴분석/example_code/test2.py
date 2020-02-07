@@ -166,8 +166,8 @@ if __name__ == "__main__":
 
   graph = load_graph(model_file)
 
-  count=341; ##rows[:209]
-  for row in rows[342:]:
+  count=0; ##rows[:209]
+  for row in rows[:209]:
       try:
           url = row['IMAGE']  #이미지 url  이거사용하면됨
           url=url.replace("90x90","400x400") #이미지크기 수정

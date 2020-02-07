@@ -319,6 +319,7 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
                         String image = row.getString("IMAGE");
                         String style=row.getString("STYLE");
                         String color=row.getString("COLOR");
+                        String realcolor=row.getString("REALCOLOR");
                         String size=row.getString("SIZE");
                         int price=row.getInt("PRICE");
                         String sizeTable=row.getString("SIZE_TABLE");
@@ -330,6 +331,7 @@ private class SearchProduct extends AsyncTask<String, Void,String> {
                         product.setId(id);
                         product.setCategory(category);
                         product.setColor(color);
+                        product.setReal_color(realcolor);
                         product.setSize(size);
                         product.setImage(image);
                         product.setStyle(style);
