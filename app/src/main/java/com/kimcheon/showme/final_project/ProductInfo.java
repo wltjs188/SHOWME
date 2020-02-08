@@ -15,7 +15,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.speech.RecognizerIntent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
@@ -28,6 +27,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.*;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
 import com.kimcheon.showme.final_project.db.DTO.User;
 import com.kimcheon.showme.final_project.db.DTO.WishProduct;

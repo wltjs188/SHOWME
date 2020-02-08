@@ -3,7 +3,8 @@ package com.kimcheon.showme.final_project;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import com.google.common.io.BaseEncoding;
 

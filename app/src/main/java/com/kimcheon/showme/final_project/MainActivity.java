@@ -12,12 +12,14 @@ import android.content.pm.Signature;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.kimcheon.showme.final_project.db.DTO.User;
 import com.google.gson.Gson;
@@ -107,7 +109,7 @@ public class MainActivity extends Activity {
 //                "- 공유 서비스 사용 시 문자 발송을 위해 필요합니다.\n" +
                 "3. 연락처 권한 (필수)\n" +
                 "- 공유 서비스 사용 시 연락처 정보를 확인하기 위해 필요합니다.\n";
-        new android.support.v7.app.AlertDialog.Builder(this)
+        new AlertDialog.Builder(this)
                 .setTitle("[쇼우미 사용을 위해 필요한 접근 권한 안내]")
                 .setMessage(msg)
                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -149,7 +151,7 @@ public class MainActivity extends Activity {
                 if (grantResults[2] !=0)
                     msg=msg+"공유 서비스를 위해 연락처 정보를 확인할 수 있습니다. \n연락처 권한을 허가해주세요.\n";
 
-                new android.support.v7.app.AlertDialog.Builder(this)
+                new AlertDialog.Builder(this)
                         .setTitle("알림")
                         .setMessage(msg)
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {

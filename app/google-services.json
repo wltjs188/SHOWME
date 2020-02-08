@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "427047227652",
+    "firebase_url": "https://showme-5be04.firebaseio.com",
+    "project_id": "showme-5be04",
+    "storage_bucket": "showme-5be04.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:427047227652:android:fac1a21ceef7acbf214051",
+        "android_client_info": {
+          "package_name": "com.kimcheon.showme.final_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "427047227652-0ccurk27igia1ij4dlv1i4g80pqqi0qu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2JVV0arHX7HwToNfoi0t98NXi25ykDts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "427047227652-0ccurk27igia1ij4dlv1i4g80pqqi0qu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

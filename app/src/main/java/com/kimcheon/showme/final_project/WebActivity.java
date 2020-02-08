@@ -2,13 +2,14 @@ package com.kimcheon.showme.final_project;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

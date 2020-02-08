@@ -1,10 +1,11 @@
 package com.kimcheon.showme.final_project;
 
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
 import android.net.Uri;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class TestActivity extends AppCompatActivity {
 

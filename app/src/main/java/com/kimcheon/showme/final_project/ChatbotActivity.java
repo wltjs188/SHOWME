@@ -19,7 +19,6 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
-import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -51,6 +50,8 @@ import com.kakao.network.callback.ResponseCallback;
 import com.kakao.util.helper.log.Logger;
 
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;

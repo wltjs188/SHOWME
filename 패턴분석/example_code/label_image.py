@@ -108,7 +108,7 @@ def load_labels(label_file):
 
 if __name__ == "__main__":
 
-  conn = pymysql.connect(host='18.191.10.193',
+  conn = pymysql.connect(host='13.209.138.178',
         user='kimcheon',
         password='kim2cheon1',
         db='SHOWOOMI',
@@ -169,8 +169,8 @@ if __name__ == "__main__":
   count=208;
   for row in rows[209:]:
     
-    url = row['image']  #이미지 url  이거사용하면됨
-    url=url.replace("90x90","400x400") #이미지크기 수정
+    url = row['IMAGE']  #이미지 url  이거사용하면됨
+    # url=url.replace("90x90","400x400") #이미지크기 수정
     if not 'gif' in url :
       count+=1;
       print(count)
