@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.telephony.TelephonyManager;
@@ -21,6 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kimcheon.showme.final_project.db.DTO.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -32,7 +32,7 @@ import java.util.Locale;
 import java.util.UUID;
 import static android.speech.tts.TextToSpeech.ERROR;
 public class MainActivity extends Activity {
-
+    private FirebaseAnalytics mFirebaseAnalytics;
     private static final int PERMISSIONS_REQUEST = 100;
 
     private Gson gson = new GsonBuilder().create();
@@ -44,7 +44,8 @@ public class MainActivity extends Activity {
     private TextToSpeech tts;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         String permission[] = new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_CONTACTS}; //폰상태(로그인UUID),오디오, sms, 연락처
         boolean check=false;
         for(int i=0;i<permission.length;i++){
@@ -97,6 +98,7 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
 
+
     }
     // 접근 권한 안내
     public void showPermission(){
@@ -125,6 +127,7 @@ public class MainActivity extends Activity {
 
     //접근 권한 확인하기
     public void checkPermission(){
+
         String permission[] = new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.READ_CONTACTS}; //폰상태(로그인UUID),오디오, sms, 연락처
         ActivityCompat.requestPermissions(this,permission, PERMISSIONS_REQUEST);
