@@ -19,8 +19,15 @@ public class Product {
     String season;
     String ave_dilevery;
     String size_table;
+    String pattern;
 
+    public String getPattern() {
+        return pattern;
+    }
 
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
+    }
 
     String real_color;
 
@@ -190,14 +197,16 @@ public class Product {
         String s4=(size==null||size=="null"?"":"사이즈: "+ size+"\n");
         String s5=(brand==null||brand=="null"?"":"브랜드명: "+ brand+"\n");
         String s6=real_color==null||real_color=="null"?"":"색상: "+ real_color+"\n";
+        String s14=pattern==null||pattern=="null"?"":"패턴: "+ pattern+"\n";
         String s7=fabric==null||fabric=="null"?"":"소재: "+ fabric+"\n";
         String s8=texture==null||texture=="null"?"":"촉감: "+ texture+"\n";
         String s9=stretch==null||stretch=="null"?"":"신축성: "+ stretch+"\n";
         String s10=see_through==null||see_through=="null"?"":"비침: "+ see_through+"\n";
         String s11=thick==null||thick=="null"?"":"두께: "+ thick+"\n";
         String s12=season==null||season=="null"?"":"계절: "+ season+"\n";
-        String s13=ave_dilevery==null||ave_dilevery=="null"?"":"평균 배송일: "+ ave_dilevery;
-        str=s1+s2+s3+s4+s5+s6+s7+s8+s9+s10+s11+s12+s13;
+        String s13=ave_dilevery==null||ave_dilevery=="null"?"":"평균 배송일: "+ ave_dilevery+"\n";
+
+        str=s1+s2+s3+s4+s5+s6+s14+s7+s8+s9+s10+s11+s12+s13;
         return str;
     }
 

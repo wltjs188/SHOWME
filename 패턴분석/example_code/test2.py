@@ -166,57 +166,49 @@ if __name__ == "__main__":
 
   graph = load_graph(model_file)
 
-  count=341; ##rows[:209]
-  for row in rows[342:]:
-    
-    url = row['IMAGE']  #이미지 url  이거사용하면됨
-<<<<<<< HEAD
-    # url=url.replace("90x90","400x400") #이미지크기 수정
-=======
-    url=url.replace("90x90","400x400") #이미지크기 수정
->>>>>>> c63efb2c28302de083caa8d1136307334127004e
-    if not 'gif' in url :
-      count+=1;
-      print(count)
-      print(url)
-      t = read_tensor_from_image_url(
-        url,
-        input_height=input_height,
-        input_width=input_width,
-        input_mean=input_mean,
-        input_std=input_std)
-      input_name = "import/" + input_layer
-      output_name = "import/" + output_layer
-      input_operation = graph.get_operation_by_name(input_name)
-      output_operation = graph.get_operation_by_name(output_name)
+  count=0; ##rows[:209]
+  for row in rows[:209]:
+      try:
+          url = row['IMAGE']  #이미지 url  이거사용하면됨
+          url=url.replace("90x90","400x400") #이미지크기 수정
+          if not 'gif' in url :
+              count+=1;
+              print(count)
+              print(url)
+              t = read_tensor_from_image_url(url,input_height=input_height,input_width=input_width,input_mean=input_mean,input_std=input_std)
+              input_name = "import/" + input_layer
+              output_name = "import/" + output_layer
+              input_operation = graph.get_operation_by_name(input_name)
+              output_operation = graph.get_operation_by_name(output_name)
+              with tf.Session(graph=graph) as sess:
+                  results = sess.run(output_operation.outputs[0], {
+                      input_operation.outputs[0]: t
+                      })
+                  results = np.squeeze(results)
+                  top_k = results.argsort()[-5:][::-1]
+                  labels = load_labels(label_file)
+                  i=top_k[0] #정확도 가장 높은 인덱스
+                  print("이미지:"+url)
+                  print("패턴", "정확도")
+                  print(labels[i], results[i] ,"%") #labels: 패턴결과값, results : 정확도
+                  if results[i]>=0.8:
+                      print('정확도높음')
+                      row['PATTERN']=get_pattern_name(labels[i])
+                      print(row['PATTERN'])
+                      sql = 'UPDATE PRODUCTS SET PATTERN = %s WHERE ID = %s'
+                      print(sql)
+                      curs.execute(sql,(row['PATTERN'],row['ID']))
+                      conn.commit()
+                      print(curs.rowcount)
+                      print("DB update완료")
+                  else:
+                        print('정확도낮음')
+                  print("*****************************************")
+          print("실행");
+      except:
+          print("오류");
+          pass
 
-    
-    #텐서플로우 실행
-      with tf.Session(graph=graph) as sess:
-        results = sess.run(output_operation.outputs[0], {
-          input_operation.outputs[0]: t
-          })
-        results = np.squeeze(results)
-        top_k = results.argsort()[-5:][::-1]
-        labels = load_labels(label_file)
-        i=top_k[0] #정확도 가장 높은 인덱스
-        print("이미지:"+url)
-        print("패턴", "정확도")
-        print(labels[i], results[i] ,"%") #labels: 패턴결과값, results : 정확도
-        if results[i]>=0.8:
-          print('정확도높음')
-          row['PATTERN']=get_pattern_name(labels[i])
-          print(row['PATTERN'])
-          sql = 'UPDATE PRODUCTS SET PATTERN = %s WHERE ID = %s'
-          print(sql)
-          curs.execute(sql,(row['PATTERN'],row['ID']))
-          conn.commit()
-          print(curs.rowcount)
-          print("DB update완료")
-                
-        else:
-          print('정확도낮음')
-        print("*****************************************")
       
 
 

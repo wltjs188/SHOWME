@@ -1312,7 +1312,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                             String sizeTable=row.getString("SIZE_TABLE");
                             String brand=row.getString("BRAND");
                             String ave_dilevery=row.getString("AVE_DILEVERY");
-
+                            String pattern=row.getString("PATTERN");
                             Product product=new Product();
                             product.setName(name);
                             product.setId(id);
@@ -1326,6 +1326,7 @@ public class ChatbotActivity extends AppCompatActivity implements AIListener{
                             product.setSize_table(sizeTable);
                             product.setBrand(brand);
                             product.setAve_dilevery(ave_dilevery);
+                            product.setPattern(pattern);
                             searched_products.add(product);
 
                             Log.i("chat가져온 데이터ㄹㄹ", product.toString());
@@ -1693,7 +1694,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                 String pSizeTable=p.get(i).getSize_table();
                 String pBarnd=p.get(i).getBrand();
                 String pAve_dilevery=p.get(i).getAve_dilevery();
-
+                String pPattern=p.get(i).getPattern();
                 Glide.with(MessageAdapter.super.getContext()).load(image).into(holder.imageViews.get(i));
                 holder.imageViews.get(i).setContentDescription("상품명:"+p.get(i).getName()+"\n가격:"+p.get(i).getPrice()+"원");
                 holder.imageViews.get(i).setOnClickListener(new View.OnClickListener() {
@@ -1708,6 +1709,7 @@ class MessageAdapter extends ArrayAdapter<ChatMessage> { //메세지어댑터
                         productInfoIntent.putExtra("name",pName);
                         productInfoIntent.putExtra("brand",pBarnd);
                         productInfoIntent.putExtra("ave_dilevery",pAve_dilevery);
+                        productInfoIntent.putExtra("pattern",pPattern);
 
                         activity.startActivity(productInfoIntent);
                     }
