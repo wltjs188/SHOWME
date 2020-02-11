@@ -45,7 +45,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Obtain the FirebaseAnalytics instance.
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+//        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         String permission[] = new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_CONTACTS}; //폰상태(로그인UUID),오디오, sms, 연락처
         boolean check=false;
         for(int i=0;i<permission.length;i++){
@@ -97,6 +98,9 @@ public class MainActivity extends Activity {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
 
     }
